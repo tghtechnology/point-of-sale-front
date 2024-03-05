@@ -22,6 +22,13 @@ export default function Articulos() {
         <MaterialCommunityIcons name="content-copy" size={24} color="#708090" />
         <Text style={styles.text}>Categorias</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Descuento")}
+        style={styles.container}
+      >
+        <MaterialCommunityIcons name="tag-outline" size={24} color="#708090" />
+        <Text style={styles.text}>Descuento</Text>
+      </TouchableOpacity>
     </View>
   );
 }
