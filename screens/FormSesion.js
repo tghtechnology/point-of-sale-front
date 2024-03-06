@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert 
 import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
+import CustomAlert from '../Alertas/CustomAlert';
 
 
 const FormSesion = () => {
@@ -9,12 +10,16 @@ const FormSesion = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [inconAlertVisible, setConAlertVisible] = useState(false);
+  const [emailAlertVisible, setEmailAlertVisible] = useState(false);
   //Logica de Iniciar Secion
   const handleSignIn = () => {
 
     // Verifica si los campos de entrada están vacíos
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Campos Incompletos', 'Falta ingresar Email o Password.');
+      setConAlertVisible(true)
       return;
     }
     //aqui termina
@@ -22,7 +27,7 @@ const FormSesion = () => {
     // Verifica si el correo electrónico es válido
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Alert.alert('Formato Incorrecto', 'Solo acepta Email.');
+      setEmailAlertVisible(true)
       return;
     }
     //Aqui Termina
@@ -45,10 +50,10 @@ const FormSesion = () => {
         return response.json();
       })
       .then(data => {
-        Alert.alert('Correcto', 'Se ingreso Correctamente.');
+        setSuccessAlertVisible(true);
       })
       .catch(error => {
-        Alert.alert('Error', 'Error al Iniciar Secion.'); // Muestra la alerta de error
+        setErrorAlertVisible(true); // Muestra la alerta de error
       });
   };
   //Aqui Termina
@@ -79,13 +84,49 @@ const FormSesion = () => {
         onChangeText={(text) => setPassword(text)}
       />
 
-      <TouchableOpacity  onPress={handleIniciarPress} style={styles.button}>
+      <TouchableOpacity  onPress={handleSignIn} style={styles.button}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handleIniciarPress}>
         <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
+
+      <CustomAlert
+        isVisible={successAlertVisible}
+        onClose={() => setSuccessAlertVisible(false)}
+        title="Inicio de sesión exitoso"
+        message="Has iniciado sesión correctamente."
+        buttonColor="green"
+        iconName="check"
+      />
+
+      <CustomAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        title="Error"
+        message="Las credenciales son incorrectas. Por favor, inténtalo de nuevo."
+        buttonColor="red"
+        iconName="times-circle"
+      />
+
+      <CustomAlert
+        isVisible={inconAlertVisible}
+        onClose={() => setConAlertVisible(false)}
+        title="Campos Incompletos"
+        message="Ingresar Email o Password."
+        buttonColor="orange"
+        iconName="question"
+      />
+
+      <CustomAlert
+        isVisible={emailAlertVisible}
+        onClose={() => setEmailAlertVisible(false)}
+        title="Formato Incorrecto"
+        message="Ingresar Email."
+        buttonColor="lightblue"
+        iconName="exclamation-triangle"
+      />
 
     </View>
   )
