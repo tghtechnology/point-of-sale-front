@@ -51,6 +51,7 @@ const FormEnvioCorreo = () => {
       })
       .then(data => {
         setSuccessAlertVisible(true);
+        navigation.navigate('Verificar');
       })
       .catch(error => {
         console.error('Error al enviar el PIN:', error.message);
