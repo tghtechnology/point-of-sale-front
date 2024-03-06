@@ -96,7 +96,7 @@ const FormSesion = () => {
         isVisible={successAlertVisible}
         onClose={() => setSuccessAlertVisible(false)}
         title="Inicio de sesión exitoso"
-        message="Has iniciado sesión correctamente."
+        message="Inicio de Secion Exitoso."
         buttonColor="green"
         iconName="check"
       />
@@ -105,7 +105,7 @@ const FormSesion = () => {
         isVisible={errorAlertVisible}
         onClose={() => setErrorAlertVisible(false)}
         title="Error"
-        message="Las credenciales son incorrectas. Por favor, inténtalo de nuevo."
+        message="Error al Iniciar Secion"
         buttonColor="red"
         iconName="times-circle"
       />
