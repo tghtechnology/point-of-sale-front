@@ -17,6 +17,8 @@ import ForMain from './screens/ForMain';
 import FormSesion from './screens/FormSesion';
 import FormReg from './screens/FormReg';
 import Descuento from './screens/Descuento';
+import FormEnvioCorreo from './screens/FormEnvioCorreo';
+
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -26,7 +28,9 @@ return (
       <Stack.Screen name="FormMain" component={ForMain}  options={{headerShown:false}} />
       <Stack.Screen name="Iniciar Sesion" component={FormSesion} />
       <Stack.Screen name="Registro" component={FormReg} />
+      <Stack.Screen name="Envio" component={FormEnvioCorreo} />
       <Stack.Screen name="Home" component={HomeScreen}
+      
         options={{title: "Soporte",
           headerLeft: () => {
             return (
