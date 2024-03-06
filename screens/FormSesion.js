@@ -51,6 +51,7 @@ const FormSesion = () => {
       })
       .then(data => {
         setSuccessAlertVisible(true);
+        navigation.navigate('Home');
       })
       .catch(error => {
         setErrorAlertVisible(true); // Muestra la alerta de error
