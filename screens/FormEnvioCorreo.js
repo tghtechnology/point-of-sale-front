@@ -1,42 +1,42 @@
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert } from 'react-native'
-import { StatusBar } from "expo-status-bar"
+import { View, Text } from 'react-native'
+import { TextInput, StyleSheet, Alert } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import CustomAlert from '../Alertas/CustomAlert';
 
 
-const FormSesion = () => {
+const FormEnvioCorreo = () => {
   const navigation = useNavigation();
-
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
-  const [inconAlertVisible, setConAlertVisible] = useState(false);
-  const [emailAlertVisible, setEmailAlertVisible] = useState(false);
-  //Logica de Iniciar Secion
-  const handleSignIn = () => {
+  const [campoAlertVisible, setCampoAlertVisible] = useState(false);
+  const [formatAlertVisible, setFormatAlertVisible] = useState(false);
 
-    // Verifica si los campos de entrada están vacíos
-    if (!email.trim() || !password.trim()) {
-      setConAlertVisible(true)
+  //Logica de Enviar Pin
+  const handleSendPin = () => {
+
+    // Verificar si el campo de correo electrónico está vacío
+    if (!email.trim()) {
+      setCampoAlertVisible(true);
       return;
     }
-    //aqui termina
+    //Aqui termina
 
-    // Verifica si el correo electrónico es válido
+    // Verificar si el correo electrónico tiene un formato válido
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setEmailAlertVisible(true)
+      setFormatAlertVisible(true);
       return;
     }
     //Aqui Termina
 
     const userData = {
       email: email,
-      password: password,
     };
-    fetch('http://192.168.18.8:3000/login', {
+
+    fetch('http://192.168.18.8:3000/enviarPIN', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,58 +45,42 @@ const FormSesion = () => {
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Invalid credentials');
+          throw new Error('Error al enviar el PIN');
         }
         return response.json();
       })
       .then(data => {
         setSuccessAlertVisible(true);
-        navigation.navigate('Home');
       })
       .catch(error => {
+        console.error('Error al enviar el PIN:', error.message);
         setErrorAlertVisible(true); // Muestra la alerta de error
       });
   };
   //Aqui Termina
 
-  const handleIniciarPress = () => {
-    navigation.navigate('Envio');
-  };
-
-  const handleRecibosPress = () => {
-    console.log('Registro presionado');
-    navigation.navigate('FormRecibos');
-  };
 
   return (
     <View style={styles.container}>
+      <Text>
+        Introduzca su correo electronico para recibir
+        instrucciones para restablecer la contraseña
+      </Text>
       <TextInput
         style={styles.input}
-        placeholder='Correo Electronico'
+        placeholder="Direccion de Correo Electronico"
         placeholderTextColor="#546574"
         onChangeText={(text) => setEmail(text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder='Contraseña'
-        placeholderTextColor="#546574"
-        secureTextEntry={true}
-        onChangeText={(text) => setPassword(text)}
-      />
-
-      <TouchableOpacity  onPress={handleSignIn} style={styles.button}>
-        <Text style={styles.buttonText}>Iniciar Sesión</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={handleIniciarPress}>
-        <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
+      <TouchableOpacity style={styles.buttonEnviar} onPress={handleSendPin}>
+        <Text style={styles.buttonText}>Enviar</Text>
       </TouchableOpacity>
 
       <CustomAlert
         isVisible={successAlertVisible}
         onClose={() => setSuccessAlertVisible(false)}
-        title="Inicio de sesión exitoso"
-        message="Has iniciado sesión correctamente."
+        title="Envio Exitoso"
+        message="Has enviado el Pin correctamente."
         buttonColor="green"
         iconName="check"
       />
@@ -105,27 +89,27 @@ const FormSesion = () => {
         isVisible={errorAlertVisible}
         onClose={() => setErrorAlertVisible(false)}
         title="Error"
-        message="Las credenciales son incorrectas. Por favor, inténtalo de nuevo."
+        message="El Pin no se envio Correctamente. Por favor, inténtalo de nuevo."
         buttonColor="red"
         iconName="times-circle"
       />
 
       <CustomAlert
-        isVisible={inconAlertVisible}
-        onClose={() => setConAlertVisible(false)}
+        isVisible={campoAlertVisible}
+        onClose={() => setCampoAlertVisible(false)}
         title="Campos Incompletos"
-        message="Ingresar Email o Password."
+        message="Falta ingresar el Email. Por favor, inténtalo de nuevo."
         buttonColor="orange"
-        iconName="question"
+        iconName="question" // Agrega el nombre del icono aquí
       />
 
       <CustomAlert
-        isVisible={emailAlertVisible}
-        onClose={() => setEmailAlertVisible(false)}
+        isVisible={formatAlertVisible}
+        onClose={() => setFormatAlertVisible(false)}
         title="Formato Incorrecto"
-        message="Ingresar Email."
+        message="Ingresar formato Email. Por favor, inténtalo de nuevo."
         buttonColor="lightblue"
-        iconName="exclamation-triangle"
+        iconName="exclamation-triangle" // Agrega el nombre del icono aquí
       />
 
     </View>
@@ -133,12 +117,10 @@ const FormSesion = () => {
 }
 
 const styles = StyleSheet.create({
-
   container: {
-    marginTop: 300, // Puedes ajustar este valor según tus necesidades
+    marginTop: 100, // Puedes ajustar este valor según tus necesidades
     paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
   },
-
   input: {
     marginBottom: 25,
     fontSize: 17,
@@ -148,9 +130,8 @@ const styles = StyleSheet.create({
     color: '#546574',
     padding: 10,
     borderRadius: 5,
-
   },
-  button: {
+  buttonEnviar: {
     backgroundColor: 'red',
     paddingVertical: 12,
     borderRadius: 5,
@@ -162,15 +143,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-
-  forgotPasswordText: {
-    color: 'blue',
-    marginTop: 18,
-    textAlign: 'center',
-    fontSize: 15,
-  }
-
-
 })
 
-export default FormSesion;
+export default FormEnvioCorreo
