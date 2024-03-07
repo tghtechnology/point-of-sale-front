@@ -13,45 +13,53 @@ const FormVerificarPin = () => {
   const navigation = useNavigation();
   const [code, setCode] = useState('');
   //Alertas
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [campoAlertVisible, setCampoAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   //
 
   // Logica para Conformar PIN
-  const [userPin, setUserPin] = useState('');
   const [pin, setSentPin] = useState('');
   const [email, setEmail] = useState(''); // Agrega un estado para el correo electrónico
 
-  const endpoint = 'http://192.168.18.8:3000/verificarPin';
-
-  const fetchPin = async () => {
-    try {
-      const response = await fetch(`${endpoint}?email=${email}`);
-      if (!response.ok) {
-        throw new Error('El correo electrónico ya existe en la base de datos.');
-      }
-      const data = await response.json();
-      setSentPin(data.pin);
-    } catch (error) {
-      console.error('Error al obtener el PIN:', error);
-      Alert.alert('Error', error.message);
+  const fetchPin = async (pin, email) => {
+    // Verificar si el campo de Pin está vacío
+    if (!pin.trim()) {
+      setCampoAlertVisible(true);
+      return;
     }
-  };
-
-  const confirmPin = () => {
-    if (userPin === pin) {
-      Alert.alert('Correcto', 'El PIN ingresado es correcto.');
-    } else {
+    //Aqui Terminna
+    // Verificar si el Pin es un número
+    if (isNaN(pin)) {
       setErrorAlertVisible(true);
+      return;
     }
+    //Aqui Termina
+    const userData = {
+      pin: pin,
+      email: email,
+    };
+    fetch('http://192.168.18.8:3000/verificarPin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+      .then(response => {
+        console.log(response)
+        if (!response.ok) {
+          throw new Error('Pin Incorrecto');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setSuccessAlertVisible(true)
+      })
+      .catch(error => {
+        setErrorAlertVisible(true)
+      });
   };
-
-  // Obtener el PIN cuando se cambia el correo electrónico
-  React.useEffect(() => {
-    if (email) {
-      fetchPin();
-    }
-  }, [email]);
   // Aqui Termina
   return (
     <View style={styles.container}>
@@ -60,9 +68,9 @@ const FormVerificarPin = () => {
         style={styles.input}
         placeholder="Pin"
         placeholderTextColor="#546574"
-        onChangeText={(text) => setSentPin(text)}
+        onChangeText={(number) => setSentPin(number)}
       />
-      <TouchableOpacity style={styles.buttonEnviar} onPress={confirmPin}>
+      <TouchableOpacity style={styles.buttonEnviar} onPress={() => fetchPin(pin, email)}>
         <Text style={styles.buttonText}>Verificar</Text>
       </TouchableOpacity>
       <CustomAlert
@@ -77,9 +85,17 @@ const FormVerificarPin = () => {
         isVisible={errorAlertVisible}
         onClose={() => setErrorAlertVisible(false)}
         title="Error"
-        message="El Pin no se envio Correctamente. Por favor, inténtalo de nuevo."
+        message="Pin Incorrecto. Por favor, inténtalo de nuevo."
         buttonColor="red"
         iconName="times-circle"
+      />
+      <CustomAlert
+        isVisible={successAlertVisible}
+        onClose={() => setSuccessAlertVisible(false)}
+        title="Verificacion Exitosa"
+        message="Has verificado el Pin correctamente."
+        buttonColor="green"
+        iconName="check"
       />
     </View>
   )

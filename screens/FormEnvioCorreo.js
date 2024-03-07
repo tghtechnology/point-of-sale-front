@@ -16,8 +16,7 @@ const FormEnvioCorreo = () => {
 
   //Logica de Enviar Pin
   const handleSendPin = () => {
-
-    // Verificar si el campo de correo electrónico está vacío
+    // Verificar si el campo de Pin está vacío
     if (!email.trim()) {
       setCampoAlertVisible(true);
       return;
