@@ -55,6 +55,7 @@ const FormVerificarPin = () => {
       })
       .then(data => {
         setSuccessAlertVisible(true)
+        navigation.navigate('Confirmar')
       })
       .catch(error => {
         setErrorAlertVisible(true)

@@ -18,6 +18,7 @@ import FormSesion from './screens/FormSesion';
 import FormReg from './screens/FormReg';
 import FormEnvioCorreo from './screens/FormEnvioCorreo';
 import FormVerificarPin from './screens/FormVerificarPin';
+import FormConfirContra from './screens/FormConfirContra';
 
 
 function StackNavigation() {
@@ -30,6 +31,7 @@ return (
       <Stack.Screen name="Registro" component={FormReg} />
       <Stack.Screen name="Envio" component={FormEnvioCorreo} />
       <Stack.Screen name="Verificar" component={FormVerificarPin} />
+      <Stack.Screen name="Confirmar" component={FormConfirContra} />
       <Stack.Screen name="Home" component={HomeScreen}
       
         options={{title: "Soporte",
