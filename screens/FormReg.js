@@ -1,6 +1,7 @@
 import React, { useState,useEffect  } from 'react'
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
-
+import { registroUsuario } from '../api';
+import { obtenerPais } from '../api';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
@@ -92,7 +93,7 @@ const FormReg = () => {
         style={styles.showPasswordButton}
       >
         <Icon
-        name={showPassword ? 'eye-slash' : 'eye'}
+        name={showPassword ? 'eye' : 'eye-slash'}
         size={20}
         color="#546574"
         />
@@ -118,7 +119,7 @@ const FormReg = () => {
 
       <Text>País seleccionado: {selectedCountry}</Text>
 
-      <TouchableOpacity style={styles.buttonRegister} >
+      <TouchableOpacity style={styles.buttonRegister} onPress={EnviarDatos}>
           <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
 
@@ -126,7 +127,7 @@ const FormReg = () => {
         <View style={styles.modalContainer}>
           <Icon name="check-circle" size={80} color="green" style={styles.icon} />
           <Text style={styles.modalText}>Registro Exitoso</Text>
-          <TouchableOpacity style={styles.modalButton} >
+          <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
             <Text style={styles.modalButtonText}>OK</Text>
           </TouchableOpacity>
         </View>

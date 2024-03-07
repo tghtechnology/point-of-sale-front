@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, Modal, Text, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { registroDescuento, obtenerDescuentos, actualizarEstadoDescuento } from '../api';
+import DescuentoForm from './descuento/DescuentoForm';
+import DescuentoList from './descuento/DescuentoList';
 
-
-const Descuento = () => {
+  const Descuento = () => {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [tipoDescuento, setTipoDescuento] = useState('');
+  const [descuentos, setDescuentos] = useState([]);
   const [datosFormulario, setDatosFormulario] = useState({
     id: '',
     nombre: '',
@@ -13,6 +16,28 @@ const Descuento = () => {
     valor:'0.0',
     estado:'',
   });
+
+  const cargarDescuentos = async () => {
+    try {
+      const descuentosData = await obtenerDescuentos();
+      setDescuentos(descuentosData);
+    } catch (error) {
+      console.error('Error al cargar descuentos:', error);
+    }
+  };
+
+  useEffect(() => {
+    const cargarDescuentos = async () => {
+      try {
+        const descuentosData = await obtenerDescuentos();
+        setDescuentos(descuentosData);
+      } catch (error) {
+        console.error('Error al cargar descuentos:', error);
+      }
+    };
+
+    cargarDescuentos();
+  }, []);
 
   const irAFormulario = () => {
     setMostrarFormulario(true);
@@ -30,13 +55,13 @@ const Descuento = () => {
 
   const EnviarDesc= async() =>{
     try {
-      const tipoDescuentoApi = tipoDescuento === 'percent' ? 'porcentaje' : 'dollar';
+      const tipoDescuentoApi = tipoDescuento ===  'percent' ? '%' : '$';
       const datosDescuento = {
-      ...datosFormulario,
-      tipo_descuento: tipoDescuentoApi,
-    };
-
-    const response = await registroDescuento(datosFormulario);
+        ...datosFormulario,
+        tipo_descuento: tipoDescuentoApi,
+      };
+  
+      const response = await registroDescuento(datosDescuento);
     console.log('Respuesta de la API:', response);
     
     setMostrarFormulario(false);
@@ -51,75 +76,49 @@ const Descuento = () => {
     console.error('Error en registroDescuento:', error);
     console.error('Error al enviar datos:', error.message);
     console.log('Respuesta completa del error:', error.response);
+
+    // Agrega esta línea para imprimir el cuerpo de la respuesta si está disponible
+    if (error.response && error.response.data) {
+      console.log('Cuerpo de la respuesta del servidor:', error.response.data);
+    }
+
     throw error;
-}  
-}
+}   
+};
+
+const cambiarEstadoDescuento = async (id, nuevoEstado) => {
+  try {
+    await actualizarEstadoDescuento(id, nuevoEstado);
+    // Recargar la lista después de cambiar el estado
+    const descuentosData = await obtenerDescuentos();
+    setDescuentos(descuentosData);
+  } catch (error) {
+    console.error('Error al cambiar el estado del descuento:', error);
+  }
+};
+
   return (
     <View style={styles.container}>
-      {Descuento.length === 0 ? (
-        <View style={styles.mensajeContainer}>
-          <Text style={styles.mensaje}>No hay descuento :'v</Text>
-          <Icon name='frown-o' size={70} color="gray" />
-        </View>
-      ) : (
-        <View style={styles.bottomSpace} />
-      )}
+      
+      
+        <DescuentoList descuentos={descuentos} cambiarEstadoDescuento={cambiarEstadoDescuento} />
+          
+      
       <View style={styles.bottomSpace} />
-
       {/* Botón con ícono para ir al formulario */}
       <TouchableOpacity style={styles.addButton} onPress={irAFormulario}>
         <Icon name='plus-circle' size={70} color="green" />
       </TouchableOpacity>
 
-      {/* Modal que muestra el formulario */}
-      <Modal visible={mostrarFormulario} animationType="slide" transparent>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            {/* Contenido del formulario */}
-            <Text style={styles.formularioTitle}>Crear Descuento</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nombre"
-              value={datosFormulario.nombre}
-              onChangeText={text => setDatosFormulario({ ...datosFormulario, nombre: text })}
-            />
-            <View style={styles.iconContainer}>  
-            {tipoDescuento === 'dollar' && (
-    <Text style={styles.dollarSign}>$</Text>
-  )}
-            <TextInput
-            style={styles.input}
-            placeholder="Valor"
-            value={datosFormulario.valor}
-            onChangeText={(decimal) => {
-            const nuevoValor = decimal.replace(/^0+(?=\d)/, '');
-            setDatosFormulario({ ...datosFormulario, valor: nuevoValor });
-            }} 
-            keyboardType="numeric"
-            />
-            <View style={styles.iconoBorde}>
-            <TouchableOpacity onPress={() => setTipoDescuento(tipoDescuento === 'percent' ? 'dollar' : 'percent')}>
-            <Icon
-            name={tipoDescuento === 'percent' ? 'percent' : 'dollar'}
-            size={20}
-            color={tipoDescuento === 'percent' ? 'green' : 'gray'}
-            style={styles.iconoDescuento}
-            />
-            
-            </TouchableOpacity>
-            </View>
-            </View>
-            <View style={styles.botonesContainer}>
-              <TouchableOpacity onPress={EnviarDesc} style={[styles.boton, { fontSize: 20, height: 50 }]}>
-                <Text style={styles.texto}>Enviar</Text>
-              </TouchableOpacity>
-              <View style={{ width: 10 }}/>
-            <TouchableOpacity onPress={cerrarFormulario} style={[styles.boton, { fontSize: 20, height: 50 }]}>
-                <Text style={styles.texto}>Cerrar</Text>
-            </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+      <Modal visible={mostrarFormulario}  transparent>
+            <DescuentoForm  // Usa el componente DescuentoFormulario
+              EnviarDesc={EnviarDesc}
+              cerrarFormulario={cerrarFormulario}
+              tipoDescuento={tipoDescuento}
+              setTipoDescuento={setTipoDescuento}
+              datosFormulario={datosFormulario}
+              setDatosFormulario={setDatosFormulario}
+            />  
       </Modal>
     </View>
   );
@@ -136,25 +135,6 @@ const styles = StyleSheet.create({
   },
   addButton: {
     alignSelf: 'flex-end', // Alinea el botón a la derecha
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 80,
-    borderRadius: 10,
-    elevation: 5, 
-    fontSize: 20,
-  },
-  formularioTitle: {
-    fontSize: 40, // Ajusta el tamaño del título
-    fontWeight: 'bold',
-    marginBottom: 25,
   },
   input: {
     marginBottom: 25,
@@ -176,11 +156,6 @@ const styles = StyleSheet.create({
     color: '#546574',
     padding: 10,
     borderRadius: 5,
-  },
-  botonesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom:10, // Alinea los botones alrededor
   },
   texto:{
     fontSize:20,
@@ -210,32 +185,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color:'gray',
   },
-  iconContainer:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: 'gray',
-    marginBottom: 15,
-  },
-  iconoDescuento: {
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  iconoSigma: {
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  iconoBorde: {
-    borderWidth: 3,
-    borderColor: 'gray',
-    borderRadius: 5,
-    padding: 5,
-  },
-  dollarSign: {
-    fontSize: 30,
-    color: '#546574',
-    marginLeft: 5,
-  },
-
 });
 
 export default Descuento;

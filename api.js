@@ -1,27 +1,110 @@
-const API = 'http://192.168.0.109:3000'
+const API = 'http://192.168.101.12:3000';
 
-const eliminarCuentaPermanentemente = async (userId) => {
-    try {
-      const response = await fetch(`${API}/eliminar-permanentemente/${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
+export const registroUsuario = async (datosUsuario) => {
+  try {
+    const response = await fetch(`${API}/registro`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(datosUsuario),
+    });
   
-        },
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.mensaje);
-      } else {
-        const errorData = await response.json();
-        console.error(errorData.mensaje); 
-      }
-    } catch (error) {
-      console.error('Error al intentar eliminar la cuenta permanentemente:', error);
+    if (!response.ok) {
+      const errorData = await response.text(); // Cambiado de json a text
+      throw new Error(`Error en la solicitud (${response.status}): ${errorData}`);
     }
-  };
   
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error en registroUsuario`, error);
+    throw error;
+  }
+};
 
-  const userIdToDelete = 123; 
-  eliminarCuentaPermanentemente(userIdToDelete);
+
+export const obtenerPais = async () => {
+  try {
+    const response = await fetch(`${API}/listaPaises`); // Ajusta la URL de tu API
+    const textResponse = await response.text();
+    if (!response.ok) {
+      console.error(`Error en la solicitud (${response.status}): ${textResponse}`);
+      throw new Error(`Error en la solicitud (${response.status}): ${textResponse}`);
+    }
+
+    const listaPaises = JSON.parse(textResponse);
+    return listaPaises;
+  } catch (error) {
+    console.error('Error en obtenerPais:', error);
+    throw error;
+  }
+};
+
+
+export const registroDescuento = async (datosDescuento) => {
+  try {
+    const response = await fetch(`${API}/descuento`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(datosDescuento),
+    });
+    if (!response.ok) {
+      const errorData = await response.json(); // Obtener detalles del error desde el cuerpo de la respuesta
+      console.log('Detalles del error:', errorData);
+      throw new Error(`Error en la solicitud (${response.status}): ${errorData.message || 'Error desconocido en la solicitud'}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error en registroDescuento:', error);
+    throw error;
+  }
+};
+
+export const obtenerDescuentos = async () => {
+  try {
+    const response = await fetch(`${API}/descuento`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      const errorMessage = errorData.message || 'Error desconocido en la solicitud';
+      throw new Error(`Error en la solicitud (${response.status}): ${errorMessage}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error al obtener descuentos:', error);
+    throw error;
+  }
+};
+
+export const actualizarEstadoDescuento = async (id, nuevoEstado) => {
+  try {
+    const response = await fetch(`${API}/descuento/${id}/cambiar-estado`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ estado: nuevoEstado ? 1 : 0 }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = `Error al actualizar el estado del descuento: ${response.statusText}`;
+      console.error(errorMessage);
+      return response.status === 204 ? {} : Promise.reject(errorMessage);
+    }
+
+    return response.status === 204 ? {} : response.json();
+  } catch (error) {
+    console.error('Error al cambiar el estado del descuento:', error);
+    if (error.response && error.response.data && error.response.data.error) {
+      console.error('Error específico:', error.response.data.error);
+    }
+    throw error;
+  }
+};
