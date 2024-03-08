@@ -17,14 +17,7 @@ import DescuentoList from './descuento/DescuentoList';
     estado:'',
   });
 
-  const cargarDescuentos = async () => {
-    try {
-      const descuentosData = await obtenerDescuentos();
-      setDescuentos(descuentosData);
-    } catch (error) {
-      console.error('Error al cargar descuentos:', error);
-    }
-  };
+
 
   useEffect(() => {
     const cargarDescuentos = async () => {
@@ -62,8 +55,7 @@ import DescuentoList from './descuento/DescuentoList';
       };
   
       const response = await registroDescuento(datosDescuento);
-    console.log('Respuesta de la API:', response);
-    
+    console.log('Respuesta de la API:', response);r
     setMostrarFormulario(false);
     setDatosFormulario({
       id: '',
