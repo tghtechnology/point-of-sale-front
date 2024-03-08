@@ -20,6 +20,7 @@ import FormEnvioCorreo from './screens/FormEnvioCorreo';
 import FormVerificarPin from './screens/FormVerificarPin';
 import FormConfirContra from './screens/FormConfirContra';
 
+import Descuento from './screens/Descuento';
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -65,7 +66,7 @@ function ArticulosScreen() {
         },
       }}
     >
-      <Stack.Screen name="Articulos" component={Articulos} options={{ headerLeft: () => {
+    <Stack.Screen name="Articulos" component={Articulos} options={{ headerLeft: () => {
         return (
             <Icon
               name="menu"
@@ -108,6 +109,34 @@ function ArticulosScreen() {
   );
 };
 
+function DescuentoScreen(){
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+return(
+  <Stack.Navigator
+      screenOptions={{
+        statusBarColor: "#ff0000",
+        headerStyle: { backgroundColor: "#ff0000" },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
+    <Stack.Screen name="Descuento" component={Descuento} options={{ headerLeft: () => {
+        return (
+            <Icon
+              name="menu"
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              size={24}
+              color="#fff"
+            />
+          );
+        },
+      }}></Stack.Screen>
+    </Stack.Navigator>
+);
+};
 
 
 const DrawerNav =()=> {
@@ -117,6 +146,7 @@ const DrawerNav =()=> {
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Descuento" component={Descuento}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
     
     </Drawer.Navigator>
   );
