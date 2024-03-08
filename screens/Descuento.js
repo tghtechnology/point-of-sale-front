@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { registroDescuento, obtenerDescuentos, actualizarEstadoDescuento } from '../api';
+import { registroDescuento, obtenerDescuentos, actualizarEstadoDescuento } from './apiss/ApiDesc';
 import DescuentoForm from './descuento/DescuentoForm';
 import DescuentoList from './descuento/DescuentoList';
 
