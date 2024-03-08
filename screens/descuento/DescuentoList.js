@@ -10,7 +10,7 @@ const DescuentoList = ({ descuentos, cambiarEstadoDescuento }) => {
       <Text style={styles.itemText}>{item.nombre}</Text>
       <Text style={styles.itemText}>{item.valor}</Text>
       <Text style={styles.itemText}>{item.tipo_descuento}</Text>
-      <Text style={styles.itemText}>{item.estado}</Text>
+      
       <Switch
         value={item.estado === 1}
         onValueChange={() => {

@@ -1,4 +1,4 @@
-const API = 'http://192.168.101.12:3000';
+const API = 'http://192.168.18.18:3000';
 
 export const registroUsuario = async (datosUsuario) => {
   try {
