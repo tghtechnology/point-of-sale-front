@@ -19,8 +19,8 @@ import FormReg from './screens/FormReg';
 import FormEnvioCorreo from './screens/FormEnvioCorreo';
 import FormVerificarPin from './screens/FormVerificarPin';
 import FormConfirContra from './screens/FormConfirContra';
-
 import Descuento from './screens/Descuento';
+import FormRegisEmpleado from './screens/Empleado/FormRegisEmpleado';
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -147,7 +147,7 @@ const DrawerNav =()=> {
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Descuento" component={Descuento}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-    
+      <Drawer.Screen name="Empleado" component={FormRegisEmpleado}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );
 };
