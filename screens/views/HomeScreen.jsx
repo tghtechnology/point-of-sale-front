@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 export default function HomeScreen(props) {
     const navigation = useNavigation();
   return (
-    <TouchableOpacity  onPress= {() => props.navigation.navigate("DeleteAccount")}style ={styles.container}>
+    <TouchableOpacity  onPress= {() => props.navigation.navigate("Profile")}style ={styles.container}>
     <MaterialCommunityIcons name="account-circle-outline" size={24} color="#708090" />
       <Text style ={styles.text}>Cuenta</Text>
     </TouchableOpacity>

@@ -38,26 +38,26 @@ const LoginForm = () => {
       email: email,
       password: password,
     };
-    // fetch('http://192.168.18.27:3000/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(userData),
-    // })
-    //   .then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Invalid credentials');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     setSuccessAlertVisible(true);
-    //     navigation.navigate('Home');
-    //   })
-    //   .catch(error => {
-    //     setErrorAlertVisible(true); // Muestra la alerta de error
-    //   });
+     fetch('http://192.168.18.27:3000/login', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify(userData),
+     })
+       .then(response => {
+         if (!response.ok) {
+          throw new Error('Invalid credentials');
+        }
+         return response.json();
+      })
+      .then(data => {
+        setSuccessAlertVisible(true);
+        navigation.navigate('Home');
+      })
+       .catch(error => {
+         setErrorAlertVisible(true); // Muestra la alerta de error
+      });
 
     navigation.navigate('Home')
   };
