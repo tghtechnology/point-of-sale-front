@@ -4,9 +4,9 @@ import { TextInput, StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react'
-import CustomAlert from './componentes/CustomAlert';
+import CustomAlert from '../componentes/CustomAlert';
 
-const FormConfirContra = () => {
+const ConfirmPasswordForm = () => {
     const navigation = useNavigation();
     //Alertas
     const [successAlertVisible, setSuccessAlertVisible] = useState(false);
@@ -129,4 +129,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default FormConfirContra
+export default ConfirmPasswordForm

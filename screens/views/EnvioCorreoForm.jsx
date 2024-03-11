@@ -3,10 +3,10 @@ import { TextInput, StyleSheet, Alert } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import CustomAlert from './componentes/CustomAlert';
+import CustomAlert from '../componentes/CustomAlert';
 
 
-const FormEnvioCorreo = () => {
+const EnvioCorreoForm = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
@@ -50,7 +50,6 @@ const FormEnvioCorreo = () => {
       })
       .then(data => {
         setSuccessAlertVisible(true);
-        navigation.navigate('Verificar');
       })
       .catch(error => {
         console.error('Error al enviar el PIN:', error.message);
@@ -145,4 +144,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default FormEnvioCorreo
+export default EnvioCorreoForm

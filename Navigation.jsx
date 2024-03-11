@@ -6,9 +6,9 @@ import {NavigationContainer, useNavigation, DrawerActions } from "@react-navigat
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from './screens/views/HomeScreen';
 import DeleteAccount from './screens/views/DeleteAccount';
-import Articulos from './screens/Articulos';
-import Arti from './screens/Arti';
-import Categorias from './screens/Categorias';
+import ArticlesNavigate from './screens/views/ArticlesNavigate';
+import PlusArticles from './screens/views/PlusArticles';
+import PlusCategory from './screens/views/PlusCategory';
 import ArticlesForm from './screens/views/ArticlesForm';
 import Icon from "react-native-vector-icons/Entypo";
 import CategoryForm from './screens/views/CategoryForm';
@@ -16,9 +16,8 @@ import { Ionicons, MaterialCommunityIcons,FontAwesome } from '@expo/vector-icons
 import HomeView from './screens/views/HomeView';
 import LoginForm from "./screens/views/LoginForm"
 import RegisterForm from './screens/views/RegisterForm';
-import FormEnvioCorreo from './screens/FormEnvioCorreo';
-import FormVerificarPin from './screens/FormVerificarPin';
-import FormConfirContra from './screens/FormConfirContra';
+import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
+import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
 import Descuento from './screens/Descuento';
 import FormRegisEmpleado from './screens/Empleado/FormRegisEmpleado';
 
@@ -30,9 +29,8 @@ return (
       <Stack.Screen name="Main" component={HomeView}  options={{headerShown:false}} />
       <Stack.Screen name="Login" component={LoginForm} />
       <Stack.Screen name="Register" component={RegisterForm} />
-      <Stack.Screen name="Envio" component={FormEnvioCorreo} />
-      <Stack.Screen name="Verificar" component={FormVerificarPin} />
-      <Stack.Screen name="Confirmar" component={FormConfirContra} />
+      <Stack.Screen name="Envio" component={EnvioCorreoForm} />
+      <Stack.Screen name="Confirmar" component={ConfirmPasswordForm} />
       <Stack.Screen name="Home" component={HomeScreen}
       
         options={{title: "Soporte",
@@ -66,7 +64,7 @@ function ArticulosScreen() {
         },
       }}
     >
-    <Stack.Screen name="Articulos" component={Articulos} options={{ headerLeft: () => {
+    <Stack.Screen name="Articulos" component={ArticlesNavigate} options={{ headerLeft: () => {
         return (
             <Icon
               name="menu"
@@ -78,7 +76,7 @@ function ArticulosScreen() {
         },
       }}></Stack.Screen>
 
-      <Stack.Screen name="Art" component={Arti} options={{ title: "Todos los artículos",
+      <Stack.Screen name="Art" component={PlusArticles} options={{ title: "Todos los artículos",
      headerRight: () => (
       <><FontAwesome
           name="sort-down"
@@ -97,7 +95,7 @@ function ArticulosScreen() {
             </View>
           ),
         }}></Stack.Screen>
-      <Stack.Screen name="Categorias" component={Categorias} options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
+      <Stack.Screen name="Categorias" component={PlusCategory} options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
       <Stack.Screen name="Crear Categoria" component={CategoryForm}  options={{
           headerRight: () => (
             <View style={{ marginRight: 10 }}>
