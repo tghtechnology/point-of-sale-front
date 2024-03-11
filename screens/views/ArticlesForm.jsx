@@ -3,7 +3,7 @@ import { Picker } from '@react-native-picker/picker';
 import { RadioButton } from 'react-native-paper'; 
 import React, { useState } from 'react';
 
-export default function AddArticulos() {
+export default function ArticlesForm() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedVendidoPor, setSelectedVendidoPor] = useState('unidad');
   const [isEnabled, setIsEnabled] = useState(false);
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   },
 
   switchContainer: {
-    marginLeft: 10, // Puedes ajustar el valor según sea necesario
+    marginLeft: 10, 
   },
 
   

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View} from 'react-native';
-import { CrearCategoria } from './apiss/ApiCategoria';
-import NuevaCat from './categorias/NuevaCat';
+import { CrearCategoria } from '../apiss/ApiCategoria';
+import NuevaCat from '../categorias/NuevaCat';
 
 
 
-const AddCategorias = () => {
+const CategoryForm = () => {
   const [datos, setDatos] = useState({
     id: '',
     nombre: '',
@@ -41,4 +41,4 @@ const AddCategorias = () => {
   );
 };
  
-export default AddCategorias;
+export default CategoryForm;

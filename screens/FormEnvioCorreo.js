@@ -3,7 +3,7 @@ import { TextInput, StyleSheet, Alert } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import CustomAlert from '../Alertas/CustomAlert';
+import CustomAlert from './componentes/CustomAlert';
 
 
 const FormEnvioCorreo = () => {

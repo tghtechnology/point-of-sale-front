@@ -45,13 +45,13 @@ import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column', // Esto asegura que los elementos se coloquen de forma vertical
+    flexDirection: 'column', 
   },
   container2: {
     display:'flex',
-    flexDirection: 'column', // Esto asegura que los elementos se coloquen de forma vertical
+    flexDirection: 'column',
     gap:'5px',
-    marginTop:'10px'
+    marginTop:'50px'
   },
     section: {
     borderColor: '#ccc',
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
     redSection: {
-     backgroundColor: 'red', // Fondo rojo para la primera sección
+     backgroundColor: 'red', 
      paddingVertical: '55%',
      justifyContent: 'center',
   },
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     color: 'white',
   }, 
   button: {
-    backgroundColor: 'green',
+    backgroundColor: 'red',
     paddingHorizontal:'10px',
     paddingVertical:'10px',
     borderRadius: 8,

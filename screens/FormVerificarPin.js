@@ -2,7 +2,7 @@ import { View, Text, Alert } from 'react-native'
 import React from 'react'
 import { TextInput, StyleSheet } from 'react-native'
 //import SmoothPinCodeInput from 'react-native-smooth-pincode-input'
-import CustomAlert from '../Alertas/CustomAlert';
+import CustomAlert from './componentes/CustomAlert';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react'
 import { TouchableOpacity } from 'react-native'

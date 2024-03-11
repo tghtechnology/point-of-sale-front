@@ -4,7 +4,7 @@ import { TextInput, StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react'
-import CustomAlert from '../Alertas/CustomAlert';
+import CustomAlert from './componentes/CustomAlert';
 
 const FormConfirContra = () => {
     const navigation = useNavigation();

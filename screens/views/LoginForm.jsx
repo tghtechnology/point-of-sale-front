@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert 
 import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import CustomAlert from '../../Alertas/CustomAlert';
+import CustomAlert from '../componentes/CustomAlert';
 
 
 const LoginForm = () => {
@@ -16,6 +16,8 @@ const LoginForm = () => {
   const [emailAlertVisible, setEmailAlertVisible] = useState(false);
   //Logica de Iniciar Secion
   const handleSignIn = () => {
+
+
 
     // Verifica si los campos de entrada están vacíos
     if (!email.trim() || !password.trim()) {
@@ -63,6 +65,7 @@ const LoginForm = () => {
 
   const handleIniciarPress = () => {
     navigation.navigate('Envio');
+
   };
 
   const handleRecibosPress = () => {

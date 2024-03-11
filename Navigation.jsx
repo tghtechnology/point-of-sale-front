@@ -5,13 +5,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import {NavigationContainer, useNavigation, DrawerActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from './screens/views/HomeScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import DeleteAccount from './screens/views/DeleteAccount';
 import Articulos from './screens/Articulos';
 import Arti from './screens/Arti';
 import Categorias from './screens/Categorias';
-import AddArticulos from './screens/AddArticulos';
+import ArticlesForm from './screens/views/ArticlesForm';
 import Icon from "react-native-vector-icons/Entypo";
-import AddCategorias from './screens/AddCategorias';
+import CategoryForm from './screens/views/CategoryForm';
 import { Ionicons, MaterialCommunityIcons,FontAwesome } from '@expo/vector-icons';
 import HomeView from './screens/views/HomeView';
 import LoginForm from "./screens/views/LoginForm"
@@ -33,7 +33,7 @@ return (
       <Stack.Screen name="Envio" component={FormEnvioCorreo} />
       <Stack.Screen name="Verificar" component={FormVerificarPin} />
       <Stack.Screen name="Confirmar" component={FormConfirContra} />
-      {/* <Stack.Screen name="Home" component={HomeScreen}
+      <Stack.Screen name="Home" component={HomeScreen}
       
         options={{title: "Soporte",
           headerLeft: () => {
@@ -47,8 +47,8 @@ return (
             );
           },
         }}
-      ></Stack.Screen> */}
-      <Stack.Screen name="Profile" component={ProfileScreen}></Stack.Screen>
+      ></Stack.Screen> 
+      <Stack.Screen name="Profile" component={DeleteAccount}></Stack.Screen>
     </Stack.Navigator>
   );
 };
@@ -90,7 +90,7 @@ function ArticulosScreen() {
       </>
     ),}}
       />
-      <Stack.Screen name="Crear Articulo" component={AddArticulos}  options={{
+      <Stack.Screen name="Crear Articulo" component={ArticlesForm}  options={{
           headerRight: () => (
             <View style={{ marginRight: 10 }}>
               <Text style={{ color: 'white', fontSize: 16 }}>Guardar</Text>
@@ -98,7 +98,7 @@ function ArticulosScreen() {
           ),
         }}></Stack.Screen>
       <Stack.Screen name="Categorias" component={Categorias} options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
-      <Stack.Screen name="Crear Categoria" component={AddCategorias}  options={{
+      <Stack.Screen name="Crear Categoria" component={CategoryForm}  options={{
           headerRight: () => (
             <View style={{ marginRight: 10 }}>
               <Text style={{ color: 'white', fontSize: 16 }}>Guardar</Text>
