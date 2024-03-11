@@ -4,7 +4,7 @@ import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {NavigationContainer, useNavigation, DrawerActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from './screens/HomeScreen';
+import HomeScreen from './screens/views/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import Articulos from './screens/Articulos';
 import Arti from './screens/Arti';
@@ -13,9 +13,9 @@ import AddArticulos from './screens/AddArticulos';
 import Icon from "react-native-vector-icons/Entypo";
 import AddCategorias from './screens/AddCategorias';
 import { Ionicons, MaterialCommunityIcons,FontAwesome } from '@expo/vector-icons';
-import ForMain from './screens/ForMain';
-import FormSesion from './screens/FormSesion';
-import FormReg from './screens/FormReg';
+import HomeView from './screens/views/HomeView';
+import LoginForm from "./screens/views/LoginForm"
+import RegisterForm from './screens/views/RegisterForm';
 import FormEnvioCorreo from './screens/FormEnvioCorreo';
 import FormVerificarPin from './screens/FormVerificarPin';
 import FormConfirContra from './screens/FormConfirContra';
@@ -26,14 +26,14 @@ function StackNavigation() {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
 return (
-    <Stack.Navigator  initialRouteName="ForMain" screenOptions={{ statusBarColor: "#ff0000",headerStyle: { backgroundColor: "#ff0000" },headerTintColor: "#fff",headerTitleStyle: {color: "#fff",},}} >
-      <Stack.Screen name="FormMain" component={ForMain}  options={{headerShown:false}} />
-      <Stack.Screen name="Iniciar Sesion" component={FormSesion} />
-      <Stack.Screen name="Registro" component={FormReg} />
+    <Stack.Navigator  initialRouteName="Main" screenOptions={{ statusBarColor: "#ff0000",headerStyle: { backgroundColor: "#ff0000" },headerTintColor: "#fff",headerTitleStyle: {color: "#fff",},}} >
+      <Stack.Screen name="Main" component={HomeView}  options={{headerShown:false}} />
+      <Stack.Screen name="Login" component={LoginForm} />
+      <Stack.Screen name="Register" component={RegisterForm} />
       <Stack.Screen name="Envio" component={FormEnvioCorreo} />
       <Stack.Screen name="Verificar" component={FormVerificarPin} />
       <Stack.Screen name="Confirmar" component={FormConfirContra} />
-      <Stack.Screen name="Home" component={HomeScreen}
+      {/* <Stack.Screen name="Home" component={HomeScreen}
       
         options={{title: "Soporte",
           headerLeft: () => {
@@ -47,7 +47,7 @@ return (
             );
           },
         }}
-      ></Stack.Screen>
+      ></Stack.Screen> */}
       <Stack.Screen name="Profile" component={ProfileScreen}></Stack.Screen>
     </Stack.Navigator>
   );

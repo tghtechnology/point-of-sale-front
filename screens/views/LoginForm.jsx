@@ -2,10 +2,10 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert 
 import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import CustomAlert from '../Alertas/CustomAlert';
+import CustomAlert from '../../Alertas/CustomAlert';
 
 
-const FormSesion = () => {
+const LoginForm = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
@@ -36,26 +36,28 @@ const FormSesion = () => {
       email: email,
       password: password,
     };
-    fetch('http://192.168.18.8:3000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Invalid credentials');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setSuccessAlertVisible(true);
-        navigation.navigate('Home');
-      })
-      .catch(error => {
-        setErrorAlertVisible(true); // Muestra la alerta de error
-      });
+    // fetch('http://192.168.18.27:3000/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(userData),
+    // })
+    //   .then(response => {
+    //     if (!response.ok) {
+    //       throw new Error('Invalid credentials');
+    //     }
+    //     return response.json();
+    //   })
+    //   .then(data => {
+    //     setSuccessAlertVisible(true);
+    //     navigation.navigate('Home');
+    //   })
+    //   .catch(error => {
+    //     setErrorAlertVisible(true); // Muestra la alerta de error
+    //   });
+
+    navigation.navigate('Home')
   };
   //Aqui Termina
 
@@ -173,4 +175,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default FormSesion;
+export default LoginForm;

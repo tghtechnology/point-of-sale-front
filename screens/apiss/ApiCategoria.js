@@ -1,4 +1,4 @@
-const API = 'http://192.168.18.8:3000';
+const API = 'http://192.168.18.27:3000';
 
 export const CrearCategoria = async (datosCategoria) => {
   try {

@@ -13,7 +13,7 @@ function NuevaCat({datos,setDatos, EnviarCat}) {
       />
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={EnviarCat} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>CREAR CATEGORIA</Text>
+        <Text style={styles.buttonText}>CREAR CATEGORÍA</Text>
       </TouchableOpacity>
       <View style={{ height: 20 }} />
       <TouchableOpacity style={styles.buttonContainer}>

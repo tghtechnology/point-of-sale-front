@@ -1,13 +1,13 @@
 import React, { useState,useEffect  } from 'react'
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
-import { registroUsuario } from '../api';
-import { obtenerPais } from '../api';
+import { registroUsuario } from '../../api';
+import { obtenerPais } from '../../api';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 
 
-const FormReg = () => {
+const RegisterForm = () => {
   const [data, setData] = useState({
     id:'',
     nombre:'',
@@ -228,4 +228,4 @@ const styles = StyleSheet.create({
     },
   })
 
-export default FormReg
+export default RegisterForm;
