@@ -3,7 +3,6 @@ import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-nativ
 import useCategory from '../hooks/useCategory';
 import CategoryProvider from '../context/category/CategoryProvider';
 
-
 const INITIAL_STATE = {
   nombre:'',
 }
@@ -17,7 +16,6 @@ const CategoryForm = () => {
       [name]:value
     })
   }
-
   const EnviarCat= async() =>{
     try {
       const response = await handleCreateCategory(objectSend);
@@ -58,7 +56,6 @@ const CategoryForm = () => {
     
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     marginTop: 30,
@@ -86,6 +83,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize:15,
   },
- 
 });
 export default CategoryForm;
