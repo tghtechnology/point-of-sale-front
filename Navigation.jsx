@@ -124,11 +124,8 @@ const DrawerNav =()=> {
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-<<<<<<< HEAD:Navigation.js
-=======
       <Drawer.Screen name="Descuento" component={Descuento}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Empleado" component={FormRegisEmpleado}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
->>>>>>> 6636420132d4b85c8ac5feebcf81f01f67834ac8:Navigation.jsx
     </Drawer.Navigator>
   );
 };
