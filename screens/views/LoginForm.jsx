@@ -38,7 +38,7 @@ const LoginForm = () => {
       email: email,
       password: password,
     };
-     fetch('http://192.168.18.27:3000/login', {
+     fetch('http://192.168.18.8:3000/login', {
        method: 'POST',
        headers: {
          'Content-Type': 'application/json',
@@ -58,8 +58,6 @@ const LoginForm = () => {
        .catch(error => {
          setErrorAlertVisible(true); // Muestra la alerta de error
       });
-
-    navigation.navigate('Home')
   };
   //Aqui Termina
 
