@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Arti(props) {
+export default function PlusArticles(props) {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>

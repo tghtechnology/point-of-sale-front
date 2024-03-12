@@ -2,60 +2,76 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert 
 import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import CustomAlert from '../Alertas/CustomAlert';
+import CustomAlert from '../componentes/CustomAlert';
+// import CustomAlert from '../../Alertas/CustomAlert';
 
 
-const FormSesion = () => {
+const INITIAL_LOGIN = {
+  email:'',
+  password:''
+}
+const LoginForm = () => {
   const navigation = useNavigation();
+  const [value, setValues] = useState(INITIAL_LOGIN);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const [inconAlertVisible, setConAlertVisible] = useState(false);
   const [emailAlertVisible, setEmailAlertVisible] = useState(false);
   //Logica de Iniciar Secion
+
+  const getValuesLogin = (name, value) => {
+    setValues({
+      ...value,
+      [name]:value
+    })
+  }
+
   const handleSignIn = () => {
 
-    // Verifica si los campos de entrada están vacíos
-    if (!email.trim() || !password.trim()) {
-      setConAlertVisible(true)
-      return;
-    }
-    //aqui termina
+  //   // Verifica si los campos de entrada están vacíos
+  //   if (!email.trim() || !password.trim()) {
+  //     setConAlertVisible(true)
+  //     return;
+  //   }
+  //   //aqui termina
 
-    // Verifica si el correo electrónico es válido
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailAlertVisible(true)
-      return;
-    }
-    //Aqui Termina
+  //   // Verifica si el correo electrónico es válido
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!emailRegex.test(email)) {
+  //     setEmailAlertVisible(true)
+  //     return;
+  //   }
+  //   //Aqui Termina
 
     const userData = {
       email: email,
       password: password,
     };
-    fetch('http://192.168.18.8:3000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Invalid credentials');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setSuccessAlertVisible(true);
-        navigation.navigate('Home');
-      })
-      .catch(error => {
-        setErrorAlertVisible(true); // Muestra la alerta de error
-      });
+    // fetch('http://192.168.18.27:3000/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(userData),
+    // })
+    //   .then(response => {
+    //     if (!response.ok) {
+    //       throw new Error('Invalid credentials');
+    //     }
+    //     return response.json();
+    //   })
+    //   .then(data => {
+    //     setSuccessAlertVisible(true);
+    //     navigation.navigate('Home');
+    //   })
+    //   .catch(error => {
+    //     setErrorAlertVisible(true); // Muestra la alerta de error
+    //   });
+
+    navigation.navigate('Home')
   };
   //Aqui Termina
 
@@ -63,31 +79,38 @@ const FormSesion = () => {
     navigation.navigate('Envio');
   };
 
-  const handleRecibosPress = () => {
-    console.log('Registro presionado');
-    navigation.navigate('FormRecibos');
-  };
+  // const handleRecibosPress = () => {
+  //   console.log('Registro presionado');
+  //   navigation.navigate('FormRecibos');
+  // };
 
   return (
     <View style={styles.container}>
+      {/* INPUT DE USUARIO */}
       <TextInput
         style={styles.input}
-        placeholder='Correo Electronico'
+        placeholder='Correo Electrónico'
         placeholderTextColor="#546574"
-        onChangeText={(text) => setEmail(text)}
+        value={value.email}
+        onChangeText={(text) => getValuesLogin("email",text)}
       />
+
+      {/* INPUT PARA CONTRASEÑA */}
       <TextInput
         style={styles.input}
         placeholder='Contraseña'
         placeholderTextColor="#546574"
         secureTextEntry={true}
-        onChangeText={(text) => setPassword(text)}
+        value={value.password}
+        onChangeText={(text) => getValuesLogin("password",text)}
       />
 
+      {/* BOTÓN DE INICIO DE SESIÓN */}
       <TouchableOpacity  onPress={handleSignIn} style={styles.button}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 
+      {/* OPCIÓN PARA RECUPERAR CONTRASEÑA */}
       <TouchableOpacity onPress={handleIniciarPress}>
         <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
@@ -96,7 +119,7 @@ const FormSesion = () => {
         isVisible={successAlertVisible}
         onClose={() => setSuccessAlertVisible(false)}
         title="Inicio de sesión exitoso"
-        message="Has iniciado sesión correctamente."
+        message="Inicio de Sesión Exitoso."
         buttonColor="green"
         iconName="check"
       />
@@ -105,7 +128,7 @@ const FormSesion = () => {
         isVisible={errorAlertVisible}
         onClose={() => setErrorAlertVisible(false)}
         title="Error"
-        message="Las credenciales son incorrectas. Por favor, inténtalo de nuevo."
+        message="Error al Iniciar Sesión"
         buttonColor="red"
         iconName="times-circle"
       />
@@ -173,4 +196,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default FormSesion;
+export default LoginForm;

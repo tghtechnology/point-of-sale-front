@@ -5,13 +5,13 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-export default function Categorias(props) {
+export default function PlusCategory(props) {
   return (
     <View style={styles.container}>
       <View style={styles.circle}>
         <MaterialCommunityIcons name="content-copy" size={100} color="#808080" />
       </View>
-      <Text style={styles.text}>Todavía no tiene artículos</Text>
+      <Text style={styles.text}>Todavía no tiene Categorias</Text>
       <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
 
       <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Categoria")}>

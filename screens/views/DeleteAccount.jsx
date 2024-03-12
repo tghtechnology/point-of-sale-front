@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
 
-export default function ProfileScreen() {
+export default function DeleteAccount() {
     const [modalVisible, setModalVisible] = useState(false);
     const [password, setPassword] = useState('');
     const [isFocused, setIsFocused] = useState(false);

@@ -1,14 +1,20 @@
 import { View, TextInput, StyleSheet, TouchableOpacity,Text } from 'react-native';
 
 
-export default function AddCategorias() {
+function NuevaCat({datos,setDatos, EnviarCat}) {
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder='El nombre de la categoría'
         placeholderTextColor="#546574"
+        value={datos.nombre}
+        onChangeText={(text) => setDatos({...datos, nombre:text})}   
       />
+      <View style={{ height: 20 }} />
+      <TouchableOpacity onPress={EnviarCat} style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>CREAR CATEGORÍA</Text>
+      </TouchableOpacity>
       <View style={{ height: 20 }} />
       <TouchableOpacity style={styles.buttonContainer}>
         <Text style={styles.buttonText}>ASIGNAR ARTÍCULOS</Text>
@@ -51,3 +57,4 @@ const styles = StyleSheet.create({
   },
  
 });
+export default NuevaCat;

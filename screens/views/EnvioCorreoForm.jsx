@@ -3,10 +3,10 @@ import { TextInput, StyleSheet, Alert } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import CustomAlert from '../Alertas/CustomAlert';
+import CustomAlert from '../componentes/CustomAlert';
 
 
-const FormEnvioCorreo = () => {
+const EnvioCorreoForm = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
@@ -16,8 +16,7 @@ const FormEnvioCorreo = () => {
 
   //Logica de Enviar Pin
   const handleSendPin = () => {
-
-    // Verificar si el campo de correo electrónico está vacío
+    // Verificar si el campo de Pin está vacío
     if (!email.trim()) {
       setCampoAlertVisible(true);
       return;
@@ -145,4 +144,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default FormEnvioCorreo
+export default EnvioCorreoForm
