@@ -21,6 +21,7 @@ import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
 import Descuento from './screens/Descuento';
 import FormRegisEmpleado from './screens/Empleado/FormRegisEmpleado';
 
+
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();

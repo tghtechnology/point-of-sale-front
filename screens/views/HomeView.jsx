@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import UsuarioProvider from '../context/usuarios/UsuarioProvider';
 
 
  function HomeView() {
@@ -16,30 +17,32 @@ import { useNavigation } from '@react-navigation/native';
     navigation.navigate("Register");
   };
   return (
-    <View style={styles.container}>
-      <View style={[styles.section, styles.redSection]}>
-        <Text style={styles.text}>App de Ventas</Text>
-        <Text style={[styles.text, styles.textod]}>Tu Sitio Ideal</Text>
-      </View>
-      <View style={[styles.section, styles.blackSection]}>
-        <View style={[styles.container2]}>
-          {/* botón de inicio de sesión */}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={showLoginView}
-          >
-            <Text style={styles.buttonText}>Iniciar Sesión</Text>
-          </TouchableOpacity>
-          {/* botón de registro */}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={showViewRegister}
-          >
-            <Text style={styles.buttonText}> Registrarse </Text>
-          </TouchableOpacity>
+    <UsuarioProvider>
+      <View style={styles.container}>
+        <View style={[styles.section, styles.redSection]}>
+          <Text style={styles.text}>App de Ventas</Text>
+          <Text style={[styles.text, styles.textod]}>Tu Sitio Ideal</Text>
+        </View>
+        <View style={[styles.section, styles.blackSection]}>
+          <View style={[styles.container2]}>
+            {/* botón de inicio de sesión */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={showLoginView}
+            >
+              <Text style={styles.buttonText}>Iniciar Sesión</Text>
+            </TouchableOpacity>
+            {/* botón de registro */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={showViewRegister}
+            >
+              <Text style={styles.buttonText}> Registrarse </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </UsuarioProvider>
   );
 };
 
@@ -76,10 +79,13 @@ const styles = StyleSheet.create({
     color: 'white',
   }, 
   button: {
-    backgroundColor: 'red',
-    paddingHorizontal:'10px',
+    backgroundColor: 'green',
+    paddingHorizontal:'20px',
     paddingVertical:'10px',
     borderRadius: 8,
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
     textAlign:"center",
     height:'40px',
     width: 'auto',
@@ -87,8 +93,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontWeight:'700',
-    fontSize:'1rem'
+    fontWeight:'400',
+    fontSize:'1.5rem'
   },
 });
 export default HomeView;

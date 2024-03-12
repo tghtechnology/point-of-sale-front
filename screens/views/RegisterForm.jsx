@@ -1,24 +1,26 @@
-import React, { useState,useEffect  } from 'react'
+import { useState,useEffect  } from 'react'
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
-import { registroUsuario } from '../../api';
 import { obtenerPais } from '../../api';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
+import useUser from '../hooks/useUser';
+import UsuarioProvider from '../context/usuarios/UsuarioProvider';
 
+
+const INITIAL_STATE = {
+  nombre:'',
+  email:'',
+  password:'',
+}
 
 const RegisterForm = () => {
-  const [data, setData] = useState({
-    id:'',
-    nombre:'',
-    email:'',
-    password:'',
-    pais: 'Selecciona un país',
-  });
-  const [countries, setCountries] = useState(['Selecciona un país']);
-
-  const [showPassword, setShowPassword] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [ dataForm, setDataForm] = useState(INITIAL_STATE);
+  const [ country, setCountry] = useState([]);
+  const [ countrySelect, setCountrySelect] = useState('')
+  const [showPassword, setShowPassword] = useState(false);
+  const {handleCreateUser} = useUser();
   
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -28,111 +30,125 @@ const RegisterForm = () => {
     const loadCountries = async () => {
       try {
         const countriesData = await obtenerPais();
-        setCountries(['Selecciona un país', ...countriesData]);
+        setCountry(countriesData);
       } catch (error) {
-        // Manejar errores si es necesario
+        console.log(error);
       }
     };
 
     loadCountries();
   }, []);
 
-  const EnviarDatos = async () => {
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (
-      !data.nombre ||
-      !emailRegex.test(data.email) ||
-      data.password.length < 8 ||
-      data.pais === 'Selecciona un país'
-    ) {
-      if (!emailRegex.test(data.email)) {
-        alert('Ingresa una dirección de correo electrónico válida.');
-      } else if (data.password.length < 8) {
-        alert('La contraseña debe tener al menos 8 caracteres.');
-      } else {
-        alert('Por favor, llena todos los campos correctamente.');
+  // Obtener valor de lo países
+  const getCountry = (itemValue, itemIndex) => {
+    setCountrySelect(itemValue)
+  };
+
+  const getValues = (name,value) => {
+    setDataForm({
+      ...dataForm,
+      [name]:value
+    })
+  }
+
+  const handleSubmit = async () => {
+    
+    const objectSend = {
+      ...dataForm,
+      pais:countrySelect
+    }
+    if(Object.values(dataForm).includes("")){
+      alert("Complete todos los campos")
+    }
+    try {
+      const response = await handleCreateUser(objectSend);
+      if(response){
+        alert("Usuario creado con exito")
+        setDataForm(INITIAL_STATE);
+      }else{
+        alert("El usuarios no se pudo crear");
       }
-      return; // Si no están llenos o la contraseña es menor a 8 caracteres, termina la función aquí
-    }
-    try{ 
-      const response = await registroUsuario(data);
-      console.log('Respuesta de la API:', response);
-      toggleModal();
-      setData({
-        id: '',
-        nombre: '',
-        email: '',
-        password: '',
-        pais: 'Selecciona un país',
-        });
     } catch (error) {
-      console.error('Error al enviar datos:', error.message);
+      alert("problema interno del servidor")
     }
+    console.log("valor del formulario"  + JSON.stringify(objectSend));
   }
   return (
-    <View style={styles.container}>
-      <Text style={styles.Tittle}>Registro</Text>
-      <TextInput
-      style={styles.input} 
-         placeholder="Correo Electronico"
-         placeholderTextColor="#546574"
-         value={data.email}
-         onChangeText={(text) => setData({...data, email:text})}
-      />
-      <View style={styles.passwordContainer}>
-       <TextInput
-        style={styles.passwordInput}
-        placeholder=" Contraseña"
-        placeholderTextColor="#546574"
-        secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
-        value={data.password}
-        onChangeText={(text) => setData({ ...data, password: text })}
-      />
-      <TouchableOpacity
-        onPress={() => setShowPassword(!showPassword)} // Cambia la visibilidad de la contraseña al tocar el botón
-        style={styles.showPasswordButton}
-      >
-        <Icon
-        name={showPassword ? 'eye' : 'eye-slash'}
-        size={20}
-        color="#546574"
+    
+      <View style={styles.container}>
+        {/* IMPUT DE CORREO ELECTRONICO */}
+        <Text style={styles.Tittle}>Registro</Text>
+        <TextInput
+          style={styles.input} 
+          placeholder="Correo Electrónico"
+          placeholderTextColor="#546574"
+          keyboardType='email-address'
+          value={dataForm.email}
+          onChangeText={text => getValues('email', text)}
         />
-      </TouchableOpacity>
-      </View>
-      <TextInput
-      style={styles.input} 
-         placeholder="Nombre del Negocio"
-         placeholderTextColor="#546574"
-         value={data.nombre}
-         onChangeText={(text) => setData({...data, nombre:text})}
-      />
-      
-      <Text>Selecciona un país:</Text>
-      <Picker
-        selectedValue={data.pais}
-        onValueChange={(itemValue, itemIndex) => setData({ ...data, pais: itemValue })}
-      >
-        {countries.map((country, index) => (
-          <Picker.Item key={index} label={country} value={country} />
-        ))}
-      </Picker>
 
-      <Text>País seleccionado: {data.pais}</Text>
-
-      <TouchableOpacity style={styles.buttonRegister} onPress={EnviarDatos}>
-          <Text style={styles.buttonText}>Registrarse</Text>
-      </TouchableOpacity>
-
-      <Modal isVisible={isModalVisible} animationIn="slideInUp" animationOut="slideOutDown">
-        <View style={styles.modalContainer}>
-          <Icon name="check-circle" size={80} color="green" style={styles.icon} />
-          <Text style={styles.modalText}>Registro Exitoso</Text>
-          <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
-            <Text style={styles.modalButtonText}>OK</Text>
-          </TouchableOpacity>
+        {/* INPUT PARA ENTRADA DE PASSWORD */}
+        <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder=" Contraseña"
+          placeholderTextColor="#546574"
+          secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
+          value={dataForm.password}
+          keyboardType=''
+          onChangeText={text => getValues('password', text)}
+        />
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)} // Cambia la visibilidad de la contraseña al tocar el botón
+          style={styles.showPasswordButton}
+        >
+          <Icon
+          name={showPassword ? 'eye' : 'eye-slash'}
+          size={20}
+          color="#546574"
+          />
+        </TouchableOpacity>
         </View>
-      </Modal>
-    </View>
+
+        {/* IMPUT PARA ENTRADA DE NOMBRE DE NEGOCIO */}
+        <TextInput
+        style={styles.input} 
+          placeholder="Nombre del Negocio"
+          placeholderTextColor="#546574"
+          value={dataForm.nombreNegocio}
+          onChangeText={text => getValues('nombre', text)}
+        />
+        
+        {/* INPUT PARA SELECCIONAR PAIS */}
+        <Text>Selecciona un país:</Text>
+        <Picker
+          selectedValue={country}
+          onValueChange={getCountry}
+        >
+          {country.map((country, index) => (
+            <Picker.Item key={index} label={country} value={country} />
+          ))}
+        </Picker>
+
+        <Text>País seleccionado: {countrySelect}</Text>
+
+        {/* BOTON DE ACCION DE REGISTRO */}
+        <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Registrarse</Text>
+        </TouchableOpacity>
+
+        {/* MODAL DE ALERTA EN CASO SE HIZO CORRECTO */}
+        <Modal isVisible={isModalVisible} animationIn="slideInUp" animationOut="slideOutDown">
+          <View style={styles.modalContainer}>
+            <Icon name="check-circle" size={80} color="green" style={styles.icon} />
+            <Text style={styles.modalText}>Registro Exitoso</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      </View>
+    
   )
 }
 
