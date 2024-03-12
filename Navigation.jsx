@@ -13,11 +13,6 @@ import ArticlesForm from './screens/views/ArticlesForm';
 import Icon from "react-native-vector-icons/Entypo";
 import CategoryForm from './screens/views/CategoryForm';
 import { Ionicons, MaterialCommunityIcons,FontAwesome } from '@expo/vector-icons';
-import ForMain from './screens/ForMain';
-import FormSesion from './screens/FormSesion';
-import FormReg from './screens/FormReg';
-import Descuento from './screens/Descuento';
-import FormEnvioCorreo from './screens/FormEnvioCorreo';
 import HomeView from './screens/views/HomeView';
 import LoginForm from "./screens/views/LoginForm"
 import RegisterForm from './screens/views/RegisterForm';
