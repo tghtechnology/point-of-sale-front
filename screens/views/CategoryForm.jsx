@@ -1,26 +1,36 @@
 import React, { useState } from 'react';
-import { View} from 'react-native';
-import useCategory from '../../hooks/useCategory';
+import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
+import useCategory from '../hooks/useCategory';
+import CategoryProvider from '../context/category/CategoryProvider';
+
+
 const INITIAL_STATE = {
   nombre:'',
 }
-
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const {handleCreateCategory} = useCategory();
+
+  const getValues = (name,value) => {
+    setDatos({
+      ...datos,
+      [name]:value
+    })
+  }
 
   const EnviarCat= async() =>{
     try {
       const response = await handleCreateCategory(objectSend);
       if(response){
-        alert("Category creado con exito")
-        setDataForm(INITIAL_STATE);
+        alert("La categoria ha sido creado con exito")
+        setDatos(INITIAL_STATE);
       }else{
         alert("La categoria no se pudo crear");
       }
     } catch (error) {
       alert("problema interno del servidor")
     }
+    console.log("valor del formulario"  + JSON.stringify(objectSend));
 }
   return (
 <View style={styles.container}>
@@ -30,7 +40,7 @@ const CategoryForm = () => {
         placeholder='El nombre de la categoría'
         placeholderTextColor="#546574"
         value={datos.nombre}
-        onChangeText={(text) => setDatos({...datos, nombre:text})}   
+        onChangeText={text => getValues('nombre', text)}   
       />
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={EnviarCat} style={styles.buttonContainer}>
@@ -41,7 +51,7 @@ const CategoryForm = () => {
         <Text style={styles.buttonText}>ASIGNAR ARTÍCULOS</Text>
       </TouchableOpacity>
       <View style={{ height: 30 }} />
-      <TouchableOpacity onPress={EnviarCat} style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.buttonContainer}>
         <Text style={styles.buttonText}>CREAR ARTÍCULO</Text>
       </TouchableOpacity>
       </View>
