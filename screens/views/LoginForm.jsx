@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
 import useAuth from '../hooks/useAuth';
-import AuthProvider from '../context/auth/AuthProvider';
 // import CustomAlert from '../../Alertas/CustomAlert';
 
 
@@ -96,7 +95,7 @@ const LoginForm = () => {
       const response = await handleCreateUser(objectSend);
       if(response){
         alert("Usuario creado con exito")
-        setValues(INITIAL_STATE);
+        setDataForm(INITIAL_STATE);
       }else{
         alert("El usuarios no se pudo crear");
       }

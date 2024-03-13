@@ -8,7 +8,8 @@ const AuthProvider = ({children}) => {
     const loginAccess = async (user) => {
         const { status, data } = await createToken(user);
         if (status === 200) {
-          sessionStorage.setItem("token", data.token);
+          await SecureStorage.setItemAsync('token',data.token);
+          //const token = await SecureStore.getItemAsync('token');
           setIsAuth(true);
         
           alert("Autenticación exitosa");
@@ -23,6 +24,7 @@ const AuthProvider = ({children}) => {
     <AuthContext.Provider value={{
         isAuth,
         loginAccess,
+        hangleUserSecion,
     }}>
         {Children}
     </AuthContext.Provider>
