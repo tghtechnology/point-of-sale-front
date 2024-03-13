@@ -37,7 +37,7 @@ const LoginForm = () => {
   //     return;
   //   }
   //   //aqui termina
-
+  
   //   // Verifica si el correo electrónico es válido
   //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   //   if (!emailRegex.test(email)) {
