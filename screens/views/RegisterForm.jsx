@@ -1,11 +1,12 @@
-import { useState,useEffect  } from 'react'
+import { useState,useEffect   } from 'react'
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
-import { obtenerPais } from '../../api';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 import useUser from '../hooks/useUser';
+import useCountry from '../hooks/useCountry';
 import UsuarioProvider from '../context/usuarios/UsuarioProvider';
+import CountryProvider from '../context/country/CountryProvider';
 
 
 const INITIAL_STATE = {
@@ -17,32 +18,20 @@ const INITIAL_STATE = {
 const RegisterForm = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
-  const [ country, setCountry] = useState([]);
-  const [ countrySelect, setCountrySelect] = useState('')
+  const [countrySelect, setCountrySelect] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const {handleCreateUser} = useUser();
+  const { countries,fetchCountries } = useCountry();
   
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
+  
+  //para los paises
   useEffect(() => {
-    const loadCountries = async () => {
-      try {
-        const countriesData = await obtenerPais();
-        setCountry(countriesData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    loadCountries();
+    fetchCountries(); // Llama a fetchCountries cuando el componente se monta
   }, []);
 
-  // Obtener valor de lo países
-  const getCountry = (itemValue, itemIndex) => {
-    setCountrySelect(itemValue)
-  };
 
   const getValues = (name,value) => {
     setDataForm({
@@ -57,14 +46,13 @@ const RegisterForm = () => {
       ...dataForm,
       pais:countrySelect
     }
-    if(Object.values(dataForm).includes("")){
-      alert("Complete todos los campos")
-    }
+    
     try {
       const response = await handleCreateUser(objectSend);
       if(response){
         alert("Usuario creado con exito")
         setDataForm(INITIAL_STATE);
+        setCountrySelect('');
       }else{
         alert("El usuarios no se pudo crear");
       }
@@ -121,16 +109,16 @@ const RegisterForm = () => {
         
         {/* INPUT PARA SELECCIONAR PAIS */}
         <Text>Selecciona un país:</Text>
+        {console.log("countries:", countries)}
         <Picker
-          selectedValue={country}
-          onValueChange={getCountry}
-        >
-          {country.map((country, index) => (
-            <Picker.Item key={index} label={country} value={country} />
-          ))}
-        </Picker>
-
-        <Text>País seleccionado: {countrySelect}</Text>
+  selectedValue={countrySelect}
+  onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
+>
+  {countries && countries.map((country, index) => (
+    <Picker.Item key={index} label={country} value={country} />
+  ))}
+</Picker>
+      <Text>País seleccionado: {countrySelect}</Text>
 
         {/* BOTON DE ACCION DE REGISTRO */}
         <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>

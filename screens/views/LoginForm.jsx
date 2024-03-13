@@ -3,6 +3,8 @@ import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
+import useAuth from '../hooks/useAuth';
+import AuthProvider from '../context/auth/AuthProvider';
 // import CustomAlert from '../../Alertas/CustomAlert';
 
 
@@ -83,18 +85,18 @@ const LoginForm = () => {
 
   const handleSend  = async () => {
     const objectSend = {
-      ...data,
-      email:data,
-      password:data,
+      ...value,
+      email:value,
+      password:value,
     }
-    if(Object.values(dataForm).includes("")){
+    if(Object.values(value).includes("")){
       alert("Complete todos los campos")
     }
     try {
       const response = await handleCreateUser(objectSend);
       if(response){
         alert("Usuario creado con exito")
-        setDataForm(INITIAL_STATE);
+        setValues(INITIAL_STATE);
       }else{
         alert("El usuarios no se pudo crear");
       }
