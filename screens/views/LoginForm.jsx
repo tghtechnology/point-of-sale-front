@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
+import {useAuth} from '../hooks/useAuth';
 // import CustomAlert from '../../Alertas/CustomAlert';
 
 
@@ -20,7 +21,7 @@ const LoginForm = () => {
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const [inconAlertVisible, setConAlertVisible] = useState(false);
   const [emailAlertVisible, setEmailAlertVisible] = useState(false);
-  const {} = useAuth
+  //const {hangleUserSecion, loginAccess} = useAuth();
   //Logica de Iniciar Secion
 
   const getValuesLogin = (name, value) => {
@@ -30,46 +31,30 @@ const LoginForm = () => {
     })
   }
 
-  const handleSignIn = () => {
+  const handleSignIn = async() => {
+    const objectSend = {
+        ...value,
+      }
 
-  //   // Verifica si los campos de entrada están vacíos
-  //   if (!email.trim() || !password.trim()) {
-  //     setConAlertVisible(true)
-  //     return;
-  //   }
-  //   //aqui termina
+      if(Object.values(value).includes("")){
+        alert("Complete todos los campos")
+        return;
+      }
 
-  //   // Verifica si el correo electrónico es válido
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!emailRegex.test(email)) {
-  //     setEmailAlertVisible(true)
-  //     return;
-  //   }
-  //   //Aqui Termina
-
-    // fetch('http://192.168.18.27:3000/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(userData),
-    // })
-    //   .then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Invalid credentials');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     setSuccessAlertVisible(true);
-    //     navigation.navigate('Home');
-    //   })
-    //   .catch(error => {
-    //     setErrorAlertVisible(true); // Muestra la alerta de error
-    //   });
-
-    navigation.navigate('Home')
-  };
+      try {
+        const response = await hangleUserSecion(objectSend);
+        if(response.status == 200){
+          alert("Secion Iniada")
+          await loginAccess(objectSend)
+          setValues(INITIAL_STATE);
+        }else{
+          alert("Secion no iniciada");
+        }
+      } catch (error) {
+        alert("problema interno del servidor")
+      }
+      console.log("valor del formulario"  + JSON.stringify(objectSend));
+    };
   //Aqui Termina
 
   const handleIniciarPress = () => {
@@ -125,7 +110,7 @@ const LoginForm = () => {
       />
 
       {/* BOTÓN DE INICIO DE SESIÓN */}
-      <TouchableOpacity  onPress={handleSend} style={styles.button}>
+      <TouchableOpacity  onPress={handleSignIn} style={styles.button}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 
