@@ -18,7 +18,7 @@ import LoginForm from "./screens/views/LoginForm"
 import RegisterForm from './screens/views/RegisterForm';
 import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
 import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
-import Descuento from './screens/Descuento';
+import DiscountForm from './screens/views/DiscountForm';
 import FormRegisEmpleado from './screens/Empleado/FormRegisEmpleado';
 
 
@@ -122,7 +122,7 @@ return(
         },
       }}
     >
-    <Stack.Screen name="Descuento" component={Descuento} options={{ headerLeft: () => {
+    <Stack.Screen name="Descuento" component={DiscountForm} options={{ headerLeft: () => {
         return (
             <Icon
               name="menu"
@@ -145,7 +145,7 @@ const DrawerNav =()=> {
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Descuento" component={Descuento}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Descuento" component={DiscountForm}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Empleado" component={FormRegisEmpleado}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );

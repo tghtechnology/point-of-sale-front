@@ -25,10 +25,10 @@ const LoginForm = () => {
   //Logica de Iniciar Secion
 
   const getValuesLogin = (name, value) => {
-    setValues({
-      ...value,
-      [name]:value
-    })
+    setValues(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
   }
 
   const handleSignIn = () => {
@@ -74,7 +74,7 @@ const LoginForm = () => {
   //Aqui Termina
 
   const handleIniciarPress = () => {
-    navigation.navigate('Envio');
+    navigation.navigate('Home');
   };
 
   // const handleRecibosPress = () => {
@@ -126,7 +126,7 @@ const LoginForm = () => {
       />
 
       {/* BOTÓN DE INICIO DE SESIÓN */}
-      <TouchableOpacity  onPress={handleSend} style={styles.button}>
+      <TouchableOpacity  onPress={handleIniciarPress} style={styles.button}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 

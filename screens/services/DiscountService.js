@@ -1,9 +1,8 @@
 import apiClient from "../apiss/AxiosConfig";
 
-const createCategory = async (newCategory) => {
+const createDiscount = async (newDiscount) => {
     try {
-        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory);
-        
+        const {data, status} = await apiClient.post(`/descuento`, newDiscount);
         return {
             data,
             status
@@ -14,5 +13,5 @@ const createCategory = async (newCategory) => {
 }
 
 export {
-    createCategory
+    createDiscount
 }
