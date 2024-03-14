@@ -47,6 +47,7 @@ const RegisterForm = () => {
       pais:countrySelect
     }
     
+    //control de errores para el crear un usuario
     try {
       const response = await handleCreateUser(objectSend);
       if(response){
