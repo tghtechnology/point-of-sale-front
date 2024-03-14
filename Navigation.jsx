@@ -104,7 +104,7 @@ function ArticulosScreen() {
             </View>
           ),
         }}></Stack.Screen>
-      <Stack.Screen name="Descuento" component={Descuento}  ></Stack.Screen>
+      <Stack.Screen name="Descuento" component={DiscountForm}  ></Stack.Screen>
     </Stack.Navigator>
   );
 };
@@ -147,7 +147,6 @@ const DrawerNav =()=> {
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Descuento" component={DiscountForm}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Empleado" component={FormRegisEmpleado}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );
