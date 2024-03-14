@@ -5,6 +5,7 @@ import CategoryProvider from '../context/category/CategoryProvider';
 
 const INITIAL_STATE = {
   nombre:'',
+  color:'',
 }
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
@@ -16,9 +17,9 @@ const CategoryForm = () => {
       [name]:value
     })
   }
-  const EnviarCat= async() =>{
+  const SubmitCategory= async() =>{
     try {
-      const response = await handleCreateCategory(objectSend);
+      const response = await handleCreateCategory(datos);
       if(response){
         alert("La categoria ha sido creado con exito")
         setDatos(INITIAL_STATE);
@@ -28,7 +29,7 @@ const CategoryForm = () => {
     } catch (error) {
       alert("problema interno del servidor")
     }
-    console.log("valor del formulario"  + JSON.stringify(objectSend));
+    console.log("valor del formulario"  + JSON.stringify(datos));
 }
   return (
 <View style={styles.container}>
@@ -38,10 +39,18 @@ const CategoryForm = () => {
         placeholder='El nombre de la categoría'
         placeholderTextColor="#546574"
         value={datos.nombre}
-        onChangeText={text => getValues('nombre', text)}   
+        onChangeText={(text) => getValues('nombre', text)}  
+      />
+      {/* Input del color de la categoría */}
+      <TextInput
+        style={styles.input}
+        placeholder='Color de la categoría'
+        placeholderTextColor="#546574"
+        value={datos.color}
+        onChangeText={(text) => getValues('color', text)}
       />
       <View style={{ height: 20 }} />
-      <TouchableOpacity onPress={EnviarCat} style={styles.buttonContainer}>
+      <TouchableOpacity onPress={SubmitCategory} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>CREAR CATEGORÍA</Text>
       </TouchableOpacity>
       <View style={{ height: 20 }} />
