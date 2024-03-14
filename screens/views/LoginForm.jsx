@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
+import useAuth from '../hooks/useAuth';
 // import CustomAlert from '../../Alertas/CustomAlert';
 
 
@@ -20,6 +21,7 @@ const LoginForm = () => {
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const [inconAlertVisible, setConAlertVisible] = useState(false);
   const [emailAlertVisible, setEmailAlertVisible] = useState(false);
+  const {} = useAuth
   //Logica de Iniciar Secion
 
   const getValuesLogin = (name, value) => {
@@ -46,10 +48,6 @@ const LoginForm = () => {
   //   }
   //   //Aqui Termina
 
-    const userData = {
-      email: email,
-      password: password,
-    };
     // fetch('http://192.168.18.27:3000/login', {
     //   method: 'POST',
     //   headers: {
@@ -84,6 +82,28 @@ const LoginForm = () => {
   //   navigation.navigate('FormRecibos');
   // };
 
+  const handleSend  = async () => {
+    const objectSend = {
+      ...value,
+      email:value,
+      password:value,
+    }
+    if(Object.values(value).includes("")){
+      alert("Complete todos los campos")
+    }
+    try {
+      const response = await handleCreateUser(objectSend);
+      if(response){
+        alert("Usuario creado con exito")
+        setDataForm(INITIAL_STATE);
+      }else{
+        alert("El usuarios no se pudo crear");
+      }
+    } catch (error) {
+      alert("problema interno del servidor")
+    }
+    console.log("valor del formulario"  + JSON.stringify(objectSend));
+  }
   return (
     <View style={styles.container}>
       {/* INPUT DE USUARIO */}
@@ -106,7 +126,7 @@ const LoginForm = () => {
       />
 
       {/* BOTÓN DE INICIO DE SESIÓN */}
-      <TouchableOpacity  onPress={handleSignIn} style={styles.button}>
+      <TouchableOpacity  onPress={handleSend} style={styles.button}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 

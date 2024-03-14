@@ -1,5 +1,6 @@
 import { createCategory } from "../../services/CategoryService";
 import CategoryContext from "./CategoryContext";
+
 const CategoryProvider = ({children}) => {
     const handleCreateCategory = async (newCategory) => {
         const { status } = await createCategory(newCategory);
