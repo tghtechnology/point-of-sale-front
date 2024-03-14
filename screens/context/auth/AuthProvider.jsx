@@ -1,5 +1,4 @@
 import React,{useState} from "react";
-import { Children } from "react/cjs/react.production.min"
 import AuthContext from "./AuthContext"
 import { createToken } from "../../services/authService";
 const AuthProvider = ({children}) => {
@@ -25,9 +24,8 @@ const AuthProvider = ({children}) => {
     <AuthContext.Provider value={{
         isAuth,
         loginAccess,
-        hangleUserSecion,
     }}>
-        {Children}
+        {children}
     </AuthContext.Provider>
   )
 }

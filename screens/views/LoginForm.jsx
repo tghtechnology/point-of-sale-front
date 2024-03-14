@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 // import CustomAlert from '../../Alertas/CustomAlert';
 
 
@@ -21,7 +21,7 @@ const LoginForm = () => {
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const [inconAlertVisible, setConAlertVisible] = useState(false);
   const [emailAlertVisible, setEmailAlertVisible] = useState(false);
-  //const {hangleUserSecion, loginAccess} = useAuth();
+  const {loginAccess} = useAuth();
   //Logica de Iniciar Secion
 
   const getValuesLogin = (name, value) => {
@@ -35,14 +35,13 @@ const LoginForm = () => {
     const objectSend = {
       ...value,
     }
-
     if (Object.values(value).includes("")) {
       alert("Complete todos los campos")
       return;
     }
-
+    console.log(objectSend)
     try {
-      const response = await hangleUserSecion(objectSend);
+      const response = await loginAccess(objectSend);
       if (response.status == 200) {
         alert("Secion Iniada")
         await loginAccess(objectSend)
@@ -61,28 +60,6 @@ const LoginForm = () => {
     navigation.navigate('Envio');
   };
 
-  const handleSend = async () => {
-    const objectSend = {
-      ...value,
-      email: value,
-      password: value,
-    }
-    if (Object.values(value).includes("")) {
-      alert("Complete todos los campos")
-    }
-    try {
-      const response = await handleCreateUser(objectSend);
-      if (response) {
-        alert("Usuario creado con exito")
-        setDataForm(INITIAL_STATE);
-      } else {
-        alert("El usuarios no se pudo crear");
-      }
-    } catch (error) {
-      alert("problema interno del servidor")
-    }
-    console.log("valor del formulario" + JSON.stringify(objectSend));
-  }
   return (
     <View style={styles.container}>
       {/* INPUT DE USUARIO */}
@@ -105,7 +82,7 @@ const LoginForm = () => {
       />
 
       {/* BOTÓN DE INICIO DE SESIÓN */}
-      <TouchableOpacity onPress={handleSend} style={styles.button}>
+      <TouchableOpacity onPress={handleSignIn} style={styles.button}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 
