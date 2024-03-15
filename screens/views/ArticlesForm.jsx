@@ -11,6 +11,7 @@ export default function ArticlesForm() {
 
   return (
     <View style={styles.container}>
+      {/* INPUT DE NOMBRE */}
       <TextInput
         style={styles.input}
         placeholder='Nombre'
