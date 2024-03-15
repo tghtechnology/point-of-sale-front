@@ -19,7 +19,7 @@ import RegisterForm from './screens/views/RegisterForm';
 import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
 import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
 import DiscountForm from './screens/views/DiscountForm';
-import FormRegisEmpleado from './screens/Empleado/FormRegisEmpleado';
+import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
 
 
 function StackNavigation() {
@@ -89,21 +89,9 @@ function ArticulosScreen() {
       </>
     ),}}
       />
-      <Stack.Screen name="Crear Articulo" component={ArticlesForm}  options={{
-          headerRight: () => (
-            <View style={{ marginRight: 10 }}>
-              <Text style={{ color: 'white', fontSize: 16 }}>Guardar</Text>
-            </View>
-          ),
-        }}></Stack.Screen>
+      <Stack.Screen name="Crear Articulo" component={ArticlesForm}></Stack.Screen>
       <Stack.Screen name="Categorias" component={PlusCategory} options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
-      <Stack.Screen name="Crear Categoria" component={CategoryForm}  options={{
-          headerRight: () => (
-            <View style={{ marginRight: 10 }}>
-              <Text style={{ color: 'white', fontSize: 16 }}>Guardar</Text>
-            </View>
-          ),
-        }}></Stack.Screen>
+      <Stack.Screen name="Crear Categoria" component={CategoryForm} ></Stack.Screen>
       <Stack.Screen name="Descuento" component={DiscountForm}  ></Stack.Screen>
     </Stack.Navigator>
   );

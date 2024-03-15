@@ -1,22 +1,62 @@
-import { View, Text, TextInput, StyleSheet, Switch } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { RadioButton } from 'react-native-paper'; 
-import React, { useState } from 'react';
+import {View,Text,TextInput,StyleSheet,TouchableOpacity} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { RadioButton } from "react-native-paper";
+import React, { useState } from "react";
+import useArticle from "../hooks/useArticle";
 
+const INITIAL_STATE = {
+  nombre: "",
+  tipo_venta: "",
+  precio: "",
+  coste: "",
+  ref: "",
+  representacion: "",
+};
 export default function ArticlesForm() {
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedVendidoPor, setSelectedVendidoPor] = useState('unidad');
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [datos, setDatos] = useState(INITIAL_STATE);
+  const { handleCreateArticle } = useArticle();
+
+  const getValues = (name, value) => {
+    setDatos({
+      ...datos,
+      [name]: value,
+    });
+  };
+
+  const handleTipoVentaChange = (value) => {
+    setDatos({
+      ...datos,
+      tipo_venta: value,
+    });
+  };
+
+  const SubmitArticle = async () => {
+    try {
+      const response = await handleCreateArticle(datos);
+      if (response) {
+        alert("El articulo ha sido creado con exito");
+        setDatos(INITIAL_STATE);
+      } else {
+        alert("El articulo no se pudo crear");
+      }
+    } catch (error) {
+      alert("problema interno del servidor");
+    }
+    console.log("valor del formulario" + JSON.stringify(datos));
+  };
 
   return (
     <View style={styles.container}>
-      {/* INPUT DE NOMBRE */}
+      {/* Input nombre */}
       <TextInput
         style={styles.input}
-        placeholder='Nombre'
+        placeholder="Nombre"
         placeholderTextColor="#546574"
+        value={datos.nombre}
+        onChangeText={(text) => getValues("nombre", text)}
       />
+      {/* Opcion de categoria */}
       <View>
         <Text style={styles.label}>Categoría</Text>
       </View>
@@ -30,82 +70,74 @@ export default function ArticlesForm() {
           <Picker.Item label="Crear Categoria" value="Categoria 2" />
         </Picker>
       </View>
+      {/* Opcion vendido*/}
       <View>
-        <Text >Vendido por</Text>
+        <Text>Vendido por</Text>
       </View>
       <RadioButton.Group
-        onValueChange={(value) => setSelectedVendidoPor(value)}
-        value={selectedVendidoPor}
+        onValueChange={(value) => handleTipoVentaChange(value)}
+        value={datos.tipo_venta}
       >
         <View style={styles.radioContainer}>
-          <RadioButton value="unidad" />
+          <RadioButton value="Unidad" />
           <Text>Unidad</Text>
         </View>
         <View style={styles.radioContainer}>
-          <RadioButton value="pesos" />
+          <RadioButton value="Pesos" />
           <Text>Pesos</Text>
         </View>
       </RadioButton.Group>
+      {/* Input Precio */}
       <TextInput
         style={styles.input}
-        placeholder='Precio'
+        placeholder="Precio"
         placeholderTextColor="#546574"
+        value={datos.precio}
+        onChangeText={(text) => getValues("precio", text)}
       />
       <View>
-        <Text style={styles.info}>Deje el campo en blanco para indicar el precio durante la venta </Text>
+        <Text style={styles.info}>
+          Deje el campo en blanco para indicar el precio durante la venta{" "}
+        </Text>
       </View>
+      {/* Input Coste*/}
       <View>
         <Text style={styles.label}>Coste</Text>
       </View>
       <TextInput
         style={styles.input}
-        placeholder='S/0.00'
+        placeholder="S/0.00"
         placeholderTextColor="black"
+        value={datos.coste}
+        onChangeText={(text) => getValues("coste", text)}
       />
+      {/* Input REF*/}
       <View>
         <Text style={styles.label}>REF</Text>
       </View>
       <TextInput
         style={styles.input}
-        placeholder='10000'
+        placeholder="10000"
         placeholderTextColor="black"
+        value={datos.ref}
+        onChangeText={(text) => getValues("ref", text)}
       />
+      {/* Input representacion*/}
+      <View>
+        <Text style={styles.label}>Representacion</Text>
+      </View>
       <TextInput
         style={styles.input}
-        placeholder='Codigo de barras'
-        placeholderTextColor="#546574"
+        placeholder="img"
+        placeholderTextColor="black"
+        value={datos.representacion}
+        onChangeText={(text) => getValues("representacion", text)}
       />
-      <View>
-        <Text style={styles.inv} >Inventario</Text>
-      </View>
-      <View style={styles.inventarioContainer}>
-      <Text style={styles.text} >Seguir el Inventario</Text>
-      <View >
-          <Switch
-            trackColor={{ false: "#767577", true: "red" }}
-            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          />
-        </View>
-      {isEnabled && <TextInput style={styles.input} placeholder='0' placeholderTextColor="black" />}
+      <View style={{ height: 20 }} />
+      <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>CREAR ARTICULO</Text>
+      </TouchableOpacity>
     </View>
-    <View>
-        <Text style={styles.inv} >Impuestos</Text>
-      </View>
-      <View >
-      <Text  >Ig,0.18%</Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "red" }}
-            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          />
-        </View>
-    </View>
-    
   );
 }
 
@@ -118,49 +150,43 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: 'red',
+    borderBottomColor: "red",
     height: 40,
-    color: '#546574',
+    color: "#546574",
     padding: 10,
     borderRadius: 5,
   },
   info: {
-    color: '#546574'
+    color: "#546574",
   },
   pickeContainer: {
     marginBottom: 25,
     borderBottomWidth: 1,
-    borderBottomColor: 'red',
+    borderBottomColor: "red",
     height: 40,
-    color: '#546574',
+    color: "#546574",
     borderRadius: 5,
   },
 
   label: {
     marginTop: 4,
-    color: '#546574',
+    color: "#546574",
   },
   radioContainer: {
     marginTop: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    
+    flexDirection: "row",
+    alignItems: "center",
   },
-  inv: {
-    marginTop: 10,
-    color: 'red',
+  buttonContainer: {
+    overflow: "hidden",
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "red",
+    padding: 10,
   },
-  text: {
-    color: 'black',
+  buttonText: {
+    color: "red",
+    textAlign: "center",
+    fontSize: 15,
   },
-  inventarioContainer: {
-    marginTop: 10,
-    
-  },
-
-  switchContainer: {
-    marginLeft: 10, 
-  },
-
-  
 });

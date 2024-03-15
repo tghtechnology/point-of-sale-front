@@ -36,7 +36,7 @@ const CategoryForm = () => {
   {/* IMPUT DEL NOMBRE DE LA CATEGORIA */}
       <TextInput
         style={styles.input}
-        placeholder='El nombre de la categoría'
+        placeholder='Nombre'
         placeholderTextColor="#546574"
         value={datos.nombre}
         onChangeText={(text) => getValues('nombre', text)}  
@@ -44,7 +44,7 @@ const CategoryForm = () => {
       {/* Input del color de la categoría */}
       <TextInput
         style={styles.input}
-        placeholder='Color de la categoría'
+        placeholder='Color'
         placeholderTextColor="#546574"
         value={datos.color}
         onChangeText={(text) => getValues('color', text)}
@@ -56,10 +56,6 @@ const CategoryForm = () => {
       <View style={{ height: 20 }} />
       <TouchableOpacity style={styles.buttonContainer}>
         <Text style={styles.buttonText}>ASIGNAR ARTÍCULOS</Text>
-      </TouchableOpacity>
-      <View style={{ height: 30 }} />
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>CREAR ARTÍCULO</Text>
       </TouchableOpacity>
       </View>
     
