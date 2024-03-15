@@ -6,12 +6,14 @@ import UsuarioProvider from './screens/context/usuarios/UsuarioProvider.jsx';
 import CategoryProvider from './screens/context/category/CategoryProvider.jsx';
 import CountryProvider from './screens/context/country/CountryProvider.jsx';
 import AuthProvider from './screens/context/auth/AuthProvider.jsx';
+import EmailProvider from './screens/context/email/EmailProvider.jsx';
 
 
 
 export default function App() {
   return (
-  <AuthProvider>
+  <EmailProvider>
+    <AuthProvider>
     <UsuarioProvider>
       <CountryProvider>
       <CategoryProvider>
@@ -20,5 +22,6 @@ export default function App() {
       </CountryProvider>
     </UsuarioProvider>
   </AuthProvider>
+  </EmailProvider>
   );
 } 
