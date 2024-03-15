@@ -1,21 +1,31 @@
-import {sendemail} from "../../services/EmailService"
+import { sendemail, sendnewpassword } from "../../services/EmailService"
 import EmailContext from "./EmailContext";
 
-const EmailProvider = ({children}) => {
-    const handleSendEmail = async (email) => {
-        const { status } = await sendemail(email);
-        if(status === 200 || status === 201){
-          return true;
-        }else {
-          return false;
-        }
+const EmailProvider = ({ children }) => {
+  const handleSendEmail = async (email) => {
+    const { status } = await sendemail(email);
+    if (status === 200 || status === 201) {
+      return true;
+    } else {
+      return false;
     }
+  }
+
+  const handleSendNewPassword = async (newPassword) => {
+    const { status } = await sendnewpassword(newPassword);
+    if (status === 200 || status === 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 
   return (
     <EmailContext.Provider value={{
-      handleSendEmail
-    }}> 
+      handleSendEmail,
+      handleSendNewPassword
+    }}>
       {children}
     </EmailContext.Provider>
   )

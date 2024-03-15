@@ -11,6 +11,20 @@ const sendemail = async (credentialsrecovery)  => {
         console.log(error)
     }
 }
+
+const sendnewpassword = async (credentialsnewpassword)  => {
+    try {
+        const {data, status} = await apiClient.post(`/cambiarPassword`, credentialsnewpassword);
+        return {
+            data,
+            status
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export {
-    sendemail
+    sendemail,
+    sendnewpassword
 }

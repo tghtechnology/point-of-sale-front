@@ -3,54 +3,53 @@ import React from 'react'
 import { TextInput, StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
+//Importaciones 
+import { useState, useEffect } from 'react'
+import useEmail from '../hooks/useEmail';
+import EmailProvider from '../context/email/EmailProvider';
+//
+
+//Valores Iniciales
+const INITIAL_STATE = {
+    newPassword: '',
+}
+//
 
 const ConfirmPasswordForm = () => {
     const navigation = useNavigation();
-    //Alertas
-    const [successAlertVisible, setSuccessAlertVisible] = useState(false);
-    const [campoAlertVisible, setCampoAlertVisible] = useState(false);
-    const [errorAlertVisible, setErrorAlertVisible] = useState(false);
-    //
+    const [dataForm, setDataForm] = useState(INITIAL_STATE);
+    const { handleSendNewPassword } = useEmail();
+    
     //Logica para Cambiar la Contraseña
-    //const [pin, setPin] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const handleChangePassword = (newPassword) => {
-        // Asegúrate de que el PIN ha sido confirmado antes de cambiar la contraseña
-        const userData = {
-            newPassword: newPassword,
-        };
-
-        fetch('http://192.168.18.8:3000/cambiarPassword', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
+    const getValues = (name,value) => {
+        setDataForm({
+          ...dataForm,
+          [name]:value
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al cambiar la contraseña');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setSuccessAlertVisible(true)
-                navigation.navigate('Iniciar Sesion')
-                // Maneja la respuesta exitosa del servidor, por ejemplo, navega a otra pantalla
-            })
-            .catch(error => {
-                setErrorAlertVisible(true)
-                // Maneja los errores, por ejemplo, muestra un mensaje de error al usuario
-            });
-    };
-    //Aqui Termina
+      }
 
-    const handleContraPress = () => {
-        console.log('Iniciar presionado');
-        navigation.navigate('FormSesion');
-    };
+      const handleSendPassword = async () => {
+        const objectSend = {
+          ...dataForm,
+        }
+    
+        //control de errores para el crear un usuario
+        try {
+          const response = await handleSendNewPassword(objectSend);
+          if(response){
+            alert("Contraseña Cambiada Correctamente")
+            setDataForm(INITIAL_STATE);
+          }else{
+            alert("No se cambio Correctamente la Contraseña");
+          }
+        } catch (error) {
+          alert("problema interno del servidor")
+        }
+        console.log("valor del formulario"  + JSON.stringify(objectSend));
+      };
+      //Aqui Termina
+
 
     return (
         <View style={styles.container}>
@@ -58,43 +57,11 @@ const ConfirmPasswordForm = () => {
                 style={styles.input}
                 placeholder="Ingresar Nueva Contraseña"
                 placeholderTextColor="#546574"
-                onChangeText={(text) => setNewPassword(text)}
+                onChangeText={text => getValues('newPassword', text)}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Confirmar Contraseña"
-                placeholderTextColor="#546574"
-                secureTextEntry={true}
-                onChangeText={(text) => setNewPassword(text)}
-            />
-            <TouchableOpacity style={styles.button} onPress={() => handleChangePassword(newPassword)}>
+            <TouchableOpacity style={styles.button} onPress={handleSendPassword}>
                 <Text style={styles.buttonText}>Cambiar Contraseña</Text>
             </TouchableOpacity>
-
-            <CustomAlert
-                isVisible={campoAlertVisible}
-                onClose={() => setCampoAlertVisible(false)}
-                title="Campos Incompletos"
-                message="Falta ingresar la Contraseña"
-                buttonColor="orange"
-                iconName="question" // Agrega el nombre del icono aquí
-            />
-            <CustomAlert
-                isVisible={errorAlertVisible}
-                onClose={() => setErrorAlertVisible(false)}
-                title="Error"
-                message="Proceso no Exitoso, inténtalo de nuevo."
-                buttonColor="red"
-                iconName="times-circle"
-            />
-            <CustomAlert
-                isVisible={successAlertVisible}
-                onClose={() => setSuccessAlertVisible(false)}
-                title="Exitoso"
-                message="Has cambiado la contraseña Correctamente"
-                buttonColor="green"
-                iconName="check"
-            />
         </View>
     )
 }
