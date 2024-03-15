@@ -1,13 +1,11 @@
 import React, { useState,useEffect  } from 'react'
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
-import { registroUsuario } from '../api';
-import { obtenerPais } from '../api';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 
 
-const FormReg = () => {
+const FormRegisEmpleado = () => {
   const [data, setData] = useState({
     id:'',
     nombre:'',
@@ -71,69 +69,47 @@ const FormReg = () => {
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.Tittle}>Registro</Text>
-      <TextInput
-      style={styles.input} 
-         placeholder="Correo Electronico"
-         placeholderTextColor="#546574"
-         value={data.email}
-         onChangeText={(text) => setData({...data, email:text})}
-      />
-      <View style={styles.passwordContainer}>
-       <TextInput
-        style={styles.passwordInput}
-        placeholder=" Contraseña"
-        placeholderTextColor="#546574"
-        secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
-        value={data.password}
-        onChangeText={(text) => setData({ ...data, password: text })}
-      />
-      <TouchableOpacity
-        onPress={() => setShowPassword(!showPassword)} // Cambia la visibilidad de la contraseña al tocar el botón
-        style={styles.showPasswordButton}
-      >
-        <Icon
-        name={showPassword ? 'eye' : 'eye-slash'}
-        size={20}
-        color="#546574"
+        <Text style={styles.Tittle}>Registro Empleado</Text>
+        <Icon name="user-circle" size={100} color="#900" style={styles.icon}/>
+        <TextInput
+            style={styles.input}
+            placeholder="Nombre"
+            placeholderTextColor="#546574"
+        //value={data.email}
+        //onChangeText={(text) => setData({...data, email:text})}
         />
-      </TouchableOpacity>
-      </View>
-      <TextInput
-      style={styles.input} 
-         placeholder="Nombre del Negocio"
-         placeholderTextColor="#546574"
-         value={data.nombre}
-         onChangeText={(text) => setData({...data, nombre:text})}
-      />
-      
-      <Text>Selecciona un país:</Text>
-      <Picker
-        selectedValue={data.pais}
-        onValueChange={(itemValue, itemIndex) => setData({ ...data, pais: itemValue })}
-      >
-        {countries.map((country, index) => (
-          <Picker.Item key={index} label={country} value={country} />
-        ))}
-      </Picker>
 
-      <Text>País seleccionado: {data.pais}</Text>
+        <TextInput
+            style={styles.input}
+            placeholder="Correo Electronico"
+            placeholderTextColor="#546574"
+        //secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
+        //value={data.password}
+        //onChangeText={(text) => setData({ ...data, password: text })}
+        />
 
-      <TouchableOpacity style={styles.buttonRegister} onPress={EnviarDatos}>
-          <Text style={styles.buttonText}>Registrarse</Text>
-      </TouchableOpacity>
+        <TextInput
+            style={styles.input}
+            placeholder="Numero de Telefono"
+            placeholderTextColor="#546574"
+        //value={data.nombre}
+        //onChangeText={(text) => setData({...data, nombre:text})
+        />
 
-      <Modal isVisible={isModalVisible} animationIn="slideInUp" animationOut="slideOutDown">
-        <View style={styles.modalContainer}>
-          <Icon name="check-circle" size={80} color="green" style={styles.icon} />
-          <Text style={styles.modalText}>Registro Exitoso</Text>
-          <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
-            <Text style={styles.modalButtonText}>OK</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+        <TextInput
+            style={styles.input}
+            placeholder="Seleccionar Funciones"
+            placeholderTextColor="#546574"
+        //value={data.nombre}
+        //onChangeText={(text) => setData({...data, nombre:text})}
+        />
+
+
+        <TouchableOpacity style={styles.buttonRegister}>
+            <Text style={styles.buttonText}>Registrar</Text>
+        </TouchableOpacity>
     </View>
-  )
+ )
 }
 
 const styles = StyleSheet.create({
@@ -212,6 +188,7 @@ const styles = StyleSheet.create({
     },
     icon: {
       marginBottom: 20,
+      paddingLeft: 120
     },
     modalText: {
       fontSize: 25,
@@ -228,4 +205,4 @@ const styles = StyleSheet.create({
     },
   })
 
-export default FormReg
+export default FormRegisEmpleado

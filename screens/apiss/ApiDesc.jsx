@@ -1,4 +1,4 @@
-const API = 'http://192.168.18.18:3000';
+const API = 'http://192.168.18.8:3000';
 
 export const registroDescuento = async (datosDescuento) => {
     try {
@@ -6,7 +6,7 @@ export const registroDescuento = async (datosDescuento) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Accept': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify(datosDescuento),
       });

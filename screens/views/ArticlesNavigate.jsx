@@ -3,7 +3,7 @@ import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Articulos() {
+export default function ArticlesNavigate() {
   const navigation = useNavigation();
 
   return (
@@ -21,6 +21,13 @@ export default function Articulos() {
       >
         <MaterialCommunityIcons name="content-copy" size={24} color="#708090" />
         <Text style={styles.text}>Categorias</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Descuento")}
+        style={styles.container}
+      >
+        <MaterialCommunityIcons name="tag-outline" size={24} color="#708090" />
+        <Text style={styles.text}>Descuento</Text>
       </TouchableOpacity>
     </View>
   );
