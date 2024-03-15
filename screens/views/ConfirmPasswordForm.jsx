@@ -36,7 +36,7 @@ const ConfirmPasswordForm = () => {
     
         //control de errores para el crear un usuario
         try {
-          const response = await handleSendNewPassword(objectSend);
+          const response = await handleSendNewPassword(objectSend, token);
           if(response){
             alert("Contraseña Cambiada Correctamente")
             setDataForm(INITIAL_STATE);
