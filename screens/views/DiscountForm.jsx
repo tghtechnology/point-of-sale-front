@@ -8,17 +8,20 @@ const INITIAL_STATE = {
     nombre:'',
     tipo_descuento:'',
     valor:'',
+    estado:'',
   }
 
 const DiscountForm = () => {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [descForm, setDescForm]=useState(false);
   const [tipoDescuento, setTipoDescuento] = useState('');
-  const {handleCreateDiscount,discounts, toggleDiscountStatus } = useDiscount();
+  const {handleCreateDiscount,discounts,Cerodiscounts,toggleDiscountStatus } = useDiscount();
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
  
   const handleToggleStatus = async (id, currentStatus) => {
     try {
-      const newStatus = currentStatus === 1 ? 0 : 1;
+      // Invierte el estado actual del descuento
+      const newStatus = !currentStatus;
       await toggleDiscountStatus(id, newStatus);
     } catch (error) {
       setError('Error al actualizar el estado del descuento');
@@ -55,7 +58,14 @@ const DiscountForm = () => {
       alert("problema interno del servidor")
   }
 }
-  
+  const discountForm=()=>{
+    setDescForm(true);
+  } 
+
+ const ClosediscountForm=()=>{
+    setDescForm(false);
+ }
+
   const irAFormulario = () => {
     setMostrarFormulario(true);
   };
@@ -79,12 +89,12 @@ const DiscountForm = () => {
             <Text style={styles.itemText}>{item.nombre}</Text>
             <Text style={styles.itemText}>Tipo: {item.tipo_descuento}</Text>
             <Text style={styles.itemText}>Valor: {item.valor}</Text>
-            <Text>Estado: {discounts.estado === 1 ? 'Activado' : 'Desactivado'}</Text>
+            <Text>Estado: {item.estado === true ? 'Activado' : 'Desactivado'}</Text>
             <Switch
-              value={item.estado === 1}
-              onValueChange={(newValue) => handleToggleStatus(item.id, newValue ? 1 : 0)}
-            />
-          </View>
+            value={item.estado === true}
+            onValueChange={() => handleToggleStatus(item.id, item.estado)}
+        />          
+        </View>
     )}
     keyExtractor={(item, index) => index.toString()}
     contentContainerStyle={{ paddingHorizontal: 16 }}
@@ -96,12 +106,15 @@ const DiscountForm = () => {
         )}
         />
         <View style={styles.bottomSpace} />
-      
       <View style={styles.bottomSpace} />
-
       {/* Botón con ícono para ir al formulario */}
-      <TouchableOpacity style={styles.addButton} onPress={irAFormulario}>
-        <Icon name='plus-circle' size={70} color="green" />
+      <TouchableOpacity style={styles.addDescContainer}>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={discountForm} >
+      <Icon name='your-other-icon' size={70} color="blue" style={styles.otherIcon} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.addButtonContainer} onPress={irAFormulario}>
+        <Icon name='plus-circle' size={70} color="green"  style={styles.plusIcon}/>
       </TouchableOpacity>
 
       
@@ -147,6 +160,41 @@ const DiscountForm = () => {
           </View>
         </View>
       </Modal>
+      {/*modal para descuento en false */}
+      <View style={styles.container}>
+      <Modal visible={descForm} animationType="slide" transparent>
+      <View style={styles.modalContainer}>
+      <View style={styles.modaldesc}>
+      <FlatList
+        data={Cerodiscounts}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>
+            <Text style={styles.itemText}>{item.nombre}</Text>
+            <Text style={styles.itemText}>Tipo: {item.tipo_descuento}</Text>
+            <Text style={styles.itemText}>Valor: {item.valor}</Text>
+            <Text>Estado: {item.estado === false ? 'Desactivado' : 'Activado'}</Text>
+            <Switch
+            value={item.estado === true}
+            onValueChange={() => handleToggleStatus(item.id, item.estado)}
+        />          
+        </View>
+    )}
+    keyExtractor={(item, index) => index.toString()}
+    contentContainerStyle={{ paddingHorizontal: 16 }}
+    ListEmptyComponent={() => (
+    <View style={styles.mensajeContainer}>
+        <Text style={styles.mensaje}>No hay descuento :'v</Text>
+        <Icon name='frown-o' size={70} color="gray" />
+    </View>
+        )}
+        />
+        <TouchableOpacity onPress={ClosediscountForm} style={[styles.boton, styles.cerrarBoton]}>
+              <Text style={styles.textoBoton}>Cerrar</Text>
+        </TouchableOpacity>
+      </View>
+      </View>
+        </Modal>
+    </View>
     </View>
   );
 };
@@ -160,9 +208,19 @@ const styles = StyleSheet.create({
       bottomSpace: {
         flex: 1,
       },
-      addButton: {
-        alignSelf: 'flex-end',
-        marginBottom: 20,
+      addButtonContainer: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      plusIcon: {
+        marginRight: 10,
+      },
+      otherIcon: {
+        marginLeft: 10,
+        top:20,
       },
       modalContainer: {
         flex: 1,
@@ -175,6 +233,13 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         elevation: 5,
+      },
+      modaldesc:{
+        backgroundColor: '#fff',
+        padding: 50,
+        borderRadius: 10,
+        elevation: 5,
+        
       },
       formularioTitle: {
         fontSize: 24,

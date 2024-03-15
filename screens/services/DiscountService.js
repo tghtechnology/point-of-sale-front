@@ -22,16 +22,31 @@ const getDiscounts = async () => {
     }
 };
 
+const getCeroDiscounts = async () => {
+    try {
+        const response = await apiClient.get('/descuentosEliminados');
+        return response.data; // Devuelve los datos de los descuentos
+    } catch (error) {
+        console.log(error);
+        return []; // En caso de error, devuelve un array vacío
+    }
+};
+
 const updateDiscountStatus = async (id, newStatus) => {
     try {
-        const response = await apiClient.put(`/descuento/${id}`, { estado: newStatus });
+        const response = await apiClient.put(`/descuento/${id}/cambiar-estado`, { estado: newStatus });
         console.log('Response from updateDiscountStatus:', response);
-        return response.data;
+        if (response.status === 204) {
+            // Si la respuesta es 204, devolver un objeto vacío para indicar éxito
+            return { success: true };
+        } else {
+            return response.data;
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Error toggling discount status:', error);
         throw new Error('Error al actualizar el estado del descuento');
     }
 }
 export {
-    createDiscount, getDiscounts,updateDiscountStatus
+    createDiscount, getDiscounts,getCeroDiscounts,updateDiscountStatus
 }

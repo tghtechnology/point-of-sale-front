@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import DiscountContext from "./DiscountContext";
-import { createDiscount, getDiscounts, updateDiscountStatus } from "../../services/DiscountService";
+import { createDiscount, getDiscounts,getCeroDiscounts, updateDiscountStatus } from "../../services/DiscountService";
 
 const DiscountProvider = ({ children }) => {
     const [discounts, setDiscounts] = useState([]);
+    const [Cerodiscounts, setCerodiscounts] = useState([]);
 
     const handleCreateDiscount = async (newDiscount) => {
         try {
@@ -38,24 +39,42 @@ const DiscountProvider = ({ children }) => {
         fetchMyDiscounts();
     }, []);
 
+    const fetchCeroDiscounts = async () => {
+        try {
+            const Cerodiscounts = await getCeroDiscounts();
+            console.log("Descuentos obtenidos:", Cerodiscounts);
+            setCerodiscounts(Cerodiscounts);
+        } catch (error) {
+            console.error('Error al obtener los descuentos:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCeroDiscounts();
+    }, []);
+
+
+
     const toggleDiscountStatus = async (id, newStatus) => {
         try {
             const response = await updateDiscountStatus(id, newStatus);
-            if (response && response.status === 'success') {
-                fetchMyDiscounts(); // Actualizar la lista después de cambiar el estado
+            if (response && response.success === true) {
+                // Actualizar la lista después de cambiar el estado
+                fetchMyDiscounts(); 
+                fetchCeroDiscounts();
                 return true;
             } else {
-                console.error('Error toggling discount status:', response.message);
+                console.error('Error toggling discount status:', response.success ? 'Unexpected response' : 'Toggle discount failed');
+                console.log('Full response:', response); // Agregar esta línea para imprimir la respuesta completa
                 return false;
             }
         } catch (error) {
             console.error('Error toggling discount status:', error);
             return false;
         }
-      };
-
+    };
     return (
-        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,toggleDiscountStatus}}>
+        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,Cerodiscounts,toggleDiscountStatus }}>
             {children}
         </DiscountContext.Provider>
     );
