@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, Modal, Text, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, Modal, Text, TextInput, FlatList,Switch } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useDiscount from '../hooks/useDiscount';
 import DiscountProvider from '../context/discount/DiscountProvider';
@@ -13,9 +13,19 @@ const INITIAL_STATE = {
 const DiscountForm = () => {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [tipoDescuento, setTipoDescuento] = useState('');
-  const {handleCreateDiscount} = useDiscount();
+  const {handleCreateDiscount,discounts, toggleDiscountStatus } = useDiscount();
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
-  
+ 
+  const handleToggleStatus = async (id, currentStatus) => {
+    try {
+      const newStatus = currentStatus === 1 ? 0 : 1;
+      await toggleDiscountStatus(id, newStatus);
+    } catch (error) {
+      setError('Error al actualizar el estado del descuento');
+    }
+  };
+
+
   const getValues = (name,value) => {
     setDataForm({
       ...dataForm,
@@ -30,22 +40,21 @@ const DiscountForm = () => {
       tipo_descuento: tipoDescuento === 'percent' ? 'PORCENTAJE' : 'MONTO',
     }
     console.log("Valor de objectSend:", objectSend);
+    console.log("estado:",estado)
     //control de errores para el crear un usuario
     try {
       const response = await handleCreateDiscount(objectSend);
-      console.log("Respuesta del servidor:", response);
-      if(response){
-        alert("Descuento creado con exito")
-        setDataForm(INITIAL_STATE);
-      }else{
-        alert("El descuento no se pudo crear");
+      if (response) {
+          alert("Descuento creado con éxito");
+          setDataForm(INITIAL_STATE);
+      } else {
+          alert("El descuento no se pudo crear");
       }
-    } catch (error) {
-        console.error("Error en la solicitud:", error);
+  } catch (error) {
+      console.error("Error en la solicitud:", error);
       alert("problema interno del servidor")
-    }
-    console.log("valor del formulario"  + JSON.stringify(objectSend));
   }
+}
   
   const irAFormulario = () => {
     setMostrarFormulario(true);
@@ -59,18 +68,35 @@ const DiscountForm = () => {
     // Utiliza una expresión regular para permitir solo números
     const numeroValido = text.replace(/[^0-9.]/g, '');
     setDataForm({ ...dataForm, valor: numeroValido });
-  };
-
+  
+}
   return (
     <View style={styles.container}>
-      {DiscountForm.length === 0 ? (
-        <View style={styles.mensajeContainer}>
-          <Text style={styles.mensaje}>No hay descuento :'v</Text>
-          <Icon name='frown-o' size={70} color="gray" />
-        </View>
-      ) : (
+      <FlatList
+        data={discounts}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>
+            <Text style={styles.itemText}>{item.nombre}</Text>
+            <Text style={styles.itemText}>Tipo: {item.tipo_descuento}</Text>
+            <Text style={styles.itemText}>Valor: {item.valor}</Text>
+            <Text>Estado: {discounts.estado === 1 ? 'Activado' : 'Desactivado'}</Text>
+            <Switch
+              value={item.estado === 1}
+              onValueChange={(newValue) => handleToggleStatus(item.id, newValue ? 1 : 0)}
+            />
+          </View>
+    )}
+    keyExtractor={(item, index) => index.toString()}
+    contentContainerStyle={{ paddingHorizontal: 16 }}
+    ListEmptyComponent={() => (
+    <View style={styles.mensajeContainer}>
+        <Text style={styles.mensaje}>No hay descuento :'v</Text>
+        <Icon name='frown-o' size={70} color="gray" />
+    </View>
+        )}
+        />
         <View style={styles.bottomSpace} />
-      )}
+      
       <View style={styles.bottomSpace} />
 
       {/* Botón con ícono para ir al formulario */}
@@ -216,6 +242,33 @@ const styles = StyleSheet.create({
         color: 'gray',
         textAlign: 'center',
       },
+      descuentosContainer: {
+        marginTop: 20,
+    },
+    // Estilos para cada item de descuento
+    itemContainer: {
+      marginBottom: 10,
+      padding: 16,
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#ddd',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 3,
+    },
+    itemText: {
+      fontSize: 18,
+      color: '#333',
+      fontWeight: 'bold',
+      marginBottom: 5,
+    },
+    switchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+  },
 });
 
 export default DiscountForm;
