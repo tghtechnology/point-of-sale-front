@@ -12,6 +12,20 @@ const createUser = async (newUser) => {
     }
 }
 
+const changePassword = async (id, password) => {
+    try {
+        const {data, status} = await apiClient.post(`/verificar/${id}`,password);
+        return{
+            data,
+            status
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 export {
-    createUser
+    createUser,
+    changePassword
 }

@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
+import useUser from '../hooks/useUser';
 
 export default function DeleteAccount() {
     const [modalVisible, setModalVisible] = useState(false);
     const [password, setPassword] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const [deleteType, setDeleteType] = useState('');
+    const {handleChangePassword} = useUser();
 
-    const handleDeleteAccount = (type) => {
-        setDeleteType(type);
-        setModalVisible(true);
-    };
+    // const handleDeleteAccount = (type) => {
+    //     setDeleteType(type);
+    //     setModalVisible(true);
+    // };
+
+    const handleDeleteAccount = async () => {
+        const response = await handleChangePassword(localStorage.getItem('id'),password);
+        if(response === true){
+            alert("eliminado correctamente")
+            setPassword('');
+        }else{
+            alert("problema")
+        }
+
+    }
 
     const handleContinue = () => {
         console.log(`Entered Password for ${deleteType}:`, password);
@@ -41,6 +54,7 @@ export default function DeleteAccount() {
                         <Text style={styles.subText}>Por temas de seguridad, por favor introduzca su contraseña para continuar</Text>
                         <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'blue' : 'gray' }]}>
                             <Text style={[styles.inputLabel, { top: isFocused || password ? -25 : 10 }]}>Contraseña</Text>
+                            {/* input password */}
                             <TextInput
                                 style={styles.input}
                                 placeholder=""

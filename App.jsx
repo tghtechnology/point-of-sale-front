@@ -15,10 +15,15 @@ export default function App() {
       <CountryProvider>
       <DiscountProvider>
       <CategoryProvider>
+<<<<<<< Updated upstream
       <Navigation/>
       </CategoryProvider>  
       </DiscountProvider> 
       </CountryProvider>
+=======
+        <Navigation/>
+      </CategoryProvider>
+>>>>>>> Stashed changes
     </UsuarioProvider>
     
   );
