@@ -12,7 +12,19 @@ const createCategory = async (newCategory) => {
         console.log(error);
     }
 }
-
+const listCategories = async () => {
+    try {
+        const { data,status } = await apiClient.get(`/categoria/listar`); 
+        return {
+            data,
+            status
+        }; 
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error al cargar categorias'); 
+    }
+}
 export {
-    createCategory
+    createCategory,
+    listCategories
 }

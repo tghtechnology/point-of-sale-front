@@ -3,6 +3,7 @@ import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 import React, { useState } from "react";
 import useArticle from "../hooks/useArticle";
+import useCategory from "../hooks/useCategory";
 
 const INITIAL_STATE = {
   nombre: "",
@@ -16,6 +17,7 @@ export default function ArticlesForm() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [datos, setDatos] = useState(INITIAL_STATE);
   const { handleCreateArticle } = useArticle();
+  const {listCategory} = useCategory();
 
   const getValues = (name, value) => {
     setDatos({
@@ -66,8 +68,11 @@ export default function ArticlesForm() {
           onValueChange={(itemValue) => setSelectedCategory(itemValue)}
           style={styles.picker}
         >
-          <Picker.Item label="Sin Categoria" value="" />
-          <Picker.Item label="Crear Categoria" value="Categoria 2" />
+          {
+            listCategory?.map((item)=>(
+              <Picker.Item label={item.nombre} value={item.id_categoria} />
+            ))
+          }
         </Picker>
       </View>
       {/* Opcion vendido*/}

@@ -13,17 +13,9 @@ const createArticle = async (newArticle) => {
      }
  }
 
- const listCategory = async () => {
-    try {
-        const { data } = await apiClient.get(`/categoria/listar`); 
-        return data; 
-    } catch (error) {
-        console.log(error);
-        throw new Error('Error al cargar categorias'); 
-    }
-}
+
 
  export {
      createArticle,
-     listCategory
+    
  }

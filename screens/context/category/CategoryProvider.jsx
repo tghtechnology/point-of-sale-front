@@ -1,7 +1,23 @@
-import { createCategory } from "../../services/CategoryService";
+import { useEffect,useState } from "react";
+import { createCategory,listCategories } from "../../services/CategoryService";
 import CategoryContext from "./CategoryContext";
 
+
 const CategoryProvider = ({children}) => {
+    const [listCategory,setListCategory] = useState([])
+    useEffect(()=>{
+        const getCategory = async ()=>{
+            const {data,status} = await listCategories();
+            if(data ===200){
+               setListCategory(data) 
+               console.log(data)
+            } else{
+                console.log("Error")
+            }
+        }
+        getCategory();
+    },[])
+
     const handleCreateCategory = async (newCategory) => {
         const { nombre, color } = newCategory; // Desestructura el objeto newCategory para obtener el nombre y el color
         try {
@@ -17,8 +33,10 @@ const CategoryProvider = ({children}) => {
         }
     }
 
+    
+
     return (
-        <CategoryContext.Provider value={{ handleCreateCategory }}>
+        <CategoryContext.Provider value={{ handleCreateCategory,listCategory }}>
             {children}
         </CategoryContext.Provider>
     )
