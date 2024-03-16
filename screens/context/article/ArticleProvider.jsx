@@ -1,4 +1,4 @@
-import { createArticle } from "../../services/ArticleService";
+import { createArticle, listCategory } from "../../services/ArticleService";
 import ArticleContext from "./ArticleContext";
 
 const ArticleProvider = ({children}) => {
@@ -14,6 +14,18 @@ const ArticleProvider = ({children}) => {
         } catch (error) {
             console.error("Error creating article:", error);
             return false; 
+        }
+    }
+
+    const fetchCategory = async () =>{
+        try{
+            const category = await listCategory();
+            console.log("Categorias obtenidas:", category);
+            setDiscounts(category);
+
+        }
+        catch (error) {
+            console.error('Error al obtener categorias:', error);
         }
     }
 
