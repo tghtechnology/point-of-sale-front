@@ -42,9 +42,8 @@ const LoginForm = () => {
     console.log(objectSend)
     try {
       const response = await loginAccess(objectSend);
-      if (response.status == 200) {
-        alert("Secion Iniada")
-        await loginAccess(objectSend)
+      if (response == true) {
+        alert("Sesion Iniada")
         setValues(INITIAL_STATE);
       } else {
         alert("Secion no iniciada");
