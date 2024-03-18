@@ -18,6 +18,7 @@ export default function ArticlesForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const { handleCreateArticle } = useArticle();
   const {listCategory} = useCategory();
+  console.log(listCategory)
 
   const getValues = (name, value) => {
     setDatos({
@@ -69,8 +70,8 @@ export default function ArticlesForm() {
           style={styles.picker}
         >
           {
-            listCategory?.map((item)=>(
-              <Picker.Item label={item.nombre} value={item.id_categoria} />
+            listCategory?.map((item,index)=>(
+              <Picker.Item key={index} label={item.nombre} value={item.nombre} />
             ))
           }
         </Picker>

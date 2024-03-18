@@ -4,24 +4,30 @@ import CategoryContext from "./CategoryContext";
 
 
 const CategoryProvider = ({children}) => {
-    const [listCategory,setListCategory] = useState([])
-    useEffect(()=>{
-        const getCategory = async ()=>{
-            const {data,status} = await listCategories();
-            if(data ===200){
-               setListCategory(data) 
-               console.log(data)
-            } else{
-                console.log("Error")
+
+    const [listCategory, setListCategory] = useState([]);
+    
+    useEffect(() => {
+        const getCategory = async () => {
+            try {
+                const { data, status } = await listCategories();
+                if (status === 200) {
+                    setListCategory(data); 
+                    console.log("Categorías cargadas:", data);
+                } else {
+                    console.log("Error al cargar categorías:", status);
+                }
+            } catch (error) {
+                console.error("Error al cargar categorías:", error);
             }
         }
         getCategory();
-    },[])
+    }, []);
 
     const handleCreateCategory = async (newCategory) => {
-        const { nombre, color } = newCategory; // Desestructura el objeto newCategory para obtener el nombre y el color
+        const { nombre, color } = newCategory; 
         try {
-            const { status } = await createCategory({ nombre, color }); // Envía tanto el nombre como el color al servicio de creación de categorías
+            const { status } = await createCategory({ nombre, color }); 
             if(status === 200 || status === 201){
               return true;
             } else {
@@ -29,7 +35,7 @@ const CategoryProvider = ({children}) => {
             }
         } catch (error) {
             console.error("Error creating category:", error);
-            return false; // Retorna false en caso de error
+            return false; 
         }
     }
 

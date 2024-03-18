@@ -17,20 +17,9 @@ const ArticleProvider = ({children}) => {
         }
     }
 
-    const fetchCategory = async () =>{
-        try{
-            const category = await listCategory();
-            console.log("Categorias obtenidas:", category);
-            setDiscounts(category);
-
-        }
-        catch (error) {
-            console.error('Error al obtener categorias:', error);
-        }
-    }
-
+    
     return (
-        <ArticleContext.Provider value={{ handleCreateArticle, fetchCategory }}>
+        <ArticleContext.Provider value={{ handleCreateArticle }}>
             {children}
         </ArticleContext.Provider>
     )
