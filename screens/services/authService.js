@@ -1,8 +1,8 @@
 import apiClient from "../apiss/AxiosConfig";
 
-const createToken = async (credentials)  => {
+const createToken = async (email,password)  => {
     try {
-        const {data, status} = await apiClient.post(`/login`, credentials);
+        const {data, status} = await apiClient.post(`/login`, email,password);
         return {
             data,
             status

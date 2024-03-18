@@ -6,15 +6,8 @@ import CustomAlert from '../componentes/CustomAlert';
 import useAuth from '../hooks/useAuth';
 // import CustomAlert from '../../Alertas/CustomAlert';
 
-
-const INITIAL_LOGIN = {
-  email: '',
-  password: ''
-}
 const LoginForm = () => {
   const navigation = useNavigation();
-  const [value, setValues] = useState(INITIAL_LOGIN);
-
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
@@ -22,36 +15,25 @@ const LoginForm = () => {
   const [inconAlertVisible, setConAlertVisible] = useState(false);
   const [emailAlertVisible, setEmailAlertVisible] = useState(false);
   const {loginAccess} = useAuth();
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
   //Logica de Iniciar Secion
 
-  const getValuesLogin = (name, value) => {
-    setValues({
-      ...value,
-      [name]: value
-    })
-  }
+
 
   const handleSignIn = async () => {
-    const objectSend = {
-      ...value,
-    }
-    if (Object.values(value).includes("")) {
-      alert("Complete todos los campos")
-      return;
-    }
-    console.log(objectSend)
     try {
-      const response = await loginAccess(objectSend);
+      const response = await loginAccess(credentials);
       if (response == true) {
         alert("Sesion Iniada")
-        setValues(INITIAL_STATE);
       } else {
         alert("Secion no iniciada");
       }
     } catch (error) {
       alert("problema interno del servidor")
     }
-    console.log("valor del formulario" + JSON.stringify(objectSend));
   };
   //Aqui Termina
 
@@ -66,7 +48,12 @@ const LoginForm = () => {
         style={styles.input}
         placeholder='Correo Electrónico'
         placeholderTextColor="#546574"
-        onChangeText={(text) => getValuesLogin("email", text)}
+        onChangeText={(text) =>
+          setCredentials((prevCredentials) => ({
+            ...prevCredentials,
+            email: text,
+          }))
+        }
       />
 
       {/* INPUT PARA CONTRASEÑA */}
@@ -75,7 +62,12 @@ const LoginForm = () => {
         placeholder='Contraseña'
         placeholderTextColor="#546574"
         secureTextEntry={true}
-        onChangeText={(text) => getValuesLogin("password", text)}
+        onChangeText={(text) =>
+          setCredentials((prevCredentials) => ({
+            ...prevCredentials,
+            password: text,
+          }))
+        }
       />
 
       {/* BOTÓN DE INICIO DE SESIÓN */}
