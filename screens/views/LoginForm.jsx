@@ -66,7 +66,6 @@ const LoginForm = () => {
         style={styles.input}
         placeholder='Correo Electrónico'
         placeholderTextColor="#546574"
-        value={value.email}
         onChangeText={(text) => getValuesLogin("email", text)}
       />
 
@@ -76,7 +75,6 @@ const LoginForm = () => {
         placeholder='Contraseña'
         placeholderTextColor="#546574"
         secureTextEntry={true}
-        value={value.password}
         onChangeText={(text) => getValuesLogin("password", text)}
       />
 

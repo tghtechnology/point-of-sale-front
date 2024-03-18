@@ -2,7 +2,7 @@ import apiClient from "../apiss/AxiosConfig";
 
 const sendemail = async (credentialsrecovery)  => {
     try {
-        const {data, status} = await apiClient.post(`/enviarTokenCambioPassword`, credentialsrecovery);
+        const {data, status} = await apiClient.post(`/envioCorreo`, credentialsrecovery);
         return {
             data,
             status
