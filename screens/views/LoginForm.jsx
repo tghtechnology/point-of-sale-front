@@ -28,11 +28,12 @@ const LoginForm = () => {
       const response = await loginAccess(credentials);
       if (response == true) {
         alert("Sesion Iniada")
+        navigation.navigate("Home")
       } else {
         alert("Secion no iniciada");
       }
     } catch (error) {
-      alert("problema interno del servidor")
+      console.log('Error:', error.message);
     }
   };
   //Aqui Termina
