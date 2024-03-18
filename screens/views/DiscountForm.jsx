@@ -43,7 +43,7 @@ const DiscountForm = () => {
       tipo_descuento: tipoDescuento === 'percent' ? 'PORCENTAJE' : 'MONTO',
     }
     console.log("Valor de objectSend:", objectSend);
-    console.log("estado:",estado)
+    
     //control de errores para el crear un usuario
     try {
       const response = await handleCreateDiscount(objectSend);
