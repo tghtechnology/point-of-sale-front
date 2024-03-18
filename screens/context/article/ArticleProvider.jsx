@@ -30,7 +30,7 @@ const ArticleProvider = ({children}) => {
     }
 
     return (
-        <ArticleContext.Provider value={{ handleCreateArticle }}>
+        <ArticleContext.Provider value={{ handleCreateArticle, fetchCategory }}>
             {children}
         </ArticleContext.Provider>
     )
