@@ -31,7 +31,7 @@ const LoginForm = () => {
         alert("Secion no iniciada");
       }
     } catch (error) {
-      console.log('Error:', error.message);
+      alert("Secion no iniciada");
     }
   };
   //Aqui Termina
