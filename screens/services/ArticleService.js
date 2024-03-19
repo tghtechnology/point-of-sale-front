@@ -25,7 +25,34 @@ const createArticle = async (newArticle) => {
     }
 }
 
+const listArticlesById = async (id) => {
+    try {
+        const { data,status } = await apiClient.get(`/articulo/listar/${id}`); 
+        return {
+            data,
+            status
+        }; 
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error al listar por id articulos'); 
+    }
+}
+
+const updateArticles = async(id,article) => {
+    try{
+        const{data, status} = await apiClient.put(`/articulo/actualizar/${id}`);
+        return{
+            data,
+            status
+        };
+    }catch (error) {
+        console.log('Error:',error.response.data);
+    }
+}
+
  export {
      createArticle,
-     listArticles
+     listArticles,
+     listArticlesById,
+     updateArticles
  }

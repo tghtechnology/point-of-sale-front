@@ -6,21 +6,28 @@ import useArticle from "../hooks/useArticle";
 export default function PlusArticles(props) {
   const {listArticle} = useArticle();
   return (
-    <View style={styles.container}>
-      
+    <View style={styles.container}> 
       <FlatList
             data={listArticle}
             renderItem={({ item }) => (
-              <View style={styles.itemContainer}>
-                <View style={styles.itemTextContainer}>
+            
+            <View style={styles.itemContainer}>
                 <Text style={styles.itemText}>{item.nombre}</Text>
                 <Text style={styles.itemText}>{item.precio}</Text>
-              </View>
-          </View>
+                <View style={styles.buttonContainer}> 
+                    <TouchableOpacity style={styles.editButton} onPress= {() => props.navigation.navigate("Crear Articulo")} >
+                      <Text>Editar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.deleteButton}>
+                      <Text>Eliminar</Text>
+                    </TouchableOpacity>
+                </View>
+
+            </View>
             )}
             keyExtractor={(item) => item.id.toString()} 
         />
-
+      
         {listArticle.length === 0 ? (
         <>
           <View style={styles.circle}>
@@ -45,6 +52,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     
   },
+  
   circle: {
     width: 170,
     height: 170,
@@ -76,6 +84,10 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: 'bold',
     marginBottom: 5,
+    textAlign:'right',
+    paddingLeft: 10,
+    paddingRight: 200,
+    
   },
   itemContainer: {
     marginTop:10,
@@ -83,13 +95,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#ddd',
     shadowColor: '#000',
-    paddingLeft: 100, 
-    paddingRight: 100,
+    alignItems:'center',
     shadowOpacity: 0.8,
     
   },
-  itemTextContainer: {
+  buttonContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '50%',
+    alignItems:'center',
+    paddingLeft:70,
   },
+
+  editButton: {
+    backgroundColor: '#ff0000', 
+    borderRadius: 20,
+    padding: 10,
+  },
+  deleteButton: {
+    backgroundColor: '#ff0000', 
+    borderRadius: 20,
+    padding: 10,
+  },
+
 });
 

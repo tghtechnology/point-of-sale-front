@@ -19,6 +19,7 @@ export default function ArticlesForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const { handleCreateArticle } = useArticle();
   const {listCategory} = useCategory();
+  const { updateArticles } = useArticle();
   
 
   const getValues = (name, value) => {
@@ -155,6 +156,10 @@ export default function ArticlesForm() {
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>CREAR ARTICULO</Text>
+      </TouchableOpacity>
+      <View style={{ height: 20 }} />
+      <TouchableOpacity onPress={updateArticles} style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>ACTUALIZAR ARTICULO</Text>
       </TouchableOpacity>
     </View>
   );
