@@ -8,8 +8,6 @@ import useAuth from '../hooks/useAuth';
 
 const LoginForm = () => {
   const navigation = useNavigation();
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const [inconAlertVisible, setConAlertVisible] = useState(false);

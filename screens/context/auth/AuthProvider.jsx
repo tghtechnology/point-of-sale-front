@@ -8,8 +8,8 @@ const AuthProvider = ({children}) => {
     const loginAccess = async (email,password) => {
         const { status, data } = await createToken(email,password);
         if (status === 200) {
-          AsyncStorage.setItem("token", data.token);
-          AsyncStorage.setItemAsync('token',data.token);
+          //AsyncStorage.setItem("token", data.token);
+          //AsyncStorage.setItemAsync('token',data.token);
           //const token = await SecureStore.getItemAsync('token');
           setIsAuth(true);
         
