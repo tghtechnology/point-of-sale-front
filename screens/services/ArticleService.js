@@ -12,6 +12,20 @@ const createArticle = async (newArticle) => {
      }
  }
 
+ const listArticles = async () => {
+    try {
+        const { data,status } = await apiClient.get(`/articulo/listar`); 
+        return {
+            data,
+            status
+        }; 
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error al cargar articulos'); 
+    }
+}
+
  export {
      createArticle,
+     listArticles
  }
