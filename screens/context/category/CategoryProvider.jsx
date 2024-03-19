@@ -13,7 +13,7 @@ const CategoryProvider = ({children}) => {
                 const { data, status } = await listCategories();
                 if (status === 200) {
                     setListCategory(data); 
-                    console.log("Categorías cargadas:", data);
+                    
                 } else {
                     console.log("Error al cargar categorías:", status);
                 }

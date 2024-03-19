@@ -3,9 +3,9 @@ import ArticleContext from "./ArticleContext";
 
 const ArticleProvider = ({children}) => {
     const handleCreateArticle = async (newArticle) => {
-        const {nombre, tipo_venta, precio, coste,ref, representacion} = newArticle; 
+        const {nombre, tipo_venta, precio, coste, ref, representacion, nombre_categoria} = newArticle; 
         try {
-            const { status } = await createArticle({ nombre, tipo_venta, precio, coste,ref, representacion }); 
+            const { status } = await createArticle({nombre, tipo_venta, precio, coste, ref, representacion, nombre_categoria}); 
             if(status === 200 || status === 201){
               return true;
             } else {

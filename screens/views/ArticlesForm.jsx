@@ -12,13 +12,14 @@ const INITIAL_STATE = {
   coste: "",
   ref: "",
   representacion: "",
+  nombre_categoria:"",
 };
 export default function ArticlesForm() {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [datos, setDatos] = useState(INITIAL_STATE);
   const { handleCreateArticle } = useArticle();
   const {listCategory} = useCategory();
-  console.log(listCategory)
+  
 
   const getValues = (name, value) => {
     setDatos({
@@ -34,12 +35,23 @@ export default function ArticlesForm() {
     });
   };
 
+
+  const handleCategoryChange = (value) => {
+    setDatos({
+      ...datos,
+      nombre_categoria: value,
+    });
+  };
+
+
+
   const SubmitArticle = async () => {
     try {
       const response = await handleCreateArticle(datos);
       if (response) {
         alert("El articulo ha sido creado con exito");
         setDatos(INITIAL_STATE);
+        setSelectedCategory('');
       } else {
         alert("El articulo no se pudo crear");
       }
@@ -65,8 +77,9 @@ export default function ArticlesForm() {
       </View>
       <View style={styles.pickeContainer}>
         <Picker
-          selectedValue={selectedCategory}
-          onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+          onValueChange={(value) => handleCategoryChange(value)}
+          value={datos.nombre_categoria}
+
           style={styles.picker}
         >
           {
