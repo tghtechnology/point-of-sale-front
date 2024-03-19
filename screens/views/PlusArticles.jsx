@@ -41,7 +41,8 @@ export default function PlusArticles(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'row',
+    justifyContent: 'center',
+    alignItems:'center',
     
   },
   circle: {
