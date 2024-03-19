@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,FlatList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import useArticle from "../hooks/useArticle";
 
 export default function PlusArticles(props) {
@@ -42,8 +41,8 @@ export default function PlusArticles(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'row',
+    
   },
   circle: {
     width: 170,
@@ -78,21 +77,18 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   itemContainer: {
-    marginBottom: 8,
-    padding: 10,
+    marginTop:10,
+    padding: 15,
     backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 1,
     borderColor: '#ddd',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    paddingLeft: 100, 
+    paddingRight: 100,
     shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 3,
+    
   },
   itemTextContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 });
 
