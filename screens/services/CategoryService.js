@@ -13,6 +13,17 @@ const createCategory = async (newCategory) => {
     }
 }
 
+const getCategories = async () => {
+    try {
+        const response = await apiClient.get('/categoria/listar');
+        return response.data; // Devuelve los datos de los descuentos
+    } catch (error) {
+        console.log(error);
+        return []; // En caso de error, devuelve un array vacío
+    }
+};
+
 export {
-    createCategory
+    createCategory,
+    getCategories
 }

@@ -1,21 +1,36 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import useCategory from '../hooks/useCategory';
+import CategoryProvider from '../context/category/CategoryProvider';
 
 
-
-export default function PlusCategory(props) {
+ const PlusCategory = (props) => {
+  const navigation = useNavigation();
+  const {categories} = useCategory();
   return (
     <View style={styles.container}>
-      <View style={styles.circle}>
-        <MaterialCommunityIcons name="content-copy" size={100} color="#808080" />
-      </View>
-      <Text style={styles.text}>Todavía no tiene Categorias</Text>
-      <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
+      <FlatList
+        data={categories}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>
+            <Text style={styles.itemText}>{item.nombre}</Text>
+        </View>
+    )}
+    keyExtractor={(item, index) => index.toString()}
+    contentContainerStyle={{ paddingHorizontal: 16 }}
+    ListEmptyComponent={() => (
+      <View style={styles.mensajeContainer}>
 
-      <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Categoria")}>
-        <MaterialCommunityIcons name="plus" size={24} color="white" />
+        <MaterialCommunityIcons name="content-copy" size={100} color="#808080" />
+        <Text style={styles.text}>Todavía no tiene Categorias</Text>
+        <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
+        </View>
+        )}
+        />
+      <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Articulo")}>
+        <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -53,5 +68,30 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
   },
+  itemContainer: {
+    marginBottom: 10,
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  itemText: {
+    fontSize: 18,
+    color: '#333',
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
 });
 
+export default PlusCategory;

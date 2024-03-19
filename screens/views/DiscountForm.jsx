@@ -100,8 +100,9 @@ const DiscountForm = () => {
     contentContainerStyle={{ paddingHorizontal: 16 }}
     ListEmptyComponent={() => (
     <View style={styles.mensajeContainer}>
-        <Text style={styles.mensaje}>No hay descuento :'v</Text>
-        <Icon name='frown-o' size={70} color="gray" />
+      <Icon name='frown-o' size={70} color="gray" />
+        <Text style={styles.mensaje}>No hay descuento.</Text>
+        <Text style={styles.mensaje}>Pulse (+) para agregar un nuevo descuento.</Text>
     </View>
         )}
         />
@@ -111,10 +112,10 @@ const DiscountForm = () => {
       <TouchableOpacity style={styles.addDescContainer}>
       </TouchableOpacity>
       <TouchableOpacity onPress={discountForm} >
-      <Icon name='your-other-icon' size={70} color="blue" style={styles.otherIcon} />
+      <Icon name='plus-circle' size={50} color="blue" style={styles.otherIcon} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.addButtonContainer} onPress={irAFormulario}>
-        <Icon name='plus-circle' size={70} color="green"  style={styles.plusIcon}/>
+        <Icon name='plus-circle' size={50} color="red"  style={styles.plusIcon}/>
       </TouchableOpacity>
 
       
@@ -188,7 +189,7 @@ const DiscountForm = () => {
     </View>
         )}
         />
-        <TouchableOpacity onPress={ClosediscountForm} style={[styles.boton, styles.cerrarBoton]}>
+        <TouchableOpacity onPress={ClosediscountForm} style={ styles.cerrarDescFalse}>
               <Text style={styles.textoBoton}>Cerrar</Text>
         </TouchableOpacity>
       </View>
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        padding: 16,
+        padding: 20 ,
       },
       bottomSpace: {
         flex: 1,
@@ -236,10 +237,11 @@ const styles = StyleSheet.create({
       },
       modaldesc:{
         backgroundColor: '#fff',
-        padding: 50,
+        padding: 100,
+        paddingTop: 50,
         borderRadius: 10,
         elevation: 5,
-        
+        margin:10,
       },
       formularioTitle: {
         fontSize: 24,
@@ -291,11 +293,20 @@ const styles = StyleSheet.create({
       },
       cerrarBoton: {
         backgroundColor: 'red',
+        borderRadius: 5,
+        alignItems:'center',
       },
+      cerrarDescFalse:{
+        backgroundColor: 'red',
+        borderRadius: 5,
+        alignItems:'center',
+        padding: 10,
+      }
+      ,
       textoBoton: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 16,    
       },
       mensajeContainer: {
         justifyContent: 'center',
