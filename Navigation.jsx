@@ -20,6 +20,8 @@ import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
 import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
 import DiscountForm from './screens/views/DiscountForm';
 import FormRegisEmpleado from './screens/Empleado/FormRegisEmpleado';
+import PlusDiscount from './screens/views/PlusDiscount';
+import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
 
 
 function StackNavigation() {
@@ -104,7 +106,9 @@ function ArticulosScreen() {
             </View>
           ),
         }}></Stack.Screen>
-      <Stack.Screen name="Descuento" component={DiscountForm}  ></Stack.Screen>
+      <Stack.Screen name="Descuento" component={PlusDiscount}  options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
+      <Stack.Screen name="Crear Descuento" component={DiscountForm}></Stack.Screen>
+      <Stack.Screen name="Descuentos Desactivados" component={PlusFalseDiscount}></Stack.Screen>
     </Stack.Navigator>
   );
 };

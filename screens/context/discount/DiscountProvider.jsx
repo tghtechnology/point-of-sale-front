@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DiscountContext from "./DiscountContext";
-import { createDiscount, getDiscounts,getCeroDiscounts, updateDiscountStatus } from "../../services/DiscountService";
+import { createDiscount, getDiscounts,getCeroDiscounts, updateDiscountStatus,editDiscount } from "../../services/DiscountService";
 
 const DiscountProvider = ({ children }) => {
     const [discounts, setDiscounts] = useState([]);
@@ -53,8 +53,6 @@ const DiscountProvider = ({ children }) => {
         fetchCeroDiscounts();
     }, []);
 
-
-
     const toggleDiscountStatus = async (id, newStatus) => {
         try {
             const response = await updateDiscountStatus(id, newStatus);
@@ -73,8 +71,25 @@ const DiscountProvider = ({ children }) => {
             return false;
         }
     };
+
+    const handleEditDiscount = async (id, updatedData) => {
+        try {
+          const response = await editDiscount(id, updatedData);
+          if (response && response.status === 200) {
+            const updatedDiscounts = discounts.map((discount) =>
+              discount.id === id ? { ...discount, ...updatedData } : discount
+            );
+            setDiscounts(updatedDiscounts);
+            console.log('Descuento editado exitosamente');
+          } else if (response && response.status === 204) {
+            console.log('Descuento editado exitosamente');
+          }
+        } catch (error) {
+          console.error('Error editing discount:', error);
+        }
+      };
     return (
-        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,Cerodiscounts,toggleDiscountStatus }}>
+        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,Cerodiscounts,toggleDiscountStatus,handleEditDiscount}}>
             {children}
         </DiscountContext.Provider>
     );

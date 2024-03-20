@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useCategory from '../hooks/useCategory';
@@ -8,7 +8,41 @@ import CategoryProvider from '../context/category/CategoryProvider';
 
  const PlusCategory = (props) => {
   const navigation = useNavigation();
-  const {categories} = useCategory();
+  const {categories, handleEditCategories} = useCategory();
+  const [showModal, setShowModal] = useState(false);
+  const [editedData, setEditedData] = useState({});
+  const [selectedCategories, setSelectedCategories] = useState({});
+
+    const handleEdit = (category) => {
+      setSelectedCategories(category);
+      setEditedData({
+        ...category,
+        nombre: category.nombre,
+        color: category.color,
+      });
+      setShowModal(true);
+    };
+
+    const handleChange = (name, value) => {
+      setEditedData({
+        ...editedData,
+        [name]: value,
+      });
+    };
+
+  const handleSubmit = async () => {
+  try {
+    await handleEditCategories(selectedCategories.id, editedData);
+    console.log('Descuento editado exitosamente');
+    setShowModal(false);
+  } catch (error) {
+    console.error('Error al editar el descuento:', error);
+  }
+};
+
+const handleCancel = () => {
+  setShowModal(false);
+};
   return (
     <View style={styles.container}>
       <FlatList
@@ -16,6 +50,9 @@ import CategoryProvider from '../context/category/CategoryProvider';
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <Text style={styles.itemText}>{item.nombre}</Text>
+            <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
+              <Text style={styles.buttonText}>Editar</Text>
+            </TouchableOpacity>
         </View>
     )}
     keyExtractor={(item, index) => index.toString()}
@@ -32,6 +69,45 @@ import CategoryProvider from '../context/category/CategoryProvider';
       <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Articulo")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
+      <Modal
+        visible={showModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={handleCancel}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Editar Descuento</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Nombre</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Nombre"
+              value={editedData.nombre}
+              onChangeText={(text) => handleChange('nombre', text)}
+            />
+            </View>
+            <View style={styles.inputContainer}>
+            <Text style={styles.label}>Color</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Color"
+              value={editedData.color}
+              onChangeText={(text) => handleChange('color', text)}
+            />
+            </View>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Editar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={handleCancel}>
+              <Text style={styles.buttonText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -92,6 +168,67 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    marginBottom: 15,
+  },
+  label: {
+    marginBottom: 5,
+    fontSize: 16,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
+  },
+  button: {
+    borderRadius: 5,
+    padding: 15,
+    alignItems: 'center',
+    marginTop: 10,
+    backgroundColor: 'green',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  editButton: {
+    backgroundColor: 'green',
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginTop:10,
+  },
+  cancelButton: {
+    backgroundColor: 'red',
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginTop:10,
+  },   
 });
 
 export default PlusCategory;

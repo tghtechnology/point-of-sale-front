@@ -47,6 +47,20 @@ const updateDiscountStatus = async (id, newStatus) => {
         throw new Error('Error al actualizar el estado del descuento');
     }
 }
+
+const editDiscount = async (id, updatedData) => {
+    try {
+      const response = await apiClient.put(`/descuento/${id}`, updatedData);
+      if (response.status === 200) {
+        // Si la respuesta es 200, devuelve los datos actualizados del descuento
+        return response.data;
+      }
+    } catch (error) {
+      console.error('Error editing discount:', error);
+      throw new Error('Error al editar el descuento');
+    }
+  };
+
 export {
-    createDiscount, getDiscounts,getCeroDiscounts,updateDiscountStatus
+    createDiscount, getDiscounts,getCeroDiscounts,updateDiscountStatus, editDiscount
 }

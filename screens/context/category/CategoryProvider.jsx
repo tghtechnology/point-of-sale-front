@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createCategory, getCategories } from "../../services/CategoryService";
+import { createCategory, editCategories, getCategories } from "../../services/CategoryService";
 import CategoryContext from "./CategoryContext";
 
 
@@ -36,9 +36,25 @@ const CategoryProvider = ({children}) => {
         fetchMyCategories();
     }, []);
 
+    const handleEditCategories = async (id, updatedData) => {
+        try {
+          const response = await editCategories(id, updatedData);
+          if (response && response.status === 200) {
+            const updatedDiscounts = discounts.map((discount) =>
+              discount.id === id ? { ...discount, ...updatedData } : discount
+            );
+            setDiscounts(updatedDiscounts);
+            console.log('Descuento editado exitosamente');
+          } else if (response && response.status === 204) {
+            console.log('Descuento editado exitosamente');
+          }
+        } catch (error) {
+          console.error('Error editing discount:', error);
+        }
+      };
 
     return (
-        <CategoryContext.Provider value={{ handleCreateCategory, categories}}>
+        <CategoryContext.Provider value={{ handleCreateCategory, categories, handleEditCategories}}>
             {children}
         </CategoryContext.Provider>
     )
