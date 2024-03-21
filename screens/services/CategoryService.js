@@ -45,6 +45,7 @@ const editCategories = async (id, updatedData) => {
     }
     };
 
+    
 export {
     createCategory,getCategories,editCategories,updateCategory
 }
