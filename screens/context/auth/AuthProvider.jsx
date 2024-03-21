@@ -10,9 +10,8 @@ const AuthProvider = ({children}) => {
         if (status === 200) {
           const token=data.token
           AsyncStorage.setItem("token",token);
-          AsyncStorage.getItem("token");
-          console.log("Token: ",token);
-          //const token = await SecureStore.getItemAsync('token');
+          const storedToken=AsyncStorage.getItem("token");
+          console.log("Token: ",storedToken);
           setIsAuth(true);
   
           alert("Autenticación exitosa");
