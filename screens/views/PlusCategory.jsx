@@ -8,7 +8,7 @@ import CategoryProvider from '../context/category/CategoryProvider';
 
  const PlusCategory = (props) => {
   const navigation = useNavigation();
-  const {categories, handleEditCategories} = useCategory();
+  const {categories, handleEditCategories, handleUpdateCategory } = useCategory();
   const [showModal, setShowModal] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [selectedCategories, setSelectedCategories] = useState({});
@@ -34,6 +34,7 @@ import CategoryProvider from '../context/category/CategoryProvider';
   try {
     await handleEditCategories(selectedCategories.id, editedData);
     console.log('Descuento editado exitosamente');
+    await handleUpdateCategory(selectedCategories.id, editedData);
     setShowModal(false);
   } catch (error) {
     console.error('Error al editar el descuento:', error);
@@ -58,15 +59,14 @@ const handleCancel = () => {
     keyExtractor={(item, index) => index.toString()}
     contentContainerStyle={{ paddingHorizontal: 16 }}
     ListEmptyComponent={() => (
-      <View style={styles.mensajeContainer}>
-
+      <View>
         <MaterialCommunityIcons name="content-copy" size={100} color="#808080" />
         <Text style={styles.text}>Todavía no tiene Categorias</Text>
         <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
         </View>
         )}
         />
-      <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Articulo")}>
+      <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Categoria")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
       <Modal

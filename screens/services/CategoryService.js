@@ -36,6 +36,15 @@ const editCategories = async (id, updatedData) => {
     }
   };
 
+  const updateCategory = async (id, newData) => {
+    try {
+        const response = await apiClient.put(`/categoria/actualizar/${id}`, newData);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error al actualizar el categoria: ${error.message}`);
+    }
+    };
+
 export {
-    createCategory,getCategories,editCategories
+    createCategory,getCategories,editCategories,updateCategory
 }

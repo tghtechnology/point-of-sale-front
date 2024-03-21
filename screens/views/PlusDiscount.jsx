@@ -71,13 +71,13 @@ const PlusDiscount = (props) => {
             <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
               <Text style={styles.buttonText}>Editar</Text>
             </TouchableOpacity>
-</View>
-        </View>
+            </View>
+    </View>
     )}
     keyExtractor={(item, index) => index.toString()}
     contentContainerStyle={{ paddingHorizontal: 16 }}
     ListEmptyComponent={() => (
-    <View style={styles.mensajeContainer}>
+    <View>
       <Icon name='frown-o' size={70} color="gray" />
         <Text style={styles.mensaje}>No hay descuento.</Text>
         <Text style={styles.mensaje}>Pulse (+) para agregar un nuevo descuento.</Text>
@@ -88,7 +88,7 @@ const PlusDiscount = (props) => {
         <MaterialCommunityIcons name="plus" size={30} color="white" />
        </TouchableOpacity>
        <TouchableOpacity style={styles.descButton} onPress= {() => props.navigation.navigate("Descuentos Desactivados")}>
-        <MaterialCommunityIcons name="plus" size={30} color="white" />
+        <MaterialCommunityIcons name="close-circle" size={30} color="white" />
        </TouchableOpacity>
 
        <Modal
