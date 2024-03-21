@@ -1,9 +1,9 @@
 import { useEffect,useState } from "react";
-import { createArticle, listArticles, listArticlesById, updateArticles } from "../../services/ArticleService";
+import { createArticle, listArticles, updateArticles } from "../../services/ArticleService";
 import ArticleContext from "./ArticleContext";
 const ArticleProvider = ({children}) => {
     const [listArticle, setListArticle] = useState([]);
-    const [listArticlesById, setListArticleById] = useState([]);
+
     useEffect(() => {
         const getArticle = async () => {
             try {
@@ -21,24 +21,6 @@ const ArticleProvider = ({children}) => {
         getArticle();
     }, []);
 
-    useEffect(() => {
-        const getArticleById = async () => {
-            try {
-                const { data, status } = await listArticlesById();
-                if (status === 200) {
-                    setListArticleById(data); 
-                    
-                } else {
-                    console.log("Error al cargar articulos:", status);
-                }
-            } catch (error) {
-                console.error("Error al cargar articulos:", error);
-            }
-        }
-        getArticleById();
-    }, []);
-
-
     const handleCreateArticle = async (newArticle) => {
         const {nombre, tipo_venta, precio, coste, ref, representacion, nombre_categoria} = newArticle; 
         try {
@@ -54,11 +36,13 @@ const ArticleProvider = ({children}) => {
         }
     }
 
-    const handleUpdateArticle = async(update) => {
-        const {nombre, tipo_venta, precio, coste, ref, representacion, nombre_categoria} = update; 
+    const handleEditArticle = async(id, updateArticle) => {
         try {
-            const { status } = await updateArticles({nombre, tipo_venta, precio, coste, ref, representacion, nombre_categoria}); 
+            const { status } = await updateArticles(id, updateArticle); 
             if(status === 200 || status === 201){
+                const updateData = listArticle.map((article) => 
+                article.id === id? {...article, ...updateArticle} : article);
+                setListArticle(updateData);
               return true;
             } else {
               return false;
@@ -70,7 +54,7 @@ const ArticleProvider = ({children}) => {
     }
 
     return (
-        <ArticleContext.Provider value={{ handleCreateArticle,listArticle,listArticlesById,handleUpdateArticle }}>
+        <ArticleContext.Provider value={{ handleCreateArticle,listArticle,handleEditArticle }}>
             {children}
         </ArticleContext.Provider>
     )
