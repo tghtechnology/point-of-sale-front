@@ -8,10 +8,14 @@ const AuthProvider = ({children}) => {
     const loginAccess = async (email,password) => {
         const { status, data } = await createToken(email,password);
         if (status === 200) {
+          const usuario_id=data.usuario_id;
           const token=data.token
           AsyncStorage.setItem("token",token);
+          AsyncStorage.setItem("usuarioid",usuario_id);
           const storedToken=AsyncStorage.getItem("token");
           console.log("Token: ",storedToken);
+          const stored=AsyncStorage.getItem("usuarioid");
+          console.log("Usuario_d: ",stored);
           setIsAuth(true);
   
           alert("Autenticación exitosa");
