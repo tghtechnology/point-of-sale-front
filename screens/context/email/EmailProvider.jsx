@@ -1,5 +1,6 @@
 import { sendemail, sendnewpassword } from "../../services/EmailService"
 import EmailContext from "./EmailContext";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const EmailProvider = ({ children }) => {
   const handleSendEmail = async (email) => {
@@ -11,8 +12,8 @@ const EmailProvider = ({ children }) => {
     }
   }
 
-  const handleSendNewPassword = async (newPassword,token) => {
-    const { status } = await sendnewpassword(newPassword,token);
+  const handleSendNewPassword = async (newPassword, token) => {
+    const { status } = await sendnewpassword(newPassword, token);
     if (status === 200 || status === 201) {
       return true;
     } else {

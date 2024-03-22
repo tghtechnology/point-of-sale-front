@@ -49,6 +49,7 @@ const EnvioCorreoForm = () => {
       }
     } catch (error) {
       alert("problema interno del servidor")
+      console.log(Error)
     }
     console.log("valor del formulario"  + JSON.stringify(objectSend));
   };
