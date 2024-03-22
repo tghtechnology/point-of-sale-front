@@ -37,29 +37,31 @@ const CategoryProvider = ({children}) => {
         fetchMyCategories();
     }, []);
 
-    const handleEditCategories = async (id, updatedData) => {
+    const handleEditCategories = async (text_id, updatedData) => {
+        console.log(text_id)
         try {
-          const response = await editCategories(id, updatedData);
+          const response = await editCategories(text_id, updatedData);
           if (response && response.status === 200) {
-            const updatedDiscounts = discounts.map((discount) =>
-              discount.id === id ? { ...discount, ...updatedData } : discount
+            const updatedCategories = categories.map((categorie) =>
+            categorie.text_id === text_id ? { ...categorie, ...updatedData } : categorie
             );
-            setDiscounts(updatedDiscounts);
-            console.log('Descuento editado exitosamente');
+            setCategories(updatedCategories);
+            console.log('Categoria editado exitosamente');
           } else if (response && response.status === 204) {
-            console.log('Descuento editado exitosamente');
+            console.log('Categoria editado exitosamente');
           }
         } catch (error) {
-          console.error('Error editing discount:', error);
+          console.error('Error editing category:', error);
         }
       };
 
-      const handleUpdateCategory = async (id, newData) => {
+      const handleUpdateCategory = async (text_id, newData) => {
+        console.log("..")
         try {
-            const updatedCategory = await updateCategory(id, newData);
+            const updatedCategory = await updateCategory(text_id, newData);
             setCategories(prevCategories => {
                 return prevCategories.map(category =>
-                    category.id === id ? { ...category, ...updatedCategory } : category
+                    category.text_id === text_id ? { ...category, ...updatedCategory } : category
                 );
             });
             console.log('Categoría actualizada exitosamente:', updatedCategory);

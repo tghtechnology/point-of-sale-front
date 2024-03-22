@@ -32,12 +32,12 @@ import CategoryProvider from '../context/category/CategoryProvider';
 
   const handleSubmit = async () => {
   try {
-    await handleEditCategories(selectedCategories.id, editedData);
-    console.log('Descuento editado exitosamente');
-    await handleUpdateCategory(selectedCategories.id, editedData);
+    await handleEditCategories(selectedCategories.text_id, editedData);
+    console.log('Categoria editado exitosamente');
+    await handleUpdateCategory(selectedCategories.text_id, editedData);
     setShowModal(false);
   } catch (error) {
-    console.error('Error al editar el descuento:', error);
+    console.error('Error al editar la Categoria:', error);
   }
 };
 

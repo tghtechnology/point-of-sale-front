@@ -49,6 +49,7 @@ const updateDiscountStatus = async (id, newStatus) => {
 }
 
 const editDiscount = async (id, updatedData) => {
+    console.log(id)
     try {
       const response = await apiClient.put(`/descuento/${id}`, updatedData);
       if (response.status === 200) {
@@ -61,6 +62,15 @@ const editDiscount = async (id, updatedData) => {
     }
   };
 
+  const updateDiscount = async (id, newData) => {
+    try {
+        const response = await apiClient.put(`/descuento/${id}`, newData);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error al actualizar el descuento: ${error.message}`);
+    }
+    };
+
 export {
-    createDiscount, getDiscounts,getCeroDiscounts,updateDiscountStatus, editDiscount
+    createDiscount, getDiscounts,getCeroDiscounts,updateDiscountStatus, editDiscount,updateDiscount
 }

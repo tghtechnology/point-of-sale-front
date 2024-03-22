@@ -24,7 +24,7 @@ const CategoryForm = () => {
         alert("La categoría ha sido creada con éxito");
         setDatos(INITIAL_STATE);
         // Llamar a handleUpdateCategory solo si la categoría se crea exitosamente
-        await handleUpdateCategory(response.id, datos);
+        await handleUpdateCategory(response.text_id, datos);
       } else {
         alert("La categoría no se pudo crear");
       }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList,Switch} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import useDiscount from '../hooks/useDiscount';
 import DiscountProvider from '../context/discount/DiscountProvider';

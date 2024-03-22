@@ -23,22 +23,22 @@ const getCategories = async () => {
     }
 };
 
-const editCategories = async (id, updatedData) => {
+const editCategories = async ( updatedData) => {
+    console.log('.')
     try {
-      const response = await apiClient.put(`/categoria/actualizar/${id}`, updatedData);
-      if (response.status === 200) {
+        const response = await apiClient.put(`/categoria/actualizar/${text_id}`, updatedData);
+        if (response.status === 200) {
         // Si la respuesta es 200, devuelve los datos actualizados del descuento
         return response.data;
       }
     } catch (error) {
-      console.error('Error editing discount:', error);
-      throw new Error('Error al editar el descuento');
+      throw new Error('Error al editar la categoria');
     }
   };
 
-  const updateCategory = async (id, newData) => {
+  const updateCategory = async ( newData) => {
     try {
-        const response = await apiClient.put(`/categoria/actualizar/${id}`, newData);
+        const response = await apiClient.put(`/categoria/actualizar/${text_id}`, newData);
         return response.data;
     } catch (error) {
         throw new Error(`Error al actualizar el categoria: ${error.message}`);

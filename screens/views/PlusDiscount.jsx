@@ -8,7 +8,7 @@ import DiscountProvider from '../context/discount/DiscountProvider';
 
 const PlusDiscount = (props) => {
     const navigation = useNavigation();
-    const {discounts,toggleDiscountStatus,handleEditDiscount} = useDiscount();
+    const {discounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount} = useDiscount();
     const [showModal, setShowModal] = useState(false);
     const [editedData, setEditedData] = useState({});
     const [selectedDiscount, setSelectedDiscount] = useState({});
@@ -35,6 +35,7 @@ const PlusDiscount = (props) => {
     try {
       await handleEditDiscount(selectedDiscount.id, editedData);
       console.log('Descuento editado exitosamente');
+      await handleUpdateDiscount(selectedDiscount.id, editedData);
       setShowModal(false);
     } catch (error) {
       console.error('Error al editar el descuento:', error);
