@@ -90,6 +90,7 @@ function ArticulosScreen() {
     ),}}
       />
       <Stack.Screen name="Crear Articulo" component={ArticlesForm}></Stack.Screen>
+      
       <Stack.Screen name="Categorias" component={PlusCategory} options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
       <Stack.Screen name="Crear Categoria" component={CategoryForm} ></Stack.Screen>
       <Stack.Screen name="Descuento" component={DiscountForm}  ></Stack.Screen>

@@ -8,8 +8,9 @@ const createArticle = async (newArticle) => {
             status
          }
      } catch (error) {
-         console.log('Error:',error.response.data);
-     }
+        console.error("Error creating article:", error);
+        return { status: 500, error: error.message };
+      }
  }
 
  const listArticles = async () => {
@@ -37,8 +38,21 @@ const updateArticles = async(text_id,updateArticle) => {
     }
 }
 
+const deleteArticles = async(text_id) => {
+    try{
+        const{data, status} = await apiClient.delete(`/articulo/eliminar/${text_id}`);
+        return{
+            data,
+            status
+        };
+    }catch (error) {
+        console.log('Error:',error.response.data);
+    }
+}
+
  export {
      createArticle,
      listArticles,
-     updateArticles
+     updateArticles,
+     deleteArticles
  }

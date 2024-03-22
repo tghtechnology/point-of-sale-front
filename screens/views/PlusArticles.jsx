@@ -1,12 +1,45 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,FlatList } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity,FlatList, TextInput,Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
-
-
+import { useNavigation } from '@react-navigation/native';
 
 export default function PlusCategory(props) {
-  const {listArticle} = useArticle();
+  const {listArticle,handleDeleteArticle,handleEditArticle } = useArticle();
+  const [editedData, setEditedData] = useState({});
+  const [selectedArticles, setSelectedArticles] = useState({});
+
+  const handleEdit = (article) => {
+    setSelectedArticles(article);
+    setEditedData({
+      ...article,
+      nombre: article.nombre,
+      color: article.color,
+    });
+    setShowModal(true);
+  };
+
+  const handleChange = (name, value) => {
+    setEditedData({
+      ...editedData,
+      [name]: value,
+    });
+  };
+
+const handleSubmit = async () => {
+try {
+  await handleEditArticle(selectedArticles, editedData);
+  console.log('Descuento editado exitosamente');
+  
+} catch (error) {
+  console.error('Error al editar el descuento:', error);
+}
+};
+
+const handleCancel = () => {
+setShowModal(false);
+};
+  
   return (
     
     <View style={styles.container}>
@@ -18,6 +51,9 @@ export default function PlusCategory(props) {
                 <Text style={styles.itemText}>{item.precio}</Text>
             <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
               <Text style={styles.buttonText}>Editar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => handleDeleteArticle (item)}>
+              <Text style={styles.buttonText}>Eliminar</Text>
             </TouchableOpacity>
         </View>
          )}
@@ -36,6 +72,7 @@ export default function PlusCategory(props) {
       <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Articulo")}>
         <MaterialCommunityIcons name="plus" size={24} color="white" />
       </TouchableOpacity>
+      
     </View>
   );
 }

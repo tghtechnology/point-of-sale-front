@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react";
-import { createArticle, listArticles, updateArticles } from "../../services/ArticleService";
+import { createArticle, listArticles, updateArticles,deleteArticles } from "../../services/ArticleService";
 import ArticleContext from "./ArticleContext";
 const ArticleProvider = ({children}) => {
     const [listArticle, setListArticle] = useState([]);
@@ -41,7 +41,7 @@ const ArticleProvider = ({children}) => {
             const { status } = await updateArticles(text_id, updateArticle); 
             if(status === 200 || status === 201){
                 const updateData = listArticle.map((article) => 
-                article.id === id? {...article, ...updateArticle} : article);
+                article.text_id === text_id? {...article, ...updateArticle} : article);
                 setListArticle(updateData);
               return true;
             } else {
@@ -53,8 +53,23 @@ const ArticleProvider = ({children}) => {
         }
     }
 
+    const handleDeleteArticle = async (text_id) => {
+        try {
+            const { status } = await deleteArticles(text_id);
+            if (status === 200) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error("Error deleting article:", error);
+            return false;
+        }
+    }
+
+
     return (
-        <ArticleContext.Provider value={{ handleCreateArticle,listArticle,handleEditArticle }}>
+        <ArticleContext.Provider value={{ handleCreateArticle,listArticle,handleEditArticle, handleDeleteArticle }}>
             {children}
         </ArticleContext.Provider>
     )
