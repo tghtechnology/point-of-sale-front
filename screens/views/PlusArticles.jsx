@@ -3,40 +3,35 @@ import { View, Text, StyleSheet, TouchableOpacity,FlatList } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
 
-export default function PlusArticles(props) {
+
+
+export default function PlusCategory(props) {
   const {listArticle} = useArticle();
   return (
-    <View style={styles.container}> 
+    
+    <View style={styles.container}>
       <FlatList
-            data={listArticle}
-            renderItem={({ item }) => (
-            
-            <View style={styles.itemContainer}>
-                <Text style={styles.itemText}>{item.nombre}</Text>
+        data={listArticle}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>
+            <Text style={styles.itemText}>{item.nombre}</Text>
                 <Text style={styles.itemText}>{item.precio}</Text>
-                <View style={styles.buttonContainer}> 
-                    <TouchableOpacity style={styles.editButton} onPress= {() => props.navigation.navigate("Crear Articulo")} >
-                      <Text>Editar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.deleteButton}>
-                      <Text>Eliminar</Text>
-                    </TouchableOpacity>
-                </View>
-
-            </View>
-            )}
-            keyExtractor={(item) => item.id.toString()} 
+            <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
+              <Text style={styles.buttonText}>Editar</Text>
+            </TouchableOpacity>
+        </View>
+         )}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
+          ListEmptyComponent={() => (
+        <View>
+          
+        <MaterialCommunityIcons name="content-copy" size={100} color="#808080" />
+        <Text style={styles.text}>Todavía no tiene Categorias</Text>
+        <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
+        </View>
+        )}
         />
-      
-        {listArticle.length === 0 ? (
-        <>
-          <View style={styles.circle}>
-            <MaterialCommunityIcons name="format-list-bulleted" size={100} color="#808080" />
-          </View>
-          <Text style={styles.text}>Todavía no tiene artículos</Text>
-          <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
-        </>
-        ) : null}
 
       <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Articulo")}>
         <MaterialCommunityIcons name="plus" size={24} color="white" />
@@ -49,10 +44,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems:'center',
-    
+    alignItems: 'center',
+    marginTop: 5,
   },
-  
   circle: {
     width: 170,
     height: 170,
@@ -79,44 +73,36 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
   },
+  itemContainer: {
+    marginBottom: 10,
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 3,
+  },
   itemText: {
     fontSize: 18,
     color: '#333',
     fontWeight: 'bold',
     marginBottom: 5,
-    textAlign:'right',
-    paddingLeft: 10,
-    paddingRight: 200,
-    
   },
-  itemContainer: {
-    marginTop:10,
+  button: {
+    borderRadius: 5,
     padding: 15,
-    backgroundColor: '#fff',
-    borderColor: '#ddd',
-    shadowColor: '#000',
-    alignItems:'center',
-    shadowOpacity: 0.8,
-    
+    alignItems: 'center',
+    marginTop: 10,
+    backgroundColor: 'red',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '50%',
-    alignItems:'center',
-    paddingLeft:70,
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
   },
-
-  editButton: {
-    backgroundColor: '#ff0000', 
-    borderRadius: 20,
-    padding: 10,
-  },
-  deleteButton: {
-    backgroundColor: '#ff0000', 
-    borderRadius: 20,
-    padding: 10,
-  },
-
 });
 

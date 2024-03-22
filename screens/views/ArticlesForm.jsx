@@ -21,7 +21,6 @@ export default function ArticlesForm() {
   const {listCategory} = useCategory();
   const { updateArticles } = useArticle();
   
-
   const getValues = (name, value) => {
     setDatos({
       ...datos,
@@ -36,15 +35,12 @@ export default function ArticlesForm() {
     });
   };
 
-
   const handleCategoryChange = (value) => {
     setDatos({
       ...datos,
       nombre_categoria: value,
     });
   };
-
-
 
   const SubmitArticle = async () => {
     try {
@@ -80,7 +76,6 @@ export default function ArticlesForm() {
         <Picker
           onValueChange={(value) => handleCategoryChange(value)}
           value={datos.nombre_categoria}
-
           style={styles.picker}
         >
           {

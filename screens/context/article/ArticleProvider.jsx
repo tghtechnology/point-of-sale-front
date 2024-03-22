@@ -36,9 +36,9 @@ const ArticleProvider = ({children}) => {
         }
     }
 
-    const handleEditArticle = async(id, updateArticle) => {
+    const handleEditArticle = async(text_id, updateArticle) => {
         try {
-            const { status } = await updateArticles(id, updateArticle); 
+            const { status } = await updateArticles(text_id, updateArticle); 
             if(status === 200 || status === 201){
                 const updateData = listArticle.map((article) => 
                 article.id === id? {...article, ...updateArticle} : article);

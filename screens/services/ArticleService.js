@@ -25,11 +25,9 @@ const createArticle = async (newArticle) => {
     }
 }
 
-
-
-const updateArticles = async(id,updateArticle) => {
+const updateArticles = async(text_id,updateArticle) => {
     try{
-        const{data, status} = await apiClient.put(`/articulo/actualizar/${id}`,updateArticle);
+        const{data, status} = await apiClient.put(`/articulo/actualizar/${text_id}`,updateArticle);
         return{
             data,
             status
