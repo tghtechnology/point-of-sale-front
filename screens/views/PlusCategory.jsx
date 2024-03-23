@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 
 
 export default function PlusCategory(props) {
+
+  
   return (
     <View style={styles.container}>
       <View style={styles.circle}>

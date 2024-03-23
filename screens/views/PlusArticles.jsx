@@ -4,42 +4,16 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
 import { useNavigation } from '@react-navigation/native';
 
-export default function PlusCategory(props) {
+export default function PlusCategory() {
   const {listArticle,handleDeleteArticle,handleEditArticle } = useArticle();
-  const [editedData, setEditedData] = useState({});
-  const [selectedArticles, setSelectedArticles] = useState({});
+  const navigation = useNavigation();
 
-  const handleEdit = (article) => {
-    setSelectedArticles(article);
-    setEditedData({
-      ...article,
-      nombre: article.nombre,
-      color: article.color,
-    });
-    setShowModal(true);
+  const handleEdit = (item) => {
+    navigation.navigate('Editar Articulo', { article: item });
+    console.log(item)
   };
 
-  const handleChange = (name, value) => {
-    setEditedData({
-      ...editedData,
-      [name]: value,
-    });
-  };
 
-const handleSubmit = async () => {
-try {
-  await handleEditArticle(selectedArticles, editedData);
-  console.log('Descuento editado exitosamente');
-  
-} catch (error) {
-  console.error('Error al editar el descuento:', error);
-}
-};
-
-const handleCancel = () => {
-setShowModal(false);
-};
-  
   return (
     
     <View style={styles.container}>
@@ -63,13 +37,13 @@ setShowModal(false);
         <View>
           
         <MaterialCommunityIcons name="content-copy" size={100} color="#808080" />
-        <Text style={styles.text}>Todavía no tiene Categorias</Text>
+        <Text style={styles.text}>Todavía no tiene Articulos</Text>
         <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
         </View>
         )}
         />
 
-      <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Articulo")}>
+      <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Crear Articulo")}>
         <MaterialCommunityIcons name="plus" size={24} color="white" />
       </TouchableOpacity>
       
