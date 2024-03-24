@@ -4,12 +4,22 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
 import { useNavigation } from '@react-navigation/native';
 
+
 export default function PlusCategory() {
   const {listArticle,handleDeleteArticle,handleEditArticle } = useArticle();
+  const [articles, setArticles] = useState(listArticle); // Añade esta línea
   const navigation = useNavigation();
 
+  const handleDelete = async (text_id) => {
+    const success = await handleDeleteArticle(text_id);
+    if (success) {
+      setArticles(articles.filter(article => article.text_id !== text_id));
+    }
+  };
+
+
   const handleEdit = (item) => {
-    navigation.navigate('Editar Articulo', { article: item });
+    navigation.navigate('Editar Articulo', { article: item});
     console.log(item)
   };
 
@@ -26,7 +36,7 @@ export default function PlusCategory() {
             <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
               <Text style={styles.buttonText}>Editar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => handleDeleteArticle (item)}>
+            <TouchableOpacity style={styles.button} onPress={() => handleDelete (item.text_id)}>
               <Text style={styles.buttonText}>Eliminar</Text>
             </TouchableOpacity>
         </View>

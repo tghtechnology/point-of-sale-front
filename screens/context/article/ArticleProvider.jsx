@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react";
-import { createArticle, listArticles, updateArticles,deleteArticles } from "../../services/ArticleService";
+import { createArticle, listArticles, editArticles,updateArticle,deleteArticles } from "../../services/ArticleService";
 import ArticleContext from "./ArticleContext";
 const ArticleProvider = ({children}) => {
     const [listArticle, setListArticle] = useState([]);
@@ -37,21 +37,24 @@ const ArticleProvider = ({children}) => {
     }
 
     const handleEditArticle = async(text_id, updateArticle) => {
+        console.log(text_id)
         try {
-            const { status } = await updateArticles(text_id, updateArticle); 
-            if(status === 200 || status === 201){
+            const response = await editArticles(text_id, updateArticle); 
+            if(response && response.status === 200){
                 const updateData = listArticle.map((article) => 
                 article.text_id === text_id? {...article, ...updateArticle} : article);
                 setListArticle(updateData);
-              return true;
-            } else {
-              return false;
+                console.log('Articulo editado exitosamente');
+            } else if (response && response.status === 204) {
+              console.log('Articulos editado exitosamente');
             }
-        } catch (error) {
-            console.error("Error actualizando article:", error);
-            return false; 
-        }
-    }
+          } catch (error) {
+            console.error('Error editing articulo:', error);
+          }
+        };
+
+        
+  
 
     const handleDeleteArticle = async (text_id) => {
         try {

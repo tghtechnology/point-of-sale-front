@@ -26,17 +26,17 @@ const createArticle = async (newArticle) => {
     }
 }
 
-const updateArticles = async(text_id,updateArticle) => {
-    try{
-        const{data, status} = await apiClient.put(`/articulo/actualizar/${text_id}`,updateArticle);
-        return{
-            data,
-            status
-        };
-    }catch (error) {
-        console.log('Error:',error.response.data);
+const editArticles = async(updateArticle) => {
+    console.log(editArticles)
+    try {
+        const response = await apiClient.put(`/categoria/actualizar/${text_id}`, updateArticle);
+        if (response.status === 200) {
+        return response.data;
+      }
+    } catch (error) {
+      throw new Error('Error al editar el articulo');
     }
-}
+  };
 
 const deleteArticles = async(text_id) => {
     try{
@@ -50,9 +50,10 @@ const deleteArticles = async(text_id) => {
     }
 }
 
+
  export {
      createArticle,
      listArticles,
-     updateArticles,
+     editArticles,
      deleteArticles
  }
