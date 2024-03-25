@@ -1,72 +1,13 @@
 import React, { useState,useEffect  } from 'react'
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Modal from 'react-native-modal';
-import { Picker } from '@react-native-picker/picker';
 
 
 const FormRegisEmpleado = () => {
-  const [data, setData] = useState({
-    id:'',
-    nombre:'',
-    email:'',
-    password:'',
-    pais: 'Selecciona un país',
-  });
-  const [countries, setCountries] = useState(['Selecciona un país']);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [isModalVisible, setModalVisible] = useState(false);
+    //Colocar Logica
+
   
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
-  useEffect(() => {
-    const loadCountries = async () => {
-      try {
-        const countriesData = await obtenerPais();
-        setCountries(['Selecciona un país', ...countriesData]);
-      } catch (error) {
-        // Manejar errores si es necesario
-      }
-    };
-
-    loadCountries();
-  }, []);
-
-  const EnviarDatos = async () => {
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (
-      !data.nombre ||
-      !emailRegex.test(data.email) ||
-      data.password.length < 8 ||
-      data.pais === 'Selecciona un país'
-    ) {
-      if (!emailRegex.test(data.email)) {
-        alert('Ingresa una dirección de correo electrónico válida.');
-      } else if (data.password.length < 8) {
-        alert('La contraseña debe tener al menos 8 caracteres.');
-      } else {
-        alert('Por favor, llena todos los campos correctamente.');
-      }
-      return; // Si no están llenos o la contraseña es menor a 8 caracteres, termina la función aquí
-    }
-    try{ 
-      const response = await registroUsuario(data);
-      console.log('Respuesta de la API:', response);
-      toggleModal();
-      setData({
-        id: '',
-        nombre: '',
-        email: '',
-        password: '',
-        pais: 'Selecciona un país',
-        });
-    } catch (error) {
-      console.error('Error al enviar datos:', error.message);
-    }
-  }
   return (
     <View style={styles.container}>
         <Text style={styles.Tittle}>Registro Empleado</Text>
@@ -78,7 +19,6 @@ const FormRegisEmpleado = () => {
         //value={data.email}
         //onChangeText={(text) => setData({...data, email:text})}
         />
-
         <TextInput
             style={styles.input}
             placeholder="Correo Electronico"
@@ -87,7 +27,6 @@ const FormRegisEmpleado = () => {
         //value={data.password}
         //onChangeText={(text) => setData({ ...data, password: text })}
         />
-
         <TextInput
             style={styles.input}
             placeholder="Numero de Telefono"
@@ -95,7 +34,6 @@ const FormRegisEmpleado = () => {
         //value={data.nombre}
         //onChangeText={(text) => setData({...data, nombre:text})
         />
-
         <TextInput
             style={styles.input}
             placeholder="Seleccionar Funciones"
@@ -103,8 +41,6 @@ const FormRegisEmpleado = () => {
         //value={data.nombre}
         //onChangeText={(text) => setData({...data, nombre:text})}
         />
-
-
         <TouchableOpacity style={styles.buttonRegister}>
             <Text style={styles.buttonText}>Registrar</Text>
         </TouchableOpacity>
