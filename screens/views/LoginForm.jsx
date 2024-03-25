@@ -6,104 +6,40 @@ import CustomAlert from '../componentes/CustomAlert';
 import useAuth from '../hooks/useAuth';
 // import CustomAlert from '../../Alertas/CustomAlert';
 
-
-const INITIAL_LOGIN = {
-  email:'',
-  password:''
-}
 const LoginForm = () => {
   const navigation = useNavigation();
-  const [value, setValues] = useState(INITIAL_LOGIN);
-
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const [inconAlertVisible, setConAlertVisible] = useState(false);
   const [emailAlertVisible, setEmailAlertVisible] = useState(false);
-  const {} = useAuth
+  const {loginAccess} = useAuth();
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
   //Logica de Iniciar Secion
 
-  const getValuesLogin = (name, value) => {
-    setValues(prevState => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
 
-  const handleSignIn = () => {
 
-  //   // Verifica si los campos de entrada están vacíos
-  //   if (!email.trim() || !password.trim()) {
-  //     setConAlertVisible(true)
-  //     return;
-  //   }
-  //   //aqui termina
-  
-  //   // Verifica si el correo electrónico es válido
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!emailRegex.test(email)) {
-  //     setEmailAlertVisible(true)
-  //     return;
-  //   }
-  //   //Aqui Termina
-
-    // fetch('http://192.168.18.27:3000/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(userData),
-    // })
-    //   .then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Invalid credentials');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     setSuccessAlertVisible(true);
-    //     navigation.navigate('Home');
-    //   })
-    //   .catch(error => {
-    //     setErrorAlertVisible(true); // Muestra la alerta de error
-    //   });
-
-    navigation.navigate('Home')
+  const handleSignIn = async () => {
+    try {
+      const response = await loginAccess(credentials);
+      if (response == true) {
+        alert("Sesion Iniada")
+        navigation.navigate("Home")
+      } else {
+        alert("Secion no iniciada");
+      }
+    } catch (error) {
+      alert("Secion no iniciada");
+    }
   };
   //Aqui Termina
 
   const handleIniciarPress = () => {
-    navigation.navigate('Home');
+    navigation.navigate('Envio');
   };
 
-  // const handleRecibosPress = () => {
-  //   console.log('Registro presionado');
-  //   navigation.navigate('FormRecibos');
-  // };
-
-  const handleSend  = async () => {
-    const objectSend = {
-      ...value,
-      email:value,
-      password:value,
-    }
-    if(Object.values(value).includes("")){
-      alert("Complete todos los campos")
-    }
-    try {
-      const response = await handleCreateUser(objectSend);
-      if(response){
-        alert("Usuario creado con exito")
-        setDataForm(INITIAL_STATE);
-      }else{
-        alert("El usuarios no se pudo crear");
-      }
-    } catch (error) {
-      alert("problema interno del servidor")
-    }
-    console.log("valor del formulario"  + JSON.stringify(objectSend));
-  }
   return (
     <View style={styles.container}>
       {/* INPUT DE USUARIO */}
@@ -111,8 +47,12 @@ const LoginForm = () => {
         style={styles.input}
         placeholder='Correo Electrónico'
         placeholderTextColor="#546574"
-        value={value.email}
-        onChangeText={(text) => getValuesLogin("email",text)}
+        onChangeText={(text) =>
+          setCredentials((prevCredentials) => ({
+            ...prevCredentials,
+            email: text,
+          }))
+        }
       />
 
       {/* INPUT PARA CONTRASEÑA */}
@@ -121,12 +61,16 @@ const LoginForm = () => {
         placeholder='Contraseña'
         placeholderTextColor="#546574"
         secureTextEntry={true}
-        value={value.password}
-        onChangeText={(text) => getValuesLogin("password",text)}
+        onChangeText={(text) =>
+          setCredentials((prevCredentials) => ({
+            ...prevCredentials,
+            password: text,
+          }))
+        }
       />
 
       {/* BOTÓN DE INICIO DE SESIÓN */}
-      <TouchableOpacity  onPress={handleIniciarPress} style={styles.button}>
+      <TouchableOpacity onPress={handleSignIn} style={styles.button}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 

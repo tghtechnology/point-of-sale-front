@@ -1,17 +1,23 @@
 import React,{useState} from "react";
-import { Children } from "react/cjs/react.production.min"
 import AuthContext from "./AuthContext"
 import { createToken } from "../../services/authService";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 const AuthProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
 
-    const loginAccess = async (user) => {
-        const { status, data } = await createToken(user);
+    const loginAccess = async (email,password) => {
+        const { status, data } = await createToken(email,password);
         if (status === 200) {
-          await SecureStorage.setItemAsync('token',data.token);
-          //const token = await SecureStore.getItemAsync('token');
+          const usuario_id=data.usuario_id;
+          const token=data.token
+          AsyncStorage.setItem("token",token);
+          AsyncStorage.setItem("usuarioid",usuario_id);
+          const storedToken=AsyncStorage.getItem("token");
+          console.log("Token: ",storedToken);
+          const stored=AsyncStorage.getItem("usuarioid");
+          console.log("Usuario_d: ",stored);
           setIsAuth(true);
-        
+  
           alert("Autenticación exitosa");
           return true;
         } else {
@@ -24,9 +30,8 @@ const AuthProvider = ({children}) => {
     <AuthContext.Provider value={{
         isAuth,
         loginAccess,
-        hangleUserSecion,
     }}>
-        {Children}
+        {children}
     </AuthContext.Provider>
   )
 }

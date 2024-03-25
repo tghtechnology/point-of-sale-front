@@ -2,59 +2,56 @@ import { View, Text } from 'react-native'
 import { TextInput, StyleSheet, Alert } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react'
-import CustomAlert from '../componentes/CustomAlert';
+//Importaciones 
+import { useState,useEffect   } from 'react'
+import useEmail from '../hooks/useEmail';
+import EmailProvider from '../context/email/EmailProvider';
+//
+//import CustomAlert from '../componentes/CustomAlert';
 
+//Valores Iniciales
+const INITIAL_STATE = {
+  email:'',
+}
+//
 
 const EnvioCorreoForm = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState('');
-  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
-  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
-  const [campoAlertVisible, setCampoAlertVisible] = useState(false);
-  const [formatAlertVisible, setFormatAlertVisible] = useState(false);
+  const [ dataForm, setDataForm] = useState(INITIAL_STATE);
+  const {handleSendEmail} = useEmail();
+  //const [email, setEmail] = useState('');
+  //const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  //const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  //const [campoAlertVisible, setCampoAlertVisible] = useState(false);
+  //const [formatAlertVisible, setFormatAlertVisible] = useState(false);
 
-  //Logica de Enviar Pin
-  const handleSendPin = () => {
-    // Verificar si el campo de Pin está vacío
-    if (!email.trim()) {
-      setCampoAlertVisible(true);
-      return;
-    }
-    //Aqui termina
-
-    // Verificar si el correo electrónico tiene un formato válido
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setFormatAlertVisible(true);
-      return;
-    }
-    //Aqui Termina
-
-    const userData = {
-      email: email,
-    };
-
-    fetch('http://192.168.18.8:3000/enviarPIN', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
+  //Logica de Enviar Correo
+  const getValues = (name,value) => {
+    setDataForm({
+      ...dataForm,
+      [name]:value
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error al enviar el PIN');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setSuccessAlertVisible(true);
-      })
-      .catch(error => {
-        console.error('Error al enviar el PIN:', error.message);
-        setErrorAlertVisible(true); // Muestra la alerta de error
-      });
+  }
+
+  const handleSend = async () => {
+    const objectSend = {
+      ...dataForm,
+    }
+    
+    //control de errores para el crear un usuario
+    try {
+      const response = await handleSendEmail(objectSend);
+      if(response){
+        alert("Mensaje Enviado Correctamente")
+        setDataForm(INITIAL_STATE);
+      }else{
+        alert("No se envio Correctmente el Mensaje");
+      }
+    } catch (error) {
+      alert("problema interno del servidor")
+      console.log(Error)
+    }
+    console.log("valor del formulario"  + JSON.stringify(objectSend));
   };
   //Aqui Termina
 
@@ -69,48 +66,11 @@ const EnvioCorreoForm = () => {
         style={styles.input}
         placeholder="Direccion de Correo Electronico"
         placeholderTextColor="#546574"
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={text => getValues('email', text)}
       />
-      <TouchableOpacity style={styles.buttonEnviar} onPress={handleSendPin}>
+      <TouchableOpacity style={styles.buttonEnviar} onPress={handleSend}>
         <Text style={styles.buttonText}>Enviar</Text>
       </TouchableOpacity>
-
-      <CustomAlert
-        isVisible={successAlertVisible}
-        onClose={() => setSuccessAlertVisible(false)}
-        title="Envio Exitoso"
-        message="Has enviado el Pin correctamente."
-        buttonColor="green"
-        iconName="check"
-      />
-
-      <CustomAlert
-        isVisible={errorAlertVisible}
-        onClose={() => setErrorAlertVisible(false)}
-        title="Error"
-        message="El Pin no se envio Correctamente. Por favor, inténtalo de nuevo."
-        buttonColor="red"
-        iconName="times-circle"
-      />
-
-      <CustomAlert
-        isVisible={campoAlertVisible}
-        onClose={() => setCampoAlertVisible(false)}
-        title="Campos Incompletos"
-        message="Falta ingresar el Email. Por favor, inténtalo de nuevo."
-        buttonColor="orange"
-        iconName="question" // Agrega el nombre del icono aquí
-      />
-
-      <CustomAlert
-        isVisible={formatAlertVisible}
-        onClose={() => setFormatAlertVisible(false)}
-        title="Formato Incorrecto"
-        message="Ingresar formato Email. Por favor, inténtalo de nuevo."
-        buttonColor="lightblue"
-        iconName="exclamation-triangle" // Agrega el nombre del icono aquí
-      />
-
     </View>
   )
 }
