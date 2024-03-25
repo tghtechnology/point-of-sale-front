@@ -23,6 +23,7 @@ import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
 import ArticlesEditForm from './screens/views/ArticlesEditForm';
 import PlusDiscount from './screens/views/PlusDiscount';
 import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
+import PlusWorkers from './screens/views/PlusWorkers';
 
 
 function StackNavigation() {
@@ -36,7 +37,6 @@ return (
       <Stack.Screen name="Envio" component={EnvioCorreoForm} />
       <Stack.Screen name="Confirmar" component={ConfirmPasswordForm} />
       <Stack.Screen name="Home" component={HomeScreen}
-      
         options={{title: "Soporte",
           headerLeft: () => {
             return (
@@ -84,7 +84,6 @@ function ArticulosScreen() {
      headerRight: () => (
       <><FontAwesome
           name="sort-down"
-          // onPress={() => navigation.navigate('Arti')}
           size={16}
           color="#fff"
           style={{ marginRight: 119 }}/>
@@ -105,13 +104,46 @@ function ArticulosScreen() {
           ),
         }}></Stack.Screen>
       <Stack.Screen name="Descuento" component={PlusDiscount}  options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
-      
+    
       <Stack.Screen name="Descuentos Desactivados" component={PlusFalseDiscount}></Stack.Screen>
     </Stack.Navigator>
   );
 };
 
+function EmpleadoScreen (){
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        statusBarColor: "#ff0000",
+        headerStyle: { backgroundColor: "#ff0000" },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
+      <Stack.Screen name="Empleados" component={PlusWorkers} options={{ headerLeft: () => {
+        return (
+            <Icon
+              name="menu"
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              size={24}
+              color="#fff"
+            />
+          );
+        },
+      }}></Stack.Screen>
 
+      <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado}>
+        
+      </Stack.Screen>
+
+    </Stack.Navigator>
+
+  );
+};
 
 
 
@@ -122,7 +154,7 @@ const DrawerNav =()=> {
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Empleado" component={FormRegisEmpleado}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Empleado" component={EmpleadoScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );
 };
