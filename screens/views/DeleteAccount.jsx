@@ -28,16 +28,13 @@ export default function DeleteAccount() {
             </TouchableOpacity>
 
             <Modal
+                visible={showModal}
                 animationType="slide"
                 transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
+                onRequestClose={handleCancel}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalText}>Introduzca su contraseña</Text>
+                        <Text style={styles.modalTitle}>Introduzca su contraseña</Text>
                         <Text style={styles.subText}>Por temas de seguridad, por favor introduzca su contraseña para continuar</Text>
                         <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'blue' : 'gray' }]}>
                             <Text style={[styles.inputLabel, { top: isFocused || password ? -25 : 10 }]}>Contraseña</Text>

@@ -7,7 +7,7 @@ import CategoryProvider from '../context/category/CategoryProvider';
 import { listCategories } from '../services/CategoryService';
 
 
- const PlusCategory = (props) => {
+ const PlusCategory = () => {
   const navigation = useNavigation();
   const {categories, handleEditCategories, handleUpdateCategory,handleDeleteCategory } = useCategory();
   const [category, setCategory] = useState(categories); 
@@ -78,7 +78,7 @@ const handleCancel = () => {
         </View>
         )}
         />
-      <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Categoria")}>
+      <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Crear Categoria")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
       <Modal

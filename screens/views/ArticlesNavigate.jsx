@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 export default function ArticlesNavigate() {
@@ -28,6 +28,13 @@ export default function ArticlesNavigate() {
       >
         <MaterialCommunityIcons name="tag-outline" size={24} color="#708090" />
         <Text style={styles.text}>Descuento</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Impuestos")}
+        style={styles.container}
+      >
+        <FontAwesome5 name="percentage" size={24} color="#708090" />
+        <Text style={styles.text}>Impuestos</Text>
       </TouchableOpacity>
     </View>
   );

@@ -154,8 +154,7 @@ export default function ArticlesForm() {
       <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>CREAR ARTICULO</Text>
       </TouchableOpacity>
-      <View style={{ height: 20 }} />
-      
+  
     </View>
   );
 }

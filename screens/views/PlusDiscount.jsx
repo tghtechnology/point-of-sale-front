@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import useDiscount from '../hooks/useDiscount';
 import DiscountProvider from '../context/discount/DiscountProvider';
 
-const PlusDiscount = (props) => {
+const PlusDiscount = () => {
     const navigation = useNavigation();
     const {discounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount} = useDiscount();
     const [showModal, setShowModal] = useState(false);
@@ -85,10 +85,10 @@ const PlusDiscount = (props) => {
     </View>
         )}
         />
-      <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Descuento")}>
+      <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Crear Descuento")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
        </TouchableOpacity>
-       <TouchableOpacity style={styles.descButton} onPress= {() => props.navigation.navigate("Descuentos Desactivados")}>
+       <TouchableOpacity style={styles.descButton} onPress= {() => navigation.navigate("Descuentos Desactivados")}>
         <MaterialCommunityIcons name="close-circle" size={30} color="white" />
        </TouchableOpacity>
 
