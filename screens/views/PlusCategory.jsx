@@ -4,14 +4,23 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useCategory from '../hooks/useCategory';
 import CategoryProvider from '../context/category/CategoryProvider';
+import { listCategories } from '../services/CategoryService';
 
 
  const PlusCategory = (props) => {
   const navigation = useNavigation();
-  const {categories, handleEditCategories, handleUpdateCategory } = useCategory();
+  const {categories, handleEditCategories, handleUpdateCategory,handleDeleteCategory } = useCategory();
+  const [category, setCategory] = useState(categories); 
   const [showModal, setShowModal] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [selectedCategories, setSelectedCategories] = useState({});
+
+  const handleDelete = async (text_id) => {
+    const success = await handleDeleteCategory (text_id);
+    if (success) {
+      setCategory(category.filter(category => category.text_id !== text_id));
+    }
+  };
 
     const handleEdit = (category) => {
       setSelectedCategories(category);
@@ -53,6 +62,9 @@ const handleCancel = () => {
             <Text style={styles.itemText}>{item.nombre}</Text>
             <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
               <Text style={styles.buttonText}>Editar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => handleDelete(item.text_id)}>
+              <Text style={styles.buttonText}>Eliminar</Text>
             </TouchableOpacity>
         </View>
     )}
@@ -140,7 +152,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#ff0000', // Color del botón
+    backgroundColor: '#ff0000', 
     borderRadius: 20,
     padding: 10,
   },

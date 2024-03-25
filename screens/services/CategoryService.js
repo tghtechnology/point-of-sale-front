@@ -13,28 +13,17 @@ const createCategory = async (newCategory) => {
     }
 }
 
-const listCategories = async () => {
-    try {
-        const { data,status } = await apiClient.get(`/categoria/listar`); 
-        return {
-            data,
-            status
-        }; 
-    } catch (error) {
-        console.log(error);
-        throw new Error('Error al cargar categorias'); 
-    }
-}
 
 const getCategories = async () => {
     try {
         const response = await apiClient.get('/categoria/listar');
-        return response.data; 
+        return response.data; // Devuelve los datos de los descuentos
     } catch (error) {
         console.log(error);
-        return []; 
+        return []; // En caso de error, devuelve un array vacío
     }
 };
+
 
 const editCategories = async ( updatedData) => {
     console.log('.')
@@ -57,9 +46,20 @@ const editCategories = async ( updatedData) => {
         throw new Error(`Error al actualizar el categoria: ${error.message}`);
     }
     };
+ const deleteCategory = async(text_id) => {
+        try{
+            const{data, status} = await apiClient.delete(`/categoria/eliminar/${text_id}`);
+            return{
+                data,
+                status
+            };
+        }catch (error) {
+            console.log('Error:',error.response.data);
+        }
+    }
 
     
 export {
-    createCategory,listCategories, getCategories,editCategories,updateCategory
+    createCategory, getCategories,editCategories,updateCategory,deleteCategory
 
 }

@@ -1,37 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { createCategory, editCategories, getCategories,updateCategory} from "../../services/CategoryService";
+import { createCategory, editCategories, getCategories,updateCategory,deleteCategory} from "../../services/CategoryService";
 import CategoryContext from "./CategoryContext";
 
 
 const CategoryProvider = ({children}) => {
     const [categories, setCategories] = useState([]);
-    
+   
     const handleCreateCategory = async (newCategory) => {
-      const { nombre, color } = newCategory; // Desestructura el objeto newCategory para obtener el nombre y el color
+      const { nombre, color } = newCategory; 
       
       try {
-          const response = await createCategory({ nombre, color }); // Envía tanto el nombre como el color al servicio de creación de categorías
+          const response = await createCategory({ nombre, color });
           if (response.status === 200 || response.status === 201) {
-              // Si la creación es exitosa, devolver el objeto de categoría completo
+             
               return response.data;
           } else {
-              return null; // Retorna null si la creación no fue exitosa
+              return null;
           }
       } catch (error) {
           console.error("Error creating category:", error);
-          return null; // Retorna null en caso de error
+          return null;
       }
   }
 
-    const fetchMyCategories = async () => {
-        try {
-            const categories = await getCategories();
-            console.log("categorias obtenidos:", categories);
-            setCategories(categories);
-        } catch (error) {
-            console.error('Error al obtener las categorias:', error);
-        }
-    };
+  const fetchMyCategories = async () => {
+    try {
+        const categories = await getCategories();
+        console.log("categorias obtenidos:", categories);
+        setCategories(categories);
+    } catch (error) {
+        console.error('Error al obtener las categorias:', error);
+    }
+};
+
+useEffect(() => {
+    fetchMyCategories();
+}, []);
 
     useEffect(() => {
         fetchMyCategories();
@@ -70,8 +74,24 @@ const CategoryProvider = ({children}) => {
         }
     };
 
+    const handleDeleteCategory = async (text_id) => {
+        try {
+            const { status } = await deleteCategory(text_id);
+            if (status === 200) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error("Error deleting article:", error);
+            return false;
+        }
+    }
+
+
+
     return (
-        <CategoryContext.Provider value={{ handleCreateCategory, categories, handleEditCategories, handleUpdateCategory}}>
+        <CategoryContext.Provider value={{ handleCreateCategory, categories, handleEditCategories, handleUpdateCategory, handleDeleteCategory}}>
             {children}
         </CategoryContext.Provider>
     )

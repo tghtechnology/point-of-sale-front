@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function PlusCategory() {
   const {listArticle,handleDeleteArticle,handleEditArticle } = useArticle();
-  const [articles, setArticles] = useState(listArticle); // Añade esta línea
+  const [articles, setArticles] = useState(listArticle); 
   const navigation = useNavigation();
 
   const handleDelete = async (text_id) => {

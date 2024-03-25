@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 }
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
-  const {handleCreateCategory,handleUpdateCategory} = useCategory();
+  const {handleCreateCategory,handleUpdateCategory, handleDeleteCategory} = useCategory();
 
   const getValues = (name,value) => {
     setDatos({
@@ -38,7 +38,7 @@ const CategoryForm = () => {
   {/* IMPUT DEL NOMBRE DE LA CATEGORIA */}
       <TextInput
         style={styles.input}
-        placeholder='Nombre'
+        placeholder='El nombre de la categoría'
         placeholderTextColor="#546574"
         value={datos.nombre}
         onChangeText={(text) => getValues('nombre', text)}  
@@ -46,7 +46,7 @@ const CategoryForm = () => {
       {/* Input del color de la categoría */}
       <TextInput
         style={styles.input}
-        placeholder='Color'
+        placeholder='Color de la categoría'
         placeholderTextColor="#546574"
         value={datos.color}
         onChangeText={(text) => getValues('color', text)}
@@ -58,6 +58,10 @@ const CategoryForm = () => {
       <View style={{ height: 20 }} />
       <TouchableOpacity style={styles.buttonContainer}>
         <Text style={styles.buttonText}>ASIGNAR ARTÍCULOS</Text>
+      </TouchableOpacity>
+      <View style={{ height: 30 }} />
+      <TouchableOpacity style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>CREAR ARTÍCULO</Text>
       </TouchableOpacity>
       </View>
     

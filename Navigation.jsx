@@ -21,7 +21,6 @@ import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
 import DiscountForm from './screens/views/DiscountForm';
 import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
 import ArticlesEditForm from './screens/views/ArticlesEditForm';
-import FormRegisEmpleado from './screens/Empleado/FormRegisEmpleado';
 import PlusDiscount from './screens/views/PlusDiscount';
 import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
 
@@ -96,8 +95,8 @@ function ArticulosScreen() {
       <Stack.Screen name="Crear Articulo" component={ArticlesForm}></Stack.Screen>
       <Stack.Screen name="Editar Articulo" component={ArticlesEditForm}></Stack.Screen>
       <Stack.Screen name="Categorias" component={PlusCategory} options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
-      <Stack.Screen name="Crear Categoria" component={CategoryForm} ></Stack.Screen>
-      <Stack.Screen name="Descuento" component={DiscountForm}  ></Stack.Screen>
+      
+      <Stack.Screen name="Crear Descuento" component={DiscountForm}  ></Stack.Screen>
       <Stack.Screen name="Crear Categoria" component={CategoryForm}  options={{
           headerRight: () => (
             <View style={{ marginRight: 10 }}>
@@ -106,41 +105,14 @@ function ArticulosScreen() {
           ),
         }}></Stack.Screen>
       <Stack.Screen name="Descuento" component={PlusDiscount}  options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
-      <Stack.Screen name="Crear Descuento" component={DiscountForm}></Stack.Screen>
+      
       <Stack.Screen name="Descuentos Desactivados" component={PlusFalseDiscount}></Stack.Screen>
     </Stack.Navigator>
   );
 };
 
 
-function DescuentoScreen(){
-  const Stack = createNativeStackNavigator();
-  const navigation = useNavigation();
-return(
-  <Stack.Navigator
-      screenOptions={{
-        statusBarColor: "#ff0000",
-        headerStyle: { backgroundColor: "#ff0000" },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          color: "#fff",
-        },
-      }}
-    >
-    <Stack.Screen name="Descuento" component={DiscountForm} options={{ headerLeft: () => {
-        return (
-            <Icon
-              name="menu"
-              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              size={24}
-              color="#fff"
-            />
-          );
-        },
-      }}></Stack.Screen>
-    </Stack.Navigator>
-);
-};
+
 
 
 const DrawerNav =()=> {
