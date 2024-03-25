@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 }
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
-  const {handleCreateCategory} = useCategory();
+  const {handleCreateCategory,handleUpdateCategory} = useCategory();
 
   const getValues = (name,value) => {
     setDatos({
@@ -17,20 +17,22 @@ const CategoryForm = () => {
       [name]:value
     })
   }
-  const SubmitCategory= async() =>{
+  const SubmitCategory = async () => {
     try {
       const response = await handleCreateCategory(datos);
       if(response){
-        alert("La categoria ha sido creado con exito")
+        alert("La categoría ha sido creada con éxito");
         setDatos(INITIAL_STATE);
-      }else{
-        alert("La categoria no se pudo crear");
+        // Llamar a handleUpdateCategory solo si la categoría se crea exitosamente
+        await handleUpdateCategory(response.text_id, datos);
+      } else {
+        alert("La categoría no se pudo crear");
       }
     } catch (error) {
-      alert("problema interno del servidor")
+      alert("Problema interno del servidor");
     }
-    console.log("valor del formulario"  + JSON.stringify(datos));
-}
+    console.log("Valor del formulario: " + JSON.stringify(datos));
+  }
   return (
 <View style={styles.container}>
   {/* IMPUT DEL NOMBRE DE LA CATEGORIA */}
