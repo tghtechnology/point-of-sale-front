@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
+import useAuth from '../hooks/useAuth';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import useAuth from '../hooks/useUser';
 
 export default function DeleteAccount() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -10,27 +10,23 @@ export default function DeleteAccount() {
     const [deleteType, setDeleteType] = useState('');
     const {handleVerifyPassword} = useAuth();
 
-    // const handleDeleteAccount = (type) => {
-    //     setDeleteType(type);
-    //     setModalVisible(true);
-    // };
+     const handleDeleteAccount = (type) => {
+        setDeleteType(type);
+         setModalVisible(true);
+     };
 
-    const handleDeleteAccount = async () => {
-        const response = await handleVerifyPassword(AsyncStorage.getItem("usuarioid"),password);
-        if(response === true){
-            alert("la contraseña es correcta")
+     const handleContinue = async () => {
+        const storedUserId = await AsyncStorage.getItem("usuarioid");
+        const response = await handleVerifyPassword(storedUserId, password);
+        if (response) {
+            alert("La contraseña es correcta");
             setPassword('');
-        }else{
-            alert("problema")
+            setModalVisible(false);
+        } else {
+            alert("La contraseña es incorrecta");
         }
-
     }
 
-    const handleContinue = () => {
-        console.log(`Entered Password for ${deleteType}:`, password);
-        
-        setModalVisible(false);
-    };
 
     return (
         <View>
@@ -53,7 +49,7 @@ export default function DeleteAccount() {
                     <View style={styles.modalContent}>
                         <Text style={styles.modalText}>Introduzca su contraseña</Text>
                         <Text style={styles.subText}>Por temas de seguridad, por favor introduzca su contraseña para continuar</Text>
-                        <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'red' : 'gray' }]}>
+                        <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'red' : 'red' }]}>
                             <Text style={[styles.inputLabel, { top: isFocused || password ? -25 : 10 }]}>Contraseña</Text>
                             <TextInput
                                 style={styles.input}
@@ -69,7 +65,7 @@ export default function DeleteAccount() {
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <Text style={styles.buttonText}>Cancelar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={handleContinue}>
+                            <TouchableOpacity onPress={() => handleContinue(password)}>
                                 <Text style={styles.buttonText}>Continuar</Text>
                             </TouchableOpacity>
                         </View>

@@ -18,7 +18,7 @@ const verifyUser = async (id,password) =>{
             data,
             status
         }
-    }catch{
+    }catch(error){
             console.log(error);
         }
     }
