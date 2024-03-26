@@ -30,8 +30,10 @@ const AuthProvider = ({ children }) => {
   const logautAccess = async (token) => {
     const status = await getTokem(token);
     if (status===200) {
+      const token=data.token
       const storedToken = AsyncStorage.getItem("token");
       console.log("Token: ", storedToken);
+      AsyncStorage.removeItem("token");
       setIsAuth(true);
       alert("Cierre de sesión exitoso");
       return true;
