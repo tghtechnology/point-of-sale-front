@@ -14,7 +14,7 @@ export default function DeleteAccount() {
 
     const handleContinue = () => {
         console.log(`Entered Password for ${deleteType}:`, password);
-        // Aquí puedes implementar la lógica para eliminar la cuenta según el tipo
+        
         setModalVisible(false);
     };
 
@@ -28,15 +28,18 @@ export default function DeleteAccount() {
             </TouchableOpacity>
 
             <Modal
-                visible={showModal}
                 animationType="slide"
                 transparent={true}
-                onRequestClose={handleCancel}>
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Introduzca su contraseña</Text>
+                        <Text style={styles.modalText}>Introduzca su contraseña</Text>
                         <Text style={styles.subText}>Por temas de seguridad, por favor introduzca su contraseña para continuar</Text>
-                        <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'blue' : 'gray' }]}>
+                        <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'red' : 'gray' }]}>
                             <Text style={[styles.inputLabel, { top: isFocused || password ? -25 : 10 }]}>Contraseña</Text>
                             <TextInput
                                 style={styles.input}
@@ -78,15 +81,19 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         elevation: 5,
+        width: '80%',
     },
     modalText: {
         fontSize: 18,
-        marginBottom: 5,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
     },
     subText: {
-        fontSize: 14,
-        marginBottom: 15,
+        fontSize: 16,
+        marginBottom: 20,
         color: 'gray',
+        textAlign: 'center',
     },
     inputContainer: {
         position: 'relative',
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     inputLabel: {
-        marginTop:20,
+        marginTop:2,
         position: 'absolute',
         left: 5,
         color: 'gray',
@@ -112,7 +119,8 @@ const styles = StyleSheet.create({
         
     },
     buttonText: {
-        color: 'black',
+        color: 'red',
         fontSize: 16,
+        fontWeight: 'bold'
     },
 });
