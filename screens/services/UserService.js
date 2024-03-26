@@ -12,20 +12,9 @@ const createUser = async (newUser) => {
     }
 }
 
-const verifyUser = async (id,password) =>{
-    try{
-        const {data, status} = await apiClient.post(`/verificar/${id}`,password);
-        return{
-            data,
-            status
-        }
-    }catch{
-            console.log(error);
-        }
-    }
+
 
 
 export {
-    createUser,
-    verifyUser
+    createUser, 
 }

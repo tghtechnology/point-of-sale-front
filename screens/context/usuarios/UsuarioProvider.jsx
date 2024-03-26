@@ -1,4 +1,4 @@
-import {createUser} from "../../services/UserService"
+import {createUser,verifyUser} from "../../services/UserService"
 import UsuarioContext from "./UsuarioContext";
 const UsuarioProvider = ({children}) => {
     const handleCreateUser = async (newUser) => {
@@ -9,6 +9,8 @@ const UsuarioProvider = ({children}) => {
           return false;
         }
     }
+
+    
 
 
   return (

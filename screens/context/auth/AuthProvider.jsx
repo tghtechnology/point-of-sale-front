@@ -14,7 +14,7 @@ const AuthProvider = ({children}) => {
           AsyncStorage.setItem("usuarioid",usuario_id);
           const storedToken=AsyncStorage.getItem("token");
           console.log("Token: ",storedToken);
-          const stored=AsyncStorage.getItem("usuarioid");
+          const stored=AsyncStorage.getItem("usuario_id");
           console.log("Usuario_d: ",stored);
           setIsAuth(true);
   
@@ -26,10 +26,23 @@ const AuthProvider = ({children}) => {
           return false;
         }
       };
+
+      const handleVerifyPassword = async (id, password) => {
+        const {status} = await verifyUser(id,password);
+        if(status === 200){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+
+
   return (
     <AuthContext.Provider value={{
         isAuth,
         loginAccess,
+        handleVerifyPassword
     }}>
         {children}
     </AuthContext.Provider>
