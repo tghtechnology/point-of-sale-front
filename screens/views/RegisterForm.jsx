@@ -87,16 +87,6 @@ const RegisterForm = () => {
           keyboardType=''
           onChangeText={text => getValues('password', text)}
         />
-        <TouchableOpacity
-          onPress={() => setShowPassword(!showPassword)} // Cambia la visibilidad de la contraseña al tocar el botón
-          style={styles.showPasswordButton}
-        >
-          <Icon
-          name={showPassword ? 'eye' : 'eye-slash'}
-          size={20}
-          color="#546574"
-          />
-        </TouchableOpacity>
         </View>
 
         {/* IMPUT PARA ENTRADA DE NOMBRE DE NEGOCIO */}

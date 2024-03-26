@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from './screens/views/HomeScreen';
 import DeleteAccount from './screens/views/DeleteAccount';
 import ArticlesNavigate from './screens/views/ArticlesNavigate';
+import ClientsNavigate from './screens/views/ClientsNavigate';
 import PlusArticles from './screens/views/PlusArticles';
 import PlusCategory from './screens/views/PlusCategory';
 import ArticlesForm from './screens/views/ArticlesForm';
@@ -23,6 +24,8 @@ import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
 import ArticlesEditForm from './screens/views/ArticlesEditForm';
 import PlusDiscount from './screens/views/PlusDiscount';
 import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
+import ClientForm from './screens/views/ClientForm';
+import PlusClients from './screens/views/PlusClients';
 
 
 function StackNavigation() {
@@ -111,7 +114,49 @@ function ArticulosScreen() {
   );
 };
 
+function ClientScreen() {
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        statusBarColor: "#ff0000",
+        headerStyle: { backgroundColor: "#ff0000" },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
+    <Stack.Screen name="Clientes" component={ClientsNavigate} options={{ headerLeft: () => {
+        return (
+            <Icon
+              name="menu"
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              size={24}
+              color="#fff"
+            />
+          );
+        },
+      }}></Stack.Screen>
 
+      <Stack.Screen name="Art" component={PlusClients} options={{ title: "Todos los clientes",
+     headerRight: () => (
+      <><FontAwesome
+          name="sort-down"
+          // onPress={() => navigation.navigate('Arti')}
+          size={16}
+          color="#fff"
+          style={{ marginRight: 119 }}/>
+        <Ionicons name="search-outline" size={24} color="#fff" />
+      </>
+    ),}}
+      />
+      <Stack.Screen name="Clientes" component={PlusClients}  options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
+      <Stack.Screen name="Crear Cliente" component={ClientForm}></Stack.Screen>
+    </Stack.Navigator>
+  );
+};
 
 
 
@@ -123,6 +168,7 @@ const DrawerNav =()=> {
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Empleado" component={FormRegisEmpleado}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Cliente" component={ClientScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );
 };

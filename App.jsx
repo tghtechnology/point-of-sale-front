@@ -9,10 +9,11 @@ import DiscountProvider from "./screens/context/discount/DiscountProvider.jsx";
 import ArticleProvider from "./screens/context/article/ArticleProvider.jsx";
 import EmailProvider from "./screens/context/email/EmailProvider.jsx";
 import AuthProvider from "./screens/context/auth/AuthProvider.jsx";
-
+import ClientProvider from "./screens/context/cliente/ClientProvider.jsx";
 
 export default function App() {
   return (
+    <ClientProvider>
     <EmailProvider>
       <AuthProvider>
         <UsuarioProvider>
@@ -28,5 +29,6 @@ export default function App() {
         </UsuarioProvider>
       </AuthProvider>
     </EmailProvider>
+    </ClientProvider>
   );
 }
