@@ -24,6 +24,7 @@ import ArticlesEditForm from './screens/views/ArticlesEditForm';
 import PlusDiscount from './screens/views/PlusDiscount';
 import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
 import PlusWorkers from './screens/views/PlusWorkers';
+import LogoutButton from './screens/componentes/Logaut';
 
 
 function StackNavigation() {
@@ -36,6 +37,7 @@ return (
       <Stack.Screen name="Register" component={RegisterForm} />
       <Stack.Screen name="Envio" component={EnvioCorreoForm} />
       <Stack.Screen name="Confirmar" component={ConfirmPasswordForm} />
+      <Stack.Screen name="logout" component={LogoutButton} />
       <Stack.Screen name="Home" component={HomeScreen}
         options={{title: "Soporte",
           headerLeft: () => {

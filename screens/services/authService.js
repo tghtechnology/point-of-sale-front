@@ -11,6 +11,20 @@ const createToken = async (email,password)  => {
         console.log(error)
     }
 }
+
+const getTokem = async (token)  => {
+    try {
+        const {data, status} = await apiClient.post(`/logout`, token);
+        return {
+            data,
+            status
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export {
-    createToken
+    createToken,
+    getTokem
 }

@@ -26,7 +26,7 @@ const LoginForm = () => {
       const response = await loginAccess(credentials);
       if (response == true) {
         alert("Sesion Iniada")
-        navigation.navigate("Home")
+        navigation.navigate("logout")
       } else {
         alert("Secion no iniciada");
       }
