@@ -27,24 +27,26 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const logautAccess = async (token) => {
-    const status = await getTokem(token);
-    if (status===200) {
-      const token=data.token
-      const storedToken = AsyncStorage.getItem("token");
-      console.log("Token: ", storedToken);
-      AsyncStorage.removeItem("token");
-      setIsAuth(true);
-      alert("Cierre de sesión exitoso");
-      return true;
-    } else {
-      setIsAuth(false);
-      alert("Error al cerrar sesión");
-      console.log(Error)
-      return false;
-    }
-  };
-
+  const logautAccess = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (token !== null) {
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+        };
+        const status = await getTokem(headers);
+        if (status === 200) {
+          await AsyncStorage.removeItem("token");
+          setIsAuth(false);
+          alert("Cierre de sesión exitoso");
+          return true;
+        } else {
+          setIsAuth(false);
+          alert("Error al cerrar sesión");
+          return false;
+        }
+      }
+  }
+  
   return (
     <AuthContext.Provider value={{
       isAuth,

@@ -9,13 +9,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function HomeScreen(props) {
   const navigation = useNavigation();
   const { logautAccess } = useAuth();
-  const [credentials] = useState({
-    token: AsyncStorage.getItem("token") || "",
+  const [setCredentials] = useState({
+    token: ""
   });
 
   const handleLogout = async () => {
     try {
-      const response = await logautAccess(credentials);
+      const response = await logautAccess();
       if (response === true) {
         // Realizar cualquier acción adicional después de cerrar sesión
         console.log("Sesión cerrada exitosamente");
@@ -32,7 +32,7 @@ export default function HomeScreen(props) {
         <Text style={styles.text}>Cuenta</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleLogout} style={styles.container}>
-      <SimpleLineIcons name="logout" size={24} color="black" />
+      <SimpleLineIcons name="logout" size={18} color="black" />
         <Text style={styles.text}>Cerrar Sesion</Text>
       </TouchableOpacity>
     </View>

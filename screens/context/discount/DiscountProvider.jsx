@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DiscountContext from "./DiscountContext";
-import { createDiscount, getDiscounts,getCeroDiscounts, updateDiscountStatus,editDiscount, updateDiscount } from "../../services/DiscountService";
+import { createDiscount, getDiscounts, getCeroDiscounts, updateDiscountStatus, editDiscount, updateDiscount } from "../../services/DiscountService";
 
 const DiscountProvider = ({ children }) => {
     const [discounts, setDiscounts] = useState([]);
@@ -58,7 +58,7 @@ const DiscountProvider = ({ children }) => {
             const response = await updateDiscountStatus(id, newStatus);
             if (response && response.success === true) {
                 // Actualizar la lista después de cambiar el estado
-                fetchMyDiscounts(); 
+                fetchMyDiscounts();
                 fetchCeroDiscounts();
                 return true;
             } else {
@@ -75,22 +75,22 @@ const DiscountProvider = ({ children }) => {
     const handleEditDiscount = async (id, updatedData) => {
         console.log(id)
         try {
-          const response = await editDiscount(id, updatedData);
-          if (response && response.status === 200) {
-            const updatedDiscounts = discounts.map((discount) =>
-              discount.id === id ? { ...discount, ...updatedData } : discount
-            );
-            setDiscounts(updatedDiscounts);
-            console.log('Descuento editado exitosamente');
-          } else if (response && response.status === 204) {
-            console.log('Descuento editado exitosamente');
-          }
+            const response = await editDiscount(id, updatedData);
+            if (response && response.status === 200) {
+                const updatedDiscounts = discounts.map((discount) =>
+                    discount.id === id ? { ...discount, ...updatedData } : discount
+                );
+                setDiscounts(updatedDiscounts);
+                console.log('Descuento editado exitosamente');
+            } else if (response && response.status === 204) {
+                console.log('Descuento editado exitosamente');
+            }
         } catch (error) {
-          console.error('Error editing discount:', error);
+            console.error('Error editing discount:', error);
         }
-      };
+    };
 
-      const handleUpdateDiscount = async (id, newData) => {
+    const handleUpdateDiscount = async (id, newData) => {
         console.log("..")
         try {
             const updatedDiscount = await updateDiscount(id, newData);
@@ -105,7 +105,7 @@ const DiscountProvider = ({ children }) => {
         }
     };
     return (
-        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,Cerodiscounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount}}>
+        <DiscountContext.Provider value={{ handleCreateDiscount, discounts, Cerodiscounts, toggleDiscountStatus, handleEditDiscount, handleUpdateDiscount }}>
             {children}
         </DiscountContext.Provider>
     );
