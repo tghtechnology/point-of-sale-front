@@ -1,8 +1,9 @@
 import apiClient from "../apiss/AxiosConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const createToken = async (email,password)  => {
+const createToken = async (email, password) => {
     try {
-        const {data, status} = await apiClient.post(`/login`, email,password);
+        const { data, status } = await apiClient.post(`/login`, email, password);
         return {
             data,
             status
@@ -12,19 +13,23 @@ const createToken = async (email,password)  => {
     }
 }
 
-const getTokem = async (token)  => {
+const logout = async () => {
     try {
-        const {data, status} = await apiClient.post(`/logout`, token);
+        const { data, status } = await apiClient.post(`/logout`, {
+            headers: {
+                Authorization: `Bearer ${AsyncStorage.getItem('token')}`
+            }
+        });
         return {
             data,
             status
-        }
+        };
     } catch (error) {
-        console.log(error)
+        console.log("Error al llamar a la API de cierre de sesión:", error);
     }
 }
 
 export {
     createToken,
-    getTokem
+    logout
 }

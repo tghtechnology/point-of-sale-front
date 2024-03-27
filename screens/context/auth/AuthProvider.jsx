@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AuthContext from "./AuthContext"
-import { createToken, getTokem } from "../../services/authService";
+import { createToken, logout } from "../../services/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 const AuthProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
@@ -33,7 +33,7 @@ const AuthProvider = ({ children }) => {
         const headers = {
           'Authorization': `Bearer ${token}`,
         };
-        const status = await getTokem(headers);
+        const status = await logout(token);
         if (status === 200) {
           await AsyncStorage.removeItem("token");
           setIsAuth(false);
@@ -46,7 +46,7 @@ const AuthProvider = ({ children }) => {
         }
       }
   }
-  
+
   return (
     <AuthContext.Provider value={{
       isAuth,
