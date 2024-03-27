@@ -4,12 +4,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useCategory from '../hooks/useCategory';
 import CategoryProvider from '../context/category/CategoryProvider';
-import { listCategories } from '../services/CategoryService';
 
 
  const PlusCategory = (props) => {
   const navigation = useNavigation();
-  const {categories, handleEditCategories, handleUpdateCategory,handleDeleteCategory } = useCategory();
+  const {categories, handleEditCategories, handleUpdateCategory,handleDeleteCategory} = useCategory();
   const [category, setCategory] = useState(categories); 
   const [showModal, setShowModal] = useState(false);
   const [editedData, setEditedData] = useState({});

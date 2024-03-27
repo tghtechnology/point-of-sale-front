@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from './screens/views/HomeScreen';
 import DeleteAccount from './screens/views/DeleteAccount';
 import ArticlesNavigate from './screens/views/ArticlesNavigate';
+import MiembNavigate from './screens/views/MiembNavigate'
 import PlusArticles from './screens/views/PlusArticles';
 import PlusCategory from './screens/views/PlusCategory';
 import ArticlesForm from './screens/views/ArticlesForm';
@@ -24,6 +25,7 @@ import ArticlesEditForm from './screens/views/ArticlesEditForm';
 import PlusDiscount from './screens/views/PlusDiscount';
 import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
 import ClientForm from './screens/views/ClientForm';
+import PlusClients from './screens/views/PlusClients';
 
 
 function StackNavigation() {
@@ -113,7 +115,44 @@ function ArticulosScreen() {
 };
 
 
+function MiembrosScreen() {
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        statusBarColor: "#ff0000",
+        headerStyle: { backgroundColor: "#ff0000" },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
+    <Stack.Screen name="Miembros" component={MiembNavigate} options={{ headerLeft: () => {
+        return (
+            <Icon
+              name="user"
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              size={24}
+              color="#fff"
+            />
+          );
+        },
+      }}></Stack.Screen>
 
+      <Stack.Screen name="Miem" component={FormRegisEmpleado} options={{ title: "Todos los miembros",
+     headerRight: () => (
+      
+        <Ionicons name="search-outline" size={24} color="#fff" />
+    
+    ),}}
+      />
+      <Stack.Screen name="Cliente" component={PlusClients}></Stack.Screen>
+      <Stack.Screen name="Crear Cliente" component={ClientForm}></Stack.Screen>
+    </Stack.Navigator>
+  );
+};
 
 
 const DrawerNav =()=> {
@@ -123,8 +162,7 @@ const DrawerNav =()=> {
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Empleado" component={FormRegisEmpleado}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Clientes" component={ClientForm}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Miembros" component={MiembrosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "user" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );
 };
