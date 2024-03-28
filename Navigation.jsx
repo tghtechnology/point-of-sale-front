@@ -154,8 +154,8 @@ const DrawerNav =()=> {
     <Drawer.Navigator 
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Empleado" component={EmpleadoScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cart-minus" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Empleado" component={EmpleadoScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "account" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );
 };
