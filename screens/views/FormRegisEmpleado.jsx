@@ -2,10 +2,46 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Picker } from '@react-native-picker/picker';
+import useWorker from '../hooks/useWorker';
+import WorkerProvider from '../context/worker/WorkerProvider';
 
+const INITIAL_STATE = {
+  nombre: '',
+  correo: '',
+  telefono: '',
+  cargo: '',
+}
 
 const FormRegisEmpleado = () => {
-  const [selectedValue, setselectedValue] = useState('');
+  const [data, setData] = useState(INITIAL_STATE);
+  const { handleCreateWorker } = useWorker();
+
+  const getValues = (name, value) => {
+    setData({
+      ...data,
+      [name]: value
+    })
+  }
+
+  const handleSubmit = async () => {
+    const objectSend = {
+      ...data,
+    }
+    //control de errores para el crear un usuario
+    try {
+      const response = await handleCreateWorker(objectSend);
+      if (response) {
+        alert("Empleado creado con exito")
+        setData(INITIAL_STATE);
+      } else {
+        alert("El Empleado no se pudo crear");
+      }
+    } catch (error) {
+      alert("problema interno del servidor")
+    }
+    console.log("valor del formulario" + JSON.stringify(objectSend));
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.Tittle}>Registro Empleado</Text>
@@ -14,38 +50,31 @@ const FormRegisEmpleado = () => {
         style={styles.input}
         placeholder="Nombre"
         placeholderTextColor="#546574"
-      //value={data.email}
-      //onChangeText={(text) => setData({...data, email:text})}
+        onChangeText={text => getValues('nombre', text)}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Correo Electronico"
         placeholderTextColor="#546574"
-      //secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
-      //value={data.password}
-      //onChangeText={(text) => setData({ ...data, password: text })}
+        onChangeText={text => getValues('correo', text)}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Numero de Telefono"
         placeholderTextColor="#546574"
-      //value={data.nombre}
-      //onChangeText={(text) => setData({...data, nombre:text})
+        onChangeText={text => getValues('telefono', text)}
       />
-      <View style={styles.pickeContainer}>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={(itemValue, itemIndex) => setselectedValue(itemValue)}
-        >
-          <Picker.Item label="Gerente" value="incluido" />
-          <Picker.Item label="Administrador" value="añadido" />
-        </Picker>
-      </View>
 
+      <TextInput
+        style={styles.input}
+        placeholder="Cargo"
+        placeholderTextColor="#546574"
+        onChangeText={text => getValues('cargo', text)}
+      />
 
-      <TouchableOpacity style={styles.buttonRegister}>
+      <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Registrar</Text>
       </TouchableOpacity>
     </View>
