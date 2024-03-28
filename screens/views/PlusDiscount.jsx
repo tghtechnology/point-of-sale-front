@@ -5,11 +5,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useDiscount from '../hooks/useDiscount';
 import DiscountProvider from '../context/discount/DiscountProvider';
+import CustomAlert from '../componentes/CustomAlert';
 
 const PlusDiscount = (props) => {
     const navigation = useNavigation();
     const {discounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount} = useDiscount();
     const [showModal, setShowModal] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [modal, setModal] = useState(false);
     const [editedData, setEditedData] = useState({});
     const [selectedDiscount, setSelectedDiscount] = useState({});
 
@@ -22,6 +25,7 @@ const PlusDiscount = (props) => {
           valor: discount.valor,
         });
         setShowModal(true);
+        setModal(false);
       };
 
       const handleChange = (name, value) => {
@@ -36,6 +40,7 @@ const PlusDiscount = (props) => {
       await handleEditDiscount(selectedDiscount.id, editedData);
       console.log('Descuento editado exitosamente');
       await handleUpdateDiscount(selectedDiscount.id, editedData);
+      setShowAlert(true);
       setShowModal(false);
     } catch (error) {
       console.error('Error al editar el descuento:', error);
@@ -46,7 +51,11 @@ const PlusDiscount = (props) => {
     setShowModal(false);
   };
 
-    const handleToggleStatus = async (id, currentStatus) => {
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+
+  const handleToggleStatus = async (id, currentStatus) => {
         try {
           // Invierte el estado actual del descuento
           const newStatus = !currentStatus;
@@ -54,13 +63,23 @@ const PlusDiscount = (props) => {
         } catch (error) {
           setError('Error al actualizar el estado del descuento');
         }
-      };
+  };
+
+  const handleOptionsPress = (item) => {
+    setSelectedDiscount(item);
+    setModal(true);
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={discounts}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
+            <View style={styles.clientData}>
+            <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
+              <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+            </TouchableOpacity> 
             <Text style={styles.itemText}>{item.nombre}</Text>
             <Text style={styles.itemText}>Tipo: {item.tipo_descuento}</Text>
             <Text style={styles.itemText}>Valor: {item.valor}</Text>
@@ -69,9 +88,7 @@ const PlusDiscount = (props) => {
             value={item.estado === true}
             onValueChange={() => handleToggleStatus(item.id, item.estado)}/>      
             <View style={styles.container}>
-            <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
-              <Text style={styles.buttonText}>Editar</Text>
-            </TouchableOpacity>
+            </View>
             </View>
     </View>
     )}
@@ -140,6 +157,26 @@ const PlusDiscount = (props) => {
           </View>
         </View>
       </Modal>
+      <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.optionButton} onPress={() => handleEdit(selectedDiscount)}>
+              <Text style={styles.optionButtonText}>Editar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelButton} onPress={() => setModal(false)}>
+              <Text style={styles.optionButtonText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Edicion Correcta"
+        message="Se ha creado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" // Puedes cambiar el icono según lo desees
+        />
     </View>
 
     
@@ -163,6 +200,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 3,
+      },
+      clientData: {
+        flex: 1, // Para que ocupe el espacio restante
       },
       itemText: {
         fontSize: 18,
@@ -239,14 +279,31 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop:10,
       },
-      cancelButton: {
-        backgroundColor: 'red',
+      optionButton: {
         borderRadius: 5,
         paddingVertical: 12,
         paddingHorizontal: 20,
         alignItems: 'center',
-        marginTop:10,
-      },   
-      
+        marginVertical: 5,
+        backgroundColor: '#007bff', // Color del botón de opciones
+      },
+      optionButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white',
+      },
+      cancelButton: {
+        borderRadius: 5,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        marginVertical: 5,
+        backgroundColor: 'gray', // Color del botón de cancelar
+      },
+      optionsButton: {
+          position: 'absolute',
+          top: 10,
+          right: 10,
+      },
     })
 export default PlusDiscount

@@ -1,18 +1,20 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList,Switch,Modal,TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useClient from '../hooks/useClient';
 import ClientProvider from '../context/cliente/ClientProvider';
+import CustomAlert from '../componentes/CustomAlert';
 const PlusClients = (props) => {
     const navigation = useNavigation();
-    const {client, handleEditClient, handleDeleteClient, handleUpdateClient} = useClient()
-    const [clients,setClients] = useState(client)
+    const {client,setClient, handleEditClient, handleDeleteClient, handleUpdateClient} = useClient()
+    const [showAlert, setShowAlert] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState(false);
     const [editedData, setEditedData] = useState({});
     const [selectedClient, setselectedClient] = useState({});
+    const [deletedClientId, setDeletedClientId] = useState(null);
     
 
     const handleEdit = (client) => {
@@ -56,16 +58,27 @@ const PlusClients = (props) => {
 
     const handleDelete = async (id) => {
       try {
-      const success = await handleDeleteClient (id);
-      if (success) {
-        setClients(clients.filter(clients => clients.id !== id));
-        await handleUpdateClient(selectedClient.id, editedData);
+          await handleDeleteClient(id);
+          setShowAlert(true);
+          setDeletedClientId(id);
+          setShowModal(false);
+          setModal(false);
+      } catch (error) {
+          console.error('Error al borrar al cliente:', error);
       }
-      setModal(false);
-    } catch (error) {
-      console.error('Error al borrar al cliente:', error);
-    }
-    };
+  };
+    
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+    setDeletedClientId(null);
+};
+
+useEffect(() => {
+  if (deletedClientId !== null) {
+      // Actualiza la lista de clientes excluyendo al cliente eliminado
+      setClient(client.filter(client => client.id !== deletedClientId));
+  }
+}, [deletedClientId]);
 
     const handleOptionsPress = (item) => {
       setselectedClient(item);
@@ -107,6 +120,14 @@ const PlusClients = (props) => {
       <TouchableOpacity style={styles.addButton} onPress= {() => props.navigation.navigate("Crear Cliente")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
        </TouchableOpacity>
+       <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Cliente Eliminado"
+        message="El cliente se ha eliminado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" // Puedes cambiar el icono según lo desees
+        />
        <Modal
         visible={showModal}
         animationType="slide"

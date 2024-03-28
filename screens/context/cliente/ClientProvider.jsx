@@ -68,7 +68,7 @@ const ClientProvider = ({children}) => {
   };
   return (
     <ClientContext.Provider value={{
-        handleCreateClient, client, handleEditClient,handleDeleteClient,handleUpdateClient
+        handleCreateClient, client,setClient, handleEditClient,handleDeleteClient,handleUpdateClient
     }}> 
       {children}
     </ClientContext.Provider>

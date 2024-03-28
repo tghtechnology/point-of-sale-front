@@ -5,6 +5,7 @@ import useCountry from '../hooks/useCountry';
 import useClient from '../hooks/useClient';
 import ClientProvider from '../context/cliente/ClientProvider';
 import CountryProvider from '../context/country/CountryProvider';
+import CustomAlert from '../componentes/CustomAlert';
 
 const INITIAL_STATE = {
     nombre:'',
@@ -19,7 +20,8 @@ const INITIAL_STATE = {
     const [ data, setData] = useState(INITIAL_STATE);
     const [countrySelect, setCountrySelect] = useState('');
     const { countries,fetchCountries } = useCountry();
-    const {handleCreateClient} = useClient();
+    const {handleCreateClient,client, setClient} = useClient();
+    const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
         fetchCountries(); // Llama a fetchCountries cuando el componente se monta
@@ -41,9 +43,10 @@ const INITIAL_STATE = {
         try {
           const response = await handleCreateClient(objectSend);
           if(response){
-            alert("Cliente creado con exito")
             setData(INITIAL_STATE);
             setCountrySelect('');
+            setClient([...client, objectSend]);
+            setShowAlert(true);
           }else{
             alert("El Cliente no se pudo crear");
           }
@@ -52,6 +55,10 @@ const INITIAL_STATE = {
         }
         console.log("valor del formulario"  + JSON.stringify(objectSend));
       }
+
+      const handleCloseAlert = () => {
+        setShowAlert(false);
+    };
   return (
     <View style={styles.container}>
     <Text style={styles.title}>Nuevo Cliente</Text>
@@ -137,6 +144,14 @@ const INITIAL_STATE = {
             <Text style={styles.buttonText}>Crear Cliente</Text>
             </TouchableOpacity>
           </View>
+          <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Cliente Creado"
+        message="El cliente se ha creado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" // Puedes cambiar el icono según lo desees
+        />
   </View>
   )
 }
