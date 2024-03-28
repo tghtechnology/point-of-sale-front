@@ -46,6 +46,7 @@ const PlusClients = (props) => {
         await handleEditClient(selectedClient.id, editedData);
         console.log('Descuento editado exitosamente');
         await handleUpdateClient(selectedClient.id, editedData);
+        setShowAlert(true);
         setShowModal(false);
       } catch (error) {
         console.error('Error al editar el descuento:', error);
