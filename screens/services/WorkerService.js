@@ -12,6 +12,16 @@ const createWorker = async (newWorker) => {
     }
 }
 
+const getWorkers = async () => {
+    try {
+        const response = await apiClient.get(`/listarEmpleados`);
+        return response.data; // Devuelve los datos de los descuentos
+    } catch (error) {
+        console.log(error);
+        return []; // En caso de error, devuelve un array vacío
+    }
+}; 
+
 export {
-    createWorker
+    createWorker,getWorkers
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createWorker } from "../../services/WorkerService"
+import { createWorker,getWorkers } from "../../services/WorkerService"
 import WorkerContext from './WorkerContext';
 
 const WorkerProvider = ({ children }) => {
@@ -14,11 +14,24 @@ const WorkerProvider = ({ children }) => {
         }
     }
 
+    const fetchMyWorkers = async () => {
+        try {
+            const worker = await getWorkers();
+            console.log("Empleados obtenidos:", worker);
+            setWorker(worker);
+        } catch (error) {
+            console.error('Error al obtener los empleados:', error);
+        }
+    };
+  
+    useEffect(() => {
+      fetchMyWorkers();
+    }, []);
 
 
     return (
         <WorkerContext.Provider value={{
-            handleCreateWorker
+            handleCreateWorker,worker
         }}>
             {children}
         </WorkerContext.Provider>
