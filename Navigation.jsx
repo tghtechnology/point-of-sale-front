@@ -25,6 +25,7 @@ import PlusDiscount from './screens/views/PlusDiscount';
 import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
 import PlusImpuesto from './screens/views/PlusImpuesto';
 import ImpuestoForm from './screens/views/ImpuestoForm';
+import ImpEditForm from './screens/views/ImpEditForm';
 
 
 function StackNavigation() {
@@ -107,6 +108,7 @@ function ArticulosScreen() {
       <Stack.Screen name="Descuento" component={PlusDiscount}  options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
       <Stack.Screen name="Impuestos" component={PlusImpuesto}  ></Stack.Screen>
       <Stack.Screen name="Creación de un impuesto" component={ImpuestoForm}  ></Stack.Screen>
+      <Stack.Screen name="Editar Impuestos" component={ImpEditForm}  ></Stack.Screen>
     
       <Stack.Screen name="Descuentos Desactivados" component={PlusFalseDiscount}></Stack.Screen>
     </Stack.Navigator>

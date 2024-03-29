@@ -19,7 +19,7 @@ export default function ArticlesForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const { handleCreateArticle } = useArticle();
   const {categories} = useCategory();
-  const { updateArticles } = useArticle();
+
   
   const getValues = (name, value) => {
     
