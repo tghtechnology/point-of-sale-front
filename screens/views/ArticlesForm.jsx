@@ -20,7 +20,6 @@ export default function ArticlesForm() {
   const { handleCreateArticle } = useArticle();
   const {categories} = useCategory();
 
-  
   const getValues = (name, value) => {
     
     setDatos({
@@ -44,7 +43,6 @@ export default function ArticlesForm() {
     });
   };
   const SubmitArticle = async () => {
-    
     try {
       const response = await handleCreateArticle(datos);
       if (response) {

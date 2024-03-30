@@ -1,71 +1,52 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useCategory from '../hooks/useCategory';
-import CategoryProvider from '../context/category/CategoryProvider';
-import { listCategories } from '../services/CategoryService';
+
 
 
  const PlusCategory = () => {
   const navigation = useNavigation();
-  const {categories, handleEditCategories, handleUpdateCategory,handleDeleteCategory } = useCategory();
-  const [category, setCategory] = useState(categories); 
-  const [showModal, setShowModal] = useState(false);
-  const [editedData, setEditedData] = useState({});
-  const [selectedCategories, setSelectedCategories] = useState({});
+  const [modal, setModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [categoria, setCategoria] = useState([]);
+  const {listCategoria, handleDeleteCategory} = useCategory();
 
-  const handleDelete = async (text_id) => {
-    const success = await handleDeleteCategory (text_id);
+  useEffect(() => {
+    setCategoria(listCategoria); 
+  }, [listCategoria]);
+
+  const handleEdit = () => { 
+    navigation.navigate("Editar Categoria", { categorias: selectedItem });
+    console.log(selectedItem)
+  };
+
+  const handleDelete = async () => { 
+    const success = await handleDeleteCategory(selectedItem.id);
     if (success) {
-      setCategory(category.filter(category => category.text_id !== text_id));
+      setCategoria(categoria.filter(categorias => categorias.id !== selectedItem.id));
     }
   };
 
-    const handleEdit = (category) => {
-      setSelectedCategories(category);
-      setEditedData({
-        ...category,
-        nombre: category.nombre,
-        color: category.color,
-      });
-      setShowModal(true);
-    };
+  const handleOptionsPress = (item) => {
+    setSelectedItem(item); 
+    setModal(true);
+  };
 
-    const handleChange = (name, value) => {
-      setEditedData({
-        ...editedData,
-        [name]: value,
-      });
-    };
-
-  const handleSubmit = async () => {
-  try {
-    await handleEditCategories(selectedCategories.text_id, editedData);
-    console.log('Categoria editado exitosamente');
-    await handleUpdateCategory(selectedCategories.text_id, editedData);
-    setShowModal(false);
-  } catch (error) {
-    console.error('Error al editar la Categoria:', error);
-  }
-};
-
-const handleCancel = () => {
-  setShowModal(false);
-};
   return (
     <View style={styles.container}>
       <FlatList
-        data={categories}
+        data={listCategoria}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
+            <View style={styles.itemContent}>
             <Text style={styles.itemText}>{item.nombre}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
-              <Text style={styles.buttonText}>Editar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => handleDelete(item.text_id)}>
-              <Text style={styles.buttonText}>Eliminar</Text>
-            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
+              <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+            </TouchableOpacity> 
+        </View>
         </View>
     )}
     keyExtractor={(item, index) => index.toString()}
@@ -81,46 +62,23 @@ const handleCancel = () => {
       <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Crear Categoria")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
-      <Modal
-        visible={showModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={handleCancel}>
+      <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Editar Descuento</Text>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Nombre</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nombre"
-              value={editedData.nombre}
-              onChangeText={(text) => handleChange('nombre', text)}
-            />
-            </View>
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Color</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Color"
-              value={editedData.color}
-              onChangeText={(text) => handleChange('color', text)}
-            />
-            </View>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Editar</Text>
+            <TouchableOpacity style={styles.optionButton} onPress={() => handleEdit(selectedItem)}>
+              <Text style={styles.optionButtonText}>Editar</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={handleCancel}>
-              <Text style={styles.buttonText}>Cancelar</Text>
+            <TouchableOpacity style={styles.optionButton} onPress={() => handleDelete(selectedItem.id)}>
+              <Text style={styles.optionButtonText}>Eliminar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelButton} onPress={() => setModal(false)}>
+              <Text style={styles.optionButtonText}>Cerrar</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
     </View>
+
   );
 }
 
@@ -168,6 +126,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 3,
+    flexDirection: 'row', 
+    alignItems: 'center',
   },
   itemText: {
     fontSize: 18,
@@ -192,6 +152,12 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '80%',
     maxWidth: 400,
+  },
+  itemContent: {
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   modalTitle: {
     fontSize: 18,
@@ -233,6 +199,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop:10,
   },
+  optionButton: {
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginVertical: 5,
+    backgroundColor: '#007bff', 
+  },
+  optionButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+    maxWidth: 400,
+  },
   cancelButton: {
     backgroundColor: 'red',
     borderRadius: 5,
@@ -240,7 +226,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     marginTop:10,
-  },   
+  }, 
+  optionsButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+},  
 });
 
 export default PlusCategory;

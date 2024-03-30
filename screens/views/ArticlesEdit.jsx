@@ -28,20 +28,6 @@ export default function ArticlesForm() {
     setEditedData(article || INITIAL_STATE);
   }, [route.params]);
 
-  /*const handleEdit = (article) => {
-    setSelectedArticles(article);
-    setEditedData({
-      ...article,
-      nombre: article.nombre,
-      tipo_venta: article.tipo_venta,
-      precio: article.precio,
-      coste: article.coste,
-      ref: article.ref,
-      representacion: article.representacion,
-      nombre_categoria: article.nombre_categoria,
-    });
-  };*/
-
   const handleChange = (name, value) => {
     setEditedData({
       ...editedData,
@@ -64,7 +50,6 @@ export default function ArticlesForm() {
     });
   };
   const handleSubmit = async () => {
-    
     try {
       await handleEditArticle(selectedArticles.text_id, editedData);
       console.log("Articulo editado exitosamente");

@@ -34,7 +34,7 @@ const editImpuestos = async(id,updateImpuestos) => {
             status
         }; 
     } catch (error) {
-      throw new Error('Error al editar iimpuestos');
+      throw new Error('Error al editar impuestos');
     }
   };
 

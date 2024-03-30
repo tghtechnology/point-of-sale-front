@@ -23,8 +23,6 @@ const CategoryForm = () => {
       if(response){
         alert("La categoría ha sido creada con éxito");
         setDatos(INITIAL_STATE);
-        // Llamar a handleUpdateCategory solo si la categoría se crea exitosamente
-        await handleUpdateCategory(response.text_id, datos);
       } else {
         alert("La categoría no se pudo crear");
       }
@@ -83,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonContainer: {
-    overflow: 'hidden', // Para que no haya desbordamiento del botón
+    overflow: 'hidden', 
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'red',

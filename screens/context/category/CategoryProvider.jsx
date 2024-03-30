@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { createCategory, editCategories, getCategories,updateCategory,deleteCategory} from "../../services/CategoryService";
+import { createCategory, editCategories,listCategories,deleteCategory} from "../../services/CategoryService";
 import CategoryContext from "./CategoryContext";
 
 
 const CategoryProvider = ({children}) => {
-    const [categories, setCategories] = useState([]);
+    const [listCategoria, setListCategoria] = useState([]);
+    useEffect(() => {
+      const getTaxes= async () => {
+          try {
+              const { data, status } = await listCategories();
+              if (status === 200) {
+                setListCategoria(data); 
+                  
+              } else {
+                  console.log("Error al cargar categorias:", status);
+              }
+          } catch (error) {
+              console.error("Error al cargar categorias:", error);
+          }
+      }
+      getTaxes();
+  }, []);
+
    
     const handleCreateCategory = async (newCategory) => {
       const { nombre, color } = newCategory; 
@@ -23,60 +40,30 @@ const CategoryProvider = ({children}) => {
       }
   }
 
-  const fetchMyCategories = async () => {
+  
+  const handleEditCategories = async(updateCategorias) => {
+    const {nombre, color } = updateCategorias;
     try {
-        const categories = await getCategories();
-        console.log("categorias obtenidos:", categories);
-        setCategories(categories);
-    } catch (error) {
-        console.error('Error al obtener las categorias:', error);
-    }
-};
-
-useEffect(() => {
-    fetchMyCategories();
-}, []);
-
-    useEffect(() => {
-        fetchMyCategories();
-    }, []);
-
-    const handleEditCategories = async (text_id, updatedData) => {
-        console.log(text_id)
-        try {
-          const response = await editCategories(text_id, updatedData);
-          if (response && response.status === 200) {
-            const updatedCategories = categories.map((categorie) =>
-            categorie.text_id === text_id ? { ...categorie, ...updatedData } : categorie
-            );
-            setCategories(updatedCategories);
+        const response = await editCategories(updateCategorias.id, {nombre, color} ); 
+        if(response && response.status === 200){
             console.log('Categoria editado exitosamente');
-          } else if (response && response.status === 204) {
+            return true; 
+        } else if (response && response.status === 204) {
             console.log('Categoria editado exitosamente');
-          }
-        } catch (error) {
-          console.error('Error editing category:', error);
+            return true; 
+        } else {
+            return false; 
         }
-      };
+      } catch (error) {
+        console.error('Error editing categorias:', error);
+        return false; 
+      }
+  };
 
-      const handleUpdateCategory = async (text_id, newData) => {
-        console.log("..")
+  
+    const handleDeleteCategory = async (id) => {
         try {
-            const updatedCategory = await updateCategory(text_id, newData);
-            setCategories(prevCategories => {
-                return prevCategories.map(category =>
-                    category.text_id === text_id ? { ...category, ...updatedCategory } : category
-                );
-            });
-            console.log('Categoría actualizada exitosamente:', updatedCategory);
-        } catch (error) {
-            console.error('Error al actualizar la categoría:', error);
-        }
-    };
-
-    const handleDeleteCategory = async (text_id) => {
-        try {
-            const { status } = await deleteCategory(text_id);
+            const { status } = await deleteCategory(id);
             if (status === 200) {
                 return true;
             } else {
@@ -91,7 +78,7 @@ useEffect(() => {
 
 
     return (
-        <CategoryContext.Provider value={{ handleCreateCategory, categories, handleEditCategories, handleUpdateCategory, handleDeleteCategory}}>
+        <CategoryContext.Provider value={{ handleCreateCategory, listCategoria, handleEditCategories, handleDeleteCategory}}>
             {children}
         </CategoryContext.Provider>
     )
