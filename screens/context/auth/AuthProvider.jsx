@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import AuthContext from "./AuthContext"
-import { createToken, verifyUser } from "../../services/authService";
+import { createToken, eliminarTemporal } from "../../services/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const AuthProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
@@ -26,33 +26,32 @@ const AuthProvider = ({children}) => {
         return false;
       }
     };
-
-    const handleVerifyPassword = async (usuario_id, password) => {
-      try {
-          const storedToken = await AsyncStorage.getItem("token");
-          console.log("Token: ", storedToken);
-          if (!storedToken || !usuario_id) {
-              return false;
-          }
-          console.log("Id:", usuario_id, "Contraseña:", password);
-          const status = await verifyUser(usuario_id, password);
-          if (status === 200) {
-              return true;
-          } else {
-              return false;
-          }
-      } catch (error) {
-          console.error("Error al verificar la contraseña", error);
-          return false;
-      }
-  };
   
+
+    const handleDeleteTemporary = async (id, password, token) => {
+      try {
+        const storedToken = await AsyncStorage.getItem("token");
+        const storedUserId = await AsyncStorage.getItem("usuario_id");
+        console.log("Token almacenado:", storedToken, "ID de usuario almacenado:", storedUserId); // Imprime los valores almacenados
+    
+        if (!storedToken || !storedUserId) {
+          return false;
+        }
+    
+        const { status } = await eliminarTemporal(storedUserId, password, storedToken);
+        console.log("Estado de la respuesta:", status); // Imprime el estado de la respuesta
+        return status === 200;
+      } catch (error) {
+        console.error("Error al verificar la contraseña", error);
+        return false;
+      }
+    }
 
   return (
     <AuthContext.Provider value={{
         isAuth,
         loginAccess,
-        handleVerifyPassword,
+        handleDeleteTemporary,
     }}>
         {children}
     </AuthContext.Provider>

@@ -1,32 +1,30 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity} from "react-native";
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 import React, { useState, useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
-import { useRoute } from "@react-navigation/native";
 
 const INITIAL_STATE = {
   nombre: "",
   tipo_venta: "",
   precio: "",
-  coste: "",
   ref: "",
   representacion: "",
-  nombre_categoria:"",
+  id_categoria: "",
 };
 export default function ArticlesForm() {
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const { handleEditArticle } = useArticle();
-  const { listCategory } = useCategory();
-  const route = useRoute();
   const [editedData, setEditedData] = useState(INITIAL_STATE);
-  const [selectedArticles, setSelectedArticles] = useState(null);
+  const route = useRoute();
+  const {handleEditArticle} = useArticle();
+  const { listCategoria } = useCategory();
 
-  useEffect(() => {
-    const { article } = route.params;
-    setEditedData(article || INITIAL_STATE);
-  }, [route.params]);
+
+ useEffect(() => {
+  const { article } = route.params;
+  setEditedData(article || INITIAL_STATE);
+}, [route.params]);
 
   const handleChange = (name, value) => {
     setEditedData({
@@ -43,19 +41,22 @@ export default function ArticlesForm() {
   };
 
   const handleCategoryChange = (value) => {
-    setSelectedCategory(value);
     setEditedData({
       ...editedData,
-      nombre_categoria: value,
+      id_categoria: value,
     });
   };
   const handleSubmit = async () => {
     try {
-      await handleEditArticle(selectedArticles.text_id, editedData);
-      console.log("Articulo editado exitosamente");
-      setSelectedCategory('');
+      const articleData = {
+        ...editedData,
+        precio: parseFloat(editedData.precio),
+      };
+      console.log("Datos a enviar al servidor:", articleData);
+      await handleEditArticle(articleData);
+      console.log("Articulos ha sido editado exitosamente");
     } catch (error) {
-      console.error("Error al editar el descuento:", error);
+      console.error("Error al editar el articulos:", error);
     }
   };
 
@@ -76,14 +77,14 @@ export default function ArticlesForm() {
       <View style={styles.pickeContainer}>
         <Picker
           onValueChange={(value) => handleCategoryChange(value)}
-          value={editedData.nombre_categoria}
+          value={editedData.id_categoria}
           style={styles.picker}
         >
-          {
-            listCategory?.map((item,index)=>(
-              <Picker.Item key={index} label={item.nombre} value={item.nombre} />
-            ))
-          }
+          
+          <Picker.Item label="Sin categoría" value="" />
+          {listCategoria && listCategoria.map((item, index) => (
+            <Picker.Item key={index} label={item.nombre} value={item.id} />
+          ))}
         </Picker>
       </View>
       {/* Opcion vendido*/}
@@ -116,17 +117,6 @@ export default function ArticlesForm() {
           Deje el campo en blanco para indicar el precio durante la venta{" "}
         </Text>
       </View>
-      {/* Input Coste*/}
-      <View>
-        <Text style={styles.label}>Coste</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="S/0.00"
-        placeholderTextColor="black"
-        value={editedData.coste}
-        onChangeText={(text) => handleChange("coste", text)}
-      />
       {/* Input REF*/}
       <View>
         <Text style={styles.label}>REF</Text>
@@ -153,8 +143,6 @@ export default function ArticlesForm() {
       <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>ACTUALIZAR ARTICULO</Text>
       </TouchableOpacity>
-      <View style={{ height: 20 }} />
-      
     </View>
   );
 }

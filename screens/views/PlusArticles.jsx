@@ -1,50 +1,61 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,FlatList, TextInput,Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
 import { useNavigation } from '@react-navigation/native';
 
 
-export default function PlusCategory() {
-  const {listArticle,handleDeleteArticle,handleEditArticle } = useArticle();
-  const [articles, setArticles] = useState(listArticle); 
+
+export default function PlusImpuesto() {
+  const {listArticle,handleDeleteArticle} = useArticle();
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [modal, setModal] = useState(false);
+  const [articles, setArticles] = useState(null); 
   const navigation = useNavigation();
 
-  const handleDelete = async (text_id) => {
-    const success = await handleDeleteArticle(text_id);
+  useEffect(() => {
+    setArticles(listArticle); 
+  }, [listArticle]);
+
+
+  const handleEdit = () => { 
+    navigation.navigate("Editar Articulo", { article: selectedItem });
+    console.log(selectedItem)
+  };
+
+  const handleDelete = async () => { 
+    const success = await handleDeleteArticle(selectedItem.id);
     if (success) {
-      setArticles(articles.filter(article => article.text_id !== text_id));
+      setArticles(articles.filter(article => article.id !== selectedItem.id));
     }
   };
 
-
-  const handleEdit = (item) => {
-    navigation.navigate('Editar Articulo', { article: item});
-    console.log(item)
+  const handleOptionsPress = (item) => {
+    setSelectedItem(item); 
+    setModal(true);
   };
 
 
+
   return (
-    
     <View style={styles.container}>
       <FlatList
         data={listArticle}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
+            <View style={styles.itemContent}>
             <Text style={styles.itemText}>{item.nombre}</Text>
                 <Text style={styles.itemText}>{item.precio}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => handleEdit(item)}>
-              <Text style={styles.buttonText}>Editar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => handleDelete (item.text_id)}>
-              <Text style={styles.buttonText}>Eliminar</Text>
-            </TouchableOpacity>
+            <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
+              <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+            </TouchableOpacity> 
         </View>
-         )}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{ paddingHorizontal: 16 }}
-          ListEmptyComponent={() => (
-        <View>
+        </View>
+    )}
+    keyExtractor={(item, index) => index.toString()}
+    contentContainerStyle={{ paddingHorizontal: 16 }}
+    ListEmptyComponent={() => (
+      <View>
           
         <MaterialCommunityIcons name="content-copy" size={100} color="#808080" />
         <Text style={styles.text}>Todavía no tiene Articulos</Text>
@@ -52,12 +63,26 @@ export default function PlusCategory() {
         </View>
         )}
         />
-
       <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Crear Articulo")}>
-        <MaterialCommunityIcons name="plus" size={24} color="white" />
+        <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
-      
+      <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.optionButton} onPress={() => handleEdit(selectedItem)}>
+              <Text style={styles.optionButtonText}>Editar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.optionButton} onPress={() => handleDelete(selectedItem.id)}>
+              <Text style={styles.optionButtonText}>Eliminar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelButton} onPress={() => setModal(false)}>
+              <Text style={styles.optionButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
+
   );
 }
 
@@ -66,7 +91,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 5,
   },
   circle: {
     width: 170,
@@ -106,24 +130,112 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 3,
+    flexDirection: 'row', 
+    alignItems: 'center',
   },
   itemText: {
     fontSize: 18,
     color: '#333',
     fontWeight: 'bold',
     marginBottom: 5,
+    textAlign: 'left',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+    maxWidth: 400,
+  },
+  itemContent: {
+    flex:1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    marginBottom: 15,
+  },
+  label: {
+    marginBottom: 5,
+    fontSize: 16,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
   },
   button: {
     borderRadius: 5,
     padding: 15,
     alignItems: 'center',
     marginTop: 10,
-    backgroundColor: 'red',
+    backgroundColor: 'green',
   },
   buttonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: 'white',
   },
+  editButton: {
+    backgroundColor: 'green',
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginTop:10,
+  },
+  optionButton: {
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginVertical: 5,
+    backgroundColor: '#007bff', 
+  },
+  optionButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+    maxWidth: 400,
+  },
+  cancelButton: {
+    backgroundColor: 'red',
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginTop:10,
+  }, 
+  optionsButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+},  
 });
 

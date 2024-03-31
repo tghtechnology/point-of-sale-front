@@ -8,25 +8,27 @@ export default function DeleteAccount() {
     const [password, setPassword] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const [deleteType, setDeleteType] = useState('');
-    const {handleVerifyPassword} = useAuth();
+    const { handleDeleteTemporary } = useAuth();
 
-     const handleDeleteAccount = (type) => {
+    const handleDeleteAccount = (type) => {
         setDeleteType(type);
-         setModalVisible(true);
-     };
+        setModalVisible(true);
+    };
 
-     const handleContinue = async () => {
-        const storedUserId = await AsyncStorage.getItem("usuarioid");
-        const response = await handleVerifyPassword(storedUserId, password);
-        if (response) {
-            alert("La contraseña es correcta");
-            setPassword('');
-            setModalVisible(false);
-        } else {
-            alert("La contraseña es incorrecta");
+    const handleContinue = async () => {
+        
+        if (deleteType === 'temporary') {
+            const success = await handleDeleteTemporary(password);
+            if (success) {
+                
+                console.log("La cuenta temporal se ha eliminado exitosamente.");
+            } else {
+                alert("No se pudo eliminar la cuenta temporal. La contraseña es incorrecta o ha ocurrido un error.");
+            }
         }
+        setModalVisible(false);
+        setPassword('');
     }
-
 
     return (
         <View>
@@ -65,7 +67,7 @@ export default function DeleteAccount() {
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <Text style={styles.buttonText}>Cancelar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleContinue(password)}>
+                            <TouchableOpacity onPress={handleContinue}>
                                 <Text style={styles.buttonText}>Continuar</Text>
                             </TouchableOpacity>
                         </View>

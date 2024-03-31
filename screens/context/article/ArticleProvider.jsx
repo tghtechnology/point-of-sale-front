@@ -22,9 +22,9 @@ const ArticleProvider = ({children}) => {
     }, []);
 
     const handleCreateArticle = async (newArticle) => {
-        const {nombre, tipo_venta, precio, coste, ref, representacion, nombre_categoria} = newArticle; 
+        const {nombre, tipo_venta, precio, ref, representacion, id_categoria} = newArticle; 
         try {
-            const { status } = await createArticle({nombre, tipo_venta, precio, coste, ref, representacion, nombre_categoria}); 
+            const { status } = await createArticle({nombre, tipo_venta, precio, ref, representacion, id_categoria}); 
             if(status === 200 || status === 201){
               return true;
             } else {
@@ -36,22 +36,24 @@ const ArticleProvider = ({children}) => {
         }
     }
 
-    const handleEditArticle = async(text_id, updateArticle) => {
-        console.log(text_id)
+    const handleEditArticle = async(updateArticle) => {
+        const {nombre, tipo_venta, precio, ref, representacion, id_categoria} = updateArticle;
         try {
-            const response = await editArticles(text_id, updateArticle); 
+            const response = await editArticles(updateArticle.id, { nombre, tipo_venta, precio, ref, representacion, id_categoria} ); 
             if(response && response.status === 200){
-                const updateData = listArticle.map((article) => 
-                article.text_id === text_id? {...article, ...updateArticle} : article);
-                setListArticle(updateData);
                 console.log('Articulo editado exitosamente');
+                return true; 
             } else if (response && response.status === 204) {
-              console.log('Articulos editado exitosamente');
+                console.log('Articulo editado exitosamente');
+                return true; 
+            } else {
+                return false; 
             }
           } catch (error) {
             console.error('Error editing articulo:', error);
+            return false; 
           }
-        };
+      };
 
         
   
