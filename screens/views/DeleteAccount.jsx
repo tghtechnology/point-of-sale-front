@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import useAuth from '../hooks/useAuth';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DeleteAccount() {
     const [modalVisible, setModalVisible] = useState(false);
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState("");
     const [isFocused, setIsFocused] = useState(false);
     const [deleteType, setDeleteType] = useState('');
-    const { handleDeleteTemporary } = useAuth();
+    const { handleDeleteTemporary,handleDeletePermanent } = useAuth();
+    const navigation = useNavigation();
+    
 
     const handleDeleteAccount = (type) => {
         setDeleteType(type);
@@ -16,19 +20,31 @@ export default function DeleteAccount() {
     };
 
     const handleContinue = async () => {
-        
+        console.log("Datos enviados al servidor: ",  {deleteType,password});
+            
         if (deleteType === 'temporary') {
             const success = await handleDeleteTemporary(password);
             if (success) {
-                
+                navigation.navigate("Main")
                 console.log("La cuenta temporal se ha eliminado exitosamente.");
             } else {
                 alert("No se pudo eliminar la cuenta temporal. La contraseña es incorrecta o ha ocurrido un error.");
             }
-        }
+        } // Cierra el bloque 'if (deleteType === 'temporary')'
+    
+        if (deleteType === 'permanent') {
+            const success = await handleDeletePermanent(password);
+            if (success) {
+                navigation.navigate("Main")
+                console.log("La cuenta permanente se ha eliminado exitosamente.");
+            } else {
+                alert("No se pudo eliminar la cuenta permanente. La contraseña es incorrecta o ha ocurrido un error.");
+            }
+        } // Cierra el bloque 'if (deleteType === 'permanent')'
+    
         setModalVisible(false);
         setPassword('');
-    }
+    };
 
     return (
         <View>

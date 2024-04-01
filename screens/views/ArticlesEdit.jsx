@@ -14,17 +14,20 @@ const INITIAL_STATE = {
   representacion: "",
   id_categoria: "",
 };
-export default function ArticlesForm() {
+export default function ArticlesEdit() {
   const [editedData, setEditedData] = useState(INITIAL_STATE);
   const route = useRoute();
   const {handleEditArticle} = useArticle();
-  const { listCategoria } = useCategory();
+  const {listCategoria} = useCategory();
 
 
- useEffect(() => {
-  const { article } = route.params;
-  setEditedData(article || INITIAL_STATE);
-}, [route.params]);
+  useEffect(() => {
+    const {article, categoryId} = route.params;
+    setEditedData({
+      ...article,
+      id_categoria: categoryId,
+    });
+  }, [route.params]);
 
   const handleChange = (name, value) => {
     setEditedData({
@@ -51,9 +54,11 @@ export default function ArticlesForm() {
       const articleData = {
         ...editedData,
         precio: parseFloat(editedData.precio),
+        id_categoria: parseInt(editedData.id_categoria)
       };
+      
       console.log("Datos a enviar al servidor:", articleData);
-      await handleEditArticle(articleData);
+      await handleEditArticle(articleData,editedData.id_categoria);
       console.log("Articulos ha sido editado exitosamente");
     } catch (error) {
       console.error("Error al editar el articulos:", error);
@@ -82,7 +87,7 @@ export default function ArticlesForm() {
         >
           
           <Picker.Item label="Sin categoría" value="" />
-          {listCategoria && listCategoria.map((item, index) => (
+          {listCategoria?.map((item, index) => (
             <Picker.Item key={index} label={item.nombre} value={item.id} />
           ))}
         </Picker>

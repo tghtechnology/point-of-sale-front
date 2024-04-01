@@ -3,15 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity,FlatList, TextInput,Modal } fr
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
 import { useNavigation } from '@react-navigation/native';
+import useCategory from "../hooks/useCategory";
 
 
-
-export default function PlusImpuesto() {
+export default function PlusArticle() {
   const {listArticle,handleDeleteArticle} = useArticle();
   const [selectedItem, setSelectedItem] = useState(null)
   const [modal, setModal] = useState(false);
   const [articles, setArticles] = useState(null); 
   const navigation = useNavigation();
+  const {listCategoria} = useCategory();
 
   useEffect(() => {
     setArticles(listArticle); 
@@ -19,10 +20,12 @@ export default function PlusImpuesto() {
 
 
   const handleEdit = () => { 
-    navigation.navigate("Editar Articulo", { article: selectedItem });
-    console.log(selectedItem)
+    navigation.navigate("Editar Articulo", { 
+      article: selectedItem, 
+      categoryId: selectedItem.id_categoria,
+      listCategoria: listCategoria 
+    });
   };
-
   const handleDelete = async () => { 
     const success = await handleDeleteArticle(selectedItem.id);
     if (success) {

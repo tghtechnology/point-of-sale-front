@@ -1,9 +1,11 @@
-import React,{useState} from "react";
-import AuthContext from "./AuthContext"
-import { createToken, eliminarTemporal } from "../../services/authService";
+import React,{useState,useEffect} from "react";
+import AuthContext from "./AuthContext";
+import { createToken, eliminarTemporal,eliminarPermanente } from "../../services/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const AuthProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
+    const [userId, setUserId] = useState(null);
+    const [token, setToken] = useState(null);
 
     const loginAccess = async (email, password) => {
       const { status, data } = await createToken(email, password);
@@ -27,31 +29,64 @@ const AuthProvider = ({children}) => {
       }
     };
   
-
-    const handleDeleteTemporary = async (id, password, token) => {
+    const initializeUserAndToken = async () => {
+      const storedUserId = await AsyncStorage.getItem("usuarioid");
+      const storedToken = await AsyncStorage.getItem("token");
+      setUserId(storedUserId);
+      setToken(storedToken);
+   };
+  
+  useEffect(() => {
+      initializeUserAndToken();
+   }, []);
+  
+    const handleDeleteTemporary = async(password) => {
       try {
-        const storedToken = await AsyncStorage.getItem("token");
-        const storedUserId = await AsyncStorage.getItem("usuario_id");
-        console.log("Token almacenado:", storedToken, "ID de usuario almacenado:", storedUserId); // Imprime los valores almacenados
-    
-        if (!storedToken || !storedUserId) {
-          return false;
-        }
-    
-        const { status } = await eliminarTemporal(storedUserId, password, storedToken);
-        console.log("Estado de la respuesta:", status); // Imprime el estado de la respuesta
-        return status === 200;
+          console.log("Token almacenado:", token);
+          console.log("ID de usuario almacenado:", userId);
+          console.log("Contraseña proporcionada:", password);
+
+          if (!token || !userId) {
+              console.error("No se encontró el token o el ID de usuario en AsyncStorage");
+              return false;
+          }
+
+          const { status } = await eliminarTemporal(password);
+          console.log("Estado de la respuesta:", status);
+          return status === 200;
       } catch (error) {
-        console.error("Error al verificar la contraseña", error);
-        return false;
+          console.error("Error al eliminar cuenta temporal:", error);
+          return false;
       }
+  };
+      const handleDeletePermanent = async(password) => {
+    try {
+        console.log("Token almacenado:", token);
+        console.log("ID de usuario almacenado:", userId);
+        console.log("Contraseña proporcionada:", password);
+
+        if (!token || !userId) {
+            console.error("No se encontró el token o el ID de usuario en AsyncStorage");
+            return false;
+        }
+
+        const { status } = await eliminarPermanente (password);
+        console.log("Estado de la respuesta:", status);
+        return status === 200;
+    } catch (error) {
+        console.error("Error al eliminar cuenta temporal:", error);
+        return false;
     }
+  };
 
   return (
     <AuthContext.Provider value={{
         isAuth,
+        userId,
+        token,
         loginAccess,
         handleDeleteTemporary,
+        handleDeletePermanent,
     }}>
         {children}
     </AuthContext.Provider>

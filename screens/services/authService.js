@@ -12,22 +12,37 @@ const createToken = async (email,password)  => {
         console.log(error)
     }
 }
-const eliminarTemporal = async (id, password, token) => {
+const eliminarTemporal = async (password) => {
     try {
-      const token = await AsyncStorage.getItem('token');
-      console.log("ID:", id, "Password:", password, "Token:", token); 
-      const { data, status } = await apiClient.post(`/eliminar-temporal/`, { password, token });
-      console.log("Respuesta de la API:", data, status);
+      const usuario_id = await AsyncStorage.getItem("usuarioid");
+      const token = await AsyncStorage.getItem("token");
+      const userIdInt = parseInt(usuario_id, 10); // o Number(usuario_id)
+      const { data, status } = await apiClient.post(`/eliminar-temporal`, {usuario_id: userIdInt, password, token });
       return {
         data,
         status
       };
     } catch (error) {
-      console.log("Error al llamar a la API de eliminar temporal:", error);
+      console.log( error);
     }
   }
   
+  const eliminarPermanente = async (password) => {
+    try {
+      const usuario_id = await AsyncStorage.getItem("usuarioid");
+      const token = await AsyncStorage.getItem("token");
+      const userIdInt = parseInt(usuario_id, 10); // o Number(usuario_id)
+      const { data, status } = await apiClient.post(`/eliminar-permanente`, {usuario_id: userIdInt, password, token });
+      return {
+        data,
+        status
+      };
+    } catch (error) {
+      console.log( error);
+    }
+  }
 export {
     createToken,
     eliminarTemporal,
+    eliminarPermanente
 }
