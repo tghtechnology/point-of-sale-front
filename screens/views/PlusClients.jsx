@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useClient from '../hooks/useClient';
+import ClientProvider from '../context/cliente/ClientProvider';
 import CustomAlert from '../componentes/CustomAlert';
 const PlusClients = (props) => {
     const navigation = useNavigation();
@@ -258,11 +259,11 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.8,
       shadowRadius: 2,
       elevation: 3,
-      flexDirection: 'row', 
-      alignItems: 'center', 
+      flexDirection: 'row', // Para alinear elementos horizontalmente
+      alignItems: 'center', // Para alinear elementos verticalmente
     },
     clientData: {
-      flex: 1, 
+      flex: 1, // Para que ocupe el espacio restante
     },
     itemText: {
       fontSize: 18,
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
       position: 'absolute',
       bottom: 20,
       right: 20,
-      backgroundColor: '#ff0000', 
+      backgroundColor: '#ff0000', // Color del botón
       borderRadius: 20,
       padding: 10,
     },
@@ -282,7 +283,7 @@ const styles = StyleSheet.create({
       position: 'absolute',
       bottom: 80,
       right: 20,
-      backgroundColor: 'blue', 
+      backgroundColor: 'blue', // Color del botón
       borderRadius: 20,
       padding: 10,
     },
@@ -345,7 +346,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
       alignItems: 'center',
       marginVertical: 5,
-      backgroundColor: '#007bff',
+      backgroundColor: '#007bff', // Color del botón de opciones
     },
     optionButtonText: {
       fontSize: 16,

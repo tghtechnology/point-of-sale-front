@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from './screens/views/HomeScreen';
 import DeleteAccount from './screens/views/DeleteAccount';
 import ArticlesNavigate from './screens/views/ArticlesNavigate';
+import MiembNavigate from './screens/views/MiembNavigate'
 import PlusArticles from './screens/views/PlusArticles';
 import PlusCategory from './screens/views/PlusCategory';
 import ArticlesForm from './screens/views/ArticlesForm';
@@ -27,9 +28,10 @@ import PlusImpuesto from './screens/views/PlusImpuesto';
 import ImpuestoForm from './screens/views/ImpuestoForm';
 import ImpuestoEdit from './screens/views/ImpuestoEdit';
 import CategoryEdit from './screens/views/CategoryEdit';
-import ClientForm from './screens/views/ClientForm';
 import MiembNavigate from './screens/views/MiembNavigate';
+import ClientForm from './screens/views/ClientForm';
 import PlusClients from './screens/views/PlusClients';
+
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -119,6 +121,7 @@ function ArticulosScreen() {
   );
 };
 
+
 function MiembrosScreen() {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
@@ -157,8 +160,6 @@ function MiembrosScreen() {
     </Stack.Navigator>
   );
 };
-
-
 
 
 const DrawerNav =()=> {

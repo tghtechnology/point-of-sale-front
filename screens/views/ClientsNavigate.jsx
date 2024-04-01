@@ -3,26 +3,19 @@ import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function ArticlesNavigate() {
+export default function ClientsNavigate() {
   const navigation = useNavigation();
 
   return (
     <View>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Miem")}
+        onPress={() => navigation.navigate("Client")}
         style={styles.container}
       >
-      <MaterialCommunityIcons name="format-list-bulleted" size={24} color="#708090" />
-        <Text style={styles.text}>Empleado</Text>
+        <MaterialCommunityIcons name="format-list-bulleted" size={24} color="#708090" />
+        <Text style={styles.text}>Clientes</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Cliente")}
-        style={styles.container}
-      >
-        <MaterialCommunityIcons name="content-copy" size={24} color="#708090" />
-        <Text style={styles.text}>Cliente</Text>
-      </TouchableOpacity>
-
+      
     </View>
   );
 }

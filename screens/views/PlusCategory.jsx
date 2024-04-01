@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import useCategory from '../hooks/useCategory';
 
 
-
  const PlusCategory = () => {
   const navigation = useNavigation();
   const [modal, setModal] = useState(false);
