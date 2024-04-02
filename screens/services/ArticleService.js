@@ -28,7 +28,7 @@ const createArticle = async (newArticle) => {
 
 const editArticles = async(id,updateArticle) => {
     try {
-        const { data,status } = await apiClient.put(`/categoria/actualizar/${id}`, updateArticle);
+        const { data,status } = await apiClient.put(`/articulo/actualizar/${id}`, updateArticle);
         return {
             data,
             status

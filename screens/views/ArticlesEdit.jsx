@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   id_categoria: "",
 };
 export default function ArticlesEdit() {
-  const [editedData, setEditedData] = useState(INITIAL_STATE);
+  const [editedData, setEditedData] = useState(INITIAL_STATE)
   const route = useRoute();
   const {handleEditArticle} = useArticle();
   const {listCategoria} = useCategory();
@@ -25,6 +25,8 @@ export default function ArticlesEdit() {
     const {article} = route.params;
     setEditedData(article || INITIAL_STATE);
   }, [route.params]);
+
+ 
 
   const handleChange = (name, value) => {
     setEditedData({
