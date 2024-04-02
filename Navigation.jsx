@@ -13,7 +13,7 @@ import PlusCategory from './screens/views/PlusCategory';
 import ArticlesForm from './screens/views/ArticlesForm';
 import Icon from "react-native-vector-icons/Entypo";
 import CategoryForm from './screens/views/CategoryForm';
-import { Ionicons, MaterialCommunityIcons,FontAwesome } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons,FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import HomeView from './screens/views/HomeView';
 import LoginForm from "./screens/views/LoginForm"
 import RegisterForm from './screens/views/RegisterForm';
@@ -31,6 +31,7 @@ import CategoryEdit from './screens/views/CategoryEdit';
 import ClientForm from './screens/views/ClientForm';
 import PlusClients from './screens/views/PlusClients';
 import PlusWorkers from './screens/views/PlusWorkers';
+import RecibosScreen from './screens/views/RecibosScreen';
 
 
 function StackNavigation() {
@@ -162,6 +163,36 @@ function MiembrosScreen() {
   );
 };
 
+function Recibos(){
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+  return (
+    <Stack.Navigator
+        screenOptions={{
+          statusBarColor: "#ff0000",
+          headerStyle: { backgroundColor: "#ff0000" },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        }}
+      >
+      <Stack.Screen name="Recibos" component={RecibosScreen} options={{ headerLeft: () => {
+          return (
+              <Icon
+                name="menu"
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                size={24}
+                color="#fff"
+              />
+            );
+          },
+        }}></Stack.Screen>
+        </Stack.Navigator>
+  );
+
+};
+
 
 const DrawerNav =()=> {
   const Drawer = createDrawerNavigator();
@@ -171,6 +202,7 @@ const DrawerNav =()=> {
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Miembros" component={MiembrosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "account" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Recibos" component={Recibos}  options={{drawerIcon: ({focused, size}) => (<FontAwesome5 name= "receipt" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );
 };

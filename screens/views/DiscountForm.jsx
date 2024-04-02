@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet,Text, TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useDiscount from '../hooks/useDiscount';
-import DiscountProvider from '../context/discount/DiscountProvider';
+
 
 const INITIAL_STATE = {
     nombre:'',

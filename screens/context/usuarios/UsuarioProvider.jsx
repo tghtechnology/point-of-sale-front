@@ -18,8 +18,8 @@ const UsuarioProvider = ({children}) => {
     const initializeUserAndToken = async () => {
       const storedUserId = await AsyncStorage.getItem("usuarioid");
       const storedToken = await AsyncStorage.getItem("token");
-      setUserId(storedUserId);
-      setToken(storedToken);
+      if (storedUserId) setUserId(storedUserId);
+    if (storedToken) setToken(storedToken);
    };
   
   useEffect(() => {
