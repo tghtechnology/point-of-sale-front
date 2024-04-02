@@ -44,7 +44,6 @@ export default function ArticlesForm() {
         ...datos,
         precio: parseFloat(datos.precio),
       };
-      
       console.log("Datos a enviar al servidor:", articleData);
       const response = await handleCreateArticle(articleData);
       if (response) {

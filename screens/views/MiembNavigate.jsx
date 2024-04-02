@@ -9,7 +9,7 @@ export default function ArticlesNavigate() {
   return (
     <View>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Miem")}
+        onPress={() => navigation.navigate("Empleados")}
         style={styles.container}
       >
       <MaterialCommunityIcons name="format-list-bulleted" size={24} color="#708090" />

@@ -28,9 +28,9 @@ import PlusImpuesto from './screens/views/PlusImpuesto';
 import ImpuestoForm from './screens/views/ImpuestoForm';
 import ImpuestoEdit from './screens/views/ImpuestoEdit';
 import CategoryEdit from './screens/views/CategoryEdit';
-import MiembNavigate from './screens/views/MiembNavigate';
 import ClientForm from './screens/views/ClientForm';
 import PlusClients from './screens/views/PlusClients';
+import PlusWorkers from './screens/views/PlusWorkers';
 
 
 function StackNavigation() {
@@ -139,7 +139,7 @@ function MiembrosScreen() {
     <Stack.Screen name="Miembros" component={MiembNavigate} options={{ headerLeft: () => {
         return (
             <Icon
-              name="user"
+              name="menu"
               onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
               size={24}
               color="#fff"
@@ -147,8 +147,9 @@ function MiembrosScreen() {
           );
         },
       }}></Stack.Screen>
+       <Stack.Screen name="Empleados" component={PlusWorkers}></Stack.Screen>
 
-      <Stack.Screen name="Miem" component={FormRegisEmpleado} options={{ title: "Todos los miembros",
+      <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Todos los miembros",
      headerRight: () => (
       
         <Ionicons name="search-outline" size={24} color="#fff" />

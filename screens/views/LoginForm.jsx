@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert } from 'react-native'
 import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
 import useAuth from '../hooks/useAuth';
@@ -12,7 +13,8 @@ const LoginForm = () => {
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const [inconAlertVisible, setConAlertVisible] = useState(false);
   const [emailAlertVisible, setEmailAlertVisible] = useState(false);
-  const {loginAccess} = useAuth();
+  const { loginAccess } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -20,6 +22,9 @@ const LoginForm = () => {
   //Logica de Iniciar Secion
 
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSignIn = async () => {
     try {
@@ -55,19 +60,32 @@ const LoginForm = () => {
         }
       />
 
-      {/* INPUT PARA CONTRASEÑA */}
-      <TextInput
-        style={styles.input}
-        placeholder='Contraseña'
-        placeholderTextColor="#546574"
-        secureTextEntry={true}
-        onChangeText={(text) =>
-          setCredentials((prevCredentials) => ({
-            ...prevCredentials,
-            password: text,
-          }))
-        }
-      />
+      <View style={styles.passwordContainer}>
+        {/* INPUT PARA CONTRASEÑA */}
+        <TextInput
+          style={styles.passwordInput}
+          placeholder='Contraseña'
+          placeholderTextColor="#546574"
+          secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
+          onChangeText={(text) =>
+            setCredentials((prevCredentials) => ({
+              ...prevCredentials,
+              password: text,
+            }))
+          }
+        />
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)} // Cambia la visibilidad de la contraseña al tocar el botón
+          style={styles.showPasswordButton}
+        >
+          <Icon
+            name={showPassword ? 'eye' : 'eye-slash'}
+            size={20}
+            color="#546574"
+          />
+        </TouchableOpacity>
+      </View>
+
 
       {/* BOTÓN DE INICIO DE SESIÓN */}
       <TouchableOpacity onPress={handleSignIn} style={styles.button}>
@@ -126,6 +144,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
   },
 
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: 'gray',
+    padding: 1,
+    textAlign:'left'
+  },
+
+  passwordInput: {
+    marginBottom:35 ,
+    fontSize: 17,
+    borderBottomWidth: 1, // Cambiado de borderWidth
+    borderBottomColor: 'red', // Cambiado de borderColor
+    height: 40,
+    width: 350,
+    color: '#546574',
+    padding: 10,
+    borderRadius: 5,
+    paddingLeft:10,
+    textAlign: 'left'
+  },
+
+  showPasswordButton: {
+    padding: 5,
+    paddingBottom: 25,
+  },
+
   input: {
     marginBottom: 25,
     fontSize: 17,
@@ -135,7 +180,6 @@ const styles = StyleSheet.create({
     color: '#546574',
     padding: 10,
     borderRadius: 5,
-
   },
   button: {
     backgroundColor: 'red',

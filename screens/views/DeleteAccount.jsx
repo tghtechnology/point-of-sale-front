@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-import useAuth from '../hooks/useAuth';
+import useUser from '../hooks/useUser';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DeleteAccount() {
@@ -10,7 +9,7 @@ export default function DeleteAccount() {
     const [password, setPassword] = useState("");
     const [isFocused, setIsFocused] = useState(false);
     const [deleteType, setDeleteType] = useState('');
-    const { handleDeleteTemporary,handleDeletePermanent } = useAuth();
+    const { handleDeleteTemporary,handleDeletePermanent } = useUser();
     const navigation = useNavigation();
     
 

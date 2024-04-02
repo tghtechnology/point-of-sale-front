@@ -9,9 +9,12 @@ import EmailProvider from "./screens/context/email/EmailProvider.jsx";
 import AuthProvider from "./screens/context/auth/AuthProvider.jsx";
 import ImpuestoProvider from "./screens/context/impuesto/ImpuestoProvider.jsx";
 import ClientProvider from "./screens/context/cliente/ClientProvider.jsx";
+import WorkerProvider from "./screens/context/worker/WorkerProvider.jsx";
+
 
 export default function App() {
   return (
+    <WorkerProvider>
     <ClientProvider>
       <ImpuestoProvider>
         <EmailProvider>
@@ -31,5 +34,6 @@ export default function App() {
         </EmailProvider>
       </ImpuestoProvider>
     </ClientProvider>
+    </WorkerProvider>
   );
 }

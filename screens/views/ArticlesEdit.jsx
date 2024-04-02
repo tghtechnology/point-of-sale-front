@@ -22,11 +22,8 @@ export default function ArticlesEdit() {
 
 
   useEffect(() => {
-    const {article, categoryId} = route.params;
-    setEditedData({
-      ...article,
-      id_categoria: categoryId,
-    });
+    const {article} = route.params;
+    setEditedData(article || INITIAL_STATE);
   }, [route.params]);
 
   const handleChange = (name, value) => {

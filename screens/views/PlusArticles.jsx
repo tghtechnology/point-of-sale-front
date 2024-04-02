@@ -22,8 +22,6 @@ export default function PlusArticle() {
   const handleEdit = () => { 
     navigation.navigate("Editar Articulo", { 
       article: selectedItem, 
-      categoryId: selectedItem.id_categoria,
-      listCategoria: listCategoria 
     });
   };
   const handleDelete = async () => { 
