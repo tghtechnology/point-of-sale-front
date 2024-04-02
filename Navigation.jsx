@@ -30,6 +30,7 @@ import ImpuestoEdit from './screens/views/ImpuestoEdit';
 import CategoryEdit from './screens/views/CategoryEdit';
 import ClientForm from './screens/views/ClientForm';
 import PlusClients from './screens/views/PlusClients';
+import ClientEdit from './screens/views/ClientEdit'
 import PlusWorkers from './screens/views/PlusWorkers';
 
 
@@ -158,6 +159,7 @@ function MiembrosScreen() {
       />
       <Stack.Screen name="Cliente" component={PlusClients}></Stack.Screen>
       <Stack.Screen name="Crear Cliente" component={ClientForm}></Stack.Screen>
+      <Stack.Screen name="Editar Cliente" component={ClientEdit}></Stack.Screen>
     </Stack.Navigator>
   );
 };
