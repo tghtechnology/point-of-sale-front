@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import AuthContext from "./AuthContext";
 import {createToken,logout} from "../../services/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const AuthProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
   
@@ -57,7 +58,7 @@ const AuthProvider = ({children}) => {
     <AuthContext.Provider value={{
         isAuth,
         loginAccess,
-        logautAccess
+        logautAccess,
     }}>
         {children}
     </AuthContext.Provider>

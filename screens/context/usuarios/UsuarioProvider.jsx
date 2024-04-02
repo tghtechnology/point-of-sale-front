@@ -74,8 +74,7 @@ const UsuarioProvider = ({children}) => {
       token,
       handleCreateUser,
       handleDeleteTemporary,
-      handleDeletePermanent,
-
+      handleDeletePermanent,           
     }}> 
       {children}
     </UsuarioContext.Provider>
