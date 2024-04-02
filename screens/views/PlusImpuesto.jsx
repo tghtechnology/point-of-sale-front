@@ -1,30 +1,31 @@
 import React, {useState,useEffect} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons,FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import useCategory from '../hooks/useCategory';
+import useImpuesto from "../hooks/useImpuesto";
 
 
- const PlusCategory = () => {
+
+ const PlusImpuesto = () => {
   const navigation = useNavigation();
   const [modal, setModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null)
-  const [categoria, setCategoria] = useState([]);
-  const {listCategoria, handleDeleteCategory} = useCategory();
+  const [impuestos, setImpuestos] = useState([]);
+ const {listImpuesto, handleDeleteImp} = useImpuesto();
 
   useEffect(() => {
-    setCategoria(listCategoria); 
-  }, [listCategoria]);
+    setImpuestos(listImpuesto); 
+  }, [listImpuesto]);
 
   const handleEdit = () => { 
-    navigation.navigate("Editar Categoria", { categorias: selectedItem });
+    navigation.navigate("Editar Impuestos", { impuesto: selectedItem });
     console.log(selectedItem)
   };
 
   const handleDelete = async () => { 
-    const success = await handleDeleteCategory(selectedItem.id);
+    const success = await handleDeleteImp(selectedItem.id);
     if (success) {
-      setCategoria(categoria.filter(categorias => categorias.id !== selectedItem.id));
+      setImpuestos(impuestos.filter(impuesto => impuesto.id !== selectedItem.id));
     }
   };
 
@@ -36,12 +37,12 @@ import useCategory from '../hooks/useCategory';
   return (
     <View style={styles.container}>
       <FlatList
-        data={listCategoria}
+        data={listImpuesto}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <View style={styles.itemContent}>
             <Text style={styles.itemText}>{item.nombre}</Text>
-            
+            <Text style={styles.itemText}>{item.tasa}</Text>
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
               <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
             </TouchableOpacity> 
@@ -52,13 +53,15 @@ import useCategory from '../hooks/useCategory';
     contentContainerStyle={{ paddingHorizontal: 16 }}
     ListEmptyComponent={() => (
       <View>
-        <MaterialCommunityIcons name="content-copy" size={100} color="#808080" />
-        <Text style={styles.text}>Todavía no tiene Categorias</Text>
-        <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
-        </View>
+            <View style={styles.circle}>
+              <FontAwesome5 name="percentage" size={100} color="#808080" />
+            </View>
+            <Text style={styles.text}>Aun no tiene impuestos en esta tienda</Text>
+            <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
+          </View>
         )}
         />
-      <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Crear Categoria")}>
+      <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Creación de un impuesto")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
       <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
@@ -133,6 +136,7 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: 'bold',
     marginBottom: 5,
+    textAlign: 'left',
   },
   container: {
     flex: 1,
@@ -154,7 +158,7 @@ const styles = StyleSheet.create({
   },
   itemContent: {
     flex:1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -233,4 +237,4 @@ const styles = StyleSheet.create({
 },  
 });
 
-export default PlusCategory;
+export default PlusImpuesto;

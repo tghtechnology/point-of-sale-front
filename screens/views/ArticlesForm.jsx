@@ -1,4 +1,4 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity} from "react-native";
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 import React, { useState } from "react";
@@ -9,20 +9,16 @@ const INITIAL_STATE = {
   nombre: "",
   tipo_venta: "",
   precio: "",
-  coste: "",
   ref: "",
   representacion: "",
-  nombre_categoria:"",
+  id_categoria: "",
 };
 export default function ArticlesForm() {
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [datos, setDatos] = useState(INITIAL_STATE);
   const { handleCreateArticle } = useArticle();
-  const {categories} = useCategory();
-  const { updateArticles } = useArticle();
-  
+  const { listCategoria } = useCategory();
+
   const getValues = (name, value) => {
-    
     setDatos({
       ...datos,
       [name]: value,
@@ -37,20 +33,22 @@ export default function ArticlesForm() {
   };
 
   const handleCategoryChange = (value) => {
-    const selectedCategory = value; 
     setDatos({
       ...datos,
-      nombre_categoria: selectedCategory,
+      id_categoria: value,
     });
   };
   const SubmitArticle = async () => {
-    
     try {
-      const response = await handleCreateArticle(datos);
+      const articleData = {
+        ...datos,
+        precio: parseFloat(datos.precio),
+      };
+      console.log("Datos a enviar al servidor:", articleData);
+      const response = await handleCreateArticle(articleData);
       if (response) {
         alert("El articulo ha sido creado con exito");
         setDatos(INITIAL_STATE);
-        setSelectedCategory('');
       } else {
         alert("El articulo no se pudo crear");
       }
@@ -77,14 +75,14 @@ export default function ArticlesForm() {
       <View style={styles.pickeContainer}>
         <Picker
           onValueChange={(value) => handleCategoryChange(value)}
-          value={datos.nombre_categoria}
+          value={datos.id_categoria}
           style={styles.picker}
         >
-          {
-            categories?.map((item,index)=>(
-              <Picker.Item key={index} label={item.nombre} value={item.nombre} />
-            ))
-          }
+          
+          <Picker.Item label="Sin categoría" value="" />
+          {listCategoria?.map((item, index) => (
+            <Picker.Item key={index} label={item.nombre} value={item.id} />
+          ))}
         </Picker>
       </View>
       {/* Opcion vendido*/}
@@ -117,17 +115,6 @@ export default function ArticlesForm() {
           Deje el campo en blanco para indicar el precio durante la venta{" "}
         </Text>
       </View>
-      {/* Input Coste*/}
-      <View>
-        <Text style={styles.label}>Coste</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="S/0.00"
-        placeholderTextColor="black"
-        value={datos.coste}
-        onChangeText={(text) => getValues("coste", text)}
-      />
       {/* Input REF*/}
       <View>
         <Text style={styles.label}>REF</Text>
@@ -154,8 +141,6 @@ export default function ArticlesForm() {
       <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>CREAR ARTICULO</Text>
       </TouchableOpacity>
-      <View style={{ height: 20 }} />
-      
     </View>
   );
 }

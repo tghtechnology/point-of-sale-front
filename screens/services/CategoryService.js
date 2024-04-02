@@ -14,41 +14,36 @@ const createCategory = async (newCategory) => {
 }
 
 
-const getCategories = async () => {
+const listCategories = async () => {
     try {
-        const response = await apiClient.get('/categoria/listar');
-        return response.data; // Devuelve los datos de los descuentos
+        const { data,status } = await apiClient.get(`/categoria/listar`); 
+        return {
+            data,
+            status
+        }; 
     } catch (error) {
         console.log(error);
-        return []; // En caso de error, devuelve un array vacío
+        throw new Error('Error al cargar Categorias'); 
     }
 };
 
 
-const editCategories = async ( updatedData) => {
-    console.log('.')
+const editCategories = async(id,updateCategorias) => {
     try {
-        const response = await apiClient.put(`/categoria/actualizar/${text_id}`, updatedData);
-        if (response.status === 200) {
-       
-        return response.data;
-      }
+        const { data,status } = await apiClient.put(`/categoria/actualizar/${id}`, updateCategorias);
+        return {
+            data,
+            status
+        }; 
     } catch (error) {
-      throw new Error('Error al editar la categoria');
+      throw new Error('Error al editar categorias');
     }
   };
 
-  const updateCategory = async ( newData) => {
-    try {
-        const response = await apiClient.put(`/categoria/actualizar/${text_id}`, newData);
-        return response.data;
-    } catch (error) {
-        throw new Error(`Error al actualizar el categoria: ${error.message}`);
-    }
-    };
- const deleteCategory = async(text_id) => {
+
+ const deleteCategory = async(id) => {
         try{
-            const{data, status} = await apiClient.delete(`/categoria/eliminar/${text_id}`);
+            const{data, status} = await apiClient.delete(`/categoria/eliminar/${id}`);
             return{
                 data,
                 status
@@ -60,6 +55,6 @@ const editCategories = async ( updatedData) => {
 
     
 export {
-    createCategory, getCategories,editCategories,updateCategory,deleteCategory
+    createCategory, listCategories,editCategories,deleteCategory
 
 }

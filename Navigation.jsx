@@ -21,11 +21,16 @@ import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
 import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
 import DiscountForm from './screens/views/DiscountForm';
 import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
-import ArticlesEditForm from './screens/views/ArticlesEditForm';
+import ArticlesEdit from './screens/views/ArticlesEdit';
 import PlusDiscount from './screens/views/PlusDiscount';
 import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
+import PlusImpuesto from './screens/views/PlusImpuesto';
+import ImpuestoForm from './screens/views/ImpuestoForm';
+import ImpuestoEdit from './screens/views/ImpuestoEdit';
+import CategoryEdit from './screens/views/CategoryEdit';
 import ClientForm from './screens/views/ClientForm';
 import PlusClients from './screens/views/PlusClients';
+import PlusWorkers from './screens/views/PlusWorkers';
 
 
 function StackNavigation() {
@@ -39,7 +44,6 @@ return (
       <Stack.Screen name="Envio" component={EnvioCorreoForm} />
       <Stack.Screen name="Confirmar" component={ConfirmPasswordForm} />
       <Stack.Screen name="Home" component={HomeScreen}
-      
         options={{title: "Soporte",
           headerLeft: () => {
             return (
@@ -87,7 +91,6 @@ function ArticulosScreen() {
      headerRight: () => (
       <><FontAwesome
           name="sort-down"
-          // onPress={() => navigation.navigate('Arti')}
           size={16}
           color="#fff"
           style={{ marginRight: 119 }}/>
@@ -96,10 +99,11 @@ function ArticulosScreen() {
     ),}}
       />
       <Stack.Screen name="Crear Articulo" component={ArticlesForm}></Stack.Screen>
-      <Stack.Screen name="Editar Articulo" component={ArticlesEditForm}></Stack.Screen>
+      <Stack.Screen name="Editar Articulo" component={ArticlesEdit}></Stack.Screen>
       <Stack.Screen name="Categorias" component={PlusCategory} options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
       
       <Stack.Screen name="Crear Descuento" component={DiscountForm}  ></Stack.Screen>
+      <Stack.Screen name="Editar Categoria" component={CategoryEdit}  ></Stack.Screen>
       <Stack.Screen name="Crear Categoria" component={CategoryForm}  options={{
           headerRight: () => (
             <View style={{ marginRight: 10 }}>
@@ -108,7 +112,10 @@ function ArticulosScreen() {
           ),
         }}></Stack.Screen>
       <Stack.Screen name="Descuento" component={PlusDiscount}  options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
-      
+      <Stack.Screen name="Impuestos" component={PlusImpuesto}  ></Stack.Screen>
+      <Stack.Screen name="Creación de un impuesto" component={ImpuestoForm}  ></Stack.Screen>
+      <Stack.Screen name="Editar Impuestos" component={ImpuestoEdit}  ></Stack.Screen>
+    
       <Stack.Screen name="Descuentos Desactivados" component={PlusFalseDiscount}></Stack.Screen>
     </Stack.Navigator>
   );
@@ -132,7 +139,7 @@ function MiembrosScreen() {
     <Stack.Screen name="Miembros" component={MiembNavigate} options={{ headerLeft: () => {
         return (
             <Icon
-              name="user"
+              name="menu"
               onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
               size={24}
               color="#fff"
@@ -140,8 +147,9 @@ function MiembrosScreen() {
           );
         },
       }}></Stack.Screen>
+       <Stack.Screen name="Empleados" component={PlusWorkers}></Stack.Screen>
 
-      <Stack.Screen name="Miem" component={FormRegisEmpleado} options={{ title: "Todos los miembros",
+      <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Todos los miembros",
      headerRight: () => (
       
         <Ionicons name="search-outline" size={24} color="#fff" />

@@ -26,13 +26,13 @@ const createArticle = async (newArticle) => {
     }
 }
 
-const editArticles = async(updateArticle) => {
-    console.log(editArticles)
+const editArticles = async(id,updateArticle) => {
     try {
-        const response = await apiClient.put(`/categoria/actualizar/${text_id}`, updateArticle);
-        if (response.status === 200) {
-        return response.data;
-      }
+        const { data,status } = await apiClient.put(`/categoria/actualizar/${id}`, updateArticle);
+        return {
+            data,
+            status
+        }; 
     } catch (error) {
       throw new Error('Error al editar el articulo');
     }

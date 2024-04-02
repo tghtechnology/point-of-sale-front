@@ -1,21 +1,48 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import useUser from '../hooks/useUser';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DeleteAccount() {
     const [modalVisible, setModalVisible] = useState(false);
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState("");
     const [isFocused, setIsFocused] = useState(false);
     const [deleteType, setDeleteType] = useState('');
+    const { handleDeleteTemporary,handleDeletePermanent } = useUser();
+    const navigation = useNavigation();
+    
 
     const handleDeleteAccount = (type) => {
         setDeleteType(type);
         setModalVisible(true);
     };
 
-    const handleContinue = () => {
-        console.log(`Entered Password for ${deleteType}:`, password);
-        // Aquí puedes implementar la lógica para eliminar la cuenta según el tipo
+    const handleContinue = async () => {
+        console.log("Datos enviados al servidor: ",  {deleteType,password});
+            
+        if (deleteType === 'temporary') {
+            const success = await handleDeleteTemporary(password);
+            if (success) {
+                navigation.navigate("Main")
+                console.log("La cuenta temporal se ha eliminado exitosamente.");
+            } else {
+                alert("No se pudo eliminar la cuenta temporal. La contraseña es incorrecta o ha ocurrido un error.");
+            }
+        } // Cierra el bloque 'if (deleteType === 'temporary')'
+    
+        if (deleteType === 'permanent') {
+            const success = await handleDeletePermanent(password);
+            if (success) {
+                navigation.navigate("Main")
+                console.log("La cuenta permanente se ha eliminado exitosamente.");
+            } else {
+                alert("No se pudo eliminar la cuenta permanente. La contraseña es incorrecta o ha ocurrido un error.");
+            }
+        } // Cierra el bloque 'if (deleteType === 'permanent')'
+    
         setModalVisible(false);
+        setPassword('');
     };
 
     return (
@@ -39,7 +66,7 @@ export default function DeleteAccount() {
                     <View style={styles.modalContent}>
                         <Text style={styles.modalText}>Introduzca su contraseña</Text>
                         <Text style={styles.subText}>Por temas de seguridad, por favor introduzca su contraseña para continuar</Text>
-                        <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'blue' : 'gray' }]}>
+                        <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'red' : 'red' }]}>
                             <Text style={[styles.inputLabel, { top: isFocused || password ? -25 : 10 }]}>Contraseña</Text>
                             <TextInput
                                 style={styles.input}
@@ -81,15 +108,19 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         elevation: 5,
+        width: '80%',
     },
     modalText: {
         fontSize: 18,
-        marginBottom: 5,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
     },
     subText: {
-        fontSize: 14,
-        marginBottom: 15,
+        fontSize: 16,
+        marginBottom: 20,
         color: 'gray',
+        textAlign: 'center',
     },
     inputContainer: {
         position: 'relative',
@@ -98,7 +129,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     inputLabel: {
-        marginTop:20,
+        marginTop:2,
         position: 'absolute',
         left: 5,
         color: 'gray',
@@ -115,7 +146,8 @@ const styles = StyleSheet.create({
         
     },
     buttonText: {
-        color: 'black',
+        color: 'red',
         fontSize: 16,
+        fontWeight: 'bold'
     },
 });

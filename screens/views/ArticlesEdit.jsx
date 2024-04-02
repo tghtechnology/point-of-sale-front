@@ -1,7 +1,8 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity} from "react-native";
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
 
@@ -9,55 +10,56 @@ const INITIAL_STATE = {
   nombre: "",
   tipo_venta: "",
   precio: "",
-  coste: "",
   ref: "",
   representacion: "",
-  nombre_categoria:"",
+  id_categoria: "",
 };
-export default function ArticlesForm() {
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [datos, setDatos] = useState(INITIAL_STATE);
-  const { handleCreateArticle } = useArticle();
-  const {listCategory} = useCategory();
-  const { updateArticles } = useArticle();
-  
-  const getValues = (name, value) => {
-    
-    setDatos({
-      ...datos,
+export default function ArticlesEdit() {
+  const [editedData, setEditedData] = useState(INITIAL_STATE);
+  const route = useRoute();
+  const {handleEditArticle} = useArticle();
+  const {listCategoria} = useCategory();
+
+
+  useEffect(() => {
+    const {article} = route.params;
+    setEditedData(article || INITIAL_STATE);
+  }, [route.params]);
+
+  const handleChange = (name, value) => {
+    setEditedData({
+      ...editedData,
       [name]: value,
     });
   };
 
   const handleTipoVentaChange = (value) => {
-    setDatos({
-      ...datos,
+    setEditedData({
+      ...editedData,
       tipo_venta: value,
     });
   };
 
   const handleCategoryChange = (value) => {
-    const selectedCategory = value; 
-    setDatos({
-      ...datos,
-      nombre_categoria: selectedCategory,
+    setEditedData({
+      ...editedData,
+      id_categoria: value,
     });
   };
-  const SubmitArticle = async () => {
-    
+  const handleSubmit = async () => {
     try {
-      const response = await handleCreateArticle(datos);
-      if (response) {
-        alert("El articulo ha sido creado con exito");
-        setDatos(INITIAL_STATE);
-        setSelectedCategory('');
-      } else {
-        alert("El articulo no se pudo crear");
-      }
+      const articleData = {
+        ...editedData,
+        precio: parseFloat(editedData.precio),
+        id_categoria: parseInt(editedData.id_categoria)
+      };
+      
+      console.log("Datos a enviar al servidor:", articleData);
+      await handleEditArticle(articleData,editedData.id_categoria);
+      console.log("Articulos ha sido editado exitosamente");
     } catch (error) {
-      alert("problema interno del servidor");
+      console.error("Error al editar el articulos:", error);
     }
-    console.log("valor del formulario" + JSON.stringify(datos));
   };
 
   return (
@@ -67,8 +69,8 @@ export default function ArticlesForm() {
         style={styles.input}
         placeholder="Nombre"
         placeholderTextColor="#546574"
-        value={datos.nombre}
-        onChangeText={(text) => getValues("nombre", text)}
+        value={editedData.nombre}
+        onChangeText={(text) => handleChange("nombre", text)}
       />
       {/* Opcion de categoria */}
       <View>
@@ -77,14 +79,14 @@ export default function ArticlesForm() {
       <View style={styles.pickeContainer}>
         <Picker
           onValueChange={(value) => handleCategoryChange(value)}
-          value={datos.nombre_categoria}
+          value={editedData.id_categoria}
           style={styles.picker}
         >
-          {
-            listCategory?.map((item,index)=>(
-              <Picker.Item key={index} label={item.nombre} value={item.nombre} />
-            ))
-          }
+          
+          <Picker.Item label="Sin categoría" value="" />
+          {listCategoria?.map((item, index) => (
+            <Picker.Item key={index} label={item.nombre} value={item.id} />
+          ))}
         </Picker>
       </View>
       {/* Opcion vendido*/}
@@ -93,7 +95,7 @@ export default function ArticlesForm() {
       </View>
       <RadioButton.Group
         onValueChange={(value) => handleTipoVentaChange(value)}
-        value={datos.tipo_venta}
+        value={editedData.tipo_venta}
       >
         <View style={styles.radioContainer}>
           <RadioButton value="Unidad" />
@@ -109,25 +111,14 @@ export default function ArticlesForm() {
         style={styles.input}
         placeholder="Precio"
         placeholderTextColor="#546574"
-        value={datos.precio}
-        onChangeText={(text) => getValues("precio", text)}
+        value={editedData.precio}
+        onChangeText={(text) => handleChange("precio", text)}
       />
       <View>
         <Text style={styles.info}>
           Deje el campo en blanco para indicar el precio durante la venta{" "}
         </Text>
       </View>
-      {/* Input Coste*/}
-      <View>
-        <Text style={styles.label}>Coste</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="S/0.00"
-        placeholderTextColor="black"
-        value={datos.coste}
-        onChangeText={(text) => getValues("coste", text)}
-      />
       {/* Input REF*/}
       <View>
         <Text style={styles.label}>REF</Text>
@@ -136,8 +127,8 @@ export default function ArticlesForm() {
         style={styles.input}
         placeholder="10000"
         placeholderTextColor="black"
-        value={datos.ref}
-        onChangeText={(text) => getValues("ref", text)}
+        value={editedData.ref}
+        onChangeText={(text) => handleChange("ref", text)}
       />
       {/* Input representacion*/}
       <View>
@@ -147,15 +138,13 @@ export default function ArticlesForm() {
         style={styles.input}
         placeholder="img"
         placeholderTextColor="black"
-        value={datos.representacion}
-        onChangeText={(text) => getValues("representacion", text)}
+        value={editedData.representacion}
+        onChangeText={(text) => handleChange("representacion", text)}
       />
       <View style={{ height: 20 }} />
-      <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>CREAR ARTICULO</Text>
+      <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>ACTUALIZAR ARTICULO</Text>
       </TouchableOpacity>
-      <View style={{ height: 20 }} />
-      
     </View>
   );
 }
