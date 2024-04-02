@@ -12,14 +12,14 @@ export default function ArticlesNavigate() {
         onPress={() => navigation.navigate("Empleados")}
         style={styles.container}
       >
-      <MaterialCommunityIcons name="format-list-bulleted" size={24} color="#708090" />
+      <MaterialCommunityIcons name="account-hard-hat" size={24} color="#708090" />
         <Text style={styles.text}>Empleado</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate("Cliente")}
         style={styles.container}
       >
-        <MaterialCommunityIcons name="content-copy" size={24} color="#708090" />
+        <MaterialCommunityIcons name="account" size={24} color="#708090" />
         <Text style={styles.text}>Cliente</Text>
       </TouchableOpacity>
 
