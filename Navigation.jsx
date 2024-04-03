@@ -32,6 +32,7 @@ import ClientForm from './screens/views/ClientForm';
 import PlusClients from './screens/views/PlusClients';
 import ClientEdit from './screens/views/ClientEdit'
 import PlusWorkers from './screens/views/PlusWorkers';
+import VentNavigate from './screens/views/VentNavigate';
 
 
 function StackNavigation() {
@@ -122,6 +123,35 @@ function ArticulosScreen() {
   );
 };
 
+function VentaScreen() {
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        statusBarColor: "#ff0000",
+        headerStyle: { backgroundColor: "#ff0000" },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
+    <Stack.Screen name="Ventas" component={VentNavigate} options={{ headerLeft: () => {
+        return (
+            <Icon
+              name="menu"
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              size={24}
+              color="#fff"
+            />
+          );
+        },
+      }}></Stack.Screen>
+      <Stack.Screen name="Ticket" component={PlusWorkers}></Stack.Screen>
+    </Stack.Navigator>
+  );
+};
 
 function MiembrosScreen() {
   const Stack = createNativeStackNavigator();
@@ -171,6 +201,7 @@ const DrawerNav =()=> {
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Ventas" component={VentaScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cash-multiple" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Miembros" component={MiembrosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "account-group" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );

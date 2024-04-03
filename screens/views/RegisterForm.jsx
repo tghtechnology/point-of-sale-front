@@ -105,10 +105,11 @@ const RegisterForm = () => {
         selectedValue={countrySelect}
         onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
         >
-  {countries && countries.map((country, index) => (
-    <Picker.Item key={index} label={country} value={country} />
-  ))}
-</Picker>
+        <Picker.Item label="Seleccionar país" value="" />
+        {countries && countries.map((country, index) => (
+        <Picker.Item key={index} label={country} value={country} />
+        ))}
+      </Picker>
       <Text>País seleccionado: {countrySelect}</Text>
 
         {/* BOTON DE ACCION DE REGISTRO */}

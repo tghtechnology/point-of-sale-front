@@ -55,7 +55,7 @@ export default function ImpuestoForm() {
       <TextInput
         style={styles.input}
         placeholder="Nombre"
-        placeholderTextColor="#546574"
+        placeholderTextColor="#546574" 
         value={editedData.nombre}
         onChangeText={(text) => handleChange("nombre", text)}
       />

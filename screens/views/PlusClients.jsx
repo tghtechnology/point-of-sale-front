@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, FlatList,Switch,Modal,TextInput} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList,Modal,} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -8,53 +8,16 @@ import ClientProvider from '../context/cliente/ClientProvider';
 import CustomAlert from '../componentes/CustomAlert';
 const PlusClients = (props) => {
     const navigation = useNavigation();
-    const {client,setClient, handleEditClient, handleDeleteClient, handleUpdateClient} = useClient()
+    const {client,setClient, handleDeleteClient} = useClient()
     const [showAlert, setShowAlert] = useState(false);
-    const [showModal, setShowModal] = useState(false);
     const [modal, setModal] = useState(false);
-    const [editedData, setEditedData] = useState({});
-    const [selectedClient, setselectedClient] = useState({});
+    const [selectedClient, setSelectedClient] = useState(null);
     const [deletedClientId, setDeletedClientId] = useState(null);
     
 
-    const handleEdit = (client) => {
-      setselectedClient(client);
-      setEditedData({
-        ...client,
-        nombre: client.nombre,
-        email: client.email,
-        telefono: client.telefono,
-        direccion: client.direccion,
-        cuidad: client.cuidad,
-        region: client.region,
-        codigo_postal: client.codigo_postal,
-        pais: client.pais,
-      });
-      setShowModal(true);
+    const handleEdit = () => {
+      navigation.navigate('Editar Cliente', { client: selectedClient });
       setModal(false);
-    };
-
-    const handleChange = (name, value) => {
-      setEditedData({
-        ...editedData,
-        [name]: value,
-      });
-    };
-
-    const handleSubmit = async () => {
-      try {
-        await handleEditClient(selectedClient.id, editedData);
-        console.log('Descuento editado exitosamente');
-        await handleUpdateClient(selectedClient.id, editedData);
-        setShowAlert(true);
-        setShowModal(false);
-      } catch (error) {
-        console.error('Error al editar el descuento:', error);
-      }
-    };
-  
-    const handleCancel = () => {
-      setShowModal(false);
     };
 
     const handleDelete = async (id) => {
@@ -62,7 +25,6 @@ const PlusClients = (props) => {
           await handleDeleteClient(id);
           setShowAlert(true);
           setDeletedClientId(id);
-          setShowModal(false);
           setModal(false);
       } catch (error) {
           console.error('Error al borrar al cliente:', error);
@@ -82,7 +44,7 @@ useEffect(() => {
 }, [deletedClientId]);
 
     const handleOptionsPress = (item) => {
-      setselectedClient(item);
+      setSelectedClient(item);
       setModal(true);
     };
   return (
@@ -129,103 +91,10 @@ useEffect(() => {
         buttonColor="#2196F3"
         iconName="check-circle" // Puedes cambiar el icono según lo desees
         />
-       <Modal
-        visible={showModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={handleCancel}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Editar cliente</Text>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Nombre</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nombre"
-              value={editedData.nombre}
-              onChangeText={(text) => handleChange('nombre', text)}
-            />
-            </View>
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="email"
-              value={editedData.email}
-              onChangeText={(text) => handleChange('email', text)}
-            />
-            </View>
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Telefono</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="telefono"
-              value={editedData.telefono}
-              onChangeText={(text) => handleChange('telefono', text)}
-            />
-            </View>
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Direccion</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="direccion"
-              value={editedData.direccion}
-              onChangeText={(text) => handleChange('direccion', text)}
-            />
-            </View>
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Ciudad</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="ciudad"
-              value={editedData.ciudad}
-              onChangeText={(text) => handleChange('ciudad', text)}
-            />
-            </View>
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Region</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="region"
-              value={editedData.region}
-              onChangeText={(text) => handleChange('region', text)}
-            />
-            </View>
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Codigo Postal</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="codigo_postal"
-              value={editedData.codigo_postal}
-              onChangeText={(text) => handleChange('codigo_postal', text)}
-            />
-            </View>
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Pais</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="pais"
-              value={editedData.pais}
-              onChangeText={(text) => handleChange('pais', text)}
-            />
-            </View>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Editar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={handleCancel}>
-              <Text style={styles.buttonText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
       <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.optionButton} onPress={() => handleEdit(selectedClient)}>
+            <TouchableOpacity style={styles.optionButton} onPress={handleEdit }>
               <Text style={styles.optionButtonText}>Editar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.optionButton} onPress={() => handleDelete(selectedClient.id)}>
@@ -299,46 +168,6 @@ const styles = StyleSheet.create({
       padding: 20,
       width: '80%',
       maxWidth: 400,
-    },
-    modalTitle: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      textAlign: 'center',
-    },
-    inputContainer: {
-      marginBottom: 15,
-    },
-    label: {
-      marginBottom: 5,
-      fontSize: 16,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 5,
-      padding: 10,
-      fontSize: 16,
-    },
-    button: {
-      borderRadius: 5,
-      padding: 15,
-      alignItems: 'center',
-      marginTop: 10,
-      backgroundColor: 'green',
-    },
-    buttonText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: 'white',
-    },
-    editButton: {
-      backgroundColor: 'green',
-      borderRadius: 5,
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      alignItems: 'center',
-      marginTop:10,
     },
     optionButton: {
       borderRadius: 5,

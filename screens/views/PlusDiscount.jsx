@@ -9,7 +9,7 @@ import CustomAlert from '../componentes/CustomAlert';
 
 const PlusDiscount = (props) => {
     const navigation = useNavigation();
-    const {discounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount} = useDiscount();
+    const {discounts,setDiscounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount} = useDiscount();
     const [showModal, setShowModal] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [modal, setModal] = useState(false);
@@ -38,7 +38,6 @@ const PlusDiscount = (props) => {
     const handleSubmit = async () => {
     try {
       await handleEditDiscount(selectedDiscount.id, editedData);
-      console.log('Descuento editado exitosamente');
       await handleUpdateDiscount(selectedDiscount.id, editedData);
       setShowAlert(true);
       setShowModal(false);
@@ -60,6 +59,14 @@ const PlusDiscount = (props) => {
           // Invierte el estado actual del descuento
           const newStatus = !currentStatus;
           await toggleDiscountStatus(id, newStatus);
+          const updatedDiscounts = discounts.map(discount => {
+            if (discount.id === id) {
+              return { ...discount, estado: newStatus };
+            }
+            return discount;
+          });
+          // Actualiza la lista de descuentos
+          setDiscounts(updatedDiscounts);
         } catch (error) {
           setError('Error al actualizar el estado del descuento');
         }
@@ -83,9 +90,9 @@ const PlusDiscount = (props) => {
             <Text style={styles.itemText}>{item.nombre}</Text>
             <Text style={styles.itemText}>Tipo: {item.tipo_descuento}</Text>
             <Text style={styles.itemText}>Valor: {item.valor}</Text>
-            <Text>Estado: {item.estado === true ? 'Activado' : 'Desactivado'}</Text>
+            <Text>Estado: {item.estado ? 'Activado' : 'Desactivado'}</Text>
             <Switch
-            value={item.estado === true}
+            value={item.estado == true}
             onValueChange={() => handleToggleStatus(item.id, item.estado)}/>      
             <View style={styles.container}>
             </View>
@@ -173,7 +180,7 @@ const PlusDiscount = (props) => {
         isVisible={showAlert}
         onClose={handleCloseAlert}
         title="Edicion Correcta"
-        message="Se ha creado correctamente."
+        message="Se ha editado correctamente."
         buttonColor="#2196F3"
         iconName="check-circle" // Puedes cambiar el icono según lo desees
         />

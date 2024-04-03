@@ -9,7 +9,7 @@ const INITIAL_STATE = {
     nombre:'',
     tipo_descuento:'',
     valor:'',
-    estado:'',
+    estado: true,
   }
 
 const DiscountForm = () => {
@@ -31,6 +31,7 @@ const DiscountForm = () => {
     const objectSend = {
       ...dataForm,
       tipo_descuento: tipoDescuento === 'percent' ? 'PORCENTAJE' : 'MONTO',
+      estado: 1, 
     }
     console.log("Valor de objectSend:", objectSend);
     

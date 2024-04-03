@@ -3,7 +3,7 @@ import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function ArticlesNavigate() {
+export default function MiembNavigate() {
   const navigation = useNavigation();
 
   return (
