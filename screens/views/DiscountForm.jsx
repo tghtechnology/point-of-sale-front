@@ -30,8 +30,7 @@ const DiscountForm = () => {
     
     const objectSend = {
       ...dataForm,
-      tipo_descuento: tipoDescuento === 'percent' ? 'PORCENTAJE' : 'MONTO',
-      estado: 1, 
+      tipo_descuento: tipoDescuento === 'percent' ? 'PORCENTAJE' : 'MONTO', 
     }
     console.log("Valor de objectSend:", objectSend);
     
@@ -39,10 +38,10 @@ const DiscountForm = () => {
     try {
       const response = await handleCreateDiscount(objectSend);
       if (response) {
-          alert("Descuento creado con éxito");
-          setDataForm(INITIAL_STATE);
-          setDiscounts([...discounts, objectSend]);
+          const createdDiscount = response; 
+          setDiscounts([...discounts, createdDiscount]);
           setShowAlert(true);
+          setDataForm(INITIAL_STATE);
       } else {
           alert("El descuento no se pudo crear");
       }

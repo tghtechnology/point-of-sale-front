@@ -11,17 +11,18 @@ const DiscountProvider = ({ children }) => {
             const response = await createDiscount(newDiscount);
             if (response && response.status !== undefined) {
                 if (response.status === 200 || response.status === 201) {
-                    return true;
+                    return response.data; // Devuelve la respuesta completa del servidor
                 } else {
-                    return false;
+                    console.error("La respuesta indica un error:", response);
+                    return null;
                 }
             } else {
                 console.error("La respuesta no tiene una propiedad 'status' válida:", response);
-                return false;
+                return null;
             }
         } catch (error) {
             console.error("Error al llamar a createDiscount:", error);
-            return false;
+            return null;
         }
     }
 
