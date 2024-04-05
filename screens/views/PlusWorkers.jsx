@@ -92,10 +92,10 @@ export default function PlusWorkers() {
                             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)} >
                                 <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
                             </TouchableOpacity>
-                            <Text style={styles.itemText}>{item.nombre}</Text>
-                            <Text style={styles.itemText}>{item.correo}</Text>
-                            <Text style={styles.itemText}>{item.telefono}</Text>
-                            <Text style={styles.itemText}>{item.cargo}</Text>
+                            <Text style={styles.itemText}>Nombre: {item.nombre}</Text>
+                            <Text style={styles.itemText}>Correo: {item.correo}</Text>
+                            <Text style={styles.itemText}>Telefono: {item.telefono}</Text>
+                            <Text style={styles.itemText}>Cargo: {item.cargo}</Text>
                             <View style={styles.container}>
                             </View>
                         </View>
