@@ -4,6 +4,7 @@ import { RadioButton } from "react-native-paper";
 import React, { useState } from "react";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
+import CustomAlert from '../componentes/CustomAlert';
 
 const INITIAL_STATE = {
   nombre: "",
@@ -15,6 +16,7 @@ const INITIAL_STATE = {
 };
 export default function ArticlesForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
+  const [showAlert, setShowAlert] = useState(false);
   const { handleCreateArticle } = useArticle();
   const { listCategoria } = useCategory();
 
@@ -47,7 +49,7 @@ export default function ArticlesForm() {
       console.log("Datos a enviar al servidor:", articleData);
       const response = await handleCreateArticle(articleData);
       if (response) {
-        alert("El articulo ha sido creado con exito");
+        setShowAlert(true);
         setDatos(INITIAL_STATE);
       } else {
         alert("El articulo no se pudo crear");
@@ -57,6 +59,10 @@ export default function ArticlesForm() {
     }
     console.log("valor del formulario" + JSON.stringify(datos));
   };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+};
 
   return (
     <View style={styles.container}>
@@ -139,8 +145,16 @@ export default function ArticlesForm() {
       />
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>CREAR ARTICULO</Text>
+        <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Articulo Creado"
+        message="El articulo se ha creado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" // Puedes cambiar el icono según lo desees
+        />
     </View>
   );
 }

@@ -78,7 +78,7 @@ const CategoryProvider = ({children}) => {
 
 
     return (
-        <CategoryContext.Provider value={{ handleCreateCategory, listCategoria, handleEditCategories, handleDeleteCategory}}>
+        <CategoryContext.Provider value={{ handleCreateCategory, listCategoria,setListCategoria, handleEditCategories, handleDeleteCategory}}>
             {children}
         </CategoryContext.Provider>
     )

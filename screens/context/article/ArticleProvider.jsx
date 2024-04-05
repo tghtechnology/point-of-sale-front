@@ -74,7 +74,7 @@ const ArticleProvider = ({children}) => {
 
 
     return (
-        <ArticleContext.Provider value={{ handleCreateArticle,listArticle,handleEditArticle, handleDeleteArticle }}>
+        <ArticleContext.Provider value={{ handleCreateArticle,listArticle,setListArticle,handleEditArticle, handleDeleteArticle }}>
             {children}
         </ArticleContext.Provider>
     )

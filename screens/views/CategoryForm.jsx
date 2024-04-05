@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
 import useCategory from '../hooks/useCategory';
-import CategoryProvider from '../context/category/CategoryProvider';
+import CustomAlert from '../componentes/CustomAlert';
 
 const INITIAL_STATE = {
   nombre:'',
@@ -9,7 +9,8 @@ const INITIAL_STATE = {
 }
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
-  const {handleCreateCategory,handleUpdateCategory, handleDeleteCategory} = useCategory();
+  const [showAlert, setShowAlert] = useState(false);
+  const {handleCreateCategory,handleUpdateCategory, setListCategoria,listCategoria} = useCategory();
 
   const getValues = (name,value) => {
     setDatos({
@@ -21,8 +22,9 @@ const CategoryForm = () => {
     try {
       const response = await handleCreateCategory(datos);
       if(response){
-        alert("La categoría ha sido creada con éxito");
         setDatos(INITIAL_STATE);
+        setListCategoria([...listCategoria,datos]);
+        setShowAlert(true);
       } else {
         alert("La categoría no se pudo crear");
       }
@@ -31,6 +33,11 @@ const CategoryForm = () => {
     }
     console.log("Valor del formulario: " + JSON.stringify(datos));
   }
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+};
+
   return (
 <View style={styles.container}>
   {/* IMPUT DEL NOMBRE DE LA CATEGORIA */}
@@ -51,8 +58,16 @@ const CategoryForm = () => {
       />
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={SubmitCategory} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>CREAR CATEGORÍA</Text>
+        <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Categoria Creado"
+        message="La categoria se ha creado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+        />
       <View style={{ height: 20 }} />
       <TouchableOpacity style={styles.buttonContainer}>
         <Text style={styles.buttonText}>ASIGNAR ARTÍCULOS</Text>

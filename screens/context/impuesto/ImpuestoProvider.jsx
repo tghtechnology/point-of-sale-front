@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react";
-import {createImpuesto,listImpuestos,editImpuestos,deleteImpuesto} from "../../services/ImpuestoService";
+import {createImpuesto,listImpuestos,editImpuestos,deleteImpuesto,updateImpuesto} from "../../services/ImpuestoService";
 import ImpuestoContext from "./ImpuestoContext";
 
 const ImpuestoProvider = ({ children }) => {
@@ -65,8 +65,12 @@ const handleDeleteImp = async (id) => {
   }
 }
 
+
+
+
+
   return (
-    <ImpuestoContext.Provider value={{handleCreateImp,listImpuesto,handleEditImp,handleDeleteImp}}> 
+    <ImpuestoContext.Provider value={{handleCreateImp,listImpuesto,setListImpuesto,handleEditImp,handleDeleteImp}}> 
         {children}
     </ImpuestoContext.Provider>
   );

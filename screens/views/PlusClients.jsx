@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import useClient from '../hooks/useClient';
 import ClientProvider from '../context/cliente/ClientProvider';
 import CustomAlert from '../componentes/CustomAlert';
+
 const PlusClients = (props) => {
     const navigation = useNavigation();
     const {client,setClient, handleDeleteClient} = useClient()
