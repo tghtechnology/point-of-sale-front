@@ -22,8 +22,12 @@ export default function ArticlesEdit() {
 
 
   useEffect(() => {
-    const {article} = route.params;
-    setEditedData(article || INITIAL_STATE);
+    const { article } = route.params;
+    console.log("Objeto del artículo:", article); // Imprime el objeto completo del artículo
+    setEditedData({
+      ...article,
+      id_categoria: article.categoria.id, // Agrega el id_categoria desde la propiedad categoria
+    });
   }, [route.params]);
 
   const handleChange = (name, value) => {
@@ -77,17 +81,16 @@ export default function ArticlesEdit() {
         <Text style={styles.label}>Categoría</Text>
       </View>
       <View style={styles.pickeContainer}>
-        <Picker
-          onValueChange={(value) => handleCategoryChange(value)}
-          value={editedData.id_categoria}
-          style={styles.picker}
-        >
-          
-          <Picker.Item label="Sin categoría" value="" />
-          {listCategoria?.map((item, index) => (
-            <Picker.Item key={index} label={item.nombre} value={item.id} />
-          ))}
-        </Picker>
+      <Picker
+      selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : ''} // Convertimos a cadena el ID de la categoría si está definido
+      onValueChange={(value) => handleCategoryChange(value)}
+      style={styles.picker}
+      >
+  <Picker.Item label="Sin categoría" value="" />
+  {listCategoria?.map((item) => (
+    <Picker.Item key={item.id} label={item.nombre} value={item.id.toString()} />
+  ))}
+</Picker>
       </View>
       {/* Opcion vendido*/}
       <View>
