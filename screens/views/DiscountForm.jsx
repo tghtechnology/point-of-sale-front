@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet,Text, TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useDiscount from '../hooks/useDiscount';
-
+import DiscountProvider from '../context/discount/DiscountProvider';
+import CustomAlert from '../componentes/CustomAlert';
 
 const INITIAL_STATE = {
     nombre:'',
     tipo_descuento:'',
     valor:'',
-    estado:'',
+    estado: true,
   }
 
 const DiscountForm = () => {
   const [tipoDescuento, setTipoDescuento] = useState('');
-  const {handleCreateDiscount} = useDiscount();
+  const {handleCreateDiscount,discounts,setDiscounts} = useDiscount();
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
+  const [showAlert, setShowAlert] = useState(false);
+
  
   const getValues = (name,value) => {
     setDataForm({
@@ -28,6 +31,7 @@ const DiscountForm = () => {
     const objectSend = {
       ...dataForm,
       tipo_descuento: tipoDescuento === 'percent' ? 'PORCENTAJE' : 'MONTO',
+      estado: 1, 
     }
     console.log("Valor de objectSend:", objectSend);
     
@@ -37,6 +41,8 @@ const DiscountForm = () => {
       if (response) {
           alert("Descuento creado con éxito");
           setDataForm(INITIAL_STATE);
+          setDiscounts([...discounts, objectSend]);
+          setShowAlert(true);
       } else {
           alert("El descuento no se pudo crear");
       }
@@ -45,6 +51,11 @@ const DiscountForm = () => {
       alert("problema interno del servidor")
   }
 }
+
+const handleCloseAlert = () => {
+  setShowAlert(false);
+};
+
   const numeros = (text) => {
     // Utiliza una expresión regular para permitir solo números
     const numeroValido = text.replace(/[^0-9.]/g, '');
@@ -91,6 +102,15 @@ const DiscountForm = () => {
               <TouchableOpacity onPress={SubmitDiscount} style={styles.button}>
               <Text style={styles.buttonText}>Guardar Descuento</Text>
               </TouchableOpacity>
+
+              <CustomAlert
+              isVisible={showAlert}
+              onClose={handleCloseAlert}
+              title="Descuento Creado"
+              message="El descuento se ha creado correctamente."  
+              buttonColor="#2196F3"
+              iconName="check-circle" // Puedes cambiar el icono según lo desees
+              />
             </View>
     </View>
   );

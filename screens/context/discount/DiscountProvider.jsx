@@ -105,7 +105,7 @@ const DiscountProvider = ({ children }) => {
         }
     };
     return (
-        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,Cerodiscounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount}}>
+        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,setDiscounts,Cerodiscounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount}}>
             {children}
         </DiscountContext.Provider>
     );
