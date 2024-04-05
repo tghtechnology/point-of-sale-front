@@ -33,6 +33,7 @@ import PlusClients from './screens/views/PlusClients';
 import ClientEdit from './screens/views/ClientEdit'
 import PlusWorkers from './screens/views/PlusWorkers';
 import VentNavigate from './screens/views/VentNavigate';
+import TicketFormHome from './screens/views/TicketFormHome';
 
 
 function StackNavigation() {
@@ -148,7 +149,7 @@ function VentaScreen() {
           );
         },
       }}></Stack.Screen>
-      <Stack.Screen name="Ticket" component={PlusWorkers}></Stack.Screen>
+      <Stack.Screen name="Ticket" component={TicketFormHome}></Stack.Screen>
     </Stack.Navigator>
   );
 };

@@ -135,6 +135,7 @@ const INITIAL_STATE = {
         selectedValue={countrySelect}
         onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
         >
+        <Picker.Item label="Seleccionar país" value="" />
         {countries && countries.map((country, index) => (
         <Picker.Item key={index} label={country} value={country} />
         ))}

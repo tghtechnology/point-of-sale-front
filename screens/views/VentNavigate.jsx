@@ -3,7 +3,7 @@ import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-function VentNavigate() {
+const VentNavigate =() => {
     const navigation = useNavigation();
   return (
     <View>

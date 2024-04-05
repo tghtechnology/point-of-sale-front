@@ -57,14 +57,14 @@ useEffect(() => {
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
               <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
             </TouchableOpacity> 
-            <Text style={styles.itemText}>{item.nombre}</Text>
-            <Text style={styles.itemText}>{item.email}</Text>
-            <Text style={styles.itemText}>{item.telefono}</Text>
-            <Text style={styles.itemText}>{item.direccion}</Text>
-            <Text style={styles.itemText}>{item.cuidad}</Text>
-            <Text style={styles.itemText}>{item.region}</Text>
-            <Text style={styles.itemText}>{item.codigo_postal}</Text>
-            <Text style={styles.itemText}>{item.pais}</Text>
+            <Text style={styles.itemText}>Nombre: {item.nombre}</Text>
+            <Text style={styles.itemText}>Email: {item.email}</Text>
+            <Text style={styles.itemText}>Telefono: {item.telefono}</Text>
+            <Text style={styles.itemText}>Direccion: {item.direccion}</Text>
+            <Text style={styles.itemText}>Ciudad: {item.ciudad}</Text>
+            <Text style={styles.itemText}>Region: {item.region}</Text>
+            <Text style={styles.itemText}>Codigo Postal: {item.codigo_postal}</Text>
+            <Text style={styles.itemText}>Pais: {item.pais}</Text>
             <View style={styles.container}>
             </View>
             </View>
