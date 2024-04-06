@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     magnifies: {
-        marginRight: 10,
         border: 1,
         marginRight: 10,
         padding:15,
