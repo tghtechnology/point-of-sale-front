@@ -33,24 +33,30 @@ const ImpuestoProvider = ({ children }) => {
     }
 };
 
-const handleEditImp = async(updateImpuestos) => {
+const handleEditImp= async (updateImpuestos) => {
   const { nombre, tasa, tipo_impuesto } = updateImpuestos;
-  try {
-      const response = await editImpuestos(updateImpuestos.id, { nombre, tasa, tipo_impuesto } ); 
-      if(response && response.status === 200){
-          console.log('Impuesto editado exitosamente');
-          return true; 
-      } else if (response && response.status === 204) {
-          console.log('Impuesto editado exitosamente');
-          return true; 
-      } else {
-          return false; 
-      }
-    } catch (error) {
-      console.error('Error editing impuesto:', error);
-      return false; 
-    }
-};
+   try {
+     const response = await editImpuestos(updateImpuestos.id, { nombre, tasa, tipo_impuesto } ); 
+     if (response && (response.status === 200 || response.status === 204)) {
+       console.log('Impuesto editado exitosamente');
+       const updatedList = listImpuesto.map(impuesto => {
+         if (impuesto.id === updateImpuestos.id) {
+           return { ...impuesto, ...updateImpuestos };
+         } else {
+           return impuesto;
+         }
+       });
+       setListImpuesto(updatedList);
+       return true;
+     } else {
+       return false;
+     }
+   } catch (error) {
+     console.error('Error editing impuesto:', error);
+     return false;
+   }
+ };
+ 
 const handleDeleteImp = async (id) => {
   try {
       const { status } = await deleteImpuesto(id);

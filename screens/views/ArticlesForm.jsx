@@ -17,7 +17,7 @@ const INITIAL_STATE = {
 export default function ArticlesForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
-  const { handleCreateArticle } = useArticle();
+  const { handleCreateArticle,listArticle,setListArticle} = useArticle();
   const { listCategoria } = useCategory();
 
   const getValues = (name, value) => {
@@ -51,6 +51,7 @@ export default function ArticlesForm() {
       if (response) {
         setShowAlert(true);
         setDatos(INITIAL_STATE);
+        setListArticle([...listArticle,datos]);
       } else {
         alert("El articulo no se pudo crear");
       }

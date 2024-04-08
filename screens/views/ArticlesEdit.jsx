@@ -5,6 +5,8 @@ import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
+import CustomAlert from '../componentes/CustomAlert';
+
 
 const INITIAL_STATE = {
   nombre: "",
@@ -17,18 +19,20 @@ const INITIAL_STATE = {
 export default function ArticlesEdit() {
   const [editedData, setEditedData] = useState(INITIAL_STATE)
   const route = useRoute();
+  const [showAlert, setShowAlert] = useState(false);
   const {handleEditArticle} = useArticle();
   const {listCategoria} = useCategory();
 
 
   useEffect(() => {
     const { article } = route.params;
-    console.log("Objeto del artículo:", article); // Imprime el objeto completo del artículo
+    console.log("Objeto del artículo:", article);
     setEditedData({
       ...article,
-      id_categoria: article.categoria.id, // Agrega el id_categoria desde la propiedad categoria
+      id_categoria: article.categoria?.id || "", // Utilizando el operador de encadenamiento opcional (?)
     });
   }, [route.params]);
+  
 
  
 
@@ -62,11 +66,15 @@ export default function ArticlesEdit() {
       
       console.log("Datos a enviar al servidor:", articleData);
       await handleEditArticle(articleData,editedData.id_categoria);
+      setShowAlert(true);
       console.log("Articulos ha sido editado exitosamente");
     } catch (error) {
       console.error("Error al editar el articulos:", error);
     }
   };
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+};
 
   return (
     <View style={styles.container}>
@@ -148,8 +156,16 @@ export default function ArticlesEdit() {
       />
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>ACTUALIZAR ARTICULO</Text>
+        <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Articulo Creado"
+        message="El articulo se ha creado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+        />
     </View>
   );
 }
