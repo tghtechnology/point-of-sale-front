@@ -1,10 +1,11 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity,} from "react-native";
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,Pressable,ScrollView} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 import React, { useState } from "react";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
 import CustomAlert from '../componentes/CustomAlert';
+
 
 const INITIAL_STATE = {
   nombre: "",
@@ -14,9 +15,16 @@ const INITIAL_STATE = {
   representacion: "",
   id_categoria: "",
 };
+const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+
+const ColorBox = ({ color }) => (
+  <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
+);
 export default function ArticlesForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
+  const [categorySelect, setCategorySelect] = useState('');
+  const [value, setValue] = useState('color');
   const { handleCreateArticle,listArticle,setListArticle} = useArticle();
   const { listCategoria } = useCategory();
 
@@ -66,7 +74,7 @@ export default function ArticlesForm() {
 };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* Input nombre */}
       <TextInput
         style={styles.input}
@@ -148,6 +156,33 @@ export default function ArticlesForm() {
       <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+
+      <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value} >
+        <View style={styles.radioContainer}>
+          <RadioButton value="Color" />
+          <Text>Color</Text>
+        </View>
+        <View style={styles.radioContainer}>
+          <RadioButton value="Imagen" />
+          <Text>Imagen</Text>
+        </View>
+      </RadioButton.Group>
+      {value === 'Imagen' && (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
+         
+          <Pressable style={styles.uploadImagen}>
+            <Text style={styles.text}>Subir Imagen</Text>
+          </Pressable>
+        </View>
+      )}
+      {value === 'Color' && (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center'}}>
+          {colors.map((color, index) => (
+            <ColorBox key={index} color={color} />
+          ))}
+        </View>
+      )}
+
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
@@ -156,7 +191,7 @@ export default function ArticlesForm() {
         buttonColor="#2196F3"
         iconName="check-circle" // Puedes cambiar el icono según lo desees
         />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -207,5 +242,21 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     fontSize: 15,
+   
+  },
+  uploadImagen:{
+    backgroundColor: '#fcfcfc',
+    width:200,
+    height:200,
+    alignItems: 'center',
+    margin: 50,
+  },
+  text: {
+    marginTop: 80,
+    fontWeight: 'bold',
+    color: "#dcdcdc",
+    textAlign: "center",
+    alignItems:"center",
+    fontSize: 20,
   },
 });

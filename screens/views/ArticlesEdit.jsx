@@ -29,12 +29,10 @@ export default function ArticlesEdit() {
     console.log("Objeto del artículo:", article);
     setEditedData({
       ...article,
-      id_categoria: article.categoria?.id || "", // Utilizando el operador de encadenamiento opcional (?)
+      id_categoria: article.categoria?.id || "", 
     });
   }, [route.params]);
   
-
- 
 
   const handleChange = (name, value) => {
     setEditedData({
@@ -161,7 +159,7 @@ export default function ArticlesEdit() {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Articulo Creado"
+        title="Edicion exitosa"
         message="El articulo se ha creado correctamente."
         buttonColor="#2196F3"
         iconName="check-circle" 
@@ -217,5 +215,9 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     fontSize: 15,
+  },
+  label: {
+    marginTop: 4,
+    color: "#546574",
   },
 });
