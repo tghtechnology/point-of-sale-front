@@ -13,7 +13,7 @@ const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
 
 export default function PlusWorkers() {
     const navigation = useNavigation();
-    const { worker, handleEditWorker, handleDeleteworker, handleUpdateWorker} = useWorker()
+    const { worker,setWorker, handleEditWorker, handleDeleteworker, handleUpdateWorker} = useWorker()
     const [showModal, setShowModal] = useState(false);
     const [workers, setWorkers] = useState(worker)
     const [modal, setModal] = useState(false);
@@ -69,7 +69,7 @@ export default function PlusWorkers() {
         try {
             const success = await handleDeleteworker(id);
             if (success) {
-                setWorkers(workers.filter(workers => workers.id !== id));
+                setWorker(workers.filter(workers => workers.id !== id));
             }
             setModal(false);
         } catch (error) {

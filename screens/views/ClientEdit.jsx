@@ -27,7 +27,7 @@ const ClientEdit = () => {
   const { countries,fetchCountries} = useCountry();
 
   useEffect(() => {
-    fetchCountries(); // Llama a fetchCountries cuando el componente se monta
+    fetchCountries(); 
   }, []);
 
   useEffect(() => {
@@ -108,12 +108,12 @@ const ClientEdit = () => {
           selectedValue={selectedCountry}
           onValueChange={(itemValue) => {
             setSelectedCountry(itemValue);
-            handleChange('pais', itemValue); // Actualiza el país en el estado
+            handleChange('pais', itemValue); 
           }}
         >
           <Picker.Item label="Seleccionar país" value="" />
           {countries.map((country, index) => (
-            <Picker.Item key={index} label={country} value={country} /> // Supongo que cada país tiene una propiedad "name"
+            <Picker.Item key={index} label={country} value={country} /> 
           ))}
         </Picker>
       </View>
@@ -126,7 +126,7 @@ const ClientEdit = () => {
         title="Edición Exitosa"
         message="El cliente se ha editado correctamente."
         buttonColor="#2196F3"
-        iconName="check-circle" // Puedes cambiar el icono según lo desees
+        iconName="check-circle" 
       />
     </View>
   );

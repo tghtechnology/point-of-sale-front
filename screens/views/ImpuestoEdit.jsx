@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { Picker } from "@react-native-picker/picker";
 import { useRoute } from "@react-navigation/native";
 import useImpuesto from "../hooks/useImpuesto";
+import CustomAlert from "../componentes/CustomAlert";
 
 const INITIAL_STATE = {
   nombre: "",
@@ -11,7 +12,8 @@ const INITIAL_STATE = {
 };
 
 export default function ImpuestoForm() {
-  const {handleEditImp} = useImpuesto();
+  const {handleEditImp,handleUpdateImp} = useImpuesto();
+  const [showAlert, setShowAlert] = useState(false);
   const route = useRoute();
   const [editedData, setEditedData] = useState(INITIAL_STATE);
  
@@ -37,6 +39,7 @@ export default function ImpuestoForm() {
     });
   };
   
+  
   const handleSubmit = async () => {
     try {
       const dataToSend = {
@@ -45,11 +48,15 @@ export default function ImpuestoForm() {
       };
       console.log("Datos a enviar al servidor:", dataToSend);
       await handleEditImp(dataToSend);
-      console.log("Impuesto ha sido editado exitosamente");
+      setShowAlert(true);
     } catch (error) {
       console.error("Error al editar el impuesto:", error);
     }
   };
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -81,8 +88,16 @@ export default function ImpuestoForm() {
       </View>
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={handleSubmit } style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Crear Impuesto</Text>
+        <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Edición Exitosa"
+        message="El impuesto se ha editado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+      />
     </View>
   );
 }

@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   nombre: '',
   correo: '',
   telefono: '',
-  cargo: '', // Establecer el valor inicial del cargo aquí
+  cargo: '', 
 }
 
 //Contante para Seleccionar Cargos
@@ -17,17 +17,17 @@ const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
 //
 
 const FormRegisEmpleado = () => {
-  const [cargo, setCargo] = useState(INITIAL_STATE.cargo); // Inicializar el estado del cargo con el valor predeterminado
+  const [cargo, setCargo] = useState(INITIAL_STATE.cargo); 
   
-  // Función para manejar cambios en la selección del cargo
+
   const handleCargoChange = (cargoSeleccionado) => {
     setCargo(cargoSeleccionado);
    
   };
-  //
+  
 
   const [data, setData] = useState(INITIAL_STATE);
-  const { handleCreateWorker } = useWorker();
+  const { handleCreateWorker,worker,setWorker } = useWorker();
 
   const getValues = (name, value) => {
     setData({
@@ -39,14 +39,15 @@ const FormRegisEmpleado = () => {
   const handleSubmit = async () => {
     const objectSend = {
       ...data,
-      cargo: cargo // Incluir el valor del cargo en el objeto a enviar
+      cargo: cargo 
     }
-    //control de errores para el crear un usuario
+   
     try {
       const response = await handleCreateWorker(objectSend);
       if (response) {
         alert("Empleado creado con exito")
         setData(INITIAL_STATE);
+        setWorker([...worker,objectSend]);
       } else {
         alert("El Empleado no se pudo crear");
       }
@@ -103,8 +104,8 @@ const FormRegisEmpleado = () => {
 const styles = StyleSheet.create({
 
   container: {
-    marginTop: 100, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
+    marginTop: 100, 
+    paddingHorizontal: 25, 
   },
   Tittle: {
     fontSize: 34,
@@ -122,8 +123,8 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 25,
     fontSize: 17,
-    borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
+    borderBottomWidth: 1,
+    borderBottomColor: 'red', 
     height: 40,
     color: '#546574',
     padding: 10,
@@ -164,8 +165,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 25,
     fontSize: 17,
-    borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
+    borderBottomWidth: 1, 
+    borderBottomColor: 'red', 
     height: 40,
     color: '#546574',
     padding: 10,
