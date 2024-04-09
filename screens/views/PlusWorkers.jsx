@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Picker, Modal, TextInput } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useWorker from '../hooks/useWorker';
 import WorkerProvider from '../context/worker/WorkerProvider';
+import CustomAlert from '../componentes/CustomAlert';
 
 
 
@@ -13,13 +14,19 @@ const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
 
 export default function PlusWorkers() {
     const navigation = useNavigation();
-    const { worker, handleEditWorker, handleDeleteworker, handleUpdateWorker} = useWorker()
+    const { worker,setWorker , handleEditWorker, handleDeleteworker, handleUpdateWorker } = useWorker()
+    const [deletedWorkerId, setDeletedWorkerId] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [workers, setWorkers] = useState(worker)
     const [modal, setModal] = useState(false);
     const [editedData, setEditedData] = useState({});
     const [selectedWorker, setselectedWorker] = useState({});
     const [cargo, setCargo] = useState(''); // Estado para el valor seleccionado del cargo en el formulario de edición
+    const [successEditAlertVisible, setSuccessEditAlertVisible] = useState(false);
+    const [errorEditAlertVisible, setErrorEditAlertVisible] = useState(false);
+    const [successDeleteAlertVisible, setSuccessDeleteAlertVisible] = useState(false);
+    const [errorDeleteAlertVisible, setErrorDeleteAlertVisible] = useState(false);
+
 
     const handleEdit = (worker) => {
         setselectedWorker(worker);
@@ -29,6 +36,7 @@ export default function PlusWorkers() {
             correo: worker.correo,
             telefono: worker.telefono,
             cargo: worker.cargo,
+            password: worker.contrasena
         });
         setCargo(worker.cargo); // Establecer el valor inicial del cargo seleccionado del trabajador
         setShowModal(true);
@@ -55,8 +63,10 @@ export default function PlusWorkers() {
             console.log('Empleado editado exitosamente');
             await handleUpdateWorker(selectedWorker.id, editedData);
             setShowModal(false);
+            setSuccessEditAlertVisible(true)
         } catch (error) {
             console.error('Error al editar el empleado:', error);
+            setErrorEditAlertVisible(true)
         }
     };
 
@@ -65,15 +75,25 @@ export default function PlusWorkers() {
     };
 
 
+    useEffect(() => {
+        if (deletedWorkerId !== null) {
+            // Actualiza la lista de clientes excluyendo al cliente eliminado
+            setWorker(worker.filter(worker => worker.id !== deletedWorkerId));
+        }
+      }, [deletedWorkerId]);
+
     const handleDelete = async (id) => {
         try {
             const success = await handleDeleteworker(id);
             if (success) {
                 setWorkers(workers.filter(workers => workers.id !== id));
             }
+            setDeletedWorkerId(id);
             setModal(false);
+            setSuccessDeleteAlertVisible(true)
         } catch (error) {
             console.error('Error al borrar al empleado:', error);
+            setErrorDeleteAlertVisible(true)
         }
     }
 
@@ -92,10 +112,11 @@ export default function PlusWorkers() {
                             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)} >
                                 <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
                             </TouchableOpacity>
-                            <Text style={styles.itemText}>Nombre: {item.nombre}</Text>
-                            <Text style={styles.itemText}>Correo: {item.correo}</Text>
-                            <Text style={styles.itemText}>Telefono: {item.telefono}</Text>
-                            <Text style={styles.itemText}>Cargo: {item.cargo}</Text>
+                            <Text style={styles.itemText}>{item.nombre}</Text>
+                            <Text style={styles.itemText}>{item.correo}</Text>
+                            <Text style={styles.itemText}>{item.password}</Text>
+                            <Text style={styles.itemText}>{item.telefono}</Text>
+                            <Text style={styles.itemText}>{item.cargo}</Text>
                             <View style={styles.container}>
                             </View>
                         </View>
@@ -142,6 +163,15 @@ export default function PlusWorkers() {
                             />
                         </View>
                         <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Password</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="password"
+                                value={editedData.password}
+                                onChangeText={(text) => handleChange('password', text)}
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
                             <Text style={styles.label}>Telefono</Text>
                             <TextInput
                                 style={styles.input}
@@ -174,7 +204,7 @@ export default function PlusWorkers() {
                     </View>
                 </View>
             </Modal>
-            
+
             <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
@@ -190,6 +220,42 @@ export default function PlusWorkers() {
                     </View>
                 </View>
             </Modal>
+
+            <CustomAlert
+                isVisible={successEditAlertVisible}
+                onClose={() => setSuccessEditAlertVisible(false)}
+                title="Actualizacion exitoso"
+                message="Empleado Actualizado Exitoso."
+                buttonColor="green"
+                iconName="check"
+            />
+
+            <CustomAlert
+                isVisible={errorEditAlertVisible}
+                onClose={() => setErrorEditAlertVisible(false)}
+                title="Error"
+                message="Error al Actualizar Empleado"
+                buttonColor="red"
+                iconName="times-circle"
+            />
+
+            <CustomAlert
+                isVisible={successDeleteAlertVisible}
+                onClose={() => setSuccessDeleteAlertVisible(false)}
+                title="Eliminado exitoso"
+                message="Empleado Eliminado Exitoso."
+                buttonColor="green"
+                iconName="check"
+            />
+
+            <CustomAlert
+                isVisible={errorDeleteAlertVisible}
+                onClose={() => setErrorDeleteAlertVisible(false)}
+                title="Error"
+                message="Error al Eliminar Empleado"
+                buttonColor="red"
+                iconName="times-circle"
+            />
         </View>
     );
 }

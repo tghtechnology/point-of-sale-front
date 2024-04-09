@@ -4,10 +4,12 @@ import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useWorker from '../hooks/useWorker';
 import WorkerProvider from '../context/worker/WorkerProvider';
+import CustomAlert from '../componentes/CustomAlert';
 
 const INITIAL_STATE = {
   nombre: '',
   correo: '',
+  password: '',
   telefono: '',
   cargo: '', // Establecer el valor inicial del cargo aquí
 }
@@ -18,16 +20,18 @@ const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
 
 const FormRegisEmpleado = () => {
   const [cargo, setCargo] = useState(INITIAL_STATE.cargo); // Inicializar el estado del cargo con el valor predeterminado
-  
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+
   // Función para manejar cambios en la selección del cargo
   const handleCargoChange = (cargoSeleccionado) => {
     setCargo(cargoSeleccionado);
-   
+
   };
   //
 
   const [data, setData] = useState(INITIAL_STATE);
-  const { handleCreateWorker } = useWorker();
+  const { handleCreateWorker, worker, setWorker } = useWorker();
 
   const getValues = (name, value) => {
     setData({
@@ -47,11 +51,14 @@ const FormRegisEmpleado = () => {
       if (response) {
         alert("Empleado creado con exito")
         setData(INITIAL_STATE);
+        setWorker([...worker, objectSend]);
+        setSuccessAlertVisible(true)
       } else {
         alert("El Empleado no se pudo crear");
       }
     } catch (error) {
       alert("problema interno del servidor")
+      setErrorAlertVisible(true)
     }
     console.log("valor del formulario" + JSON.stringify(objectSend));
   }
@@ -76,6 +83,14 @@ const FormRegisEmpleado = () => {
 
       <TextInput
         style={styles.input}
+        placeholder="Contraseña"
+        placeholderTextColor="#546574"
+        secureTextEntry={true}
+        onChangeText={text => getValues('password', text)}
+      />
+
+      <TextInput
+        style={styles.input}
         placeholder="Numero de Telefono"
         placeholderTextColor="#546574"
         onChangeText={text => getValues('telefono', text)}
@@ -96,6 +111,24 @@ const FormRegisEmpleado = () => {
       <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Registrar</Text>
       </TouchableOpacity>
+
+      <CustomAlert
+        isVisible={successAlertVisible}
+        onClose={() => setSuccessAlertVisible(false)}
+        title="Registro exitoso"
+        message="Registro de Empleado Exitoso."
+        buttonColor="green"
+        iconName="check"
+      />
+
+      <CustomAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        title="Error"
+        message="Error al Registrar"
+        buttonColor="red"
+        iconName="times-circle"
+      />
     </View>
   )
 }
