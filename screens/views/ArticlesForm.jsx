@@ -15,11 +15,11 @@ const INITIAL_STATE = {
   representacion: "",
   id_categoria: "",
 };
-// const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
 
-// const ColorBox = ({ color }) => (
-//   <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
-// );
+ const ColorBox = ({ color }) => (
+  <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
+ );
 export default function ArticlesForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
@@ -48,17 +48,20 @@ export default function ArticlesForm() {
       id_categoria: value,
     });
   };
+
   const SubmitArticle = async () => {
     try {
       const articleData = {
         ...datos,
         precio: parseFloat(datos.precio),
+
       };
       console.log("Datos a enviar al servidor:", articleData);
       const response = await handleCreateArticle(articleData);
       if (response) {
         setShowAlert(true);
         setDatos(INITIAL_STATE);
+
         setListArticle([...listArticle,datos]);
       } else {
         alert("El articulo no se pudo crear");
@@ -157,7 +160,7 @@ export default function ArticlesForm() {
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
 
-      {/* <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value} >
+       <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value} >
         <View style={styles.radioContainer}>
           <RadioButton value="Color" />
           <Text>Color</Text>
@@ -181,7 +184,7 @@ export default function ArticlesForm() {
             <ColorBox key={index} color={color} />
           ))}
         </View>
-      )} */}
+      )} 
 
       <CustomAlert
         isVisible={showAlert}
@@ -189,7 +192,7 @@ export default function ArticlesForm() {
         title="Articulo Creado"
         message="El articulo se ha creado correctamente."
         buttonColor="#2196F3"
-        iconName="check-circle" // Puedes cambiar el icono según lo desees
+        iconName="check-circle"
         />
     </ScrollView>
   );
