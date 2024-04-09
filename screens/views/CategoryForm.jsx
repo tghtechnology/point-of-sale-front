@@ -7,11 +7,11 @@ const INITIAL_STATE = {
   nombre:'',
   color:'',
 }
- const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+//  const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
 
- const ColorBox = ({ color }) => (
-  <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
- );
+//  const ColorBox = ({ color }) => (
+//   <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
+//  );
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
@@ -81,12 +81,12 @@ const CategoryForm = () => {
       <TouchableOpacity style={styles.buttonContainer}>
         <Text style={styles.buttonText}>CREAR ARTÍCULO</Text>
       </TouchableOpacity>
-       <Text style={styles.label}>Color de Categoría</Text>
+       {/* <Text style={styles.label}>Color de Categoría</Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center', marginTop:20}}>
           {colors.map((color, index) => (
             <ColorBox key={index} color={color} />
           ))}
-        </View> 
+        </View>  */}
       </View>
     
   );
