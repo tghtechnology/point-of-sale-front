@@ -15,11 +15,11 @@ const INITIAL_STATE = {
   representacion: "",
   id_categoria: "",
 };
-const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+// const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
 
-const ColorBox = ({ color }) => (
-  <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
-);
+// const ColorBox = ({ color }) => (
+//   <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
+// );
 export default function ArticlesForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
@@ -157,7 +157,7 @@ export default function ArticlesForm() {
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
 
-      <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value} >
+      {/* <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value} >
         <View style={styles.radioContainer}>
           <RadioButton value="Color" />
           <Text>Color</Text>
@@ -181,7 +181,7 @@ export default function ArticlesForm() {
             <ColorBox key={index} color={color} />
           ))}
         </View>
-      )}
+      )} */}
 
       <CustomAlert
         isVisible={showAlert}

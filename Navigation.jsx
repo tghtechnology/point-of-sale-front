@@ -18,7 +18,6 @@ import HomeView from './screens/views/HomeView';
 import LoginForm from "./screens/views/LoginForm"
 import RegisterForm from './screens/views/RegisterForm';
 import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
-import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
 import DiscountForm from './screens/views/DiscountForm';
 import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
 import ArticlesEdit from './screens/views/ArticlesEdit';
@@ -46,7 +45,6 @@ return (
       <Stack.Screen name="Login" component={LoginForm} />
       <Stack.Screen name="Register" component={RegisterForm} />
       <Stack.Screen name="Envio" component={EnvioCorreoForm} />
-      <Stack.Screen name="Confirmar" component={ConfirmPasswordForm} />
       <Stack.Screen name="Home" component={HomeScreen}
         options={{title: "Soporte",
           headerLeft: () => {
