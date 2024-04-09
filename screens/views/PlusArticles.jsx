@@ -4,11 +4,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
 import { useNavigation } from '@react-navigation/native';
 import useCategory from "../hooks/useCategory";
+import CustomAlert from '../componentes/CustomAlert';
 
 
 export default function PlusArticle() {
-  const {listArticle,handleDeleteArticle} = useArticle();
+  const {listArticle,handleDeleteArticle,setListArticle} = useArticle();
+  const [deletedClientId, setDeletedClientId] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null)
+  const [showAlert, setShowAlert] = useState(false);
   const [modal, setModal] = useState(false);
   const [articles, setArticles] = useState(null); 
   const navigation = useNavigation();
@@ -20,16 +23,30 @@ export default function PlusArticle() {
 
 
   const handleEdit = () => { 
-    navigation.navigate("Editar Articulo", { 
-      article: selectedItem, 
-    });
+    navigation.navigate("Editar Articulo", {  article: selectedItem, });
+    setModal(false);
   };
-  const handleDelete = async () => { 
-    const success = await handleDeleteArticle(selectedItem.id);
-    if (success) {
-      setArticles(articles.filter(article => article.id !== selectedItem.id));
-    }
+  const handleDelete = async (id) => { 
+    try {
+      await handleDeleteArticle(id);
+      setShowAlert(true);
+      setDeletedClientId(id);
+      setModal(false);
+  } catch (error) {
+      console.error('Error al borrar al cliente:', error);
+  }
   };
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+    setDeletedClientId(null);
+};
+
+useEffect(() => {
+  if (deletedClientId !== null) {
+      
+    setListArticle(articles.filter(article => article.id !== deletedClientId));
+  }
+}, [deletedClientId]);
 
   const handleOptionsPress = (item) => {
     setSelectedItem(item); 
@@ -67,6 +84,14 @@ export default function PlusArticle() {
       <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Crear Articulo")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Articulo Eliminado"
+        message="El articulo se ha eliminado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+        />
       <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>

@@ -4,8 +4,8 @@ import UsuarioContext from "./UsuarioContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UsuarioProvider = ({children}) => {
-  const [userId, setUserId] = useState(null);
-    const [token, setToken] = useState(null);
+  const [isAuth, setIsAuth] = useState(false);
+
     const handleCreateUser = async (newUser) => {
         const { status } = await createUser(newUser);
         if(status === 200 || status === 201){
@@ -14,67 +14,62 @@ const UsuarioProvider = ({children}) => {
           return false;
         }
     }
-
-    const initializeUserAndToken = async () => {
-      const storedUserId = await AsyncStorage.getItem("usuarioid");
-      const storedToken = await AsyncStorage.getItem("token");
-      setUserId(storedUserId);
-      setToken(storedToken);
-   };
+    const handleDeleteTemporary = async (password) => {
+      const { status, data } = await eliminarTemporal(password);
+      if (status === 200) {
+        const usuario_id = data.usuario_id;
+        const token = data.token
+        AsyncStorage.setItem("token", token);
+        AsyncStorage.setItem("usuarioid", usuario_id);
+        const storedToken = AsyncStorage.getItem("token");
+        console.log("Token: ", storedToken);
+        const stored = AsyncStorage.getItem("usuarioid");
+        console.log("Usuario_d: ", stored);
+        setIsAuth(true);
   
-  useEffect(() => {
-      initializeUserAndToken();
-   }, []);
-  
-    const handleDeleteTemporary = async(password) => {
-      try {
-          console.log("Token almacenado:", token);
-          console.log("ID de usuario almacenado:", userId);
-          console.log("Contraseña proporcionada:", password);
-
-          if (!token || !userId) {
-              console.error("No se encontró el token o el ID de usuario en AsyncStorage");
-              return false;
-          }
-
-          const { status } = await eliminarTemporal(password);
-          console.log("Estado de la respuesta:", status);
-          return status === 200;
-      } catch (error) {
-          console.error("Error al eliminar cuenta temporal:", error);
-          return false;
-      }
-  };
-      const handleDeletePermanent = async(password) => {
-    try {
-        console.log("Token almacenado:", token);
-        console.log("ID de usuario almacenado:", userId);
-        console.log("Contraseña proporcionada:", password);
-
-        if (!token || !userId) {
-            console.error("No se encontró el token o el ID de usuario en AsyncStorage");
-            return false;
-        }
-
-        const { status } = await eliminarPermanente (password);
-        console.log("Estado de la respuesta:", status);
-        return status === 200;
-    } catch (error) {
-        console.error("Error al eliminar cuenta temporal:", error);
+        alert("Cuenta eliminada temporalmente");
+        return true;
+      } else {
+        setIsAuth(false);
+        alert("Datos incorrectos, intente de nuevo");
         return false;
-    }
-  };
+      }
+    };
+
+    const handleDeletePermanent = async (password) => {
+      const { status, data } = await eliminarPermanente(password);
+      if (status === 200) {
+        const usuario_id = data.usuario_id;
+        const token = data.token
+        AsyncStorage.setItem("token", token);
+        AsyncStorage.setItem("usuarioid", usuario_id);
+        const storedToken = AsyncStorage.getItem("token");
+        console.log("Token: ", storedToken);
+        const stored = AsyncStorage.getItem("usuarioid");
+        console.log("Usuario_d: ", stored);
+        setIsAuth(true);
+  
+        alert("Cuenta eliminada permanentemente");
+        return true;
+      } else {
+        setIsAuth(false);
+        alert("Datos incorrectos, intente de nuevo");
+        return false;
+      }
+    };
+
 
     
 
+  
 
   return (
     <UsuarioContext.Provider value={{
-      userId,
-      token,
+      
       handleCreateUser,
       handleDeleteTemporary,
-      handleDeletePermanent,           
+      handleDeletePermanent,
+              
     }}> 
       {children}
     </UsuarioContext.Provider>

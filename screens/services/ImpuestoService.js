@@ -49,12 +49,10 @@ const editImpuestos = async(id,updateImpuestos) => {
         console.log('Error:',error.response.data);
     }
 }
-
-
-
 export {
     createImpuesto,
     listImpuestos,
     editImpuestos,
     deleteImpuesto,
+  
 }

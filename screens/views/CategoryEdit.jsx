@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native';
 import { useRoute } from "@react-navigation/native";
 import useCategory from '../hooks/useCategory';
+import CustomAlert from "../componentes/CustomAlert";
+
 
 const INITIAL_STATE = {
   nombre:'',
@@ -10,6 +12,7 @@ const INITIAL_STATE = {
 const CategoryForm = () => {
   const route = useRoute();
   const {handleEditCategories} = useCategory();
+  const [showAlert, setShowAlert] = useState(false);
   const [editedData, setEditedData] = useState(INITIAL_STATE);
  
 
@@ -30,10 +33,15 @@ const CategoryForm = () => {
   const handleSubmit = async () => {
     try {
       await handleEditCategories(editedData);
+      setShowAlert(true);
       console.log("Articulo editado exitosamente");
     } catch (error) {
       console.error("Error al editar el descuento:", error);
     }
+  };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
   };
 
   return (
@@ -58,6 +66,14 @@ const CategoryForm = () => {
       <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Edición Exitosa"
+        message="La categoria se ha editado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+      />
       </View>
     
   );

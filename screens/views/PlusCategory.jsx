@@ -3,14 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} fr
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useCategory from '../hooks/useCategory';
-
+import CustomAlert from '../componentes/CustomAlert';
 
  const PlusCategory = () => {
   const navigation = useNavigation();
   const [modal, setModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null)
+  const [deletedClientId, setDeletedClientId] = useState(null);
   const [categoria, setCategoria] = useState([]);
-  const {listCategoria, handleDeleteCategory} = useCategory();
+  const {listCategoria, handleDeleteCategory,setListCategoria} = useCategory();
 
   useEffect(() => {
     setCategoria(listCategoria); 
@@ -19,14 +21,30 @@ import useCategory from '../hooks/useCategory';
   const handleEdit = () => { 
     navigation.navigate("Editar Categoria", { categorias: selectedItem });
     console.log(selectedItem)
+    setModal(false);
   };
 
-  const handleDelete = async () => { 
-    const success = await handleDeleteCategory(selectedItem.id);
-    if (success) {
-      setCategoria(categoria.filter(categorias => categorias.id !== selectedItem.id));
-    }
+  const handleDelete = async (id) => { 
+    try {
+      await handleDeleteCategory(id);
+      setShowAlert(true);
+      setDeletedClientId(id);
+      setModal(false);
+  } catch (error) {
+      console.error('Error al borrar al cliente:', error);
+  }
   };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+    setDeletedClientId(null);
+};
+useEffect(() => {
+  if (deletedClientId !== null) {
+      
+    setListCategoria(categoria.filter(categorias => categorias.id !== deletedClientId));
+  }
+}, [deletedClientId]);
 
   const handleOptionsPress = (item) => {
     setSelectedItem(item); 
@@ -61,6 +79,14 @@ import useCategory from '../hooks/useCategory';
       <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Crear Categoria")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Categoria Eliminada"
+        message="La categoria se ha eliminado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+        />
       <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>

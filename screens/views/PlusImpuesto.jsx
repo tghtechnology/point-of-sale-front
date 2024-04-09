@@ -3,15 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} fr
 import { MaterialCommunityIcons,FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useImpuesto from "../hooks/useImpuesto";
-
+import CustomAlert from '../componentes/CustomAlert';
 
 
  const PlusImpuesto = () => {
   const navigation = useNavigation();
   const [modal, setModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null)
   const [impuestos, setImpuestos] = useState([]);
- const {listImpuesto, handleDeleteImp} = useImpuesto();
+  const [deletedClientId, setDeletedClientId] = useState(null);
+ const {listImpuesto, handleDeleteImp,setListImpuesto} = useImpuesto();
 
   useEffect(() => {
     setImpuestos(listImpuesto); 
@@ -20,14 +22,31 @@ import useImpuesto from "../hooks/useImpuesto";
   const handleEdit = () => { 
     navigation.navigate("Editar Impuestos", { impuesto: selectedItem });
     console.log(selectedItem)
+    setModal(false);
   };
 
-  const handleDelete = async () => { 
-    const success = await handleDeleteImp(selectedItem.id);
-    if (success) {
-      setImpuestos(impuestos.filter(impuesto => impuesto.id !== selectedItem.id));
-    }
+  const handleDelete = async (id) => { 
+    try {
+      await handleDeleteImp(id);
+      setShowAlert(true);
+      setDeletedClientId(id);
+      setModal(false);
+  } catch (error) {
+      console.error('Error al borrar al cliente:', error);
+  }
   };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+    setDeletedClientId(null);
+};
+
+useEffect(() => {
+  if (deletedClientId !== null) {
+      
+    setListImpuesto(impuestos.filter(impuesto => impuesto.id !== deletedClientId));
+  }
+}, [deletedClientId]);
 
   const handleOptionsPress = (item) => {
     setSelectedItem(item); 
@@ -64,6 +83,14 @@ import useImpuesto from "../hooks/useImpuesto";
       <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Creación de un impuesto")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Impuesto Eliminado"
+        message="El impuesto se ha eliminado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+        />
       <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>

@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useUser from '../hooks/useUser';
+import CustomAlert from '../componentes/CustomAlert';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DeleteAccount() {
     const [modalVisible, setModalVisible] = useState(false);
+    const [showAlertTemporary, setShowAlertTemporary] = useState(false);
+    const [showAlertPermanent, setShowAlertPermanent] = useState(false);
     const [password, setPassword] = useState("");
     const [isFocused, setIsFocused] = useState(false);
     const [deleteType, setDeleteType] = useState('');
@@ -25,7 +28,8 @@ export default function DeleteAccount() {
             const success = await handleDeleteTemporary(password);
             if (success) {
                 navigation.navigate("Main")
-                console.log("La cuenta temporal se ha eliminado exitosamente.");
+                setShowAlertTemporary(true);
+                console.log("La cuenta temporal se ha eliminado exitosamente."); 
             } else {
                 alert("No se pudo eliminar la cuenta temporal. La contraseña es incorrecta o ha ocurrido un error.");
             }
@@ -35,6 +39,7 @@ export default function DeleteAccount() {
             const success = await handleDeletePermanent(password);
             if (success) {
                 navigation.navigate("Main")
+                setShowAlertPermanent(true);
                 console.log("La cuenta permanente se ha eliminado exitosamente.");
             } else {
                 alert("No se pudo eliminar la cuenta permanente. La contraseña es incorrecta o ha ocurrido un error.");
@@ -89,6 +94,23 @@ export default function DeleteAccount() {
                     </View>
                 </View>
             </Modal>
+            <CustomAlert
+                isVisible={showAlertTemporary}
+                onClose={() => setShowAlertTemporary(false)}
+                title="Cuenta Temporal Eliminada"
+                message="La cuenta temporal se ha eliminado correctamente."
+                buttonColor="#2196F3"
+                iconName="check-circle" 
+            />
+
+            <CustomAlert
+                isVisible={showAlertPermanent}
+                onClose={() => setShowAlertPermanent(false)}
+                title="Cuenta Permanente Eliminada"
+                message="La cuenta permanente se ha eliminado correctamente."
+                buttonColor="#2196F3"
+                iconName="check-circle" 
+            />
         </View>
     );
 }

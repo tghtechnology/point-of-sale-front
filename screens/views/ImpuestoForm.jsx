@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
 import useImpuesto from "../hooks/useImpuesto";
+import CustomAlert from '../componentes/CustomAlert';
 
 const INITIAL_STATE = {
   nombre: "",
@@ -11,7 +12,10 @@ const INITIAL_STATE = {
 
 export default function ImpuestoForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
-  const { handleCreateImp } = useImpuesto();
+  const { handleCreateImp,listImpuesto,setListImpuesto } = useImpuesto();
+  const [showAlert, setShowAlert] = useState(false);
+
+
   const getValues = (name, value) => {
     const newValue = name === 'tasa' ? parseFloat(value) : value;
     setDatos({
@@ -33,16 +37,20 @@ export default function ImpuestoForm() {
       console.log("Datos a enviar al servidor:", datos);
       const response = await handleCreateImp(datos);
       if (response) {
-        alert("El impuesto ha sido creado con éxito");
         setDatos(INITIAL_STATE);
       } else {
-        alert("El impuesto no se pudo crear");
+        setListImpuesto([...listImpuesto,datos]);
+        setShowAlert(true);
       }
     } catch (error) {
       console.log("Problema interno del servidor", error);
     }
     console.log("Valor del formulario: " + JSON.stringify(datos));
   };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+};
 
   return (
     <View style={styles.container}>
@@ -75,8 +83,16 @@ export default function ImpuestoForm() {
       </View>
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={SubmitImpuesto} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Crear Impuesto</Text>
+        <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Impuesto Creado"
+        message="El impuesto se ha creado correctamente."
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+        />
     </View>
   );
 }

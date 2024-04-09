@@ -13,12 +13,11 @@ import PlusCategory from './screens/views/PlusCategory';
 import ArticlesForm from './screens/views/ArticlesForm';
 import Icon from "react-native-vector-icons/Entypo";
 import CategoryForm from './screens/views/CategoryForm';
-import { Ionicons, MaterialCommunityIcons,FontAwesome } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons,FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import HomeView from './screens/views/HomeView';
 import LoginForm from "./screens/views/LoginForm"
 import RegisterForm from './screens/views/RegisterForm';
 import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
-import ConfirmPasswordForm from './screens/views/ConfirmPasswordForm';
 import DiscountForm from './screens/views/DiscountForm';
 import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
 import ArticlesEdit from './screens/views/ArticlesEdit';
@@ -32,6 +31,7 @@ import ClientForm from './screens/views/ClientForm';
 import PlusClients from './screens/views/PlusClients';
 import ClientEdit from './screens/views/ClientEdit'
 import PlusWorkers from './screens/views/PlusWorkers';
+import RecibosScreen from './screens/views/RecibosScreen';
 import VentNavigate from './screens/views/VentNavigate';
 import TicketFormHome from './screens/views/TicketFormHome';
 import ReceiptForm from './screens/views/ReceiptForm';
@@ -46,7 +46,6 @@ return (
       <Stack.Screen name="Login" component={LoginForm} />
       <Stack.Screen name="Register" component={RegisterForm} />
       <Stack.Screen name="Envio" component={EnvioCorreoForm} />
-      <Stack.Screen name="Confirmar" component={ConfirmPasswordForm} />
       <Stack.Screen name="Home" component={HomeScreen}
         options={{title: "Soporte",
           headerLeft: () => {
@@ -194,6 +193,36 @@ function MiembrosScreen() {
       <Stack.Screen name="Editar Cliente" component={ClientEdit}></Stack.Screen>
     </Stack.Navigator>
   );
+};
+
+function Recibos(){
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+  return (
+    <Stack.Navigator
+        screenOptions={{
+          statusBarColor: "#ff0000",
+          headerStyle: { backgroundColor: "#ff0000" },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        }}
+      >
+      <Stack.Screen name="Recibos" component={RecibosScreen} options={{ headerLeft: () => {
+          return (
+              <Icon
+                name="menu"
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                size={24}
+                color="#fff"
+              />
+            );
+          },
+        }}></Stack.Screen>
+        </Stack.Navigator>
+  );
+
 };
 
 

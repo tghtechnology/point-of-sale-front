@@ -41,25 +41,30 @@ const CategoryProvider = ({children}) => {
   }
 
   
-  const handleEditCategories = async(updateCategorias) => {
+  const handleEditCategories = async (updateCategorias) => {
     const {nombre, color } = updateCategorias;
     try {
-        const response = await editCategories(updateCategorias.id, {nombre, color} ); 
-        if(response && response.status === 200){
-            console.log('Categoria editado exitosamente');
-            return true; 
-        } else if (response && response.status === 204) {
-            console.log('Categoria editado exitosamente');
-            return true; 
-        } else {
-            return false; 
-        }
-      } catch (error) {
-        console.error('Error editing categorias:', error);
-        return false; 
+      const response = await  editCategories(updateCategorias.id, {nombre, color} );
+      if (response && (response.status === 200 || response.status === 204)) {
+        console.log('Artículo editado exitosamente');
+        const updatedList = listCategoria.map(category => {
+          if (category.id === updateCategorias.id) {
+            return { ...category, ...updateCategorias };
+          } else {
+            return category;
+          }
+        });
+        setListCategoria(updatedList);
+        return true;
+      } else {
+        return false;
       }
+    } catch (error) {
+      console.error('Error editing categoria:', error);
+      return false;
+    }
   };
-
+  
   
     const handleDeleteCategory = async (id) => {
         try {
@@ -78,7 +83,7 @@ const CategoryProvider = ({children}) => {
 
 
     return (
-        <CategoryContext.Provider value={{ handleCreateCategory, listCategoria, handleEditCategories, handleDeleteCategory}}>
+        <CategoryContext.Provider value={{ handleCreateCategory, listCategoria,setListCategoria, handleEditCategories, handleDeleteCategory}}>
             {children}
         </CategoryContext.Provider>
     )
