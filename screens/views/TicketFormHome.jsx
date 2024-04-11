@@ -28,7 +28,7 @@ const TicketFormHome = () => {
         <Picker
           style={styles.picker}
           onValueChange={(itemValue, itemIndex) =>
-            setSelectedItem(itemValue)
+            setSelectedValue(itemValue)
           }>
           <Picker.Item label="Todos los artículos" value="default" />
           <Picker.Item label="Descuentos" value="discounts" />
@@ -39,32 +39,36 @@ const TicketFormHome = () => {
       </View>
 
       {/* List Items */}
-      <View style={styles.itemList}>
-        <FlatList
-          data={listArticle}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <View style={styles.circle} />
-              <Text style={styles.itemText}>{item.nombre}</Text>
-              <Text style={styles.priceText}>S/ {item.precio}</Text>
-            </View>
-          )}
-        />
-      </View>
-      {/*Listar Descuentos */}
-      <View style={styles.itemList}>
-        <FlatList
-          data={discounts}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <View style={styles.circle} />
-              <Text style={styles.itemText}>{item.nombre}</Text>
-              <Text style={styles.priceText}>{item.valor} %</Text>
-            </View>
-          )}
-        />
-      </View>
+      {selectedValue === 'default' && (
+        <View style={styles.itemList}>
+          <FlatList
+            data={listArticle}
+            renderItem={({ item }) => (
+              <View style={styles.item}>
+                <View style={styles.circle} />
+                <Text style={styles.itemText}>{item.nombre}</Text>
+                <Text style={styles.priceText}>S/ {item.precio}</Text>
+              </View>
+            )}
+          />
+        </View>
+      )}
 
+      {/* List Discounts */}
+      {selectedValue === 'discounts' && (
+        <View style={styles.itemList}>
+          <FlatList
+            data={discounts}
+            renderItem={({ item }) => (
+              <View style={styles.item}>
+                <View style={styles.circle} />
+                <Text style={styles.itemText}>{item.nombre}</Text>
+                <Text style={styles.priceText}>{item.valor} %</Text>
+              </View>
+            )}
+          />
+        </View>
+      )}
 
 
       {/* Footer Navigation */}
