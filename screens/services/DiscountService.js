@@ -1,4 +1,15 @@
 import apiClient from "../apiss/AxiosConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const getToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        return token;
+    } catch (error) {
+        console.error('Error getting token:', error);
+        throw new Error('Error al obtener el token');
+    }
+};
 
 const createDiscount = async (newDiscount) => {
     try {
@@ -14,7 +25,12 @@ const createDiscount = async (newDiscount) => {
 
 const getDiscounts = async () => {
     try {
-        const response = await apiClient.get(`/descuento`);
+        const token = await getToken();
+        const response = await apiClient.get(`/descuento`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return response.data; // Devuelve los datos de los descuentos
     } catch (error) {
         console.log(error);
