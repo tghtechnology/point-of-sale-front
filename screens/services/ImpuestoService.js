@@ -1,8 +1,24 @@
 import apiClient from "../apiss/AxiosConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const getToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        return token;
+    } catch (error) {
+        console.error('Error getting token:', error);
+        throw new Error('Error al obtener el token');
+    }
+};
 
 const createImpuesto = async (newImp) => {
     try {
-        const { data, status } = await apiClient.post(`/impuesto/crear`, newImp);
+        const token = await getToken();
+        const { data, status } = await apiClient.post(`/impuesto/crear`, newImp, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return {
             data,
             status,
@@ -15,7 +31,13 @@ const createImpuesto = async (newImp) => {
 
 const listImpuestos = async () => {
     try {
-        const { data,status } = await apiClient.get(`/impuesto/listar`); 
+        const token = await getToken();
+        console.log('Tokem:',token)
+        const { data,status } = await apiClient.get(`/impuesto/listar`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }); 
         return {
             data,
             status

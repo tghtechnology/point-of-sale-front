@@ -14,7 +14,7 @@ const getToken = async () => {
 const createArticle = async (newArticle) => {
     try {
         const token = await getToken();
-        const { data, status } = await apiClient.post(`/articulo/crear`, newArticle, {}, {
+        const { data, status } = await apiClient.post(`/articulo/crear`, newArticle, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

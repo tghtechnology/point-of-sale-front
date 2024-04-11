@@ -13,8 +13,12 @@ const getToken = async () => {
 
 const createCategory = async (newCategory) => {
     try {
-        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory);
-        
+        const token = await getToken();
+        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return {
             data,
             status

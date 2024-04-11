@@ -13,7 +13,12 @@ const getToken = async () => {
 
 const createDiscount = async (newDiscount) => {
     try {
-        const {data, status} = await apiClient.post(`/descuento`, newDiscount);
+        const token = await getToken();
+        const {data, status} = await apiClient.post(`/descuento`, newDiscount, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return {
             data,
             status
@@ -26,7 +31,7 @@ const createDiscount = async (newDiscount) => {
 const getDiscounts = async () => {
     try {
         const token = await getToken();
-        const response = await apiClient.get(`/descuento`, {}, {
+        const response = await apiClient.get(`/descuento`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
