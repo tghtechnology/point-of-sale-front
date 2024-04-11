@@ -14,26 +14,32 @@ const getToken = async () => {
 const createCategory = async (newCategory) => {
     try {
         const token = await getToken();
-        console.log("Token de autenticación:", token); 
-        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory, {
-            headers: {
+        console.log("Token de autenticación:", token);
+        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory,{
+        headers:{
                 Authorization: `Bearer ${token}` 
             }
         });
+        
         return {
             data,
             status
         }
     } catch (error) {
-        console.error("Error al crear categoría:", error);
-        throw new Error('Error al crear la categoría');
+        console.log(error);
     }
-};
+}
 
 
 const listCategories = async () => {
     try {
-        const { data,status } = await apiClient.get(`/categoria/listar`); 
+        const token = await getToken();
+        console.log("Token de autenticación:", token);
+        const { data,status } = await apiClient.get(`/categoria/listar`,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return {
             data,
             status
@@ -47,7 +53,12 @@ const listCategories = async () => {
 
 const editCategories = async(id,updateCategorias) => {
     try {
-        const { data,status } = await apiClient.put(`/categoria/actualizar/${id}`, updateCategorias);
+        const token = await getToken();
+        const { data,status } = await apiClient.put(`/categoria/actualizar/${id}`, updateCategorias,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return {
             data,
             status
