@@ -48,22 +48,33 @@ const listCategories = async () => {
 };
 
 
-const editCategories = async(id,updateCategorias) => {
+const editCategories = async(id, updateCategorias) => {
     try {
-        const { data,status } = await apiClient.put(`/categoria/actualizar/${id}`, updateCategorias);
+        const token = await getToken();
+        const { data, status } = await apiClient.put(`/categoria/actualizar/${id}`, updateCategorias, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
         return {
             data,
             status
         }; 
     } catch (error) {
-      throw new Error('Error al editar categorias');
+      console.error('Error original:', error);
+      throw new Error(`Error al editar categorias: ${error}`);
     }
-  };
+};
 
 
  const deleteCategory = async(id) => {
         try{
-            const{data, status} = await apiClient.delete(`/categoria/eliminar/${id}`);
+            const token = await getToken();
+            const{data, status} = await apiClient.delete(`/categoria/eliminar/${id}`,{
+                headers:{
+                        Authorization: `Bearer ${token}` 
+                    }
+                });
             return{
                 data,
                 status
@@ -72,7 +83,6 @@ const editCategories = async(id,updateCategorias) => {
             console.log('Error:',error.response.data);
         }
     }
-
     
 export {
     createCategory, listCategories,editCategories,deleteCategory
