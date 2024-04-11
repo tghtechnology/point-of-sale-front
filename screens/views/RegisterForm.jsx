@@ -12,10 +12,15 @@ import CountryProvider from '../context/country/CountryProvider';
 const INITIAL_STATE = {
   nombre:'',
   email:'',
+  cargo:'',
+  telefono:'',
   password:'',
 }
 
+const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
+
 const RegisterForm = () => {
+  const [cargo, setCargo] = useState(INITIAL_STATE.cargo);
   const [isModalVisible, setModalVisible] = useState(false);
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
   const [countrySelect, setCountrySelect] = useState('');
@@ -23,6 +28,11 @@ const RegisterForm = () => {
   const {handleCreateUser} = useUser();
   const { countries,fetchCountries } = useCountry();
   
+  const handleCargoChange = (cargoSeleccionado) => {
+    setCargo(cargoSeleccionado);
+
+  };
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -44,7 +54,8 @@ const RegisterForm = () => {
     
     const objectSend = {
       ...dataForm,
-      pais:countrySelect
+      pais:countrySelect,
+      cargo: cargo
     }
     
     //control de errores para el crear un usuario
@@ -53,6 +64,7 @@ const RegisterForm = () => {
       if(response){
         alert("Usuario creado con exito")
         setDataForm(INITIAL_STATE);
+        setWorker([...worker, objectSend]);
         setCountrySelect('');
       }else{
         alert("El usuarios no se pudo crear");
@@ -76,8 +88,17 @@ const RegisterForm = () => {
           onChangeText={text => getValues('email', text)}
         />
 
+        <TextInput
+          style={styles.input} 
+          placeholder="Telefono"
+          placeholderTextColor="#546574"
+          keyboardType='number'
+          value={dataForm.telefono}
+          onChangeText={text => getValues('telefono', text)}
+        />
+
         {/* INPUT PARA ENTRADA DE PASSWORD */}
-        <View style={styles.passwordContainer}>
+        
         <TextInput
           style={styles.passwordInput}
           placeholder=" Contraseña"
@@ -87,7 +108,7 @@ const RegisterForm = () => {
           keyboardType=''
           onChangeText={text => getValues('password', text)}
         />
-        </View>
+      
 
         {/* IMPUT PARA ENTRADA DE NOMBRE DE NEGOCIO */}
         <TextInput
@@ -98,6 +119,17 @@ const RegisterForm = () => {
           onChangeText={text => getValues('nombre', text)}
         />
         
+        <Text>Seleccione un cargo:</Text>
+        <Picker
+        selectedValue={cargo}
+        onValueChange={handleCargoChange}
+        >
+        <Picker.Item label="Seleccionar cargo" value="" />
+        {cargosDisponibles.map((cargo, index) => (
+          <Picker.Item label={cargo} value={cargo} key={index} />
+        ))}
+        </Picker>
+
         {/* INPUT PARA SELECCIONAR PAIS */}
         <Text>Selecciona un país:</Text>
         {console.log("countries:", countries)}
@@ -110,7 +142,6 @@ const RegisterForm = () => {
         <Picker.Item key={index} label={country} value={country} />
         ))}
       </Picker>
-      <Text>País seleccionado: {countrySelect}</Text>
 
         {/* BOTON DE ACCION DE REGISTRO */}
         <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
@@ -185,15 +216,15 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     passwordInput: {
-        flex:1,
-        marginBottom: 25,
-        fontSize: 17,
-        borderBottomWidth: 1, // Cambiado de borderWidth
-        borderBottomColor: 'red', // Cambiado de borderColor
-        height: 40,
-        color: '#546574',
-        padding: 10,
-        borderRadius: 5,
+      flex:1,
+      marginBottom: 25,
+      fontSize: 17,
+      borderBottomWidth: 1, // Cambiado de borderWidth
+      borderBottomColor: 'red', // Cambiado de borderColor
+      height: 40,
+      color: '#546574',
+      padding: 10,
+      borderRadius: 5,
     },
     showPasswordButton: {
       padding: 5,

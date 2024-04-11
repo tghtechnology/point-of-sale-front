@@ -114,7 +114,6 @@ export default function PlusWorkers() {
                             </TouchableOpacity>
                             <Text style={styles.itemText}>{item.nombre}</Text>
                             <Text style={styles.itemText}>{item.correo}</Text>
-                            <Text style={styles.itemText}>{item.password}</Text>
                             <Text style={styles.itemText}>{item.telefono}</Text>
                             <Text style={styles.itemText}>{item.cargo}</Text>
                             <View style={styles.container}>

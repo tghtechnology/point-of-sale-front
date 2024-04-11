@@ -3,12 +3,13 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useWorker from '../hooks/useWorker';
+import useCountry from '../hooks/useCountry';
 import WorkerProvider from '../context/worker/WorkerProvider';
 import CustomAlert from '../componentes/CustomAlert';
 
 const INITIAL_STATE = {
   nombre: '',
-  correo: '',
+  email: '',
   password: '',
   telefono: '',
   cargo: '', // Establecer el valor inicial del cargo aquí
@@ -22,6 +23,10 @@ const FormRegisEmpleado = () => {
   const [cargo, setCargo] = useState(INITIAL_STATE.cargo); // Inicializar el estado del cargo con el valor predeterminado
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const { countries,fetchCountries } = useCountry();
+  const [countrySelect, setCountrySelect] = useState('');
+  const [data, setData] = useState(INITIAL_STATE);
+  const { handleCreateWorker, worker, setWorker } = useWorker();
 
   // Función para manejar cambios en la selección del cargo
   const handleCargoChange = (cargoSeleccionado) => {
@@ -30,8 +35,10 @@ const FormRegisEmpleado = () => {
   };
   //
 
-  const [data, setData] = useState(INITIAL_STATE);
-  const { handleCreateWorker, worker, setWorker } = useWorker();
+  //para los paises
+  useEffect(() => {
+    fetchCountries(); // Llama a fetchCountries cuando el componente se monta
+  }, []);
 
   const getValues = (name, value) => {
     setData({
@@ -43,6 +50,7 @@ const FormRegisEmpleado = () => {
   const handleSubmit = async () => {
     const objectSend = {
       ...data,
+      pais:countrySelect,
       cargo: cargo // Incluir el valor del cargo en el objeto a enviar
     }
     //control de errores para el crear un usuario
@@ -52,6 +60,7 @@ const FormRegisEmpleado = () => {
         alert("Empleado creado con exito")
         setData(INITIAL_STATE);
         setWorker([...worker, objectSend]);
+        setCountrySelect('');
         setSuccessAlertVisible(true)
       } else {
         alert("El Empleado no se pudo crear");
@@ -71,6 +80,7 @@ const FormRegisEmpleado = () => {
         style={styles.input}
         placeholder="Nombre"
         placeholderTextColor="#546574"
+        value={data.nombre}
         onChangeText={text => getValues('nombre', text)}
       />
 
@@ -78,7 +88,8 @@ const FormRegisEmpleado = () => {
         style={styles.input}
         placeholder="Correo Electronico"
         placeholderTextColor="#546574"
-        onChangeText={text => getValues('correo', text)}
+        value={data.email}
+        onChangeText={text => getValues('email', text)}
       />
 
       <TextInput
@@ -86,6 +97,7 @@ const FormRegisEmpleado = () => {
         placeholder="Contraseña"
         placeholderTextColor="#546574"
         secureTextEntry={true}
+        value={data.password}
         onChangeText={text => getValues('password', text)}
       />
 
@@ -93,6 +105,7 @@ const FormRegisEmpleado = () => {
         style={styles.input}
         placeholder="Numero de Telefono"
         placeholderTextColor="#546574"
+        value={data.telefono}
         onChangeText={text => getValues('telefono', text)}
       />
 
@@ -102,9 +115,21 @@ const FormRegisEmpleado = () => {
         onValueChange={handleCargoChange}
         style={styles.picker}
       >
-        <Picker.Item label="" value="" />
+        <Picker.Item label="Seleccionar cargo" value="" />
         {cargosDisponibles.map((cargo, index) => (
           <Picker.Item label={cargo} value={cargo} key={index} />
+        ))}
+      </Picker>
+      
+      <Text>Selecciona un país:</Text>
+        {console.log("countries:", countries)}
+        <Picker
+        selectedValue={countrySelect}
+        onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
+        >
+        <Picker.Item label="Seleccionar país" value="" />
+        {countries && countries.map((country, index) => (
+        <Picker.Item key={index} label={country} value={country} />
         ))}
       </Picker>
 

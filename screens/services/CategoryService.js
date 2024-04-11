@@ -1,9 +1,24 @@
 import apiClient from "../apiss/AxiosConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const getToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        return token;
+    } catch (error) {
+        console.error('Error getting token:', error);
+        throw new Error('Error al obtener el token');
+    }
+};
 
 const createCategory = async (newCategory) => {
     try {
-        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory);
-        
+        const token = await getToken();
+        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory, {
+        headers: {
+            Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+        }
+        });
         return {
             data,
             status
