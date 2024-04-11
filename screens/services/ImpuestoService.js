@@ -1,8 +1,39 @@
 import apiClient from "../apiss/AxiosConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const saveToken = async(token) =>  {
+    try{
+        await AsyncStorage.setItem('token',token);
+        console.log('Token guardado correctamente', token);
+    }catch(error){
+        console.log('Error al guardar el token', error)
+    }
+}
+
+const getToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        if(token!==null){
+            console.log("Token recuperado correctamente:", token);
+            return token;
+        }else{
+            console.log('No se encontro ningun token en AsyncStorage');
+            return null;
+        }
+    } catch (error) {
+        console.error('Error getting token:', error);
+        return null;
+    }
+};
 
 const createImpuesto = async (newImp) => {
     try {
-        const { data, status } = await apiClient.post(`/impuesto/crear`, newImp);
+        const token = await getToken();
+        const { data, status } = await apiClient.post(`/impuesto/crear`, newImp,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return {
             data,
             status,
@@ -15,7 +46,12 @@ const createImpuesto = async (newImp) => {
 
 const listImpuestos = async () => {
     try {
-        const { data,status } = await apiClient.get(`/impuesto/listar`); 
+        const token = await getToken();
+        const { data,status } = await apiClient.get(`/impuesto/listar`,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return {
             data,
             status
@@ -28,7 +64,12 @@ const listImpuestos = async () => {
 
 const editImpuestos = async(id,updateImpuestos) => {
     try {
-        const { data,status } = await apiClient.put(`/impuesto/actualizar/${id}`, updateImpuestos);
+        const token = await getToken();
+        const { data,status } = await apiClient.put(`/impuesto/actualizar/${id}`, updateImpuestos,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return {
             data,
             status
@@ -40,7 +81,12 @@ const editImpuestos = async(id,updateImpuestos) => {
 
   const deleteImpuesto = async(id) => {
     try{
-        const{data, status} = await apiClient.delete(`/impuesto/eliminar/${id}`);
+        const token = await getToken();
+        const{data, status} = await apiClient.delete(`/impuesto/eliminar/${id}`,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return{
             data,
             status
@@ -54,5 +100,6 @@ export {
     listImpuestos,
     editImpuestos,
     deleteImpuesto,
+    saveToken,
   
 }
