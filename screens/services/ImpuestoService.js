@@ -50,7 +50,12 @@ const listImpuestos = async () => {
 
 const editImpuestos = async(id,updateImpuestos) => {
     try {
-        const { data,status } = await apiClient.put(`/impuesto/actualizar/${id}`, updateImpuestos);
+        const token = await getToken();
+        const { data,status } = await apiClient.put(`/impuesto/actualizar/${id}`, updateImpuestos, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return {
             data,
             status
@@ -62,7 +67,12 @@ const editImpuestos = async(id,updateImpuestos) => {
 
   const deleteImpuesto = async(id) => {
     try{
-        const{data, status} = await apiClient.delete(`/impuesto/eliminar/${id}`);
+        const token = await getToken();
+        const{data, status} = await apiClient.delete(`/impuesto/eliminar/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return{
             data,
             status
