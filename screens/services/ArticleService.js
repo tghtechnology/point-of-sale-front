@@ -49,7 +49,12 @@ const listArticles = async () => {
 
 const editArticles = async (id, updateArticle) => {
     try {
-        const { data, status } = await apiClient.put(`/articulo/actualizar/${id}`, updateArticle);
+        const token = await getToken();
+        const { data, status } = await apiClient.put(`/articulo/actualizar/${id}`, updateArticle, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return {
             data,
             status
@@ -61,7 +66,12 @@ const editArticles = async (id, updateArticle) => {
 
 const deleteArticles = async (text_id) => {
     try {
-        const { data, status } = await apiClient.delete(`/articulo/eliminar/${text_id}`);
+        const token = await getToken();
+        const { data, status } = await apiClient.delete(`/articulo/eliminar/${text_id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return {
             data,
             status
