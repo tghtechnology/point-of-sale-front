@@ -122,7 +122,6 @@ const FormRegisEmpleado = () => {
       </Picker>
       
       <Text>Selecciona un país:</Text>
-        {console.log("countries:", countries)}
         <Picker
         selectedValue={countrySelect}
         onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}

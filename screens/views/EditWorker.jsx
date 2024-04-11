@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Picker, Modal, TextInput } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
 import useWorker from '../hooks/useWorker';
+import useCountry from '../hooks/useCountry';
 import WorkerProvider from '../context/worker/WorkerProvider';
 import CustomAlert from '../componentes/CustomAlert';
 
@@ -11,14 +11,62 @@ const INITIAL_STATE = {
     email: '',
     password: '',
     telefono: '',
-    cargo: '', // Establecer el valor inicial del cargo aquí
-  }
+    cargo: '',
+    pais:'', // Establecer el valor inicial del cargo aquí
+  };
+
+  const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
 
 const EditWorker = () => {
+    const route = useRoute();
     const {handleEditWorker, handleUpdateWorker } = useWorker()
     const [editedData, setEditedData] = useState(INITIAL_STATE);
-    const [selectedWorker, setselectedWorker] = useState({});
+    const [selectedCountry, setSelectedCountry] = useState('');
+    const [cargo, setCargo] = useState('');
+    const { countries,fetchCountries} = useCountry();
+    const [showAlert, setShowAlert] = useState(false);
+    const [successEditAlertVisible, setSuccessEditAlertVisible] = useState(false);
+    const [errorEditAlertVisible, setErrorEditAlertVisible] = useState(false);
 
+    const handleCargoChange = (cargoSeleccionado) => {
+      setCargo(cargoSeleccionado);
+      handleChange('cargo', cargoSeleccionado);
+  };
+
+    useEffect(() => {
+      fetchCountries(); 
+    }, []);
+
+    useEffect(() => {
+      // Verificamos si existe el parámetro "work" en la ruta.
+      const { work } = route.params;
+      // Inicializamos el estado editedData con los datos del empleado seleccionado.
+      setEditedData(work || INITIAL_STATE);
+      // Inicializamos los estados para otros campos si es necesario.
+      setSelectedCountry(work ? work.pais : '');
+      setCargo(work ? work.cargo : '')
+  }, [route.params]);
+
+    const handleChange = (name, value) => {
+      setEditedData({
+        ...editedData,
+        [name]: value,
+      });
+    };
+
+    const handleSubmit = async () => {
+      try {
+        await handleEditWorker(editedData.id, editedData);
+        await handleUpdateWorker(editedData.id, editedData);
+        setShowAlert(true);
+        //navigation.goBack();
+      } catch (error) {
+        console.error('Error al editar el cliente:', error);
+      }
+    };
+    const handleCloseAlert = () => {
+      setShowAlert(false);
+    };
 
 return (
     <View style={styles.container}>
@@ -42,28 +90,20 @@ return (
       />
       <TextInput
         style={styles.input}
-        placeholder="Dirección"
-        value={editedData.direccion}
-        onChangeText={(text) => handleChange('direccion', text)}
+        placeholder="password"
+        value={editedData.password}
+        onChangeText={(text) => handleChange('password', text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Ciudad"
-        value={editedData.ciudad}
-        onChangeText={(text) => handleChange('ciudad', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Región"
-        value={editedData.region}
-        onChangeText={(text) => handleChange('region', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Código Postal"
-        value={editedData.codigo_postal}
-        onChangeText={(text) => handleChange('codigo_postal', text)}
-      />
+      <Text style={styles.label}>Cargo</Text>
+      <Picker
+          style={styles.picker}
+          selectedValue={cargo}
+          onValueChange={handleCargoChange}
+          >
+          {cargosDisponibles.map((cargo, index) => (
+          <Picker.Item label={cargo} value={cargo} key={index} />
+        ))}
+      </Picker>
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>País</Text>
         <Picker
@@ -74,7 +114,6 @@ return (
             handleChange('pais', itemValue); 
           }}
         >
-          <Picker.Item label="Seleccionar país" value="" />
           {countries.map((country, index) => (
             <Picker.Item key={index} label={country} value={country} /> 
           ))}
@@ -90,6 +129,23 @@ return (
         message="El cliente se ha editado correctamente."
         buttonColor="#2196F3"
         iconName="check-circle" 
+      />
+      <CustomAlert
+        isVisible={successEditAlertVisible}
+        onClose={() => setSuccessEditAlertVisible(false)}
+        title="Actualizacion exitoso"
+        message="Empleado Actualizado Exitoso."
+        buttonColor="green"
+        iconName="check"
+      />
+
+      <CustomAlert
+        isVisible={errorEditAlertVisible}
+        onClose={() => setErrorEditAlertVisible(false)}
+        title="Error"
+        message="Error al Actualizar Empleado"
+        buttonColor="red"
+        iconName="times-circle"
       />
     </View>
   );

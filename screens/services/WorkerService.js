@@ -2,24 +2,27 @@ import apiClient from "../apiss/AxiosConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const saveToken = async (token) => {
-    try {
-      await AsyncStorage.setItem('token', token);
-    } catch (error) {
-      console.error('Error al guardar el token:', error);
-      throw new Error('Error al guardar el token en AsyncStorage');
-    }
-  };
+  try {
+    await AsyncStorage.setItem('token', token);
+    console.log('Token guardado correctamente:', token);
+  } catch (error) {
+    console.error('Error al guardar el token:', error);
+  }
+};
 
 const getToken = async () => {
   try {
     const token = await AsyncStorage.getItem('token');
-    if (token === null) {
-      throw new Error('Token no encontrado en AsyncStorage');
+    if (token !== null) {
+      console.log('Token recuperado correctamente:', token);
+      return token;
+    } else {
+      console.log('No se encontró ningún token en AsyncStorage');
+      return null;
     }
-    return token;
   } catch (error) {
-    console.error('Error al obtener el token:', error);
-    throw new Error('Error al obtener el token desde AsyncStorage');
+    console.error('Error al recuperar el token:', error);
+    return null;
   }
 };
 
@@ -44,6 +47,7 @@ const createWorker = async (newWorker) => {
 const getWorkers = async () => {
     try {
       const token = await getToken();
+      console.log('tu token es:',token)
       const response = await apiClient.get(`/empleado`, {
         headers: {
           Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
@@ -59,37 +63,49 @@ const getWorkers = async () => {
 const editworker = async (id, updatedWorker) => {
     try {
         const token = await getToken();
-        const response = await apiClient.put(`/empleado/${id}`, updatedWorker, {
-            headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
-            }
-        });
-        if (response.status === 200) {
-            // Si la respuesta es 200, devuelve los datos actualizados del descuento
-            return response.data;
-        }
-    } catch (error) {
-        console.error('Error editing worker:', error);
-        throw new Error('Error al editar el empleado');
-    }
+        const { data,status } = await apiClient.put(`/empleado/${id}`,updatedWorker,{
+          headers:{
+                  Authorization: `Bearer ${token}` 
+              }
+          });
+      return {
+          data,
+          status
+      }; 
+  } catch (error) {
+    throw new Error('Error al editar el empleado');
+  }
 };
 
 const deleteworker = async (id) => {
     try {
-        const { data, status } = await apiClient.delete(`/empleado/${id}`);
-        return {
-            data,
-            status
-        };
-    } catch (error) {
-        console.log('Error:', error.response.data);
-    }
+        const token = await getToken();
+        const {data, status} = await apiClient.delete(`/empleado/${id}`,{
+          headers:{
+                  Authorization: `Bearer ${token}` 
+              }
+          });
+      return{
+          data,
+          status
+      };
+  }catch (error) {
+      console.log('Error:',error.response.data);
+  }
 }
 
 const updatedWorker = async (id, newData) => {
     try {
-        const response = await apiClient.put(`/empleado/${id}`, newData);
-        return response.data;
+        const token = await getToken();
+        const {data, status} = await apiClient.put(`/empleado/${id}`, newData, {
+          headers: {
+              Authorization: `Bearer ${token}`
+          }
+      });
+      return{
+        data,
+        status
+    };
     } catch (error) {
         throw new Error(`Error al actualizar el empleado: ${error.message}`);
     }

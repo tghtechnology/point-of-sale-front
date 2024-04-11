@@ -130,7 +130,6 @@ const INITIAL_STATE = {
           {/* INPUT PARA SELECCIONAR PAIS */}
         <View style={styles.inputContainer}>
         <Text style={styles.label}>Selecciona un país:</Text>
-        {console.log("countries:", countries)}
         <Picker
         selectedValue={countrySelect}
         onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}

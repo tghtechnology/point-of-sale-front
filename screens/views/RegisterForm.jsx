@@ -116,7 +116,7 @@ const RegisterForm = () => {
           placeholder="Nombre del Negocio"
           placeholderTextColor="#546574"
           value={dataForm.nombreNegocio}
-          onChangeText={text => getValues('nombre', text)}
+          onChangeText={text => getValues('nombreNegocio', text)}
         />
         
         <Text>Seleccione un cargo:</Text>
