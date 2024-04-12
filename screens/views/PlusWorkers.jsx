@@ -105,7 +105,7 @@ const PlusWorkers = (props) => {
 
             <CustomAlert
                 isVisible={showAlert}
-                onClose={() => handleCloseAlert}
+                onClose={handleCloseAlert}
                 title="Eliminado exitoso"
                 message="Empleado Eliminado Exitoso."
                 buttonColor="green"
