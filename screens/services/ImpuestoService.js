@@ -1,28 +1,13 @@
 import apiClient from "../apiss/AxiosConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const saveToken = async(token) =>  {
-    try{
-        await AsyncStorage.setItem('token',token);
-        console.log('Token guardado correctamente', token);
-    }catch(error){
-        console.log('Error al guardar el token', error)
-    }
-}
-
 const getToken = async () => {
     try {
         const token = await AsyncStorage.getItem('token');
-        if(token!==null){
-            console.log("Token recuperado correctamente:", token);
-            return token;
-        }else{
-            console.log('No se encontro ningun token en AsyncStorage');
-            return null;
-        }
+        return token;
     } catch (error) {
         console.error('Error getting token:', error);
-        return null;
+        throw new Error('Error al obtener el token');
     }
 };
 
@@ -100,6 +85,6 @@ export {
     listImpuestos,
     editImpuestos,
     deleteImpuesto,
-    saveToken,
+
   
 }

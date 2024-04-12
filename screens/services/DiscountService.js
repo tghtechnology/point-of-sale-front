@@ -1,8 +1,23 @@
 import apiClient from "../apiss/AxiosConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const getToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        return token;
+    } catch (error) {
+        console.error('Error getting token:', error);
+        throw new Error('Error al obtener el token');
+    }
+};
 const createDiscount = async (newDiscount) => {
     try {
-        const {data, status} = await apiClient.post(`/descuento`, newDiscount);
+        const token = await getToken();
+        const {data, status} = await apiClient.post(`/descuento`, newDiscount,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return {
             data,
             status
@@ -14,7 +29,12 @@ const createDiscount = async (newDiscount) => {
 
 const getDiscounts = async () => {
     try {
-        const response = await apiClient.get(`/descuento`);
+        const token = await getToken();
+        const response = await apiClient.get(`/descuento`,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return response.data; // Devuelve los datos de los descuentos
     } catch (error) {
         console.log(error);
@@ -24,7 +44,12 @@ const getDiscounts = async () => {
 
 const getCeroDiscounts = async () => {
     try {
-        const response = await apiClient.get('/descuentosEliminados');
+        const token = await getToken();
+        const response = await apiClient.get('/descuentosEliminados',{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return response.data; // Devuelve los datos de los descuentos
     } catch (error) {
         console.log(error);
@@ -34,7 +59,12 @@ const getCeroDiscounts = async () => {
 
 const updateDiscountStatus = async (id, newStatus) => {
     try {
-        const response = await apiClient.put(`/descuento/${id}/cambiar-estado`, { estado: newStatus });
+        const token = await getToken();
+        const response = await apiClient.put(`/descuento/${id}/cambiar-estado`, { estado: newStatus },{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         console.log('Response from updateDiscountStatus:', response);
         if (response.status === 204) {
             // Si la respuesta es 204, devolver un objeto vacío para indicar éxito
@@ -51,7 +81,12 @@ const updateDiscountStatus = async (id, newStatus) => {
 const editDiscount = async (id, updatedData) => {
     console.log(id)
     try {
-      const response = await apiClient.put(`/descuento/${id}`, updatedData);
+      const token = await getToken();
+      const response = await apiClient.put(`/descuento/${id}`, updatedData,{
+        headers:{
+                Authorization: `Bearer ${token}` 
+            }
+        });
       if (response.status === 200) {
         // Si la respuesta es 200, devuelve los datos actualizados del descuento
         return response.data;
@@ -64,7 +99,12 @@ const editDiscount = async (id, updatedData) => {
 
   const updateDiscount = async (id, newData) => {
     try {
-        const response = await apiClient.put(`/descuento/${id}`, newData);
+        const token = await getToken();
+        const response = await apiClient.put(`/descuento/${id}`, newData,{
+            headers:{
+                    Authorization: `Bearer ${token}` 
+                }
+            });
         return response.data;
     } catch (error) {
         throw new Error(`Error al actualizar el descuento: ${error.message}`);
