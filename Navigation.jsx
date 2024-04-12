@@ -35,6 +35,7 @@ import RecibosScreen from './screens/views/RecibosScreen';
 import VentNavigate from './screens/views/VentNavigate';
 import TicketFormHome from './screens/views/TicketFormHome';
 import ReceiptForm from './screens/views/ReceiptForm';
+import EditWorker from './screens/views/EditWorker';
 
 
 function StackNavigation() {
@@ -181,6 +182,7 @@ function MiembrosScreen() {
         },
       }}></Stack.Screen>
       <Stack.Screen name="Empleados" component={PlusWorkers}></Stack.Screen>
+      <Stack.Screen name="Editar empleado" component={EditWorker}></Stack.Screen>
       <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Todos los miembros",
      headerRight: () => (
       

@@ -86,7 +86,7 @@ useEffect(() => {
        </TouchableOpacity>
        <CustomAlert
         isVisible={showAlert}
-        onClose={handleCloseAlert}
+        onClose={() => handleCloseAlert}
         title="Cliente Eliminado"
         message="El cliente se ha eliminado correctamente."
         buttonColor="#2196F3"
