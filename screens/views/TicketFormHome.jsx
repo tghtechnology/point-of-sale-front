@@ -6,14 +6,27 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../hooks/useArticle";
 import useDiscount from '../hooks/useDiscount'
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const TicketFormHome = () => {
   const { listArticle } = useArticle();
-  const {discounts} = useDiscount();
+  const { discounts } = useDiscount();
   const [selectedValue, setSelectedValue] = useState('default');
+  //Prueba guardar Productos en Asyng Storage
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  
+  const handleSelectItem = async (item) => {
+    setSelectedItem(item);
+    // Guardar el artículo seleccionado en AsyncStorage
+    try {
+      await AsyncStorage.setItem('selectedItem', JSON.stringify(item));
+      console.log('Artículo seleccionado guardado:', item);
+    } catch (error) {
+      console.error('Error saving item to AsyncStorage:', error);
+    }
+  };
+  //
 
 
   return (
@@ -44,11 +57,13 @@ const TicketFormHome = () => {
           <FlatList
             data={listArticle}
             renderItem={({ item }) => (
-              <View style={styles.item}>
-                <View style={styles.circle} />
-                <Text style={styles.itemText}>{item.nombre}</Text>
-                <Text style={styles.priceText}>S/ {item.precio}</Text>
-              </View>
+              <TouchableOpacity onPress={() => handleSelectItem(item)}>
+                <View style={styles.item}>
+                  <View style={styles.circle} />
+                  <Text style={styles.itemText}>{item.nombre}</Text>
+                  <Text style={styles.priceText}>S/ {item.precio}</Text>
+                </View>
+              </TouchableOpacity>
             )}
           />
         </View>
