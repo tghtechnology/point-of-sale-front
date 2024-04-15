@@ -1,4 +1,4 @@
-import React, {FlatList } from 'react-native';
+import React, { FlatList } from 'react-native';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -6,37 +6,38 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
-import TicketFormHome from './TicketFormHome';
 
 
 const TicketListForm = () => {
-    const [savedItems, setSavedItems] = useState([]); // Nuevo estado para almacenar la lista de artículos guardados
+    const [selectedItem, setSelectedItem] = useState(null); // Nuevo estado para almacenar la lista de artículos guardados
 
     useEffect(() => {
-        // Recuperar la lista de artículos guardados al cargar el componente
-        const fetchSavedItems = async () => {
+        const getSelectedItem = async () => {
             try {
-                const savedItemsJSON = await AsyncStorage.getItem('savedItems');
-                if (savedItemsJSON !== null) {
-                    setSavedItems(JSON.parse(savedItemsJSON));
+                const item = await AsyncStorage.getItem('selectedItem');
+                if (item !== null) {
+                    setSelectedItem(JSON.parse(item));
                 }
             } catch (error) {
-                console.error('Error fetching saved items from AsyncStorage:', error);
+                console.log('Error retrieving selected item:', error);
             }
         };
 
-        fetchSavedItems();
+        getSelectedItem();
     }, []); // Ejecutar solo una vez al cargar el componente
 
 
+    
+
     return (
         <View style={styles.container}>
-            {/* Mostrar el nombre y precio del artículo guardado en otro formulario */}
-            {savedItems.map((savedItem, index) => (
-                <View key={index} style={styles.item}>
-                    <TicketFormHome item={savedItem} />
+            {selectedItem && (
+                <View>
+                    <Text>{selectedItem.nombre}</Text>
+                    <Text>{selectedItem.precio}</Text>
+                    {/* Display other properties of the selected item */}
                 </View>
-            ))}
+            )}
         </View>
     );
 };
