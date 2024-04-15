@@ -26,7 +26,7 @@ const TicketFormHome = () => {
     setSelectedItems(prevItems => [...prevItems, item]);
     // Guardar el artículo seleccionado en AsyncStorage si es necesario
     try {
-      await AsyncStorage.setItem('selectedItem', JSON.stringify(item));
+      await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
       console.log('Artículo seleccionado guardado:', item);
       setShowAlert(true);
     } catch (error) {

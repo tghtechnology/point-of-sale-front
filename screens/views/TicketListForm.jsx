@@ -9,12 +9,13 @@ import { useEffect } from 'react';
 
 
 const TicketListForm = () => {
-    const [selectedItem, setSelectedItem] = useState(null); // Nuevo estado para almacenar la lista de artículos guardados
+    const [selectedItem, setSelectedItem] = useState([]); // Nuevo estado para almacenar la lista de artículos guardados
 
     useEffect(() => {
         const getSelectedItem = async () => {
             try {
                 const item = await AsyncStorage.getItem('selectedItem');
+                console.log("item",item)
                 if (item !== null) {
                     setSelectedItem(JSON.parse(item));
                 }
@@ -30,14 +31,14 @@ const TicketListForm = () => {
     
 
     return (
-        <View style={styles.container}>
-            {selectedItem && (
-                <View>
-                    <Text>{selectedItem.nombre}</Text>
-                    <Text>{selectedItem.precio}</Text>
+        <View style={styles.itemList}>
+            {selectedItem?.map(itm => (
+                <View key={itm.id} style={styles.item}>
+                    <Text style={styles.itemText}>{itm.nombre}</Text>
+                    <Text style={styles.priceText}>S/ {itm.precio}</Text>
                     {/* Display other properties of the selected item */}
                 </View>
-            )}
+            ))}
         </View>
     );
 };
@@ -88,6 +89,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 10,
         alignItems: 'center',
+        backgroundColor:'lightblue'
     },
     magnifies: {
         border: 1,
