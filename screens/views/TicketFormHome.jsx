@@ -7,7 +7,7 @@ import useArticle from "../hooks/useArticle";
 import useDiscount from '../hooks/useDiscount'
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useNavigation } from '@react-navigation/native';
 
 const TicketFormHome = () => {
   const { listArticle } = useArticle();
@@ -15,6 +15,7 @@ const TicketFormHome = () => {
   const [selectedValue, setSelectedValue] = useState('default');
   //Prueba guardar Productos en Asyng Storage
   const [selectedItem, setSelectedItem] = useState(null);
+  const navigation = useNavigation();
 
   const handleSelectItem = async (item) => {
     setSelectedItem(item);
@@ -28,10 +29,13 @@ const TicketFormHome = () => {
   };
   //
 
+  const showListArticles = () => {
+    navigation.navigate('ListarTicket');
+  };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.cobrarButton}>
+      <TouchableOpacity style={styles.cobrarButton} onPress={showListArticles}>
         <Text style={styles.cobrarText}>COBRAR</Text>
         <Text style={styles.amountText}>S/0.00</Text>
       </TouchableOpacity>

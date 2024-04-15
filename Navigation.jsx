@@ -36,6 +36,7 @@ import VentNavigate from './screens/views/VentNavigate';
 import TicketFormHome from './screens/views/TicketFormHome';
 import ReceiptForm from './screens/views/ReceiptForm';
 import EditWorker from './screens/views/EditWorker';
+import TicketListForm from './screens/views/TicketListForm';
 
 
 function StackNavigation() {
@@ -47,6 +48,7 @@ return (
       <Stack.Screen name="Login" component={LoginForm} />
       <Stack.Screen name="Register" component={RegisterForm} />
       <Stack.Screen name="Envio" component={EnvioCorreoForm} />
+      <Stack.Screen name="ListarTicket" component={TicketListForm} />
       <Stack.Screen name="Home" component={HomeScreen}
         options={{title: "Soporte",
           headerLeft: () => {
