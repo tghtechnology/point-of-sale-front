@@ -8,21 +8,27 @@ import useDiscount from '../hooks/useDiscount'
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import CustomAlert from '../componentes/CustomAlert';
 
 const TicketFormHome = () => {
+  const [showAlert, setShowAlert] = useState(false);
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const [selectedValue, setSelectedValue] = useState('default');
   //Prueba guardar Productos en Asyng Storage
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
   const navigation = useNavigation();
 
   const handleSelectItem = async (item) => {
     setSelectedItem(item);
-    // Guardar el artículo seleccionado en AsyncStorage
+    // Agregar el artículo seleccionado a la lista de seleccionados
+    setSelectedItems(prevItems => [...prevItems, item]);
+    // Guardar el artículo seleccionado en AsyncStorage si es necesario
     try {
       await AsyncStorage.setItem('selectedItem', JSON.stringify(item));
       console.log('Artículo seleccionado guardado:', item);
+      setShowAlert(true);
     } catch (error) {
       console.error('Error saving item to AsyncStorage:', error);
     }
@@ -31,6 +37,10 @@ const TicketFormHome = () => {
 
   const showListArticles = () => {
     navigation.navigate('ListarTicket');
+  };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
   };
 
   return (
@@ -59,7 +69,7 @@ const TicketFormHome = () => {
       {selectedValue === 'default' && (
         <View style={styles.itemList}>
           <FlatList
-            data={listArticle}
+            data={listArticle.filter(item => !selectedItems.some(selectedItem => selectedItem.id === item.id))}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handleSelectItem(item)}>
                 <View style={styles.item}>
@@ -94,6 +104,15 @@ const TicketFormHome = () => {
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
       </View>
+
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Producto Seleccionado"
+        message="El producto se guardo correctamente."
+        buttonColor="#FF0000"
+        iconName="list" // Puedes cambiar el icono según lo desees
+      />
     </View>
   );
 };

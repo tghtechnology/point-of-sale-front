@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import TicketFormHome from './TicketFormHome';
 
+
 const TicketListForm = () => {
     const [savedItems, setSavedItems] = useState([]); // Nuevo estado para almacenar la lista de artículos guardados
 
