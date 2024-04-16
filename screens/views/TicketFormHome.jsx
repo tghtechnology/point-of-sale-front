@@ -21,12 +21,15 @@ const TicketFormHome = () => {
   const navigation = useNavigation();
 
   const handleSelectItem = async (item) => {
-    setSelectedItem(item);
-    // Agregar el artículo seleccionado a la lista de seleccionados
-    setSelectedItems(prevItems => [...prevItems, item]);
-    // Guardar el artículo seleccionado en AsyncStorage si es necesario
+    let updatedItems;
+    if (selectedItems.some(selectedItem => selectedItem.id === item.id)) {
+      updatedItems = selectedItems.filter(selectedItem => selectedItem.id !== item.id);
+    } else {
+      updatedItems = [...selectedItems, item];
+    }
+    setSelectedItems(updatedItems);
     try {
-      await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
+      await AsyncStorage.setItem('selectedItem', JSON.stringify(updatedItems));
       console.log('Artículo seleccionado guardado:', item);
       setShowAlert(true);
     } catch (error) {
@@ -42,6 +45,19 @@ const TicketFormHome = () => {
   const handleCloseAlert = () => {
     setShowAlert(false);
   };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleSelectItem(item)}>
+      <View style={styles.item}>
+        <TouchableOpacity
+          style={[styles.circle, selectedItems.some(selectedItem => selectedItem.id === item.id) && styles.circleSelected]}
+          onPress={() => handleSelectItem(item)}
+        />
+        <Text style={styles.itemText}>{item.nombre}</Text>
+        <Text style={styles.priceText}>S/ {item.precio}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -70,15 +86,7 @@ const TicketFormHome = () => {
         <View style={styles.itemList}>
           <FlatList
             data={listArticle.filter(item => !selectedItems.some(selectedItem => selectedItem.id === item.id))}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handleSelectItem(item)}>
-                <View style={styles.item}>
-                  <View style={styles.circle} />
-                  <Text style={styles.itemText}>{item.nombre}</Text>
-                  <Text style={styles.priceText}>S/ {item.precio}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
+            renderItem={renderItem}
           />
         </View>
       )}
@@ -174,8 +182,13 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: '#000', // Color del borde del círculo no seleccionado
+    backgroundColor: '#FFF', // Color del círculo no seleccionado
     marginRight: 10,
+  },
+  circleSelected: {
+    backgroundColor: 'blue', // Color del círculo seleccionado
+    borderColor: 'blue', // Color del borde del círculo seleccionado
   },
   itemText: {
     flex: 1,
