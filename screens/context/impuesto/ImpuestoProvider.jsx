@@ -27,7 +27,7 @@ const ImpuestoProvider = ({ children }) => {
     try {
         const res = await createImpuesto({ nombre, tasa, tipo_impuesto });
         if(res.status==200 || res.status == 201){
-          return true;
+          return res.data;
         }
         else{
           return null;

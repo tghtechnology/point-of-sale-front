@@ -23,11 +23,14 @@ const CategoryForm = () => {
       [name]:value
     })
   }
+
+
   const SubmitCategory = async () => {
   try {
     console.log("Datos a enviar al servidor:", datos);
     const nuevaCategoria = await handleCreateCategory(datos);
     if(nuevaCategoria && nuevaCategoria.id){
+      console.log('Una categoria',nuevaCategoria.id)
       setListCategoria([...listCategoria, nuevaCategoria]);
       setShowAlert(true);
       setDatos(INITIAL_STATE);
