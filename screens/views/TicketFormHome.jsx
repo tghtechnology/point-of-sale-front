@@ -16,6 +16,7 @@ const TicketFormHome = () => {
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const [selectedValue, setSelectedValue] = useState('default');
+  const [quantity, setQuantity] = useState(1);
   //Prueba guardar Productos en Asyng Storage
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -52,6 +53,16 @@ const TicketFormHome = () => {
     setShowAlertDeselect(false);
   };
 
+  const handleAddQuantity = () => {
+    setQuantity(prevQuantity => prevQuantity + 1);
+  };
+
+  const handleSubtractQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(prevQuantity => prevQuantity - 1);
+    }
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <TouchableOpacity
@@ -60,6 +71,20 @@ const TicketFormHome = () => {
         onPress={() => handleSelectItem(item)}
       />
       <Text style={styles.itemText}>{item.nombre}</Text>
+      <View style={styles.quantityContainer}>
+        <TouchableOpacity onPress={handleSubtractQuantity}>
+          <Text style={styles.quantityButton}>-</Text>
+        </TouchableOpacity>
+        <TextInput
+          style={styles.quantityInput}
+          value={String(quantity)}
+          onChangeText={text => setQuantity(parseInt(text) || 0)}
+          keyboardType="numeric"
+        />
+        <TouchableOpacity onPress={handleAddQuantity}>
+          <Text style={styles.quantityButton}>+</Text>
+        </TouchableOpacity>
+      </View>
       <Text style={styles.priceText}>S/ {item.precio}</Text>
     </View>
   );
@@ -203,6 +228,25 @@ const styles = StyleSheet.create({
   circleSelected: {
     backgroundColor: 'blue', // Color del círculo seleccionado
     borderColor: 'blue', // Color del borde del círculo seleccionado
+  },quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  quantityInput: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    marginRight: 5,
+    width: 40,
+    textAlign: 'center',
+  },
+  quantityButton: {
+    backgroundColor: 'lightgray',
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    textAlign: 'center',
   },
   itemText: {
     flex: 1,
