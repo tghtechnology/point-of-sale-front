@@ -47,16 +47,15 @@ const TicketFormHome = () => {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleSelectItem(item)}>
-      <View style={styles.item}>
-        <TouchableOpacity
-          style={[styles.circle, selectedItems.some(selectedItem => selectedItem.id === item.id) && styles.circleSelected]}
-          onPress={() => handleSelectItem(item)}
-        />
-        <Text style={styles.itemText}>{item.nombre}</Text>
-        <Text style={styles.priceText}>S/ {item.precio}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.item}>
+      <TouchableOpacity
+        style={[styles.circle,
+        selectedItems.some(selectedItem => selectedItem.id === item.id) && styles.circleSelected]}
+        onPress={() => handleSelectItem(item)}
+      />
+      <Text style={styles.itemText}>{item.nombre}</Text>
+      <Text style={styles.priceText}>S/ {item.precio}</Text>
+    </View>
   );
 
   return (
@@ -85,7 +84,7 @@ const TicketFormHome = () => {
       {selectedValue === 'default' && (
         <View style={styles.itemList}>
           <FlatList
-            data={listArticle.filter(item => !selectedItems.some(selectedItem => selectedItem.id === item.id))}
+            data={listArticle}
             renderItem={renderItem}
           />
         </View>
