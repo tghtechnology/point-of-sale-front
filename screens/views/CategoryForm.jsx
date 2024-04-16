@@ -24,20 +24,22 @@ const CategoryForm = () => {
     })
   }
   const SubmitCategory = async () => {
-    try {
-      const response = await handleCreateCategory(datos);
-      if(response){
-        setDatos(INITIAL_STATE);
-        setListCategoria([...listCategoria,datos]);
-        setShowAlert(true);
-      } else {
-        alert("La categoría no se pudo crear");
-      }
-    } catch (error) {
-      alert("Problema interno del servidor");
+  try {
+    console.log("Datos a enviar al servidor:", datos);
+    const nuevaCategoria = await handleCreateCategory(datos);
+    if(nuevaCategoria && nuevaCategoria.id){
+      setListCategoria([...listCategoria, nuevaCategoria]);
+      setShowAlert(true);
+      setDatos(INITIAL_STATE);
+    } else {
+      alert("La categoría no se pudo crear");
     }
-    console.log("Valor del formulario: " + JSON.stringify(datos));
+  } catch (error) {
+    alert("Problema interno del servidor");
   }
+  console.log("Valor del formulario: " + JSON.stringify(datos));
+}
+
 
   const handleCloseAlert = () => {
     setShowAlert(false);

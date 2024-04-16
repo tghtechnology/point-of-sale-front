@@ -48,6 +48,10 @@ export default function ImpuestoForm() {
     console.log("Valor del formulario: " + JSON.stringify(datos));
   };
 
+
+
+  
+
   const handleCloseAlert = () => {
     setShowAlert(false);
 };

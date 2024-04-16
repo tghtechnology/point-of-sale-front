@@ -25,11 +25,16 @@ const ImpuestoProvider = ({ children }) => {
   const handleCreateImp = async (newImp) => {
     const { nombre, tasa, tipo_impuesto } = newImp;
     try {
-        const status = await createImpuesto({ nombre, tasa, tipo_impuesto });
-        return status === 200 || status === 201;
+        const res = await createImpuesto({ nombre, tasa, tipo_impuesto });
+        if(res.status==200 || res.status == 201){
+          return true;
+        }
+        else{
+          return null;
+        }
     } catch (error) {
         console.log("Error creating impuesto:", error);
-        return false;
+        return null;
     }
 };
 
