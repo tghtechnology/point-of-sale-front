@@ -16,7 +16,7 @@ const TicketFormHome = () => {
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const [selectedValue, setSelectedValue] = useState('default');
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
   //Prueba guardar Productos en Asyng Storage
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -78,7 +78,7 @@ const TicketFormHome = () => {
         <TextInput
           style={styles.quantityInput}
           value={String(quantity)}
-          onChangeText={text => setQuantity(parseInt(text) || 0)}
+          onChangeText={text => handleQuantityChange(item.id, parseInt(text) || 0)}
           keyboardType="numeric"
         />
         <TouchableOpacity onPress={handleAddQuantity}>
