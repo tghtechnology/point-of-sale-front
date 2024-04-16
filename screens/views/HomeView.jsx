@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
   container2: {
     display:'flex',
     flexDirection: 'column',
-    gap:'5px',
     marginTop:'50px'
   },
     section: {
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight:'400',
-    fontSize:'1.5rem'
+    fontSize:24
   },
 });
 export default HomeView;
