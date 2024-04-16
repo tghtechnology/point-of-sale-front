@@ -35,18 +35,21 @@ export default function ImpuestoForm() {
   const SubmitImpuesto = async () => {
     try {
       console.log("Datos a enviar al servidor:", datos);
-      const response = await handleCreateImp(datos);
-      if (response) {
+      const nuevoImpuesto = await handleCreateImp(datos);
+      if (nuevoImpuesto && nuevoImpuesto.id) {
+        setListImpuesto([...listImpuesto, nuevoImpuesto]);
+        setShowAlert(true);
         setDatos(INITIAL_STATE);
       } else {
-        setListImpuesto([...listImpuesto,datos]);
-        setShowAlert(true);
+        throw new Error("La respuesta del servidor no contiene un impuesto válido.");
       }
     } catch (error) {
-      console.log("Problema interno del servidor", error);
+      console.log("Error al crear el impuesto:", error.message);
+    
     }
-    console.log("Valor del formulario: " + JSON.stringify(datos));
   };
+  
+  
 
   const handleCloseAlert = () => {
     setShowAlert(false);
