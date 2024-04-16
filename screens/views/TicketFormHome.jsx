@@ -12,6 +12,7 @@ import CustomAlert from '../componentes/CustomAlert';
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlertDeselect, setShowAlertDeselect] = useState(false);
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const [selectedValue, setSelectedValue] = useState('default');
@@ -24,14 +25,15 @@ const TicketFormHome = () => {
     let updatedItems;
     if (selectedItems.some(selectedItem => selectedItem.id === item.id)) {
       updatedItems = selectedItems.filter(selectedItem => selectedItem.id !== item.id);
+      setShowAlertDeselect(true)
     } else {
       updatedItems = [...selectedItems, item];
+      setShowAlert(true);
     }
     setSelectedItems(updatedItems);
     try {
       await AsyncStorage.setItem('selectedItem', JSON.stringify(updatedItems));
       console.log('Artículo seleccionado guardado:', item);
-      setShowAlert(true);
     } catch (error) {
       console.error('Error saving item to AsyncStorage:', error);
     }
@@ -44,6 +46,10 @@ const TicketFormHome = () => {
 
   const handleCloseAlert = () => {
     setShowAlert(false);
+  };
+
+  const handleCloseAlertDeselect = () => {
+    setShowAlertDeselect(false);
   };
 
   const renderItem = ({ item }) => (
@@ -116,6 +122,15 @@ const TicketFormHome = () => {
         isVisible={showAlert}
         onClose={handleCloseAlert}
         title="Producto Seleccionado"
+        message="El producto se guardo correctamente."
+        buttonColor="#FF0000"
+        iconName="list" // Puedes cambiar el icono según lo desees
+      />
+
+      <CustomAlert
+        isVisible={showAlertDeselect}
+        onClose={handleCloseAlertDeselect}
+        title="Producto Deseleccionado"
         message="El producto se guardo correctamente."
         buttonColor="#FF0000"
         iconName="list" // Puedes cambiar el icono según lo desees
