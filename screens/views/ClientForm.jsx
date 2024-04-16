@@ -41,14 +41,14 @@ const INITIAL_STATE = {
         }   
         //control de errores para el crear un usuario
         try {
-          const response = await handleCreateClient(objectSend);
-          if(response){
+          const nuevoCliente = await handleCreateClient(objectSend);
+          if(nuevoCliente && nuevoCliente.id){
             setData(INITIAL_STATE);
             setCountrySelect('');
-            setClient([...client, objectSend]);
+            setClient([...client, nuevoCliente]);
             setShowAlert(true);
           }else{
-            alert("El Cliente no se pudo crear");
+            throw new Error("La respuesta del servidor no contiene un impuesto válido.");
           }
         } catch (error) {
           alert("problema interno del servidor")
