@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
 import CustomAlert from '../componentes/CustomAlert';
-
+import ImagePicker from 'react-native-image-picker';
 
 const INITIAL_STATE = {
   nombre: "",
@@ -27,6 +27,14 @@ export default function ArticlesForm() {
   const [value, setValue] = useState('color');
   const { handleCreateArticle,listArticle,setListArticle} = useArticle();
   const { listCategoria } = useCategory();
+
+  const options = {
+    title: 'Selecciona una imagen',
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
 
   const getValues = (name, value) => {
     setDatos({
@@ -148,18 +156,14 @@ export default function ArticlesForm() {
       <View>
         <Text style={styles.label}>Representacion</Text>
       </View>
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="img"
         placeholderTextColor="black"
         value={datos.representacion}
         onChangeText={(text) => getValues("representacion", text)}
-      />
-      <View style={{ height: 20 }} />
-      <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Guardar</Text>
-      </TouchableOpacity>
-
+      /> */}
+      
        <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value} >
         <View style={styles.radioContainer}>
           <RadioButton value="Color" />
@@ -171,13 +175,27 @@ export default function ArticlesForm() {
         </View>
       </RadioButton.Group>
       {value === 'Imagen' && (
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
-         
-          <Pressable style={styles.uploadImagen}>
-            <Text style={styles.text}>Subir Imagen</Text>
-          </Pressable>
-        </View>
-      )}
+  <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
+    <Pressable 
+      style={styles.uploadImagen}
+      onPress={() => {
+        ImagePicker.showImagePicker(options, (response) => {
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+          } else {
+            const source = { uri: response.uri };
+            // Aquí puedes manejar la imagen seleccionada
+            console.log(source);
+          }
+        });
+      }}
+    >
+      <Text style={styles.text}>Subir Imagen</Text>
+    </Pressable>
+  </View>
+)}
       {value === 'Color' && (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center'}}>
           {colors.map((color, index) => (
@@ -185,6 +203,12 @@ export default function ArticlesForm() {
           ))}
         </View>
       )} 
+
+      <View style={{ height: 20 }} />
+      <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>Guardar</Text>
+      </TouchableOpacity>
+
 
       <CustomAlert
         isVisible={showAlert}
@@ -252,7 +276,7 @@ const styles = StyleSheet.create({
     width:200,
     height:200,
     alignItems: 'center',
-    margin: 50,
+    padding: 10,
   },
   text: {
     marginTop: 80,
