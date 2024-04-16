@@ -39,7 +39,7 @@ const INITIAL_STATE = {
           ...data,
           pais:countrySelect
         }   
-        //control de errores para el crear un usuario
+        //control de errores para el crear un cliente
         try {
           const nuevoCliente = await handleCreateClient(objectSend);
           if(nuevoCliente && nuevoCliente.id){

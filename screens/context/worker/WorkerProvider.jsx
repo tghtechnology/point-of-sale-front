@@ -6,12 +6,20 @@ const WorkerProvider = ({ children }) => {
     const [worker, setWorker] = useState([])
 
     const handleCreateWorker = async (newWorker) => {
-        const { status } = await createWorker(newWorker);
-        if (status === 200 || status === 201) {
-            return true;
-        } else {
-            return false;
+      try {
+        const res= await createWorker(newWorker);
+        if(res.status === 200 || res.status === 201){
+          return res.data;
         }
+         else {     
+          return null;
+        }
+      }catch(error){
+
+          console.log("Error creating worker:", error);
+          return null;
+      }
+
     }
 
     const fetchMyWorkers = async () => {
@@ -27,19 +35,23 @@ const WorkerProvider = ({ children }) => {
         fetchMyWorkers();
       }, []);
 
-    const handleEditWorker = async (id) => {
+    const handleEditWorker = async (id,updatedData) => {
         console.log(id)
         try {
-          const response = await editworker(id);
+          const response = await editworker(id,updatedData);
           if (response && response.status === 200) {
-            console.log('cliente editado exitosamente');
-          } else if (response && response.status === 204) {
-            console.log('cliente editado exitosamente');
-          }
-        } catch (error) {
-          console.error('Error editing client:', error);
+            const updatedWorkers = worker.map((workers)=>
+            workers.id === id ? {...workers, ...updatedData} : workers
+          );
+          setWorker(updatedWorkers);
+          console.log('edicion correcta')
+        } else if (response && response.status === 204) {
+          console.log('emeplado editado exitosamente');
         }
-      };
+      } catch (error) {
+        console.error('Error editing worker:', error);
+      }
+    };
   
       const handleDeleteworker = async (id) => {
         const {status} = await deleteworker(id);
