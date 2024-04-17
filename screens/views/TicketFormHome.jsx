@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../hooks/useArticle";
@@ -39,7 +39,7 @@ const TicketFormHome = () => {
         console.error('Error fetching selected items from AsyncStorage:', error);
       }
     };
-  
+
     fetchSelectedItems();
   }, []);
 
@@ -96,7 +96,7 @@ const TicketFormHome = () => {
     <View style={styles.item}>
       <TouchableOpacity
         style={[styles.circle,
-        (selectedItem => selectedItem.id === item.id) && styles.circleSelected]}
+        selectedItems.some(selectedItem => selectedItem.id === item.id) && styles.circleSelected]}
         onPress={() => handleSelectItem(item)}
       />
       <Text style={styles.itemText}>{item.nombre}</Text>
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   circleSelected: {
     backgroundColor: 'blue', // Color del círculo seleccionado
     borderColor: 'blue', // Color del borde del círculo seleccionado
-  },quantityContainer: {
+  }, quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 10,
