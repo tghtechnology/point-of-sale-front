@@ -1,14 +1,12 @@
-import React, { useEffect, FlatList } from 'react-native';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../hooks/useArticle";
-import useDiscount from '../hooks/useDiscount'
-import { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import useDiscount from '../hooks/useDiscount';
 import { useNavigation } from '@react-navigation/native';
 import CustomAlert from '../componentes/CustomAlert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -16,19 +14,42 @@ const TicketFormHome = () => {
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const [selectedValue, setSelectedValue] = useState('default');
-  const [quantity, setQuantity] = useState(0);
-  //Prueba guardar Productos en Asyng Storage
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchSelectedItems = async () => {
+      try {
+        const storedItems = await AsyncStorage.getItem('selectedItem');
+        if (storedItems !== null) {
+          setSelectedItems(JSON.parse(storedItems));
+        }
+      } catch (error) {
+        console.error('Error fetching selected items from AsyncStorage:', error);
+      }
+    };
+
+    fetchSelectedItems();
+  }, []);
+
+  useEffect(() => {
+    // Calculate total amount
+    let total = 0;
+    selectedItems.forEach(item => {
+      total += item.precio * item.quantity;
+    });
+    setTotalAmount(total);
+  }, [selectedItems]);
 
   const handleSelectItem = async (item) => {
     let updatedItems;
     if (selectedItems.some(selectedItem => selectedItem.id === item.id)) {
       updatedItems = selectedItems.filter(selectedItem => selectedItem.id !== item.id);
-      setShowAlertDeselect(true)
+      setShowAlertDeselect(true);
     } else {
-      updatedItems = [...selectedItems, item];
+      updatedItems = [...selectedItems, { ...item, quantity }];
       setShowAlert(true);
     }
     setSelectedItems(updatedItems);
@@ -39,7 +60,6 @@ const TicketFormHome = () => {
       console.error('Error saving item to AsyncStorage:', error);
     }
   };
-  //
 
   const showListArticles = () => {
     navigation.navigate('ListarTicket');
@@ -78,7 +98,7 @@ const TicketFormHome = () => {
         <TextInput
           style={styles.quantityInput}
           value={String(quantity)}
-          onChangeText={text => handleQuantityChange(item.id, parseInt(text) || 0)}
+          onChangeText={text => setQuantity(parseInt(text) || 0)}
           keyboardType="numeric"
         />
         <TouchableOpacity onPress={handleAddQuantity}>
@@ -93,7 +113,7 @@ const TicketFormHome = () => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.cobrarButton} onPress={showListArticles}>
         <Text style={styles.cobrarText}>COBRAR</Text>
-        <Text style={styles.amountText}>S/0.00</Text>
+        <Text style={styles.amountText}>S/{totalAmount.toFixed(2)}</Text>
       </TouchableOpacity>
 
       {/* Search Bar */}
@@ -136,7 +156,6 @@ const TicketFormHome = () => {
           />
         </View>
       )}
-
 
       {/* Footer Navigation */}
       <View style={styles.footer}>
