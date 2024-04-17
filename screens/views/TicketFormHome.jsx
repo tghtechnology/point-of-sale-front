@@ -24,16 +24,7 @@ const TicketFormHome = () => {
       try {
         const storedItems = await AsyncStorage.getItem('selectedItem');
         if (storedItems !== null) {
-          // Parseamos los items guardados
-          let parsedItems = JSON.parse(storedItems);
-          // Verificamos si lo que obtenemos es un array
-          if (Array.isArray(parsedItems)) {
-            setSelectedItems(parsedItems);
-          } else {
-            // Si no es un array, mostramos un mensaje de error y establecemos un array vacío
-            console.error('Los elementos almacenados no son un array:', parsedItems);
-            setSelectedItems([]);
-          }
+          setSelectedItems(JSON.parse(storedItems));
         }
       } catch (error) {
         console.error('Error fetching selected items from AsyncStorage:', error);
