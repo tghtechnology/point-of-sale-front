@@ -46,7 +46,7 @@ const TicketFormHome = () => {
   const handleSelectItem = async (item) => {
     let updatedItems = [...selectedItems];
     const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
-  
+
     if (itemIndex !== -1) {
       // Si el elemento ya está seleccionado, deseleccione
       updatedItems.splice(itemIndex, 1);
@@ -56,9 +56,9 @@ const TicketFormHome = () => {
       updatedItems.push({ ...item, quantity });
       setShowAlert(true);
     }
-  
+
     setSelectedItems(updatedItems);
-  
+
     try {
       await AsyncStorage.setItem('selectedItem', JSON.stringify(updatedItems));
       console.log('Artículo seleccionado guardado:', item);
@@ -84,18 +84,37 @@ const TicketFormHome = () => {
       selectedItem.id === item.id ? { ...item, quantity: selectedItem.quantity + 1 } : selectedItem
     ));
   };
-  
+
   const handleSubtractQuantity = (item) => {
-    setSelectedItems(selectedItems.map(selectedItem =>
-      selectedItem.id === item.id ? { ...item, quantity: selectedItem.quantity - 1 } : selectedItem
-    ));
+    const updatedItems = selectedItems.map((selectedItem) => {
+      if (selectedItem.id === item.id) {
+        const newQuantity = selectedItem.quantity - 1;
+        if (newQuantity >= 1) {
+          return { ...selectedItem, quantity: newQuantity };
+        } else {
+          return { ...selectedItem, quantity: 1 };
+        }
+      } else {
+        return selectedItem;
+      }
+    });
+
+    setSelectedItems(updatedItems);
   };
-  
+
   const handleQuantityChange = (item, text) => {
-    const quantity = parseInt(text) || 0;
-    setSelectedItems(selectedItems.map(selectedItem =>
-      selectedItem.id === item.id ? { ...item, quantity } : selectedItem
-    ));
+    const newQuantity = parseInt(text) || 0;
+    if (newQuantity >= 1) {
+      const updatedItems = selectedItems.map((selectedItem) => {
+        if (selectedItem.id === item.id) {
+          return { ...selectedItem, quantity: newQuantity };
+        } else {
+          return selectedItem;
+        }
+      });
+
+      setSelectedItems(updatedItems);
+    }
   };
 
   const renderItem = ({ item }) => (
@@ -115,6 +134,7 @@ const TicketFormHome = () => {
           value={selectedItems.find(selectedItem => selectedItem.id === item.id)?.quantity || ''}
           onChangeText={(text) => handleQuantityChange(item, text)}
           keyboardType="numeric"
+          editable={false} 
         />
         <TouchableOpacity onPress={() => handleAddQuantity(item)}>
           <Text style={styles.quantityButton}>+</Text>
