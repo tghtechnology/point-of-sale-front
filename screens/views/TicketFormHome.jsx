@@ -44,15 +44,21 @@ const TicketFormHome = () => {
   }, [selectedItems]);
 
   const handleSelectItem = async (item) => {
-    let updatedItems;
-    if (selectedItems.some(selectedItem => selectedItem.id === item.id)) {
-      updatedItems = selectedItems.filter(selectedItem => selectedItem.id !== item.id);
+    let updatedItems = [...selectedItems];
+    const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
+  
+    if (itemIndex !== -1) {
+      // Si el elemento ya está seleccionado, deseleccione
+      updatedItems.splice(itemIndex, 1);
       setShowAlertDeselect(true);
     } else {
-      updatedItems = [...selectedItems, { ...item, quantity }];
+      // Si el elemento no está seleccionado, seleccione con una cantidad predeterminada
+      updatedItems.push({ ...item, quantity });
       setShowAlert(true);
     }
+  
     setSelectedItems(updatedItems);
+  
     try {
       await AsyncStorage.setItem('selectedItem', JSON.stringify(updatedItems));
       console.log('Artículo seleccionado guardado:', item);
@@ -73,14 +79,23 @@ const TicketFormHome = () => {
     setShowAlertDeselect(false);
   };
 
-  const handleAddQuantity = () => {
-    setQuantity(prevQuantity => prevQuantity + 1);
+  const handleAddQuantity = (item) => {
+    setSelectedItems(selectedItems.map(selectedItem =>
+      selectedItem.id === item.id ? { ...item, quantity: selectedItem.quantity + 1 } : selectedItem
+    ));
   };
-
-  const handleSubtractQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(prevQuantity => prevQuantity - 1);
-    }
+  
+  const handleSubtractQuantity = (item) => {
+    setSelectedItems(selectedItems.map(selectedItem =>
+      selectedItem.id === item.id ? { ...item, quantity: selectedItem.quantity - 1 } : selectedItem
+    ));
+  };
+  
+  const handleQuantityChange = (item, text) => {
+    const quantity = parseInt(text) || 0;
+    setSelectedItems(selectedItems.map(selectedItem =>
+      selectedItem.id === item.id ? { ...item, quantity } : selectedItem
+    ));
   };
 
   const renderItem = ({ item }) => (
@@ -92,16 +107,16 @@ const TicketFormHome = () => {
       />
       <Text style={styles.itemText}>{item.nombre}</Text>
       <View style={styles.quantityContainer}>
-        <TouchableOpacity onPress={handleSubtractQuantity}>
+        <TouchableOpacity onPress={() => handleSubtractQuantity(item)}>
           <Text style={styles.quantityButton}>-</Text>
         </TouchableOpacity>
         <TextInput
           style={styles.quantityInput}
-          value={String(quantity)}
-          onChangeText={text => setQuantity(parseInt(text) || 0)}
+          value={selectedItems.find(selectedItem => selectedItem.id === item.id)?.quantity || ''}
+          onChangeText={(text) => handleQuantityChange(item, text)}
           keyboardType="numeric"
         />
-        <TouchableOpacity onPress={handleAddQuantity}>
+        <TouchableOpacity onPress={() => handleAddQuantity(item)}>
           <Text style={styles.quantityButton}>+</Text>
         </TouchableOpacity>
       </View>
