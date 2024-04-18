@@ -13,7 +13,7 @@ const AuthProvider = ({children}) => {
         const usuario_id = data.usuario_id;
         const token = data.token
         AsyncStorage.setItem("token", token);
-        AsyncStorage.setItem("usuarioid", usuario_id);
+        AsyncStorage.setItem("usuarioid", usuario_id.toString());
         const storedToken = AsyncStorage.getItem("token");
         console.log("Token: ", storedToken);
         const stored = AsyncStorage.getItem("usuarioid");

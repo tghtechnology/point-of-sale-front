@@ -10,12 +10,14 @@ import { useEffect } from 'react';
 
 const TicketListForm = () => {
     const [selectedItem, setSelectedItem] = useState([]); // Nuevo estado para almacenar la lista de artículos guardados
+    const getSubtotal = (item) => item.precio * item.quantity;
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         const getSelectedItem = async () => {
             try {
                 const item = await AsyncStorage.getItem('selectedItem');
-                console.log("item",item)
+                console.log("item", item)
                 if (item !== null) {
                     setSelectedItem(JSON.parse(item));
                 }
@@ -27,18 +29,32 @@ const TicketListForm = () => {
         getSelectedItem();
     }, []); // Ejecutar solo una vez al cargar el componente
 
+    useEffect(() => {
+        const newTotal = selectedItem.reduce((total, itm) => {
+            return total + itm.precio * itm.quantity;
+        }, 0);
+        setTotal(newTotal);
+    }, [selectedItem]);
 
-    
 
     return (
-        <View style={styles.itemList}>
-            {selectedItem?.map(itm => (
-                <View key={itm.id} style={styles.item}>
-                    <Text style={styles.itemText}>{itm.nombre}</Text>
-                    <Text style={styles.priceText}>S/ {itm.precio}</Text>
-                    {/* Display other properties of the selected item */}
-                </View>
-            ))}
+        <View>
+            <View style={styles.itemList}>
+                {selectedItem?.map(itm => (
+                    <View key={itm.id} style={styles.item}>
+                        <Text style={styles.itemText}>{itm.nombre}</Text>
+                        <View style={styles.priceContainer}>
+                            <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
+                            <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
+                            <Text style={styles.priceText}>Subtotal: S/ {getSubtotal(itm).toFixed(2)}</Text>
+                        </View>
+                        {/* Display other properties of the selected item */}
+                    </View>
+                ))}
+            </View>
+            <View style={styles.totalContainer}>
+                <Text style={styles.totalText}>Total: S/ {total.toFixed(2)}</Text>
+            </View>
         </View>
     );
 };
@@ -47,6 +63,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFF',
+    },
+    priceContainer: {
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+    },
+    quantityText: {
+        color: '#4CAF50',
+        fontWeight: 'bold',
+        marginTop: 5,
+    },
+    total: {
+        alignItems: 'flex-end',
+        marginTop: 20,
+    },
+    totalText: {
+        color: '#4CAF50',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginTop: 20,
+        textAlign: 'right',
     },
     cobrarButton: {
         backgroundColor: 'red',
@@ -89,7 +125,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 10,
         alignItems: 'center',
-        backgroundColor:'lightblue'
+        backgroundColor: 'lightblue'
     },
     magnifies: {
         border: 1,
