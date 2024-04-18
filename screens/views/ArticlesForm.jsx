@@ -1,18 +1,19 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity,Pressable,ScrollView} from "react-native";
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,Image,ScrollView} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
 import CustomAlert from '../componentes/CustomAlert';
-import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 const INITIAL_STATE = {
   nombre: "",
   tipo_venta: "",
   precio: "",
   ref: "",
-  representacion: "",
+  color:"",
+  imagen:"",
   id_categoria: "",
 };
 const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
@@ -21,21 +22,36 @@ const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF'
   <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
  );
 export default function ArticlesForm() {
+  const [selectedImage, setSelectedImage] = useState(null)
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
-  const [categorySelect, setCategorySelect] = useState('');
   const [value, setValue] = useState('color');
   const { handleCreateArticle,listArticle,setListArticle} = useArticle();
   const { listCategoria } = useCategory();
 
-  const options = {
-    title: 'Selecciona una imagen',
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
+  const openImagePickerAsync = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if(permissionResult.granted === false){
+      alert('Permission to acces camera is required');
+      return;
+    }
 
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    
+    if(pickerResult.canceled === true){
+      return;
+    }
+
+    setSelectedImage({localUri: pickerResult.assets[0].uri});
+   console.log(pickerResult)
+  }
+
+  
   const getValues = (name, value) => {
     setDatos({
       ...datos,
@@ -104,7 +120,6 @@ export default function ArticlesForm() {
           value={datos.id_categoria}
           style={styles.picker}
         >
-          
           <Picker.Item label="Sin categoría" value="" />
           {listCategoria?.map((item, index) => (
             <Picker.Item key={index} label={item.nombre} value={item.id} />
@@ -156,14 +171,6 @@ export default function ArticlesForm() {
       <View>
         <Text style={styles.label}>Representacion</Text>
       </View>
-      {/* <TextInput
-        style={styles.input}
-        placeholder="img"
-        placeholderTextColor="black"
-        value={datos.representacion}
-        onChangeText={(text) => getValues("representacion", text)}
-      /> */}
-      
        <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value} >
         <View style={styles.radioContainer}>
           <RadioButton value="Color" />
@@ -175,27 +182,19 @@ export default function ArticlesForm() {
         </View>
       </RadioButton.Group>
       {value === 'Imagen' && (
-  <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
-    <Pressable 
-      style={styles.uploadImagen}
-      onPress={() => {
-        ImagePicker.showImagePicker(options, (response) => {
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-          } else {
-            const source = { uri: response.uri };
-            // Aquí puedes manejar la imagen seleccionada
-            console.log(source);
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
+          <TouchableOpacity style={styles.uploadImagen} onPress={openImagePickerAsync}>
+          {selectedImage ? 
+              (
+          <Image style={{ width: 190, height: 190, borderRadius: 8 }} source={{ uri: selectedImage.localUri }} />
+        ) :
+        (
+          <Text style={styles.text}>Subir Imagen</Text>
+        )
           }
-        });
-      }}
-    >
-      <Text style={styles.text}>Subir Imagen</Text>
-    </Pressable>
-  </View>
-)}
+          </TouchableOpacity>
+        </View>
+      )}
       {value === 'Color' && (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center'}}>
           {colors.map((color, index) => (
@@ -208,7 +207,6 @@ export default function ArticlesForm() {
       <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
-
 
       <CustomAlert
         isVisible={showAlert}
