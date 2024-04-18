@@ -14,11 +14,11 @@ const getToken = async () => {
 const createImpuesto = async (newImp) => {
     try {
         const token = await getToken();
-        const { data, status } = await apiClient.post(`/impuesto/crear`, newImp,{
-            headers:{
-                    Authorization: `Bearer ${token}` 
-                }
-            });
+        const { data, status } = await apiClient.post(`/impuesto/crear`, newImp, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return {
             data,
             status,
@@ -32,11 +32,12 @@ const createImpuesto = async (newImp) => {
 const listImpuestos = async () => {
     try {
         const token = await getToken();
-        const { data,status } = await apiClient.get(`/impuesto/listar`,{
-            headers:{
-                    Authorization: `Bearer ${token}` 
-                }
-            });
+        console.log('Tokem:',token)
+        const { data,status } = await apiClient.get(`/impuesto/listar`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }); 
         return {
             data,
             status
@@ -50,11 +51,11 @@ const listImpuestos = async () => {
 const editImpuestos = async(id,updateImpuestos) => {
     try {
         const token = await getToken();
-        const { data,status } = await apiClient.put(`/impuesto/actualizar/${id}`, updateImpuestos,{
-            headers:{
-                    Authorization: `Bearer ${token}` 
-                }
-            });
+        const { data,status } = await apiClient.put(`/impuesto/actualizar/${id}`, updateImpuestos, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return {
             data,
             status
@@ -67,11 +68,11 @@ const editImpuestos = async(id,updateImpuestos) => {
   const deleteImpuesto = async(id) => {
     try{
         const token = await getToken();
-        const{data, status} = await apiClient.delete(`/impuesto/eliminar/${id}`,{
-            headers:{
-                    Authorization: `Bearer ${token}` 
-                }
-            });
+        const{data, status} = await apiClient.delete(`/impuesto/eliminar/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return{
             data,
             status
@@ -85,6 +86,5 @@ export {
     listImpuestos,
     editImpuestos,
     deleteImpuesto,
-
   
 }

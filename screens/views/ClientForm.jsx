@@ -1,5 +1,5 @@
 import { useState,useEffect   } from 'react'
-import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
+import { ScrollView, View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
 import { Picker } from '@react-native-picker/picker';
 import useCountry from '../hooks/useCountry';
 import useClient from '../hooks/useClient';
@@ -39,7 +39,7 @@ const INITIAL_STATE = {
           ...data,
           pais:countrySelect
         }   
-        //control de errores para el crear un usuario
+        //control de errores para el crear un cliente
         try {
           const nuevoCliente = await handleCreateClient(objectSend);
           if(nuevoCliente && nuevoCliente.id){
@@ -60,8 +60,8 @@ const INITIAL_STATE = {
         setShowAlert(false);
     };
   return (
-    <View style={styles.container}>
-    <Text style={styles.title}>Nuevo Cliente</Text>
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <View style={styles.container}>
           {/* Contenido del formulario */}
           <View style={styles.inputContainer}>
           <Text style={styles.label}>Nombre Cliente</Text>
@@ -130,7 +130,6 @@ const INITIAL_STATE = {
           {/* INPUT PARA SELECCIONAR PAIS */}
         <View style={styles.inputContainer}>
         <Text style={styles.label}>Selecciona un país:</Text>
-        {console.log("countries:", countries)}
         <Picker
         selectedValue={countrySelect}
         onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
@@ -154,14 +153,20 @@ const INITIAL_STATE = {
         iconName="check-circle" // Puedes cambiar el icono según lo desees
         />
   </View>
+  </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollViewContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  container: {
+    flex: 1,
+    marginTop: 30,
   },
   title: {
     fontSize: 24,

@@ -63,110 +63,101 @@ const handleCloseAlert = () => {
 }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ingrese los detalles del descuento</Text>
-            {/* Contenido del formulario */}
             <View style={styles.inputContainer}>
-            <Text style={styles.label}>Crear Nuevo Descuento</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nombre del descuento"
-              value={dataForm.nombre}
-              onChangeText={text => getValues('nombre', text)}
-            />
+                <Text style={styles.label}>Crear Nuevo Descuento</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Nombre del descuento"
+                    value={dataForm.nombre}
+                    onChangeText={text => getValues('nombre', text)}
+                />
             </View>
-            
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Valor del descuento</Text>
-            <View style={styles.inputWithIcon}>
-            <TextInput
-                style={styles.input}
-                placeholder="Valor"
-                value={dataForm.valor}
-                onChangeText={text => getValues('valor', text)}
-                keyboardType="numeric"
-            />
-            
-              <TouchableOpacity
-              onPress={() => setTipoDescuento(prevTipo => prevTipo === 'percent' ? 'dollar' : 'percent')}
-              style={styles.iconContainer}
-              >
-              <Icon
-              name={tipoDescuento === 'percent' ? 'percent' : 'dollar'}
-              size={20}
-              color={tipoDescuento === 'percent' ? '#00cc00' : '#0066ff'}
-              style={styles.iconoDescuento}
-              />
-              </TouchableOpacity>
-              </View>
-              <TouchableOpacity onPress={SubmitDiscount} style={styles.button}>
-              <Text style={styles.buttonText}>Guardar Descuento</Text>
-              </TouchableOpacity>
 
-              <CustomAlert
-              isVisible={showAlert}
-              onClose={handleCloseAlert}
-              title="Descuento Creado"
-              message="El descuento se ha creado correctamente."  
-              buttonColor="#2196F3"
-              iconName="check-circle" // Puedes cambiar el icono según lo desees
-              />
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Valor del descuento</Text>
+                <View style={styles.inputWithIcon}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Valor"
+                        value={dataForm.valor}
+                        onChangeText={text => getValues('valor', text)}
+                        keyboardType="numeric"
+                    />
+                    <TouchableOpacity
+                        onPress={() => setTipoDescuento(prevTipo => prevTipo === 'percent' ? 'dollar' : 'percent')}
+                        style={styles.iconContainer}
+                    >
+                        <Icon
+                            name={tipoDescuento === 'percent' ? 'percent' : 'dollar'}
+                            size={20}
+                            color={tipoDescuento === 'percent' ? '#00cc00' : '#0066ff'}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
-    </View>
+
+            <TouchableOpacity onPress={SubmitDiscount} style={styles.button}>
+                <Text style={styles.buttonText}>Guardar Descuento</Text>
+            </TouchableOpacity>
+
+            <CustomAlert
+                isVisible={showAlert}
+                onClose={() => setShowAlert(false)}
+                title="Descuento Creado"
+                message="El descuento se ha creado correctamente."
+                buttonColor="#2196F3"
+                iconName="check-circle"
+            />
+        </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingBottom:80,
-  },
-  title: {
-    fontSize: 24,
+    padding: 20,
+    backgroundColor: '#FFF',
+},
+inputContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'gray',
+    marginBottom: 10,
+},
+input: {
+    color: 'black',
+    paddingHorizontal: 10,
+    padding: 10,
+    fontSize: 15
+},
+label: {
     fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
     marginBottom: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    flex: 1,
-  },
-  inputWithIcon: {
+    fontSize: 20,
+},
+inputWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: 'gray',
+},
+iconContainer: {
+    padding: 5,
+    borderColor: 'gray',
     borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 5,
-  },
-  iconContainer: {
-    padding: 10,
-  },
-  button: {
+    marginLeft: 120,
+},
+button: {
     backgroundColor: 'red',
-    borderRadius: 5,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    padding: 10,
     alignItems: 'center',
-    marginTop:10,
-  },
-  buttonText: {
+    borderRadius: 5,
+    marginTop: 20,
+},
+buttonText: {
     color: 'white',
-    fontSize: 18,
     fontWeight: 'bold',
-  },
+},
 });
 
 export default DiscountForm;

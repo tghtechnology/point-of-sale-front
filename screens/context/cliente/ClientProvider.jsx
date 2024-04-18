@@ -23,10 +23,10 @@ const ClientProvider = ({children}) => {
     const fetchMyClients = async () => {
       try {
           const client = await getClients();
-          console.log("Descuentos obtenidos:", client);
+          console.log("Clientes obtenidos:", client);
           setClient(client);
       } catch (error) {
-          console.error('Error al obtener los descuentos:', error);
+          console.error('Error al obtener los clientes:', error);
       }
   };
 

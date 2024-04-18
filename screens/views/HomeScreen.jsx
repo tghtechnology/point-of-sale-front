@@ -34,6 +34,10 @@ export default function HomeScreen(props) {
         <Text style={styles.text}>Cuenta</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleLogout} style={styles.container}>
+      <MaterialCommunityIcons name="account" size={24} color="#708090" />
+        <Text style={styles.text}>Perfil</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleLogout} style={styles.container}>
       <SimpleLineIcons name="logout" size={24} color="#708090" />
         <Text style={styles.text}>Cerrar Sesion</Text>
       </TouchableOpacity>

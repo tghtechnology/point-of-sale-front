@@ -1,6 +1,9 @@
 import { useEffect,useState } from "react";
 import { createArticle, listArticles, editArticles,deleteArticles } from "../../services/ArticleService";
 import ArticleContext from "./ArticleContext";
+
+
+
 const ArticleProvider = ({children}) => {
     const [listArticle, setListArticle] = useState([]);
 
@@ -10,7 +13,6 @@ const ArticleProvider = ({children}) => {
                 const { data, status } = await listArticles();
                 if (status === 200) {
                     setListArticle(data); 
-                    
                 } else {
                     console.log("Error al cargar articulos:", status);
                 }

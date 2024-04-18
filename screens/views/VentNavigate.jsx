@@ -15,6 +15,13 @@ const VentNavigate =() => {
         <Text style={styles.text}>Ticket</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Recibos")}
+        style={styles.container}
+      >
+      <MaterialCommunityIcons name="receipt" size={24} color="#708090" />
+        <Text style={styles.text}>Recibos</Text>
+      </TouchableOpacity>
     </View>
   );
 }

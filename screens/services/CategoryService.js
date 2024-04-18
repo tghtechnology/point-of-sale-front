@@ -14,13 +14,11 @@ const getToken = async () => {
 const createCategory = async (newCategory) => {
     try {
         const token = await getToken();
-        console.log("Token de autenticación:", token);
-        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory,{
-        headers:{
-                Authorization: `Bearer ${token}` 
+        const {data, status} = await apiClient.post(`/categoria/crear`, newCategory, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
         });
-        
         return {
             data,
             status
@@ -34,12 +32,11 @@ const createCategory = async (newCategory) => {
 const listCategories = async () => {
     try {
         const token = await getToken();
-        console.log("Token de autenticación:", token);
-        const { data,status } = await apiClient.get(`/categoria/listar`,{
-            headers:{
-                    Authorization: `Bearer ${token}` 
-                }
-            });
+        const { data,status } = await apiClient.get(`/categoria/listar`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }); 
         return {
             data,
             status
@@ -86,8 +83,8 @@ const editCategories = async(id, updateCategorias) => {
             console.log('Error:',error.response.data);
         }
     }
-
-  
+    
 export {
     createCategory, listCategories,editCategories,deleteCategory
+
 }

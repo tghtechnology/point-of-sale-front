@@ -34,6 +34,8 @@ import PlusWorkers from './screens/views/PlusWorkers';
 import RecibosScreen from './screens/views/RecibosScreen';
 import VentNavigate from './screens/views/VentNavigate';
 import TicketFormHome from './screens/views/TicketFormHome';
+import ReceiptForm from './screens/views/ReceiptForm';
+import EditWorker from './screens/views/EditWorker';
 
 
 function StackNavigation() {
@@ -149,6 +151,7 @@ function VentaScreen() {
         },
       }}></Stack.Screen>
       <Stack.Screen name="Ticket" component={TicketFormHome}></Stack.Screen>
+      <Stack.Screen name="Recibos" component={ReceiptForm}></Stack.Screen>
     </Stack.Navigator>
   );
 };
@@ -179,6 +182,7 @@ function MiembrosScreen() {
         },
       }}></Stack.Screen>
       <Stack.Screen name="Empleados" component={PlusWorkers}></Stack.Screen>
+      <Stack.Screen name="Editar empleado" component={EditWorker}></Stack.Screen>
       <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Todos los miembros",
      headerRight: () => (
       
@@ -230,9 +234,8 @@ const DrawerNav =()=> {
     <Drawer.Navigator 
      screenOptions={{headerShown:false}}>
       <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "format-list-bulleted" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Recibos" component={Recibos}  options={{drawerIcon: ({focused, size}) => (<FontAwesome5 name= "receipt" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Ventas" component={VentaScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cash-multiple" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cart" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Miembros" component={MiembrosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "account-group" size={25} color="#778899" />), }}/>
     </Drawer.Navigator>
   );

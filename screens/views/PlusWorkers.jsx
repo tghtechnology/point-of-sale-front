@@ -1,84 +1,56 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Picker, Modal, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useWorker from '../hooks/useWorker';
 import WorkerProvider from '../context/worker/WorkerProvider';
+import CustomAlert from '../componentes/CustomAlert';
 
 
 
 //Contante para Seleccionar Cargos
-const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
-//
-
-export default function PlusWorkers() {
+const PlusWorkers = (props) => {
     const navigation = useNavigation();
-    const { worker,setWorker, handleEditWorker, handleDeleteworker, handleUpdateWorker} = useWorker()
-    const [showModal, setShowModal] = useState(false);
-    const [workers, setWorkers] = useState(worker)
+    const { worker,setWorker, handleDeleteworker } = useWorker()
     const [modal, setModal] = useState(false);
-    const [editedData, setEditedData] = useState({});
-    const [selectedWorker, setselectedWorker] = useState({});
-    const [cargo, setCargo] = useState(''); // Estado para el valor seleccionado del cargo en el formulario de edición
+    const [showAlert, setShowAlert] = useState(false);
+    const [selectedWorker, setselectedWorker] = useState(null);
+    const [deletedWorkerId, setDeletedWorkerId] = useState(null); // Estado para el valor seleccionado del cargo en el formulario de edición
+    const [errorDeleteAlertVisible, setErrorDeleteAlertVisible] = useState(false);
 
-    const handleEdit = (worker) => {
-        setselectedWorker(worker);
-        setEditedData({
-            ...worker,
-            nombre: worker.nombre,
-            correo: worker.correo,
-            telefono: worker.telefono,
-            cargo: worker.cargo,
-        });
-        setCargo(worker.cargo); // Establecer el valor inicial del cargo seleccionado del trabajador
-        setShowModal(true);
+    const handleEdit = () => {
+        navigation.navigate('Editar empleado', { work: selectedWorker });
         setModal(false);
     };
-
-    //
-    const handleCargoChange = (cargoSeleccionado) => {
-        setCargo(cargoSeleccionado);
-        handleChange('cargo', cargoSeleccionado);
-    };
-    //
-
-    const handleChange = (name, value) => {
-        setEditedData({
-            ...editedData,
-            [name]: value,
-        });
-    };
-
-    const handleSubmit = async () => {
-        try {
-            await handleEditWorker(selectedWorker.id, editedData);
-            console.log('Empleado editado exitosamente');
-            await handleUpdateWorker(selectedWorker.id, editedData);
-            setShowModal(false);
-        } catch (error) {
-            console.error('Error al editar el empleado:', error);
-        }
-    };
-
-    const handleCancel = () => {
-        setShowModal(false);
-    };
-
+    
 
     const handleDelete = async (id) => {
         try {
-            const success = await handleDeleteworker(id);
-            if (success) {
-                setWorker(workers.filter(workers => workers.id !== id));
-            }
+            await handleDeleteworker(id);
+            setShowAlert(true);
+            setDeletedWorkerId(id);
             setModal(false);
         } catch (error) {
             console.error('Error al borrar al empleado:', error);
         }
     }
 
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+        setDeletedWorkerId(null);
+    };
+    
+    useEffect(() => {
+      if (deletedWorkerId !== null) {
+          // Actualiza la lista de clientes excluyendo al cliente eliminado
+          setWorker(worker.filter(worker => worker.id !== deletedWorkerId));
+      }
+    }, [deletedWorkerId]);
+
+
     const handleOptionsPress = (item) => {
         setselectedWorker(item);
+        console.log("Selected worker:", item);
         setModal(true);
     };
 
@@ -92,10 +64,10 @@ export default function PlusWorkers() {
                             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)} >
                                 <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
                             </TouchableOpacity>
-                            <Text style={styles.itemText}>Nombre: {item.nombre}</Text>
-                            <Text style={styles.itemText}>Correo: {item.correo}</Text>
-                            <Text style={styles.itemText}>Telefono: {item.telefono}</Text>
-                            <Text style={styles.itemText}>Cargo: {item.cargo}</Text>
+                            <Text style={styles.itemText}>{item.nombre}</Text>
+                            <Text style={styles.itemText}>{item.email}</Text>
+                            <Text style={styles.itemText}>{item.telefono}</Text>
+                            <Text style={styles.itemText}>{item.cargo}</Text>
                             <View style={styles.container}>
                             </View>
                         </View>
@@ -111,74 +83,14 @@ export default function PlusWorkers() {
                     </View>
                 )}
             />
-            <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate("Registrar Empleado")}>
+            <TouchableOpacity style={styles.addButton} onPress={() => props.navigation.navigate("Registrar Empleado")}>
                 <MaterialCommunityIcons name="plus" size={24} color="white" />
             </TouchableOpacity>
 
-            <Modal
-                visible={showModal}
-                animationType="slide"
-                transparent={true}
-                onRequestClose={handleCancel}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Editar Empleado</Text>
-                        <View style={styles.inputContainer}>
-                            <Text style={styles.label}>Nombre</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Nombre"
-                                value={editedData.nombre}
-                                onChangeText={(text) => handleChange('nombre', text)}
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Text style={styles.label}>Email</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="email"
-                                value={editedData.correo}
-                                onChangeText={(text) => handleChange('correo', text)}
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Text style={styles.label}>Telefono</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="telefono"
-                                value={editedData.telefono}
-                                onChangeText={(text) => handleChange('telefono', text)}
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Text style={styles.label}>Cargo</Text>
-                            <Picker
-                                selectedValue={cargo}
-                                onValueChange={handleCargoChange}
-                                style={styles.input}>
-                                {cargosDisponibles.map((cargo, index) => (
-                                    <Picker.Item label={cargo} value={cargo} key={index} />
-                                ))}
-                            </Picker>
-                        </View>
-                        <TouchableOpacity
-                            style={styles.editButton}
-                            onPress={handleSubmit}>
-                            <Text style={styles.buttonText}>Editar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.cancelButton}
-                            onPress={handleCancel}>
-                            <Text style={styles.buttonText}>Cancelar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-            
             <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <TouchableOpacity style={styles.optionButton} onPress={() => handleEdit(selectedWorker)}>
+                        <TouchableOpacity style={styles.optionButton} onPress= {handleEdit}>
                             <Text style={styles.optionButtonText}>Editar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.optionButton} onPress={() => handleDelete(selectedWorker.id)}>
@@ -190,6 +102,24 @@ export default function PlusWorkers() {
                     </View>
                 </View>
             </Modal>
+
+            <CustomAlert
+                isVisible={showAlert}
+                onClose={handleCloseAlert}
+                title="Eliminado exitoso"
+                message="Empleado Eliminado Exitoso."
+                buttonColor="green"
+                iconName="check"
+            />
+
+            <CustomAlert
+                isVisible={errorDeleteAlertVisible}
+                onClose={() => setErrorDeleteAlertVisible(false)}
+                title="Error"
+                message="Error al Eliminar Empleado"
+                buttonColor="red"
+                iconName="times-circle"
+            />
         </View>
     );
 }
@@ -343,3 +273,5 @@ const styles = StyleSheet.create({
         right: 10,
     },
 });
+
+export default PlusWorkers
