@@ -64,6 +64,15 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFF',
     },
+    totalContainer: {
+        backgroundColor: '#f2f2f2',
+        padding: 10,
+        marginTop: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#ccc',
+        borderBottomWidth: 1,
+        borderBottomColor: '#000',
+      },
     priceContainer: {
         flexDirection: 'column',
         alignItems: 'flex-end',
