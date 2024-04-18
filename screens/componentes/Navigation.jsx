@@ -4,38 +4,41 @@ import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {NavigationContainer, useNavigation, DrawerActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from './screens/views/HomeScreen';
-import DeleteAccount from './screens/views/DeleteAccount';
-import ArticlesNavigate from './screens/views/ArticlesNavigate';
-import MiembNavigate from './screens/views/MiembNavigate'
-import PlusArticles from './screens/views/PlusArticles';
-import PlusCategory from './screens/views/PlusCategory';
-import ArticlesForm from './screens/views/ArticlesForm';
+import HomeScreen from '../views/HomeScreen';
+import DeleteAccount from '../views/DeleteAccount';
+import ArticlesNavigate from '../views/ArticlesNavigate';
+import MiembNavigate from '../views/MiembNavigate'
+import PlusArticles from '../views/PlusArticles';
+import PlusCategory from '../views/PlusCategory';
+import ArticlesForm from '../views/ArticlesForm';
 import Icon from "react-native-vector-icons/Entypo";
-import CategoryForm from './screens/views/CategoryForm';
-import { Ionicons, MaterialCommunityIcons,FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import HomeView from './screens/views/HomeView';
-import LoginForm from "./screens/views/LoginForm"
-import RegisterForm from './screens/views/RegisterForm';
-import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
-import DiscountForm from './screens/views/DiscountForm';
-import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
-import ArticlesEdit from './screens/views/ArticlesEdit';
-import PlusDiscount from './screens/views/PlusDiscount';
-import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
-import PlusImpuesto from './screens/views/PlusImpuesto';
-import ImpuestoForm from './screens/views/ImpuestoForm';
-import ImpuestoEdit from './screens/views/ImpuestoEdit';
-import CategoryEdit from './screens/views/CategoryEdit';
-import ClientForm from './screens/views/ClientForm';
-import PlusClients from './screens/views/PlusClients';
-import ClientEdit from './screens/views/ClientEdit'
-import PlusWorkers from './screens/views/PlusWorkers';
-import RecibosScreen from './screens/views/RecibosScreen';
-import VentNavigate from './screens/views/VentNavigate';
-import TicketFormHome from './screens/views/TicketFormHome';
-import ReceiptForm from './screens/views/ReceiptForm';
-import EditWorker from './screens/views/EditWorker';
+import CategoryForm from '../views/CategoryForm';
+import { Ionicons, MaterialCommunityIcons,FontAwesome } from '@expo/vector-icons';
+import HomeView from '../views/HomeView';
+import LoginForm from "../views/LoginForm"
+import RegisterForm from '../views/RegisterForm';
+import EnvioCorreoForm from '../views/EnvioCorreoForm';
+import DiscountForm from '../views/DiscountForm';
+import FormRegisEmpleado from '../views/FormRegisEmpleado';
+import ArticlesEdit from '../views/ArticlesEdit';
+import PlusDiscount from '../views/PlusDiscount';
+import PlusFalseDiscount from '../views/PlusFalseDiscount';
+import PlusImpuesto from '../views/PlusImpuesto';
+import ImpuestoForm from '../views/ImpuestoForm';
+import ImpuestoEdit from '../views/ImpuestoEdit';
+import CategoryEdit from '../views/CategoryEdit';
+import ClientForm from '../views/ClientForm';
+import PlusClients from '../views/PlusClients';
+import ClientEdit from '../views/ClientEdit'
+import PlusWorkers from '../views/PlusWorkers';
+import RecibosScreen from '../views/RecibosScreen';
+import VentNavigate from '../views/VentNavigate';
+import TicketFormHome from '../views/TicketFormHome';
+import ReceiptForm from '../views/ReceiptForm';
+import EditWorker from '../views/EditWorker';
+import ProfileEdit from '../views/ProfileEdit';
+import ResetPassword from '../views/ResetPassword';
+import DataUser from '../views/DataUser';
 
 
 function StackNavigation() {
@@ -62,6 +65,10 @@ return (
         }}
       ></Stack.Screen> 
       <Stack.Screen name="Profile" component={DeleteAccount}></Stack.Screen>
+      <Stack.Screen name="perfil" component={DataUser}></Stack.Screen>
+      <Stack.Screen name="Contraseña" component={ResetPassword}></Stack.Screen>
+
+      <Stack.Screen name="Editar usuario" component={ProfileEdit}></Stack.Screen>
     </Stack.Navigator>
   );
 };

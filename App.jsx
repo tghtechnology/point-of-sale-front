@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import Navigation from "./Navigation.jsx";
+import Navigation from "./screens/componentes/Navigation.jsx";
 import UsuarioProvider from "./screens/context/usuarios/UsuarioProvider.jsx";
 import CategoryProvider from "./screens/context/category/CategoryProvider.jsx";
 import CountryProvider from "./screens/context/country/CountryProvider.jsx";

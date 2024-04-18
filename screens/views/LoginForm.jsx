@@ -29,14 +29,14 @@ const LoginForm = () => {
   const handleSignIn = async () => {
     try {
       const response = await loginAccess(credentials);
-      if (response == true) {
-        alert("Sesion Iniada")
-        navigation.navigate("Home")
+      if (response) {
+        setSuccessAlertVisible(true); // Mostrar alerta de inicio de sesión exitoso
+        navigation.navigate("Home");
       } else {
-        alert("Secion no iniciada");
+        setErrorAlertVisible(true); // Mostrar alerta de error de inicio de sesión
       }
     } catch (error) {
-      alert("Secion no iniciada");
+      setErrorAlertVisible(true); // Mostrar alerta de error de inicio de sesión
     }
   };
   //Aqui Termina

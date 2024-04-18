@@ -62,7 +62,6 @@ const RegisterForm = () => {
     try {
       const response = await handleCreateUser(objectSend);
       if(response){
-        alert("Usuario creado con exito")
         setDataForm(INITIAL_STATE);
         setWorker([...worker, objectSend]);
         setCountrySelect('');
@@ -81,6 +80,15 @@ const RegisterForm = () => {
         <Text style={styles.Tittle}>Registro</Text>
         <TextInput
           style={styles.input} 
+          placeholder="Nombre"
+          placeholderTextColor="#546574"
+          keyboardType='default'
+          value={dataForm.nombre}
+          onChangeText={text => getValues('nombre', text)}
+        />
+
+        <TextInput
+          style={styles.input} 
           placeholder="Correo Electrónico"
           placeholderTextColor="#546574"
           keyboardType='email-address'
@@ -92,7 +100,7 @@ const RegisterForm = () => {
           style={styles.input} 
           placeholder="Telefono"
           placeholderTextColor="#546574"
-          keyboardType='number'
+          keyboardType='numeric'
           value={dataForm.telefono}
           onChangeText={text => getValues('telefono', text)}
         />
@@ -105,7 +113,6 @@ const RegisterForm = () => {
           placeholderTextColor="#546574"
           secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
           value={dataForm.password}
-          keyboardType=''
           onChangeText={text => getValues('password', text)}
         />
       
@@ -118,9 +125,10 @@ const RegisterForm = () => {
           value={dataForm.nombreNegocio}
           onChangeText={text => getValues('nombreNegocio', text)}
         />
-        
+        <View style={styles.pickerContainer}>
         <Text>Seleccione un cargo:</Text>
         <Picker
+        style={styles.picker}
         selectedValue={cargo}
         onValueChange={handleCargoChange}
         >
@@ -132,8 +140,8 @@ const RegisterForm = () => {
 
         {/* INPUT PARA SELECCIONAR PAIS */}
         <Text>Selecciona un país:</Text>
-        {console.log("countries:", countries)}
         <Picker
+        style={styles.picker}
         selectedValue={countrySelect}
         onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
         >
@@ -142,6 +150,7 @@ const RegisterForm = () => {
         <Picker.Item key={index} label={country} value={country} />
         ))}
       </Picker>
+      </View>
 
         {/* BOTON DE ACCION DE REGISTRO */}
         <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
@@ -216,15 +225,15 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     passwordInput: {
-      flex:1,
-      marginBottom: 25,
-      fontSize: 17,
-      borderBottomWidth: 1, // Cambiado de borderWidth
-      borderBottomColor: 'red', // Cambiado de borderColor
-      height: 40,
-      color: '#546574',
-      padding: 10,
-      borderRadius: 5,
+        flex:1,
+        marginBottom: 25,
+        fontSize: 17,
+        borderBottomWidth: 1, // Cambiado de borderWidth
+        borderBottomColor: 'red', // Cambiado de borderColor
+        height: 40,
+        color: '#546574',
+        padding: 10,
+        borderRadius: 5,
     },
     showPasswordButton: {
       padding: 5,
@@ -253,6 +262,17 @@ const styles = StyleSheet.create({
       color: 'white',
       fontSize: 25,
     },
+    pickerContainer: {
+      marginBottom: 20,
+    },
+    picker: {
+      height: 50,
+      backgroundColor: '#FFFFFF',
+      borderColor: '#D3D3D3',
+      borderWidth: 1,
+      borderRadius: 5,
+    },
   })
+
 
 export default RegisterForm;

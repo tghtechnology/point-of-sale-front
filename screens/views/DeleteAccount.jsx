@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useUser from '../hooks/useUser';
 import CustomAlert from '../componentes/CustomAlert';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function DeleteAccount() {
+export default function DeleteAccount(props) {
     const [modalVisible, setModalVisible] = useState(false);
     const [showAlertTemporary, setShowAlertTemporary] = useState(false);
     const [showAlertPermanent, setShowAlertPermanent] = useState(false);
@@ -52,10 +53,23 @@ export default function DeleteAccount() {
 
     return (
         <View>
-            <TouchableOpacity onPress={() => handleDeleteAccount('permanent')}>
+            <TouchableOpacity onPress={() => props.navigation.navigate ("perfil")} style={styles.container}>
+            <MaterialCommunityIcons name="account" size={24} color="#708090" />
+                <Text style={styles.text}>Perfil</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => props.navigation.navigate ("Contraseña")} style={styles.container}>
+            <MaterialCommunityIcons name="lock-reset" size={24} color="#708090" />
+                <Text style={styles.text}>Cambiar Contraseña</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.container} onPress={() => handleDeleteAccount('permanent')}>
+            <MaterialCommunityIcons name="account-remove-outline" size={24} color="#708090" />
                 <Text style={styles.text}>Eliminar Cuenta Permanente</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleDeleteAccount('temporary')}>
+
+            <TouchableOpacity style={styles.container} onPress={() => handleDeleteAccount('temporary')}>
+            <MaterialCommunityIcons name="account-remove" size={24} color="#708090" />
                 <Text style={styles.text}>Eliminar Cuenta Temporal</Text>
             </TouchableOpacity>
 
@@ -172,5 +186,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold'
     },
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 20,
+      },
+      text: {
+        marginLeft: 20,
+      },
 });
 
