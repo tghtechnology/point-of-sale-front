@@ -203,9 +203,13 @@ const TicketFormHome = () => {
         </View>
       )}
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
-        <Text style={styles.saveButtonText}>Guardar Cambios</Text>
-      </TouchableOpacity>
+      <View style={styles.divider} />
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
+          <Icon name="content-save" size={27} color="white" /> {/* Icono de guardar */}
+        </TouchableOpacity>
+      </View>
 
       {/* Footer Navigation */}
       <View style={styles.footer}>
@@ -238,18 +242,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
+  divider: {
+    width: '120%',
+    height: 1,
+    backgroundColor: 'black',
+    marginBottom: 10, // Espacio entre la línea divisoria y el botón
+  },
+  buttonContainer: {
+    alignItems: 'center',
+  },
   saveButton: {
     backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-    // Agrega otros estilos de botón según sea necesario
+    borderRadius: 20,
+    width: 100,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'black',
   },
   saveButtonText: {
     color: 'white',
     fontSize: 16,
     textAlign: 'center',
-    // Agrega otros estilos de texto según sea necesario
   },
   cobrarButton: {
     backgroundColor: 'red',
