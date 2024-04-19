@@ -117,6 +117,17 @@ const TicketFormHome = () => {
     }
   };
 
+  const handleSaveChanges = async () => {
+    try {
+      await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
+      console.log('Cambios guardados exitosamente');
+      // Puedes mostrar una alerta o mensaje de éxito aquí si lo deseas
+    } catch (error) {
+      console.error('Error al guardar cambios:', error);
+      // Puedes mostrar una alerta o mensaje de error aquí si lo deseas
+    }
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <TouchableOpacity
@@ -134,7 +145,7 @@ const TicketFormHome = () => {
           value={selectedItems.find(selectedItem => selectedItem.id === item.id)?.quantity || ''}
           onChangeText={(text) => handleQuantityChange(item, text)}
           keyboardType="numeric"
-          editable={false} 
+          editable={false}
         />
         <TouchableOpacity onPress={() => handleAddQuantity(item)}>
           <Text style={styles.quantityButton}>+</Text>
@@ -192,6 +203,10 @@ const TicketFormHome = () => {
         </View>
       )}
 
+      <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
+        <Text style={styles.saveButtonText}>Guardar Cambios</Text>
+      </TouchableOpacity>
+
       {/* Footer Navigation */}
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
@@ -222,6 +237,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+  },
+  saveButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    // Agrega otros estilos de botón según sea necesario
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+    // Agrega otros estilos de texto según sea necesario
   },
   cobrarButton: {
     backgroundColor: 'red',
