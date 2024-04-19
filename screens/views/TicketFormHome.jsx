@@ -126,7 +126,7 @@ const TicketFormHome = () => {
       />
       <Text style={styles.itemText}>{item.nombre}</Text>
       <View style={styles.quantityContainer}>
-        <TouchableOpacity onPress={() => handleSubtractQuantity(item)}>
+        <TouchableOpacity>
           <Text style={styles.quantityButton}>-</Text>
         </TouchableOpacity>
         <TextInput
@@ -136,7 +136,7 @@ const TicketFormHome = () => {
           keyboardType="numeric"
           editable={false} 
         />
-        <TouchableOpacity onPress={() => handleAddQuantity(item)}>
+        <TouchableOpacity>
           <Text style={styles.quantityButton}>+</Text>
         </TouchableOpacity>
       </View>
