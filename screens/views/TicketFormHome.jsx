@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
+  const [showSaveChangesAlert, setShowSaveChangesAlert] = useState(false);
   const [showAlertDeselect, setShowAlertDeselect] = useState(false);
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
@@ -121,6 +122,7 @@ const TicketFormHome = () => {
     try {
       await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
       console.log('Cambios guardados exitosamente');
+      setShowSaveChangesAlert(true);
       // Puedes mostrar una alerta o mensaje de éxito aquí si lo deseas
     } catch (error) {
       console.error('Error al guardar cambios:', error);
@@ -232,6 +234,15 @@ const TicketFormHome = () => {
         message="El producto se guardo correctamente."
         buttonColor="#FF0000"
         iconName="list" // Puedes cambiar el icono según lo desees
+      />
+
+      <CustomAlert
+        isVisible={showSaveChangesAlert}
+        onClose={() => setShowSaveChangesAlert(false)}
+        title="Cambios Guardados"
+        message="Los cambios se guardaron correctamente."
+        buttonColor="#008CBA"
+        iconName="check" // Puedes cambiar el icono según lo desees
       />
     </View>
   );
