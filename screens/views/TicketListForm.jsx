@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 const TicketListForm = () => {
@@ -41,20 +42,27 @@ const TicketListForm = () => {
         <View>
             <View style={styles.itemList}>
                 {selectedItem?.map(itm => (
-                    <View key={itm.id} style={styles.item}>
+                    <LinearGradient
+                        key={itm.id}
+                        colors={['#FFD700', '#FFA500']} // Colores del gradiente
+                        style={styles.item}
+                    >
                         <Text style={styles.itemText}>{itm.nombre}</Text>
                         <View style={styles.priceContainer}>
                             <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
                             <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
-                            <Text style={styles.priceText}>Subtotal: S/ {getSubtotal(itm).toFixed(2)}</Text>
+                            <Text style={styles.subtotalText}>Subtotal: S/ {getSubtotal(itm).toFixed(2)}</Text>
                         </View>
-                        {/* Display other properties of the selected item */}
-                    </View>
+                    </LinearGradient>
                 ))}
             </View>
-            <View style={styles.totalContainer}>
-                <Text style={styles.totalText}>Total: S/ {total.toFixed(2)}</Text>
-            </View>
+            <LinearGradient
+                colors={['#87CEEB', '#4682B4']} // Dos colores diferentes para el fondo del total
+                style={styles.totalContainer}
+            >
+                <Text style={[styles.totalText, { color: '#006400' }]}>Total: S/ {total.toFixed(2)}</Text>
+            </LinearGradient>
+
         </View>
     );
 };
@@ -65,22 +73,23 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
     },
     totalContainer: {
-        backgroundColor: '#f2f2f2',
-        padding: 10,
+        backgroundColor: 'transparent', // Hacer el fondo transparente para que el gradiente sea visible
+        paddingVertical: 3, // Reducir el espacio vertical
+        paddingHorizontal: 12, // Reducir el espacio horizontal
         marginTop: 10,
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
-        borderBottomWidth: 1,
-        borderBottomColor: '#000',
-      },
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#000',
+    },
     priceContainer: {
         flexDirection: 'column',
         alignItems: 'flex-end',
+        marginLeft: 20,
     },
     quantityText: {
-        color: '#4CAF50',
+        color: '#666',
+        fontSize: 16,
         fontWeight: 'bold',
-        marginTop: 5,
     },
     total: {
         alignItems: 'flex-end',
@@ -132,9 +141,12 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: 'row',
-        padding: 10,
+        padding: 15,
         alignItems: 'center',
-        backgroundColor: 'lightblue'
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#000',
+        marginBottom: 10,
     },
     magnifies: {
         border: 1,
@@ -151,10 +163,18 @@ const styles = StyleSheet.create({
     },
     itemText: {
         flex: 1,
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     priceText: {
         color: '#4CAF50',
         fontWeight: 'bold',
+        fontSize: 16,
+    },
+    subtotalText: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontSize: 16,
     },
     footer: {
         position: 'absolute',
