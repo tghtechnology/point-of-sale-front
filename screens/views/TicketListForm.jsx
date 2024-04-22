@@ -11,6 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const TicketListForm = () => {
     const [selectedItem, setSelectedItem] = useState([]); // Nuevo estado para almacenar la lista de artículos guardados
+    const [selectedDiscounts, setSelectedDiscounts] = useState([]); // Nuevo estado para almacenar los descuentos seleccionados
     const getSubtotal = (item) => item.precio * item.quantity;
     const [total, setTotal] = useState(0);
 
@@ -27,7 +28,19 @@ const TicketListForm = () => {
             }
         };
 
+        const getSelectedDiscount = async () => {
+            try {
+                const discount = await AsyncStorage.getItem('selectedDiscount');
+                if (discount !== null) {
+                    setSelectedDiscounts(JSON.parse(discount));
+                }
+            } catch (error) {
+                console.log('Error retrieving selected discount:', error);
+            }
+        };
+
         getSelectedItem();
+        getSelectedDiscount();
     }, []); // Ejecutar solo una vez al cargar el componente
 
     useEffect(() => {
@@ -56,11 +69,19 @@ const TicketListForm = () => {
                     </LinearGradient>
                 ))}
             </View>
+
             <LinearGradient
                 colors={['#87CEEB', '#4682B4']} // Dos colores diferentes para el fondo del total
                 style={styles.totalContainer}
             >
                 <Text style={[styles.totalText, { color: '#006400' }]}>Total: S/ {total.toFixed(2)}</Text>
+                {selectedDiscounts.length > 0 && (
+                    <Text style={[styles.totalText, { color: '#800080', fontWeight: 'bold' }]}>
+                        {selectedDiscounts.map(discount => (
+                            `Descuento: ${discount.valor}%`
+                        ))}
+                    </Text>
+                )}
             </LinearGradient>
 
         </View>
