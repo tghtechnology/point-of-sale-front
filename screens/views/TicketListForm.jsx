@@ -10,46 +10,41 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 
 const TicketListForm = () => {
-    const [selectedItem, setSelectedItem] = useState([]); // Nuevo estado para almacenar la lista de artículos guardados
-    const [selectedDiscounts, setSelectedDiscounts] = useState([]); // Nuevo estado para almacenar los descuentos seleccionados
-    const getSubtotal = (item) => item.precio * item.quantity;
+    const [selectedItem, setSelectedItem] = useState([]);
+    const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [total, setTotal] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0); // Nuevo estado para almacenar el precio total sin descuento
 
     useEffect(() => {
-        const getSelectedItem = async () => {
+        const fetchData = async () => {
             try {
                 const item = await AsyncStorage.getItem('selectedItem');
-                console.log("item", item)
+                const discount = await AsyncStorage.getItem('selectedDiscount');
+
                 if (item !== null) {
                     setSelectedItem(JSON.parse(item));
                 }
-            } catch (error) {
-                console.log('Error retrieving selected item:', error);
-            }
-        };
 
-        const getSelectedDiscount = async () => {
-            try {
-                const discount = await AsyncStorage.getItem('selectedDiscount');
                 if (discount !== null) {
                     setSelectedDiscounts(JSON.parse(discount));
                 }
             } catch (error) {
-                console.log('Error retrieving selected discount:', error);
+                console.log('Error retrieving data:', error);
             }
         };
 
-        getSelectedItem();
-        getSelectedDiscount();
-    }, []); // Ejecutar solo una vez al cargar el componente
+        fetchData();
+    }, []);
 
     useEffect(() => {
-        const newTotal = selectedItem.reduce((total, itm) => {
-            const precioConDescuento = itm.precio - (itm.precio * selectedDiscounts.reduce((total, discount) => total + (discount.valor / 100), 0));
-            return total + (precioConDescuento * itm.quantity);
-        }, 0);
-        setTotal(newTotal);
-    }, [selectedItem, selectedDiscounts]);
+        const totalPrice = selectedItem.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
+        setTotalPrice(totalPrice);
+    }, [selectedItem]);
+
+    useEffect(() => {
+        const totalDiscountedPrice = applyDiscount(totalPrice, selectedDiscounts);
+        setTotal(totalDiscountedPrice);
+    }, [totalPrice, selectedDiscounts]);
 
     const applyDiscount = (total, discounts) => {
         return total - discounts.reduce((acc, discount) => {
@@ -65,27 +60,27 @@ const TicketListForm = () => {
     return (
         <View>
             <View style={styles.itemList}>
-                {selectedItem?.map(itm => (
+                {selectedItem.map(itm => (
                     <LinearGradient
                         key={itm.id}
-                        colors={['#FFD700', '#FFA500']} // Colores del gradiente
+                        colors={['#FFD700', '#FFA500']} 
                         style={styles.item}
                     >
                         <Text style={styles.itemText}>{itm.nombre}</Text>
                         <View style={styles.priceContainer}>
                             <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
                             <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
-                            <Text style={styles.subtotalText}>Subtotal: S/ {getSubtotal(itm).toFixed(2)}</Text>
+                            <Text style={styles.subtotalText}>Subtotal: S/ {(itm.precio * itm.quantity).toFixed(2)}</Text>
                         </View>
                     </LinearGradient>
                 ))}
             </View>
 
             <LinearGradient
-                colors={['#87CEEB', '#4682B4']} // Dos colores diferentes para el fondo del total
+                colors={['#87CEEB', '#4682B4']} 
                 style={styles.totalContainer}
             >
-                <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {total.toFixed(2)}</Text>
+                <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {totalPrice.toFixed(2)}</Text>
                 {selectedDiscounts.length > 0 && (
                     <Text style={[styles.totalText, { color: '#800080', marginTop: 3, fontWeight: 'bold' }]}>
                         {selectedDiscounts.map(discount => (
@@ -94,10 +89,9 @@ const TicketListForm = () => {
                     </Text>
                 )}
                 <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
-                    Total con descuento: S/ {applyDiscount(total, selectedDiscounts).toFixed(2)}
+                    Total con descuento: S/ {total.toFixed(2)}
                 </Text>
             </LinearGradient>
-
         </View>
     );
 };
