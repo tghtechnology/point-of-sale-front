@@ -84,17 +84,17 @@ const TicketFormHome = () => {
   const handleSelectDiscount = async (discount) => {
     let updatedDiscounts = [...selectedDiscounts];
     const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
-
+  
     if (discountIndex !== -1) {
       // Si el descuento ya está seleccionado, deseleccionarlo
       updatedDiscounts.splice(discountIndex, 1);
     } else {
-      // Si el descuento no está seleccionado, seleccionarlo
-      updatedDiscounts.push(discount);
+      // Si el descuento no está seleccionado, deseleccionar cualquier descuento previamente seleccionado y luego seleccionarlo
+      updatedDiscounts = [discount];
     }
-
+  
     setSelectedDiscounts(updatedDiscounts);
-
+  
     try {
       await AsyncStorage.setItem('selectedDiscount', JSON.stringify(updatedDiscounts));
       console.log('Descuento seleccionado guardado:', discount);
