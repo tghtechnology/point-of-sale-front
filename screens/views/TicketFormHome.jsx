@@ -156,6 +156,7 @@ const TicketFormHome = () => {
   const handleSaveChanges = async () => {
     try {
       await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
+      await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts)); // Guardar los descuentos
       console.log('Cambios guardados exitosamente');
       setShowSaveChangesAlert(true);
       // Puedes mostrar una alerta o mensaje de éxito aquí si lo deseas

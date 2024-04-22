@@ -74,9 +74,9 @@ const TicketListForm = () => {
                 colors={['#87CEEB', '#4682B4']} // Dos colores diferentes para el fondo del total
                 style={styles.totalContainer}
             >
-                <Text style={[styles.totalText, { color: '#006400' }]}>Total: S/ {total.toFixed(2)}</Text>
+                <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {total.toFixed(2)}</Text>
                 {selectedDiscounts.length > 0 && (
-                    <Text style={[styles.totalText, { color: '#800080', fontWeight: 'bold' }]}>
+                    <Text style={[styles.totalText, { color: '#800080', marginTop: 3, fontWeight: 'bold' }]}>
                         {selectedDiscounts.map(discount => (
                             `Descuento: ${discount.valor}%`
                         ))}
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     totalText: {
         color: '#4CAF50',
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: 16,
         marginTop: 20,
         textAlign: 'right',
     },
