@@ -45,10 +45,11 @@ const TicketListForm = () => {
 
     useEffect(() => {
         const newTotal = selectedItem.reduce((total, itm) => {
-            return total + itm.precio * itm.quantity;
+            const precioConDescuento = itm.precio - (itm.precio * selectedDiscounts.reduce((total, discount) => total + (discount.valor / 100), 0));
+            return total + (precioConDescuento * itm.quantity);
         }, 0);
         setTotal(newTotal);
-    }, [selectedItem]);
+    }, [selectedItem, selectedDiscounts]);
 
 
     return (
