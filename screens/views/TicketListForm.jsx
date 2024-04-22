@@ -89,7 +89,7 @@ const TicketListForm = () => {
                 {selectedDiscounts.length > 0 && (
                     <Text style={[styles.totalText, { color: '#800080', marginTop: 3, fontWeight: 'bold' }]}>
                         {selectedDiscounts.map(discount => (
-                            `Descuento: ${discount.valor}%`
+                            `Descuento: ${discount.tipo_descuento === 'MONTO' ? 'S/ ' : ''}${discount.valor}${discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}`
                         ))}
                     </Text>
                 )}
