@@ -51,6 +51,16 @@ const TicketListForm = () => {
         setTotal(newTotal);
     }, [selectedItem, selectedDiscounts]);
 
+    const applyDiscount = (total, discounts) => {
+        return total - discounts.reduce((acc, discount) => {
+            if (discount.tipo_descuento === 'MONTO') {
+                return acc + discount.valor;
+            } else if (discount.tipo_descuento === 'PORCENTAJE') {
+                return acc + (total * (discount.valor / 100));
+            }
+            return acc;
+        }, 0);
+    };
 
     return (
         <View>
@@ -83,6 +93,9 @@ const TicketListForm = () => {
                         ))}
                     </Text>
                 )}
+                <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
+                    Total con descuento: S/ {applyDiscount(total, selectedDiscounts).toFixed(2)}
+                </Text>
             </LinearGradient>
 
         </View>
