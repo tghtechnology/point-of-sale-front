@@ -17,6 +17,7 @@ const TicketFormHome = () => {
   const [selectedValue, setSelectedValue] = useState('default');
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedDiscounts, setSelectedDiscounts] = useState([]); // Nuevo estado para los descuentos seleccionados
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
 
@@ -32,7 +33,19 @@ const TicketFormHome = () => {
       }
     };
 
+    const fetchSelectedDiscounts = async () => {
+      try {
+        const storedDiscounts = await AsyncStorage.getItem('selectedDiscount');
+        if (storedDiscounts !== null) {
+          setSelectedDiscounts(JSON.parse(storedDiscounts));
+        }
+      } catch (error) {
+        console.error('Error fetching selected discounts from AsyncStorage:', error);
+      }
+    };
+
     fetchSelectedItems();
+    fetchSelectedDiscounts();
   }, []);
 
   useEffect(() => {
@@ -65,6 +78,28 @@ const TicketFormHome = () => {
       console.log('Artículo seleccionado guardado:', item);
     } catch (error) {
       console.error('Error saving item to AsyncStorage:', error);
+    }
+  };
+
+  const handleSelectDiscount = async (discount) => {
+    let updatedDiscounts = [...selectedDiscounts];
+    const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
+
+    if (discountIndex !== -1) {
+      // Si el descuento ya está seleccionado, deseleccionarlo
+      updatedDiscounts.splice(discountIndex, 1);
+    } else {
+      // Si el descuento no está seleccionado, seleccionarlo
+      updatedDiscounts.push(discount);
+    }
+
+    setSelectedDiscounts(updatedDiscounts);
+
+    try {
+      await AsyncStorage.setItem('selectedDiscount', JSON.stringify(updatedDiscounts));
+      console.log('Descuento seleccionado guardado:', discount);
+    } catch (error) {
+      console.error('Error saving discount to AsyncStorage:', error);
     }
   };
 
@@ -157,6 +192,20 @@ const TicketFormHome = () => {
     </View>
   );
 
+  const renderItemDiscounts = ({ item }) => {
+    return (
+      <View style={styles.item}>
+        <TouchableOpacity
+          style={[styles.circle,
+          selectedDiscounts.some(selectedDiscount => selectedDiscount.id === item.id) && styles.circleSelected]}
+          onPress={() => handleSelectDiscount(item)}
+        />
+        <Text style={styles.itemText}>{item.nombre}</Text>
+        <Text style={styles.priceText}>{item.valor} %</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.cobrarButton} onPress={showListArticles}>
@@ -194,13 +243,7 @@ const TicketFormHome = () => {
         <View style={styles.itemList}>
           <FlatList
             data={discounts}
-            renderItem={({ item }) => (
-              <View style={styles.item}>
-                <View style={styles.circle} />
-                <Text style={styles.itemText}>{item.nombre}</Text>
-                <Text style={styles.priceText}>{item.valor} %</Text>
-              </View>
-            )}
+            renderItem={renderItemDiscounts}
           />
         </View>
       )}
