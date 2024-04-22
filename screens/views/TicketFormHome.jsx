@@ -84,7 +84,7 @@ const TicketFormHome = () => {
   const handleSelectDiscount = async (discount) => {
     let updatedDiscounts = [...selectedDiscounts];
     const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
-  
+
     if (discountIndex !== -1) {
       // Si el descuento ya está seleccionado, deseleccionarlo
       updatedDiscounts.splice(discountIndex, 1);
@@ -92,9 +92,9 @@ const TicketFormHome = () => {
       // Si el descuento no está seleccionado, deseleccionar cualquier descuento previamente seleccionado y luego seleccionarlo
       updatedDiscounts = [discount];
     }
-  
+
     setSelectedDiscounts(updatedDiscounts);
-  
+
     try {
       await AsyncStorage.setItem('selectedDiscount', JSON.stringify(updatedDiscounts));
       console.log('Descuento seleccionado guardado:', discount);
@@ -194,6 +194,14 @@ const TicketFormHome = () => {
   );
 
   const renderItemDiscounts = ({ item }) => {
+
+    let discountValue = '';
+  if (item.tipo_descuento === 'MONTO') {
+    discountValue = `S/ ${parseFloat(item.valor).toFixed(2)}`;
+  } else if (item.tipo_descuento === 'PORCENTAJE') {
+    discountValue = `${item.valor}%`;
+  }
+
     return (
       <View style={styles.item}>
         <TouchableOpacity
@@ -202,7 +210,7 @@ const TicketFormHome = () => {
           onPress={() => handleSelectDiscount(item)}
         />
         <Text style={styles.itemText}>{item.nombre}</Text>
-        <Text style={styles.priceText}>{item.valor} %</Text>
+        <Text style={styles.priceText}>{discountValue}</Text>
       </View>
     );
   };
