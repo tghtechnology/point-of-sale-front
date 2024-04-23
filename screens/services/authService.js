@@ -86,11 +86,64 @@ const editarUsuarioPorId = async (id, newData) => {
       console.error('Error al editar usuario:', error);
       throw new Error('Error al editar usuario');
     }
+};
+
+
+
+const cambiarContraseña = async (contraseñaActual, nuevaContraseña, verificarContraseña) => {
+  // Verificaciones iniciales
+  if (!contraseñaActual || !nuevaContraseña || !verificarContraseña) {
+    throw new Error("Todos los campos son requeridos");
+  }
+
+  if (nuevaContraseña !== verificarContraseña) {
+    throw new Error("La nueva contraseña y su confirmación deben coincidir");
+  }
+
+  // Obtener el token y el ID del usuario
+  const token = await AsyncStorage.getItem('token');
+  const userId = await AsyncStorage.getItem("usuarioid");
+
+  if (!token) {
+    throw new Error("Error de autenticación: Token no encontrado.");
+  }
+
+  if (!userId) {
+    throw new Error("Error de autenticación: ID del usuario no encontrado.");
+  }
+
+  // Datos para la solicitud
+  const data = {
+    contraseñaActual, // Campo actual
+    nuevaContraseña, // Nueva contraseña
+    verificarContraseña, // Verificación de la nueva contraseña
   };
+
+  // Enviar la solicitud al servidor
+  try {
+    const response = await apiClient.put(
+      `/usuario/${userId}/cambiarPass`, 
+      data, // Datos enviados
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Encabezado de autorización
+          'Content-Type': 'application/json', // Asegúrate de que sea JSON
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error al cambiar la contraseña:", error.message);
+    throw new Error("No se pudo cambiar la contraseña");
+  }
+};
+
   
 export {
     createToken,
     logout,
     obtenerDatosUsuarioPorId,
-    editarUsuarioPorId
+    editarUsuarioPorId,
+    cambiarContraseña
 }

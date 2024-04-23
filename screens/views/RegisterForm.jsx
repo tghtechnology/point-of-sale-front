@@ -12,7 +12,6 @@ import CountryProvider from '../context/country/CountryProvider';
 const INITIAL_STATE = {
   nombre:'',
   email:'',
-  cargo:'',
   telefono:'',
   password:'',
 }
@@ -20,7 +19,6 @@ const INITIAL_STATE = {
 const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
 
 const RegisterForm = () => {
-  const [cargo, setCargo] = useState(INITIAL_STATE.cargo);
   const [isModalVisible, setModalVisible] = useState(false);
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
   const [countrySelect, setCountrySelect] = useState('');
@@ -28,10 +26,7 @@ const RegisterForm = () => {
   const {handleCreateUser} = useUser();
   const { countries,fetchCountries } = useCountry();
   
-  const handleCargoChange = (cargoSeleccionado) => {
-    setCargo(cargoSeleccionado);
-
-  };
+  
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -55,7 +50,7 @@ const RegisterForm = () => {
     const objectSend = {
       ...dataForm,
       pais:countrySelect,
-      cargo: cargo
+
     }
     
     //control de errores para el crear un usuario
@@ -112,6 +107,7 @@ const RegisterForm = () => {
           placeholder=" Contraseña"
           placeholderTextColor="#546574"
           secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
+          keyboardType='default'
           value={dataForm.password}
           onChangeText={text => getValues('password', text)}
         />
@@ -119,25 +115,15 @@ const RegisterForm = () => {
 
         {/* IMPUT PARA ENTRADA DE NOMBRE DE NEGOCIO */}
         <TextInput
-        style={styles.input} 
+          style={styles.input} 
           placeholder="Nombre del Negocio"
           placeholderTextColor="#546574"
+          keyboardType='default'
           value={dataForm.nombreNegocio}
           onChangeText={text => getValues('nombreNegocio', text)}
         />
         <View style={styles.pickerContainer}>
-        <Text>Seleccione un cargo:</Text>
-        <Picker
-        style={styles.picker}
-        selectedValue={cargo}
-        onValueChange={handleCargoChange}
-        >
-        <Picker.Item label="Seleccionar cargo" value="" />
-        {cargosDisponibles.map((cargo, index) => (
-          <Picker.Item label={cargo} value={cargo} key={index} />
-        ))}
-        </Picker>
-
+    
         {/* INPUT PARA SELECCIONAR PAIS */}
         <Text>Selecciona un país:</Text>
         <Picker

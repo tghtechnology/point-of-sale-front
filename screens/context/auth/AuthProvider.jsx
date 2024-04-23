@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import AuthContext from "./AuthContext";
-import {createToken,obtenerDatosUsuarioPorId,editarUsuarioPorId,logout} from "../../services/authService";
+import {createToken,obtenerDatosUsuarioPorId,editarUsuarioPorId,cambiarContraseña,logout} from "../../services/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthProvider = ({children}) => {
@@ -41,6 +41,30 @@ const AuthProvider = ({children}) => {
       }
     };
 
+    const changePassword = async (currentPassword, newPassword, confirmPassword) => {
+      // Validación para verificar que todos los campos sean requeridos
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        throw new Error("Todos los campos son requeridos");
+      }
+    
+      // Verificación para confirmar que las nuevas contraseñas coincidan
+      if (newPassword !== confirmPassword) {
+        throw new Error("La nueva contraseña y su confirmación deben coincidir");
+      }
+    
+      try {
+        const result = await cambiarContraseña(currentPassword, newPassword, confirmPassword);
+        
+        alert("Contraseña cambiada con éxito"); // Notificación de éxito al usuario
+        return result;
+      } catch (error) {
+        console.error("Error al cambiar la contraseña:", error.message);
+        alert(error.message); // Notificación de error al usuario
+        throw error; // Lanza el error para otros manejadores
+      }
+    };
+    
+
     const logautAccess = async () => {
       const token = await AsyncStorage.getItem("token");
       if (token !== null) {
@@ -75,6 +99,7 @@ const AuthProvider = ({children}) => {
         editarUsuario,
         loginAccess,
         logautAccess,
+        changePassword
     }}>
         {children}
     </AuthContext.Provider>

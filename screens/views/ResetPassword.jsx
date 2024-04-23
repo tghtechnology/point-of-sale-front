@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text,TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TextInput, Text,TouchableOpacity, StyleSheet,Alert } from 'react-native';
+import useAuth from '../hooks/useAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ResetPassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { changePassword } = useAuth(); // Verifica si el usuario está disponible
 
-  const handleSubmit = () => {
-    if (newPassword !== confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
+  const handleSubmit = async () => {
+
+    try {
+      await changePassword(currentPassword, newPassword, confirmPassword); // Usamos la función para cambiar la contraseña
+      Alert.alert("Éxito", "Contraseña cambiada con éxito");
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch (error) {
+      Alert.alert("Error", error.message); // Mostrar errores
     }
-    // Aquí puedes manejar la lógica para cambiar la contraseña
   };
-
+  
   return (
     <View style={styles.container}>
       <TextInput
