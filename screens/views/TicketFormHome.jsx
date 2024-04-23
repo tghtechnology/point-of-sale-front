@@ -7,6 +7,7 @@ import useDiscount from '../hooks/useDiscount';
 import { useNavigation } from '@react-navigation/native';
 import CustomAlert from '../componentes/CustomAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useClient from '../hooks/useClient'
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -14,10 +15,12 @@ const TicketFormHome = () => {
   const [showAlertDeselect, setShowAlertDeselect] = useState(false);
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
+  const { client } = useClient();
   const [selectedValue, setSelectedValue] = useState('default');
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState([]); // Nuevo estado para los descuentos seleccionados
+  const [selectedClients, setSelectedClients] = useState([]); // Estado para almacenar el cliente seleccionado
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
 
@@ -44,8 +47,20 @@ const TicketFormHome = () => {
       }
     };
 
+    const fetchSelectedClient = async () => {
+      try {
+        const storedClient = await AsyncStorage.getItem('selectedClient');
+        if (storedClient !== null) {
+          setSelectedClients(JSON.parse(storedClient));
+        }
+      } catch (error) {
+        console.error('Error fetching selected client from AsyncStorage:', error);
+      }
+    };
+
     fetchSelectedItems();
     fetchSelectedDiscounts();
+    fetchSelectedClient();
   }, []);
 
   useEffect(() => {
@@ -100,6 +115,18 @@ const TicketFormHome = () => {
       console.log('Descuento seleccionado guardado:', discount);
     } catch (error) {
       console.error('Error saving discount to AsyncStorage:', error);
+    }
+  };
+
+  const handleSelectClient = async (client) => {
+    try {
+      await AsyncStorage.setItem('selectedClient', JSON.stringify(client));
+      console.log('Cliente seleccionado guardado:', client);
+      setSelectedClients(client); // Use setSelectedClients here
+      //   Verificar el estado actual de selectedClients en la consola
+      console.log('selectedClients:', selectedClients);
+    } catch (error) {
+      console.error('Error al guardar el cliente seleccionado:', error);
     }
   };
 
@@ -194,14 +221,12 @@ const TicketFormHome = () => {
   );
 
   const renderItemDiscounts = ({ item }) => {
-
     let discountValue = '';
-  if (item.tipo_descuento === 'MONTO') {
-    discountValue = `S/ ${parseFloat(item.valor).toFixed(2)}`;
-  } else if (item.tipo_descuento === 'PORCENTAJE') {
-    discountValue = `${item.valor}%`;
-  }
-
+    if (item.tipo_descuento === 'MONTO') {
+      discountValue = `S/ ${parseFloat(item.valor).toFixed(2)}`;
+    } else if (item.tipo_descuento === 'PORCENTAJE') {
+      discountValue = `${item.valor}%`;
+    }
     return (
       <View style={styles.item}>
         <TouchableOpacity
@@ -214,6 +239,20 @@ const TicketFormHome = () => {
       </View>
     );
   };
+
+  const renderItemClient = ({ item }) => (
+    <View style={styles.item}>
+      <TouchableOpacity
+        style={[
+          styles.circle,
+          selectedClients && selectedClients.id === item.id && styles.circleSelected
+        ]}
+        onPress={() => handleSelectClient(item)}
+      />
+      <Text style={styles.itemText}>{item.nombre}</Text>
+      <Text style={styles.priceText}>{item.email}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -231,6 +270,7 @@ const TicketFormHome = () => {
           }>
           <Picker.Item label="Todos los artículos" value="default" />
           <Picker.Item label="Descuentos" value="discounts" />
+          <Picker.Item label="Clientes" value="clients" />
         </Picker>
         <TouchableOpacity style={styles.magnifies}>
           <Icon name="magnify" size={20} color="#000" />
@@ -253,6 +293,16 @@ const TicketFormHome = () => {
           <FlatList
             data={discounts}
             renderItem={renderItemDiscounts}
+          />
+        </View>
+      )}
+
+      {/* List Discounts */}
+      {selectedValue === 'clients' && (
+        <View style={styles.itemList}>
+          <FlatList
+            data={client}
+            renderItem={renderItemClient}
           />
         </View>
       )}
