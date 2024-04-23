@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import CustomAlert from '../componentes/CustomAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useClient from '../hooks/useClient'
+import useImpuesto from "../hooks/useImpuesto";
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -16,11 +17,13 @@ const TicketFormHome = () => {
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const { client } = useClient();
+  const { listImpuesto } = useImpuesto();
   const [selectedValue, setSelectedValue] = useState('default');
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState([]); // Nuevo estado para los descuentos seleccionados
   const [selectedClients, setSelectedClients] = useState([]); // Estado para almacenar el cliente seleccionado
+  const [selectedTaxes, setSelectedTaxes] = useState([]); // New state for selected taxes
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
 
@@ -58,9 +61,21 @@ const TicketFormHome = () => {
       }
     };
 
+    const fetchSelectedTaxes = async () => {
+      try {
+        const storedTaxes = await AsyncStorage.getItem('selectedTax');
+        if (storedTaxes !== null) {
+          setSelectedTaxes(JSON.parse(storedTaxes));
+        }
+      } catch (error) {
+        console.error('Error fetching selected taxes from AsyncStorage:', error);
+      }
+    };
+
     fetchSelectedItems();
     fetchSelectedDiscounts();
     fetchSelectedClient();
+    fetchSelectedTaxes();
   }, []);
 
   useEffect(() => {
@@ -129,6 +144,29 @@ const TicketFormHome = () => {
       console.error('Error al guardar el cliente seleccionado:', error);
     }
   };
+
+  const handleSelectTax = async (tax) => {
+    let updatedTaxes = [...selectedTaxes];
+    const taxIndex = updatedTaxes.findIndex((t) => t.id === tax.id);
+
+    if (taxIndex !== -1) {
+      // If the tax is already selected, deselect it
+      updatedTaxes.splice(taxIndex, 1);
+    } else {
+      // If the tax is not selected, select it
+      updatedTaxes.push(tax);
+    }
+
+    setSelectedTaxes(updatedTaxes);
+
+    try {
+      await AsyncStorage.setItem('selectedTax', JSON.stringify(updatedTaxes));
+      console.log('Selected tax saved:', tax);
+    } catch (error) {
+      console.error('Error saving tax to AsyncStorage:', error);
+    }
+  };
+
 
   const showListArticles = () => {
     navigation.navigate('ListarTicket');
@@ -253,6 +291,18 @@ const TicketFormHome = () => {
     </View>
   );
 
+  const renderItemTaxes = ({ item }) => (
+    <View style={styles.item}>
+      <TouchableOpacity
+        style={[styles.circle,
+        selectedTaxes.some(selectedTax => selectedTax.id === item.id) && styles.circleSelected]}
+        onPress={() => handleSelectTax(item)}
+      />
+      <Text style={styles.itemText}>{item.nombre}</Text>
+      <Text style={styles.priceText}>{item.tasa} %</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.cobrarButton} onPress={showListArticles}>
@@ -270,6 +320,7 @@ const TicketFormHome = () => {
           <Picker.Item label="Todos los artículos" value="default" />
           <Picker.Item label="Descuentos" value="discounts" />
           <Picker.Item label="Clientes" value="clients" />
+          <Picker.Item label="Impuestos" value="impuestos" />
         </Picker>
         <TouchableOpacity style={styles.magnifies}>
           <Icon name="magnify" size={20} color="#000" />
@@ -296,12 +347,22 @@ const TicketFormHome = () => {
         </View>
       )}
 
-      {/* List Discounts */}
+      {/* List Client */}
       {selectedValue === 'clients' && (
         <View style={styles.itemList}>
           <FlatList
             data={client}
             renderItem={renderItemClient}
+          />
+        </View>
+      )}
+
+      {/* List Client */}
+      {selectedValue === 'impuestos' && (
+        <View style={styles.itemList}>
+          <FlatList
+            data={listImpuesto}
+            renderItem={renderItemTaxes}
           />
         </View>
       )}
