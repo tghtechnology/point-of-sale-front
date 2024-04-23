@@ -5,27 +5,31 @@ import React, { useState,useEffect } from "react";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
 import CustomAlert from '../componentes/CustomAlert';
+import {MaterialIcons} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
 const INITIAL_STATE = {
   nombre: "",
   tipo_venta: "",
   precio: "",
-  ref: "",
+  representacion:"",
   color:"",
   imagen:"",
   id_categoria: "",
 };
 const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
 
- const ColorBox = ({ color }) => (
-  <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
- );
+const ColorBox = ({ color,setDatos }) => (
+  <TouchableOpacity 
+    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} 
+    onPress={() => setDatos(prevDatos => ({ ...prevDatos, color }))} 
+  />
+);
 export default function ArticlesForm() {
   const [selectedImage, setSelectedImage] = useState(null)
   const [datos, setDatos] = useState(INITIAL_STATE);
+  const [categoriaSelect,setCategoriaSelect] =useState('')
   const [showAlert, setShowAlert] = useState(false);
-  const [value, setValue] = useState('color');
   const { handleCreateArticle,listArticle,setListArticle} = useArticle();
   const { listCategoria } = useCategory();
 
@@ -51,6 +55,10 @@ export default function ArticlesForm() {
    console.log(pickerResult)
   }
 
+  const removeSelectedImage = () => {
+    setSelectedImage(null);
+  };
+
   
   const getValues = (name, value) => {
     setDatos({
@@ -66,27 +74,30 @@ export default function ArticlesForm() {
     });
   };
 
-  const handleCategoryChange = (value) => {
+  const handleRepresentacion = (value) =>{
     setDatos({
       ...datos,
-      id_categoria: value,
-    });
-  };
+      representacion:value,
+    })
+
+  }
+
 
   const SubmitArticle = async () => {
     try {
       const articleData = {
         ...datos,
         precio: parseFloat(datos.precio),
+        id_categoria:categoriaSelect,
 
       };
       console.log("Datos a enviar al servidor:", articleData);
-      const response = await handleCreateArticle(articleData);
-      if (response) {
+      const newArticle = await handleCreateArticle(articleData);
+      if (newArticle && newArticle.id) {
         setShowAlert(true);
         setDatos(INITIAL_STATE);
-
-        setListArticle([...listArticle,datos]);
+        setCategoriaSelect('');
+        setListArticle([...listArticle,newArticle]);
       } else {
         alert("El articulo no se pudo crear");
       }
@@ -116,8 +127,8 @@ export default function ArticlesForm() {
       </View>
       <View style={styles.pickeContainer}>
         <Picker
-          onValueChange={(value) => handleCategoryChange(value)}
-          value={datos.id_categoria}
+          onValueChange={(itemValue, itemIndex) => setCategoriaSelect(itemValue)}
+          selectedValue={categoriaSelect}
           style={styles.picker}
         >
           <Picker.Item label="Sin categoría" value="" />
@@ -145,12 +156,12 @@ export default function ArticlesForm() {
       </RadioButton.Group>
       {/* Input Precio */}
       <TextInput
-        style={styles.input}
-        placeholder="Precio"
-        placeholderTextColor="#546574"
-        value={datos.precio}
-        onChangeText={(text) => getValues("precio", text)}
-      />
+  style={styles.input}
+  placeholder="Precio"
+  placeholderTextColor="#546574"
+  value={datos.precio.toString()}
+  onChangeText={(text) => getValues("precio", text)}
+/>
       <View>
         <Text style={styles.info}>
           Deje el campo en blanco para indicar el precio durante la venta{" "}
@@ -171,34 +182,48 @@ export default function ArticlesForm() {
       <View>
         <Text style={styles.label}>Representacion</Text>
       </View>
-       <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value} >
+       
+        <RadioButton.Group onValueChange={(value) => handleRepresentacion (value)} value={datos.representacion} >
         <View style={styles.radioContainer}>
-          <RadioButton value="Color" />
+          <RadioButton value="color" />
           <Text>Color</Text>
         </View>
         <View style={styles.radioContainer}>
-          <RadioButton value="Imagen" />
+          <RadioButton value="imagen" />
           <Text>Imagen</Text>
         </View>
       </RadioButton.Group>
-      {value === 'Imagen' && (
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
-          <TouchableOpacity style={styles.uploadImagen} onPress={openImagePickerAsync}>
-          {selectedImage ? 
-              (
+      {datos.representacion === 'imagen' && (
+  <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
+    <TouchableOpacity style={styles.uploadImagen} onPress={openImagePickerAsync}>
+      {selectedImage ? 
+        (
           <Image style={{ width: 190, height: 190, borderRadius: 8 }} source={{ uri: selectedImage.localUri }} />
         ) :
         (
           <Text style={styles.text}>Subir Imagen</Text>
         )
-          }
-          </TouchableOpacity>
-        </View>
-      )}
-      {value === 'Color' && (
+      }
+      <TouchableOpacity style={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          backgroundColor: 'white',
+          borderRadius: 50,
+          padding: 2,
+          zIndex: 1 
+        }} onPress={removeSelectedImage}>
+        <MaterialIcons name="close" size={24} color="#696969" style={{backgroundColor: 'white', borderRadius: 12}}/>
+      </TouchableOpacity> 
+    </TouchableOpacity>
+  </View>
+)}
+
+
+      {datos.representacion === 'color' && (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center'}}>
           {colors.map((color, index) => (
-            <ColorBox key={index} color={color} />
+            <ColorBox key={index} color={color} setDatos={setDatos} />
           ))}
         </View>
       )} 
@@ -207,7 +232,6 @@ export default function ArticlesForm() {
       <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
-
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}

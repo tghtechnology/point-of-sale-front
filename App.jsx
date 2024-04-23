@@ -10,7 +10,7 @@ import AuthProvider from "./screens/context/auth/AuthProvider.jsx";
 import ImpuestoProvider from "./screens/context/impuesto/ImpuestoProvider.jsx";
 import ClientProvider from "./screens/context/cliente/ClientProvider.jsx";
 import WorkerProvider from "./screens/context/worker/WorkerProvider.jsx";
-
+import {useFont} from 'expo-font';
 
 export default function App() {
   return (
