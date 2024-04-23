@@ -244,8 +244,7 @@ const TicketFormHome = () => {
     <View style={styles.item}>
       <TouchableOpacity
         style={[
-          styles.circle,
-          selectedClients && selectedClients.id === item.id && styles.circleSelected
+          styles.circle
         ]}
         onPress={() => handleSelectClient(item)}
       />
