@@ -1,12 +1,11 @@
 import React,{useEffect} from 'react'
-import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UsuarioProvider from '../context/usuarios/UsuarioProvider';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
-
 import {useFonts} from 'expo-font';
-
+import Icono from '../img/Icono.png';
 
 
  function HomeView() {
@@ -52,15 +51,21 @@ import {useFonts} from 'expo-font';
   }
 
   return (
+
     <UsuarioProvider>
-      <ScrollView style={styles.container}>
+      <ScrollView >
       <View style={[ styles.blueSection]}></View>
-        <View style={[ styles.redSection]}>
+      <View style={[ styles.redSection]}>
+        
           <Text style={styles.text}>Home Shop</Text>
           <Text style={[styles.text, styles.textod]}>Tu Sitio Ideal</Text>
         </View>
+      
+      <Image source={Icono} style={styles.logo} />
+      
+        
        
-        <View style={[styles.section, styles.blackSection]}>
+        <View style={styles.section}>
           <View style={[styles.container2]}>
             {/* botón de inicio de sesión */}
             <TouchableOpacity
@@ -92,35 +97,35 @@ const styles = StyleSheet.create({
   container2: {
     display:'flex',
     flexDirection: 'column',
-    marginTop:'50px'
+    marginTop:-45,
   },
     section: {
-    borderColor: '#ccc',
+    
     width: '100%',
     alignItems: 'center',
   },
     redSection: {
      backgroundColor: '#051EFF', 
-     paddingVertical: '40%',
-     
-
+     paddingVertical: '50%',
+     position: 'absolute',
+     paddingHorizontal: '21.5%',
      justifyContent: 'center',
-     borderRadius:10,
-    
   },
+
   blueSection:{
     backgroundColor: '#0258FE', 
     paddingVertical: '80%',
     paddingHorizontal:'20%',
     justifyContent: 'center',
-
+    borderRadius:8,
   },
 
   text: {
     fontSize: 50,
     fontWeight: 'bold',
     color: 'white',
-    top:'70%',
+    top:'200%',
+    textAlign: 'center',
     fontFamily: 'Inika',
   },
   textod:{
@@ -129,23 +134,41 @@ const styles = StyleSheet.create({
     color: 'white',
   }, 
   button: {
-    marginTop:25,
+    
     backgroundColor: '#0258FE',
-    borderRadius: 5,
-    display:'flex',
-    marginBottom:10,
-    padding:15,
-    justifyContent:'center',
-    alignItems:'center',
-    textAlign:"center",
-    borderColor:'#fff',
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 5,
+    borderRadius: 8,
+    width:275,
+    height:71,
+    textAlign:'center',
+    marginBottom:20,
     borderWidth:2,
+    borderColor:'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  
+     
+  },
+ 
+  logo: {
+    position: 'absolute',
     
-    
+    top: 10,
+    left: 30,
   },
   buttonText: {
     color: 'white',
     fontWeight:'400',
+    textAlign:'center',
+    alignItems:'center',
     fontSize:24
   },
 });

@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     height: '50%', 
     paddingVertical:'80%',
     paddingHorizontal:'58%',
-    backgroundColor: 'blue',
+    backgroundColor: '#0258FE',
   },
 
   passwordContainer: {
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#0258FE',
     paddingVertical: 12,
     alignItems: 'center',
     marginTop: 5,

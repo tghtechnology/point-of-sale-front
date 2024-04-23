@@ -72,7 +72,7 @@ const RegisterForm = () => {
     
       <View style={styles.container}>
         {/* IMPUT DE CORREO ELECTRONICO */}
-    
+        <View style={styles.box}>
         <TextInput
           style={styles.input} 
           placeholder="Nombre"
@@ -103,7 +103,7 @@ const RegisterForm = () => {
         {/* INPUT PARA ENTRADA DE PASSWORD */}
         
         <TextInput
-          style={styles.passwordInput}
+          style={styles.input}
           placeholder=" Contraseña"
           placeholderTextColor="#546574"
           secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
@@ -143,6 +143,8 @@ const RegisterForm = () => {
             <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
 
+        </View>
+
         {/* MODAL DE ALERTA EN CASO SE HIZO CORRECTO */}
         <Modal isVisible={isModalVisible} animationIn="slideInUp" animationOut="slideOutDown">
           <View style={styles.modalContainer}>
@@ -153,8 +155,9 @@ const RegisterForm = () => {
             </TouchableOpacity>
           </View>
         </Modal>
+        <View style={[styles.section, styles.redSection]}></View>
       </View>
-    
+      
   )
 }
 
@@ -162,7 +165,8 @@ const styles = StyleSheet.create({
 
   container: {
     marginTop: 100, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
+    paddingHorizontal: 25, 
+    
   },
     Tittle: {
       fontSize: 34,
@@ -170,19 +174,36 @@ const styles = StyleSheet.create({
       marginBottom: 50,
     },
     input: {
-    marginBottom: 25,
+    marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
+    borderBottomColor: '#0258FE', // Cambiado de borderColor
     height: 40,
     color: '#546574',
     padding: 10,
     borderRadius: 5,
     },
+    box:{
+    
+      backgroundColor:'#D9D9D9',
+      padding:40,
+      borderRadius: 15,
+      zIndex: 1,
+  
+    },
+    redSection: {
+      position: 'absolute', 
+      borderRadius: 15,
+      top: '50%', 
+      width: '100%', 
+      height: '50%', 
+      paddingVertical:'80%',
+      paddingHorizontal:'58%',
+      backgroundColor: '#0258FE',
+    },
     buttonRegister: {
-      backgroundColor: 'red',
+      backgroundColor: '#0258FE',
       paddingVertical: 12,
-      borderRadius: 5,
       alignItems: 'center',
       marginTop: 5,
     },
