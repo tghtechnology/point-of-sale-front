@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const TicketListForm = () => {
     const [selectedItem, setSelectedItem] = useState([]);
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
+    const [selectedTaxes, setSelectedTaxes] = useState([]); // New state for selected taxes
     const [total, setTotal] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0); // Nuevo estado para almacenar el precio total sin descuento
 
@@ -20,6 +21,7 @@ const TicketListForm = () => {
             try {
                 const item = await AsyncStorage.getItem('selectedItem');
                 const discount = await AsyncStorage.getItem('selectedDiscount');
+                const tax = await AsyncStorage.getItem('selectedTax');
 
                 if (item !== null) {
                     setSelectedItem(JSON.parse(item));
@@ -28,6 +30,11 @@ const TicketListForm = () => {
                 if (discount !== null) {
                     setSelectedDiscounts(JSON.parse(discount));
                 }
+
+                if (tax !== null) {
+                    setSelectedTaxes(JSON.parse(tax));
+                }
+
             } catch (error) {
                 console.log('Error retrieving data:', error);
             }
@@ -83,6 +90,16 @@ const TicketListForm = () => {
                 style={styles.totalContainer}
             >
                 <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {totalPrice.toFixed(2)}</Text>
+                {selectedTaxes.length > 0 && (
+                    <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
+                        Impuestos:
+                        {selectedTaxes.map((impuesto, index) => (
+                            <Text key={index} style={{ marginLeft: 5 }}>
+                                {index > 0 && ','} {impuesto.tasa}%
+                            </Text>
+                        ))}
+                    </Text>
+                )}
                 {selectedDiscounts.length > 0 && (
                     <Text style={[styles.totalText, { color: '#800080', marginTop: 3, fontWeight: 'bold' }]}>
                         {selectedDiscounts.map(discount => (
