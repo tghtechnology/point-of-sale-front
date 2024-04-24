@@ -13,6 +13,7 @@ const TicketListForm = () => {
     const [selectedItem, setSelectedItem] = useState([]);
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [selectedTaxes, setSelectedTaxes] = useState([]); // New state for selected taxes
+    const [selectedClients, setSelectedClients] = useState([]); // Estado para almacenar el cliente seleccionado
     const [total, setTotal] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0); // Nuevo estado para almacenar el precio total sin descuento
 
@@ -22,6 +23,7 @@ const TicketListForm = () => {
                 const item = await AsyncStorage.getItem('selectedItem');
                 const discount = await AsyncStorage.getItem('selectedDiscount');
                 const tax = await AsyncStorage.getItem('selectedTax');
+                const cli = await AsyncStorage.getItem('selectedClient')
 
                 if (item !== null) {
                     setSelectedItem(JSON.parse(item));
@@ -35,6 +37,10 @@ const TicketListForm = () => {
                     setSelectedTaxes(JSON.parse(tax));
                 }
 
+                if (cli !== null) {
+                    setSelectedClients(JSON.parse(cli))
+                }
+
             } catch (error) {
                 console.log('Error retrieving data:', error);
             }
@@ -43,7 +49,10 @@ const TicketListForm = () => {
         fetchData();
     }, []);
 
+
     useEffect(() => {
+        console.log('Selected clients:', selectedClients); // Log the selected clients to the console
+        console.log('Selected Tax:', selectedTaxes); // Log the selected clients to the console
         const totalPrice = selectedItem.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
         setTotalPrice(totalPrice);
     }, [selectedItem]);
@@ -52,6 +61,13 @@ const TicketListForm = () => {
         const totalDiscountedPrice = applyDiscount(totalPrice, selectedDiscounts);
         setTotal(totalDiscountedPrice);
     }, [totalPrice, selectedDiscounts]);
+
+    useEffect(() => {
+        const totalDiscountedPrice = applyDiscount(totalPrice, selectedDiscounts);
+        const totalWithTax = selectedTaxes ? applyTax(totalDiscountedPrice, selectedTaxes.tasa) : totalDiscountedPrice; // Aplicar impuesto sobre el total con descuento
+        setTotal(totalWithTax);
+    }, [totalPrice, selectedDiscounts, selectedTaxes]);
+
 
     const applyDiscount = (total, discounts) => {
         return total - discounts.reduce((acc, discount) => {
@@ -63,6 +79,11 @@ const TicketListForm = () => {
             return acc;
         }, 0);
     };
+
+    const applyTax = (price, tax) => {
+        return price + (price * (tax / 100));
+    };
+
 
     return (
         <View>
@@ -96,6 +117,16 @@ const TicketListForm = () => {
                         {selectedTaxes.map((impuesto, index) => (
                             <Text key={index} style={{ marginLeft: 5 }}>
                                 {index > 0 && ','} {impuesto.tasa}%
+                            </Text>
+                        ))}
+                    </Text>
+                )}
+                {selectedClients.length > 0 && (
+                    <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
+                        Cliente:
+                        {selectedClients.map((cliente, index) => (
+                            <Text key={index} style={{ marginLeft: 5 }}>
+                                {index > 0 && ','} {cliente.nombre}
                             </Text>
                         ))}
                     </Text>
