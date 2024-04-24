@@ -63,13 +63,15 @@ const TicketListForm = () => {
                 {selectedItem.map(itm => (
                     <LinearGradient
                         key={itm.id}
-                        colors={['#FFD700', '#FFA500']} 
+                        colors={['#FFD700', '#FFA500']}
                         style={styles.item}
                     >
-                        <Text style={styles.itemText}>{itm.nombre}</Text>
+                        <View style={styles.itemTextContainer}>
+                            <Text style={styles.itemText}>{itm.nombre}</Text>
+                            <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
+                        </View>
                         <View style={styles.priceContainer}>
                             <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
-                            <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
                             <Text style={styles.subtotalText}>Subtotal: S/ {(itm.precio * itm.quantity).toFixed(2)}</Text>
                         </View>
                     </LinearGradient>
@@ -77,7 +79,7 @@ const TicketListForm = () => {
             </View>
 
             <LinearGradient
-                colors={['#87CEEB', '#4682B4']} 
+                colors={['#87CEEB', '#4682B4']}
                 style={styles.totalContainer}
             >
                 <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {totalPrice.toFixed(2)}</Text>
@@ -100,6 +102,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFF',
+    },
+    itemTextContainer: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        marginLeft: 20,
     },
     totalContainer: {
         backgroundColor: 'transparent', // Hacer el fondo transparente para que el gradiente sea visible
@@ -170,7 +177,7 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: 'row',
-        padding: 15,
+        padding: 4,
         alignItems: 'center',
         borderRadius: 10,
         borderWidth: 1,
