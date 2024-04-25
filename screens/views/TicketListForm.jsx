@@ -1,4 +1,4 @@
-import React, { FlatList } from 'react-native';
+import React, { FlatList} from 'react-native';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const TicketListForm = () => {
@@ -75,65 +76,67 @@ const TicketListForm = () => {
     };
 
     return (
-        <View>
-            <View style={styles.itemList}>
-                {selectedItem.map(itm => (
-                    <LinearGradient
-                        key={itm.id}
-                        colors={['#FFD700', '#FFA500']}
-                        style={styles.item}
-                    >
-                        <View style={styles.itemTextContainer}>
-                            <Text style={styles.itemText}>{itm.nombre}</Text>
-                            <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
-                        </View>
-                        <View style={styles.priceContainer}>
-                            <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
-                            <Text style={styles.subtotalText}>Subtotal: S/ {(itm.precio * itm.quantity).toFixed(2)}</Text>
-                        </View>
-                    </LinearGradient>
-                ))}
-            </View>
+        <ScrollView>
+            <View>
+                <View style={styles.itemList}>
+                    {selectedItem.map(itm => (
+                        <LinearGradient
+                            key={itm.id}
+                            colors={['#FFD700', '#FFA500']}
+                            style={styles.item}
+                        >
+                            <View style={styles.itemTextContainer}>
+                                <Text style={styles.itemText}>{itm.nombre}</Text>
+                                <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
+                            </View>
+                            <View style={styles.priceContainer}>
+                                <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
+                                <Text style={styles.subtotalText}>Subtotal: S/ {(itm.precio * itm.quantity).toFixed(2)}</Text>
+                            </View>
+                        </LinearGradient>
+                    ))}
+                </View>
 
-            <LinearGradient
-                colors={['#87CEEB', '#4682B4']}
-                style={styles.totalContainer}
-            >
-                <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {totalPrice.toFixed(2)}</Text>
-                
-                {selectedTaxes.length > 0 && (
+                <LinearGradient
+                    colors={['#87CEEB', '#4682B4']}
+                    style={styles.totalContainer}
+                >
+                    <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {totalPrice.toFixed(2)}</Text>
+
+                    {selectedTaxes.length > 0 && (
+                        <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
+                            Impuestos:
+                            {selectedTaxes.map((impuesto, index) => (
+                                <Text key={index} style={{ marginLeft: 5 }}>
+                                    {index > 0 && ','} {impuesto.tasa}%
+                                </Text>
+                            ))}
+                        </Text>
+                    )}
+
+                    {selectedClients.length > 0 && (
+                        <Text style={[styles.totalText, { color: '#006400', marginTop: 2 }]}>
+                            Cliente:
+                            {selectedClients.map((cliente, index) => (
+                                <Text key={index} style={{ marginLeft: 5 }}>
+                                    {index > 0 && ','} {cliente.nombre}
+                                </Text>
+                            ))}
+                        </Text>
+                    )}
+                    {selectedDiscounts.length > 0 && (
+                        <Text style={[styles.totalText, { color: '#800080', marginTop: 3, fontWeight: 'bold' }]}>
+                            {selectedDiscounts.map(discount => (
+                                `Descuento: ${discount.tipo_descuento === 'MONTO' ? 'S/ ' : ''}${discount.valor}${discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}`
+                            ))}
+                        </Text>
+                    )}
                     <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
-                        Impuestos:
-                        {selectedTaxes.map((impuesto, index) => (
-                            <Text key={index} style={{ marginLeft: 5 }}>
-                                {index > 0 && ','} {impuesto.tasa}%
-                            </Text>
-                        ))}
+                        Total con descuento: S/ {total.toFixed(2)}
                     </Text>
-                )}
-
-                {selectedClients.length > 0 && (
-                    <Text style={[styles.totalText, { color: '#006400', marginTop: 2 }]}>
-                        Cliente:
-                        {selectedClients.map((cliente, index) => (
-                            <Text key={index} style={{ marginLeft: 5 }}>
-                                {index > 0 && ','} {cliente.nombre}
-                            </Text>
-                        ))}
-                    </Text>
-                )}
-                {selectedDiscounts.length > 0 && (
-                    <Text style={[styles.totalText, { color: '#800080', marginTop: 3, fontWeight: 'bold' }]}>
-                        {selectedDiscounts.map(discount => (
-                            `Descuento: ${discount.tipo_descuento === 'MONTO' ? 'S/ ' : ''}${discount.valor}${discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}`
-                        ))}
-                    </Text>
-                )}
-                <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
-                    Total con descuento: S/ {total.toFixed(2)}
-                </Text>
-            </LinearGradient>
-        </View>
+                </LinearGradient>
+            </View>
+        </ScrollView>
     );
 };
 
