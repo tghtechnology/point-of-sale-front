@@ -103,7 +103,7 @@ const RegisterForm = () => {
         {/* INPUT PARA ENTRADA DE PASSWORD */}
         
         <TextInput
-          style={styles.passwordInput}
+          style={styles.input}
           placeholder=" Contraseña"
           placeholderTextColor="#546574"
           secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
