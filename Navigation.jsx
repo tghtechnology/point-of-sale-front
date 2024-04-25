@@ -133,8 +133,8 @@ function VentaScreen() {
   return (
     <Stack.Navigator
       screenOptions={{
-        statusBarColor: "#ff0000",
-        headerStyle: { backgroundColor: "#ff0000" },
+        statusBarColor: "#0258FE",
+        headerStyle: { backgroundColor: "#0258FE" },
         headerTintColor: "#fff",
         headerTitleStyle: {
           color: "#fff",

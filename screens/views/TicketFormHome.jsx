@@ -144,11 +144,11 @@ const TicketFormHome = () => {
       console.error('Error al guardar el cliente seleccionado:', error);
     }
   };
-  
+
   const handleSelectTax = async (tax) => {
     let updatedTaxes = [...selectedTaxes];
     const taxIndex = updatedTaxes.findIndex((t) => t.id === tax.id);
-  
+
     if (taxIndex !== -1) {
       // If the tax is already selected, deselect it
       updatedTaxes.splice(taxIndex, 1);
@@ -156,9 +156,9 @@ const TicketFormHome = () => {
       // If the tax is not selected, select it
       updatedTaxes.push(tax);
     }
-  
+
     setSelectedTaxes(updatedTaxes);
-  
+
     try {
       await AsyncStorage.setItem('selectedTax', JSON.stringify(updatedTaxes));
       console.log('Selected tax saved:', tax);
@@ -238,7 +238,10 @@ const TicketFormHome = () => {
         selectedItems.some(selectedItem => selectedItem.id === item.id) && styles.circleSelected]}
         onPress={() => handleSelectItem(item)}
       />
-      <Text style={styles.itemText}>{item.nombre}</Text>
+      <View style={styles.itemInfo}>
+        <Text style={styles.itemText}>{item.nombre}</Text>
+        <Text style={styles.priceText}>S/ {item.precio}</Text>
+      </View>
       <View style={styles.quantityContainer}>
         <TouchableOpacity onPress={() => handleSubtractQuantity(item)}>
           <Text style={styles.quantityButton}>-</Text>
@@ -254,7 +257,6 @@ const TicketFormHome = () => {
           <Text style={styles.quantityButton}>+</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.priceText}>S/ {item.precio}</Text>
     </View>
   );
 
@@ -305,9 +307,11 @@ const TicketFormHome = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.cobrarButton} onPress={showListArticles}>
-        <Text style={styles.cobrarText}>COBRAR</Text>
-        <Text style={styles.amountText}>S/{totalAmount.toFixed(2)}</Text>
+      <TouchableOpacity style={styles.magnifies}>
+        <Icon name="magnify" size={30} color="#517EF2" />
+        <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
+          <Icon name="content-save" size={27} color="white" /> {/* Icono de guardar */}
+        </TouchableOpacity>
       </TouchableOpacity>
 
       {/* Search Bar */}
@@ -322,9 +326,6 @@ const TicketFormHome = () => {
           <Picker.Item label="Clientes" value="clients" />
           <Picker.Item label="Impuestos" value="impuestos" />
         </Picker>
-        <TouchableOpacity style={styles.magnifies}>
-          <Icon name="magnify" size={20} color="#000" />
-        </TouchableOpacity>
       </View>
 
       {/* List Items */}
@@ -366,15 +367,7 @@ const TicketFormHome = () => {
           />
         </View>
       )}
-
-      <View style={styles.divider} />
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
-          <Icon name="content-save" size={27} color="white" /> {/* Icono de guardar */}
-        </TouchableOpacity>
-      </View>
-
+  
       {/* Footer Navigation */}
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
@@ -467,7 +460,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     borderBottomWidth: 1,
-    borderBottomColor: 'red',
+    backgroundColor: '#EAEAEA',
   },
   searchInput: {
     flex: 1,
@@ -481,18 +474,20 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
   },
+  itemInfo: {
+    flex: 1, // Asegura que el texto del nombre del artículo y el precio ocupen todo el espacio disponible
+  },
   magnifies: {
     border: 1,
     marginRight: 10,
     padding: 15,
   },
   circle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#000', // Color del borde del círculo no seleccionado
-    backgroundColor: '#FFF', // Color del círculo no seleccionado
+    width: 23.59, // Aumenta el ancho del círculo cuadrado
+    height: 19.59, // Aumenta la altura del círculo cuadrado
+    borderWidth: 2,
+    borderColor: '#517EF2',
+    backgroundColor: '#FFF',
     marginRight: 10,
   },
   circleSelected: {
@@ -506,24 +501,27 @@ const styles = StyleSheet.create({
   quantityInput: {
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 5,
+    borderRadius: 5, // Quita el borde redondeado
     paddingHorizontal: 5,
     marginRight: 5,
-    width: 40,
+    width: 30,
+    height: 30, // Ajusta la altura para hacerlo cuadrado
     textAlign: 'center',
   },
   quantityButton: {
-    backgroundColor: 'lightgray',
     paddingHorizontal: 10,
     borderRadius: 5,
     textAlign: 'center',
+    fontSize: 30,
   },
   itemText: {
     flex: 1,
+    fontSize: 14,
   },
   priceText: {
-    color: '#4CAF50',
+    color: '#C30000',
     fontWeight: 'bold',
+    fontSize: 11,
   },
   footer: {
     position: 'absolute',
