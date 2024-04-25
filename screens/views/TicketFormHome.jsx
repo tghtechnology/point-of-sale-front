@@ -23,7 +23,7 @@ const TicketFormHome = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState([]); // Nuevo estado para los descuentos seleccionados
   const [selectedClients, setSelectedClients] = useState([]); // Estado para almacenar el cliente seleccionado
-  const [selectedTaxes, setSelectedTaxes] = useState([]); // New state for selected taxes
+  const [selectedTaxes, setSelectedTaxes] = useState(null); // New state for selected taxes
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
 
@@ -144,11 +144,11 @@ const TicketFormHome = () => {
       console.error('Error al guardar el cliente seleccionado:', error);
     }
   };
-
+  
   const handleSelectTax = async (tax) => {
     let updatedTaxes = [...selectedTaxes];
     const taxIndex = updatedTaxes.findIndex((t) => t.id === tax.id);
-
+  
     if (taxIndex !== -1) {
       // If the tax is already selected, deselect it
       updatedTaxes.splice(taxIndex, 1);
@@ -156,9 +156,9 @@ const TicketFormHome = () => {
       // If the tax is not selected, select it
       updatedTaxes.push(tax);
     }
-
+  
     setSelectedTaxes(updatedTaxes);
-
+  
     try {
       await AsyncStorage.setItem('selectedTax', JSON.stringify(updatedTaxes));
       console.log('Selected tax saved:', tax);
@@ -166,7 +166,6 @@ const TicketFormHome = () => {
       console.error('Error saving tax to AsyncStorage:', error);
     }
   };
-
 
   const showListArticles = () => {
     navigation.navigate('ListarTicket');
@@ -222,6 +221,7 @@ const TicketFormHome = () => {
     try {
       await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
       await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts)); // Guardar los descuentos
+      await AsyncStorage.setItem('selectedTax', JSON.stringify(selectedTaxes));
       console.log('Cambios guardados exitosamente');
       setShowSaveChangesAlert(true);
       // Puedes mostrar una alerta o mensaje de éxito aquí si lo deseas

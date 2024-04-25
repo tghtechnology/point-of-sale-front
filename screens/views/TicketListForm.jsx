@@ -62,12 +62,6 @@ const TicketListForm = () => {
         setTotal(totalDiscountedPrice);
     }, [totalPrice, selectedDiscounts]);
 
-    useEffect(() => {
-        const totalDiscountedPrice = applyDiscount(totalPrice, selectedDiscounts);
-        const totalWithTax = selectedTaxes ? applyTax(totalDiscountedPrice, selectedTaxes.tasa) : totalDiscountedPrice; // Aplicar impuesto sobre el total con descuento
-        setTotal(totalWithTax);
-    }, [totalPrice, selectedDiscounts, selectedTaxes]);
-
 
     const applyDiscount = (total, discounts) => {
         return total - discounts.reduce((acc, discount) => {
@@ -79,11 +73,6 @@ const TicketListForm = () => {
             return acc;
         }, 0);
     };
-
-    const applyTax = (price, tax) => {
-        return price + (price * (tax / 100));
-    };
-
 
     return (
         <View>
@@ -111,6 +100,7 @@ const TicketListForm = () => {
                 style={styles.totalContainer}
             >
                 <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {totalPrice.toFixed(2)}</Text>
+                
                 {selectedTaxes.length > 0 && (
                     <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
                         Impuestos:
@@ -121,8 +111,9 @@ const TicketListForm = () => {
                         ))}
                     </Text>
                 )}
+
                 {selectedClients.length > 0 && (
-                    <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
+                    <Text style={[styles.totalText, { color: '#006400', marginTop: 2 }]}>
                         Cliente:
                         {selectedClients.map((cliente, index) => (
                             <Text key={index} style={{ marginLeft: 5 }}>
