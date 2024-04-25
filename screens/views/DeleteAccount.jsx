@@ -111,19 +111,11 @@ export default function DeleteAccount(props) {
             <CustomAlert
                 isVisible={showAlertTemporary}
                 onClose={() => setShowAlertTemporary(false)}
-                title="Cuenta Temporal Eliminada"
-                message="La cuenta temporal se ha eliminado correctamente."
-                buttonColor="#2196F3"
-                iconName="check-circle" 
             />
 
             <CustomAlert
                 isVisible={showAlertPermanent}
                 onClose={() => setShowAlertPermanent(false)}
-                title="Cuenta Permanente Eliminada"
-                message="La cuenta permanente se ha eliminado correctamente."
-                buttonColor="#2196F3"
-                iconName="check-circle" 
             />
         </View>
     );

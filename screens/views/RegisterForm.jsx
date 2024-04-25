@@ -1,13 +1,12 @@
 import { useState,useEffect   } from 'react'
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 import useUser from '../hooks/useUser';
 import useCountry from '../hooks/useCountry';
 import UsuarioProvider from '../context/usuarios/UsuarioProvider';
 import CountryProvider from '../context/country/CountryProvider';
-
+import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 
 const INITIAL_STATE = {
   nombre:'',
@@ -23,6 +22,8 @@ const RegisterForm = () => {
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
   const [countrySelect, setCountrySelect] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const {handleCreateUser} = useUser();
   const { countries,fetchCountries } = useCountry();
   
@@ -57,13 +58,15 @@ const RegisterForm = () => {
     try {
       const response = await handleCreateUser(objectSend);
       if(response){
+        setSuccessAlertVisible(true);
         setDataForm(INITIAL_STATE);
         setWorker([...worker, objectSend]);
         setCountrySelect('');
       }else{
-        alert("El usuarios no se pudo crear");
+        setErrorAlertVisible(true);
       }
     } catch (error) {
+      setErrorAlertVisible(true);
       alert("problema interno del servidor")
     }
     console.log("valor del formulario"  + JSON.stringify(objectSend));
@@ -142,17 +145,8 @@ const RegisterForm = () => {
         <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
-
-        {/* MODAL DE ALERTA EN CASO SE HIZO CORRECTO */}
-        <Modal isVisible={isModalVisible} animationIn="slideInUp" animationOut="slideOutDown">
-          <View style={styles.modalContainer}>
-            <Icon name="check-circle" size={80} color="green" style={styles.icon} />
-            <Text style={styles.modalText}>Registro Exitoso</Text>
-            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
-              <Text style={styles.modalButtonText}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+        <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
+        <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/> 
       </View>
     
   )
