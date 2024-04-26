@@ -1,4 +1,4 @@
-import React, { FlatList} from 'react-native';
+import React, { FlatList } from 'react-native';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
+
 
 
 const TicketListForm = () => {
@@ -78,6 +79,13 @@ const TicketListForm = () => {
     return (
         <ScrollView>
             <View>
+                <TouchableOpacity style={styles.cobrarButton}>
+                    <View style={styles.totalTextContainer}>
+                        <Icon name="cart" size={35} color="#517EF2" />
+                        <Text style={styles.cobrarText}>Total</Text>
+                        <Text style={styles.amountText}>S/ {totalPrice.toFixed(2)}</Text>
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.itemList}>
                     {selectedItem.map(itm => (
                         <LinearGradient
@@ -143,7 +151,14 @@ const TicketListForm = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF',
+        backgroundColor: '#FFFFF',
+    },
+    totalTextContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        // Ajusta el espacio horizontal entre los elementos
+        justifyContent: 'space-between', // Esto distribuirá los elementos a lo largo del contenedor
+        paddingHorizontal: 30, // Ajusta el espacio horizontal dentro del contenedor
     },
     itemTextContainer: {
         flexDirection: 'column',
@@ -181,21 +196,29 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
     cobrarButton: {
-        backgroundColor: 'red',
+        backgroundColor: '#F5F5F5',
         padding: 25,
         alignItems: 'center',
         borderRadius: 2,
         margin: 15,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 3,
     },
     cobrarText: {
-        color: '#FFF',
-        fontSize: 18,
+        color: '#666666',
+        fontSize: 24,
         fontWeight: 'bold',
     },
     amountText: {
-        color: '#FFF',
+        color: '#517EF2',
         fontSize: 24,
         fontWeight: 'bold',
+        marginHorizontal: 15, // Ajusta el espacio horizontal entre los elementos hijos
     },
     searchSection: {
         flexDirection: 'row',
