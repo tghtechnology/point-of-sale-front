@@ -223,7 +223,7 @@ const TicketFormHome = () => {
       await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts)); // Guardar los descuentos
       await AsyncStorage.setItem('selectedTax', JSON.stringify(selectedTaxes));
       console.log('Cambios guardados exitosamente');
-      setShowSaveChangesAlert(true);
+      showListArticles();
       // Puedes mostrar una alerta o mensaje de éxito aquí si lo deseas
     } catch (error) {
       console.error('Error al guardar cambios:', error);
@@ -307,12 +307,16 @@ const TicketFormHome = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.magnifies}>
-        <Icon name="magnify" size={30} color="#517EF2" />
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
-          <Icon name="content-save" size={27} color="white" /> {/* Icono de guardar */}
+      <View style={styles.searchSection}>
+        <TouchableOpacity style={styles.magnifies}>
+          <Icon name="magnify" size={30} color="#517EF2" />
         </TouchableOpacity>
-      </TouchableOpacity>
+
+        {/* Icono de guardar */}
+        <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
+          <Icon name="cart" size={27} color="#517EF2" />
+        </TouchableOpacity>
+      </View>
 
       {/* Search Bar */}
       <View style={styles.searchSection}>
@@ -367,7 +371,7 @@ const TicketFormHome = () => {
           />
         </View>
       )}
-  
+
       {/* Footer Navigation */}
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
@@ -418,14 +422,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButton: {
-    backgroundColor: '#007bff',
-    borderRadius: 20,
     width: 100,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'black',
+    marginLeft: 200, // Agrega un margen entre el icono de búsqueda y el icono de guardar
   },
   saveButtonText: {
     color: 'white',
@@ -478,6 +479,8 @@ const styles = StyleSheet.create({
     flex: 1, // Asegura que el texto del nombre del artículo y el precio ocupen todo el espacio disponible
   },
   magnifies: {
+    flexDirection: 'row', // Alinear los elementos horizontalmente
+    alignItems: 'center', // Alinear los elementos verticalmente
     border: 1,
     marginRight: 10,
     padding: 15,
