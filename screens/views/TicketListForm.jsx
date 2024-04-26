@@ -83,66 +83,42 @@ const TicketListForm = () => {
                     <View style={styles.totalTextContainer}>
                         <Icon name="cart" size={35} color="#517EF2" />
                         <Text style={styles.cobrarText}>Total</Text>
-                        <Text style={styles.amountText}>S/ {totalPrice.toFixed(2)}</Text>
+                        <Text style={styles.amountText}>S/ {total.toFixed(2)}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={styles.itemList}>
                     {selectedItem.map(itm => (
-                        <LinearGradient
-                            key={itm.id}
-                            colors={['#FFD700', '#FFA500']}
-                            style={styles.item}
-                        >
-                            <View style={styles.itemTextContainer}>
-                                <Text style={styles.itemText}>{itm.nombre}</Text>
-                                <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
+                        <View key={itm.id} style={styles.item}>
+                            <View style={styles.leftContainer}>
+                                {/* Icono de imagen */}
+                                <Icon name="image" size={70} color="black" style={styles.icon} />
                             </View>
-                            <View style={styles.priceContainer}>
+
+                            <View style={styles.rightContainer}>
+
+                                {/* Nombre del artículo */}
+                                <Text style={styles.itemText}>{itm.nombre}</Text>
+
+                                <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
+
+                                {/* Descuento */}
+                                {selectedDiscounts.length > 0 && (
+                                    <Text style={[styles.discountText]}>
+                                        {selectedDiscounts.map(discount => (
+                                            `Descuento: ${discount.tipo_descuento === 'MONTO' ? 'S/ ' : ''}${discount.valor}${discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}`
+                                        ))}
+                                    </Text>
+                                )}
+
+                                {/* Precio */}
                                 <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
+
+                                {/* Subtotal */}
                                 <Text style={styles.subtotalText}>Subtotal: S/ {(itm.precio * itm.quantity).toFixed(2)}</Text>
                             </View>
-                        </LinearGradient>
+                        </View>
                     ))}
                 </View>
-
-                <LinearGradient
-                    colors={['#87CEEB', '#4682B4']}
-                    style={styles.totalContainer}
-                >
-                    <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>Total: S/ {totalPrice.toFixed(2)}</Text>
-
-                    {selectedTaxes.length > 0 && (
-                        <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
-                            Impuestos:
-                            {selectedTaxes.map((impuesto, index) => (
-                                <Text key={index} style={{ marginLeft: 5 }}>
-                                    {index > 0 && ','} {impuesto.tasa}%
-                                </Text>
-                            ))}
-                        </Text>
-                    )}
-
-                    {selectedClients.length > 0 && (
-                        <Text style={[styles.totalText, { color: '#006400', marginTop: 2 }]}>
-                            Cliente:
-                            {selectedClients.map((cliente, index) => (
-                                <Text key={index} style={{ marginLeft: 5 }}>
-                                    {index > 0 && ','} {cliente.nombre}
-                                </Text>
-                            ))}
-                        </Text>
-                    )}
-                    {selectedDiscounts.length > 0 && (
-                        <Text style={[styles.totalText, { color: '#800080', marginTop: 3, fontWeight: 'bold' }]}>
-                            {selectedDiscounts.map(discount => (
-                                `Descuento: ${discount.tipo_descuento === 'MONTO' ? 'S/ ' : ''}${discount.valor}${discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}`
-                            ))}
-                        </Text>
-                    )}
-                    <Text style={[styles.totalText, { color: '#006400', marginTop: 1 }]}>
-                        Total con descuento: S/ {total.toFixed(2)}
-                    </Text>
-                </LinearGradient>
             </View>
         </ScrollView>
     );
@@ -158,7 +134,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         // Ajusta el espacio horizontal entre los elementos
         justifyContent: 'space-between', // Esto distribuirá los elementos a lo largo del contenedor
-        paddingHorizontal: 30, // Ajusta el espacio horizontal dentro del contenedor
+        paddingHorizontal: 10, // Ajusta el espacio horizontal dentro del contenedor
     },
     itemTextContainer: {
         flexDirection: 'column',
@@ -181,12 +157,15 @@ const styles = StyleSheet.create({
     },
     quantityText: {
         color: '#666',
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
     },
     total: {
         alignItems: 'flex-end',
         marginTop: 20,
+    },
+    icon: {
+        marginRight: 10,
     },
     totalText: {
         color: '#4CAF50',
@@ -197,7 +176,7 @@ const styles = StyleSheet.create({
     },
     cobrarButton: {
         backgroundColor: '#F5F5F5',
-        padding: 25,
+        padding: 15,
         alignItems: 'center',
         borderRadius: 2,
         margin: 15,
@@ -241,13 +220,25 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     item: {
-        flexDirection: 'row',
-        padding: 4,
-        alignItems: 'center',
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#000',
+        flexDirection: 'row', // Para alinear los elementos en línea recta
+        alignItems: 'center', // Para alinear verticalmente los elementos
+        padding: 10,
         marginBottom: 10,
+    },
+    leftContainer: {
+        // flexDirection: 'row', // Eliminar esta línea para apilar los elementos verticalmente
+        alignItems: 'center', // Alinear los elementos en el centro horizontalmente
+        flex: 1, // Para que el contenedor ocupe todo el espacio disponible
+        marginLeft: 30,
+    },
+    rightContainer: {
+        flex: 1, // Para que el contenedor ocupe todo el espacio disponible
+        marginLeft: -40,
+    },
+    imageIcon: {
+        width: 50,
+        height: 50,
+        marginRight: 10,
     },
     magnifies: {
         border: 1,
@@ -263,19 +254,27 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     itemText: {
-        flex: 1,
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
+        marginLeft: -2,
+    },
+    discountText: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        marginTop: 1, // Añade un margen arriba del descuento
+        color: '#A6A0A0',
     },
     priceText: {
-        color: '#4CAF50',
+        fontSize: 14,
         fontWeight: 'bold',
-        fontSize: 16,
+        marginTop: 3, // Añade un margen arriba del precio
+        color: '#4CAF50',
     },
     subtotalText: {
-        color: 'red',
+        fontSize: 14,
         fontWeight: 'bold',
-        fontSize: 16,
+        marginTop: 3, // Añade un margen arriba del subtotal
+        color: '#C30000',
     },
     footer: {
         position: 'absolute',
