@@ -331,7 +331,7 @@ const TicketFormHome = () => {
         </TouchableOpacity>
 
         {/* Icono del carrito con contador */}
-        <TouchableOpacity style={styles.cartButton}>
+        <TouchableOpacity style={styles.cartButton} onPress={handleSaveChanges}>
           <Icon name="cart" size={24} color="black" />
           {cartCount > 0 && (
             <View style={styles.cartBadge}>
