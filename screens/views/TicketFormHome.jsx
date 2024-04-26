@@ -26,6 +26,24 @@ const TicketFormHome = () => {
   const [selectedTaxes, setSelectedTaxes] = useState(null); // New state for selected taxes
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
+  // Estado para el contador de productos seleccionados
+  const [cartCount, setCartCount] = useState(0);
+
+  //Metodos para Conteo
+  useEffect(() => {
+    // Calcula el total de productos seleccionados al cargar el componente
+    calculateCartCount();
+  }, [selectedItems]); // Asegúrate de incluir todos los estados que afectan a la selección de productos
+
+  // Función para calcular el total de productos seleccionados
+  const calculateCartCount = () => {
+    let count = 0;
+    selectedItems.forEach(item => {
+      count += item.quantity;
+    });
+    setCartCount(count);
+  };
+  //
 
   useEffect(() => {
     const fetchSelectedItems = async () => {
@@ -312,9 +330,14 @@ const TicketFormHome = () => {
           <Icon name="magnify" size={30} color="#517EF2" />
         </TouchableOpacity>
 
-        {/* Icono de guardar */}
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
-          <Icon name="cart" size={27} color="#517EF2" />
+        {/* Icono del carrito con contador */}
+        <TouchableOpacity style={styles.cartButton}>
+          <Icon name="cart" size={24} color="black" />
+          {cartCount > 0 && (
+            <View style={styles.cartBadge}>
+              <Text style={styles.cartBadgeText}>{cartCount}</Text>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -535,5 +558,29 @@ const styles = StyleSheet.create({
     borderTopColor: '#DDD',
     // Define the rest of your footer styles here
   },
+  //Estilos para Conteo de Articulos seleccionaodos
+  cartButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: 'lightgray',
+    borderRadius: 20,
+    padding: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cartBadge: {
+    backgroundColor: 'red',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    marginLeft: 5,
+  },
+  cartBadgeText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  //
 });
 export default TicketFormHome
