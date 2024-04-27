@@ -53,17 +53,33 @@ const TicketListForm = () => {
 
 
     useEffect(() => {
-        console.log('Selected clients:', selectedClients); // Log the selected clients to the console
-        console.log('Selected Tax:', selectedTaxes); // Log the selected clients to the console
-        const totalPrice = selectedItem.reduce((acc, item) => acc + (item.precio * item.quantity), 0);
+        const totalPrice = selectedItem.reduce((acc, item) => {
+            const subtotal = calculateSubtotalWithDiscount(item);
+            return acc + parseFloat(subtotal);
+        }, 0);
         setTotalPrice(totalPrice);
-    }, [selectedItem]);
-
+    }, [selectedItem, selectedDiscounts]); // Añade selectedDiscounts aquí para que el efecto se ejecute cuando cambie
+    
     useEffect(() => {
-        const totalDiscountedPrice = applyDiscount(totalPrice, selectedDiscounts);
-        setTotal(totalDiscountedPrice);
-    }, [totalPrice, selectedDiscounts]);
+        // Usamos el precio total con descuento como el total
+        setTotal(totalPrice);
+    }, [totalPrice]); // Solo necesitamos totalPrice aquí
 
+    //Funcion sacar Sub Total con Descuento
+    const calculateSubtotalWithDiscount = (item) => {
+        let subtotal = item.precio * item.quantity;
+        if (selectedDiscounts.length > 0) {
+            selectedDiscounts.forEach(discount => {
+                if (discount.tipo_descuento === 'MONTO') {
+                    subtotal -= discount.valor;
+                } else if (discount.tipo_descuento === 'PORCENTAJE') {
+                    subtotal -= subtotal * (discount.valor / 100);
+                }
+            });
+        }
+        return subtotal.toFixed(2);
+    };
+    //
 
     const applyDiscount = (total, discounts) => {
         return total - discounts.reduce((acc, discount) => {
@@ -114,7 +130,7 @@ const TicketListForm = () => {
                                 <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
 
                                 {/* Subtotal */}
-                                <Text style={styles.subtotalText}>Subtotal: S/ {(itm.precio * itm.quantity).toFixed(2)}</Text>
+                                <Text style={styles.subtotalText}>Subtotal: S/ {calculateSubtotalWithDiscount(itm)}</Text>
                             </View>
                         </View>
                     ))}
