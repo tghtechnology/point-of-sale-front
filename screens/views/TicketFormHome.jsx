@@ -26,23 +26,22 @@ const TicketFormHome = () => {
   const [selectedTaxes, setSelectedTaxes] = useState(null); // New state for selected taxes
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
-  // Estado para el contador de productos seleccionados
-  const [cartCount, setCartCount] = useState(0);
-
+  // Estado para almacenar los IDs de los productos seleccionados
+  const [selectedProductIds, setSelectedProductIds] = useState([]);
   //Metodos para Conteo
   useEffect(() => {
-    // Calcula el total de productos seleccionados al cargar el componente
-    calculateCartCount();
+    // Almacena los IDs de los productos seleccionados al cargar el componente
+    calculateSelectedProductIds();
   }, [selectedItems]); // Asegúrate de incluir todos los estados que afectan a la selección de productos
 
-  // Función para calcular el total de productos seleccionados
-  const calculateCartCount = () => {
-    let count = 0;
-    selectedItems.forEach(item => {
-      count += item.quantity;
-    });
-    setCartCount(count);
+  // Función para calcular los IDs de los productos seleccionados
+  const calculateSelectedProductIds = () => {
+    const productIds = selectedItems.map(item => item.id);
+    setSelectedProductIds(productIds);
   };
+
+  // Contador de productos seleccionados (número de elementos únicos)
+  const cartCount = selectedProductIds.length;
   //
 
   useEffect(() => {
