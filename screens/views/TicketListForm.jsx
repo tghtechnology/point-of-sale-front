@@ -81,17 +81,6 @@ const TicketListForm = () => {
     };
     //
 
-    const applyDiscount = (total, discounts) => {
-        return total - discounts.reduce((acc, discount) => {
-            if (discount.tipo_descuento === 'MONTO') {
-                return acc + discount.valor;
-            } else if (discount.tipo_descuento === 'PORCENTAJE') {
-                return acc + (total * (discount.valor / 100));
-            }
-            return acc;
-        }, 0);
-    };
-
     return (
         <ScrollView>
             <View>
@@ -192,7 +181,8 @@ const styles = StyleSheet.create({
     },
     cobrarButton: {
         backgroundColor: '#F5F5F5',
-        padding: 15,
+        paddingVertical: 30, // Ajusta la altura del botón aumentando el valor
+        paddingHorizontal: 5,
         alignItems: 'center',
         borderRadius: 2,
         margin: 15,
@@ -242,14 +232,13 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     leftContainer: {
-        // flexDirection: 'row', // Eliminar esta línea para apilar los elementos verticalmente
-        alignItems: 'center', // Alinear los elementos en el centro horizontalmente
-        flex: 1, // Para que el contenedor ocupe todo el espacio disponible
-        marginLeft: 30,
+        alignItems: 'flex-start', // Cambia a 'flex-start' para alinear los elementos a la izquierda
+        flex: 1, // Mantiene el contenedor como flexible para ocupar todo el espacio disponible
+        marginLeft: 0, // Ajusta el margen izquierdo a cero para que esté completamente a la izquierda
     },
     rightContainer: {
-        flex: 1, // Para que el contenedor ocupe todo el espacio disponible
-        marginLeft: -40,
+        flex: 2, // Cambia el factor de flexibilidad para que este contenedor ocupe más espacio
+        marginLeft: 5, // Añade un margen izquierdo para separarlo del contenedor izquierdo
     },
     imageIcon: {
         width: 50,
