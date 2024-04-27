@@ -43,7 +43,7 @@ function StackNavigation() {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
 return (
-    <Stack.Navigator  initialRouteName="Main" screenOptions={{ statusBarColor: "#ff0000",headerStyle: { backgroundColor: "#ff0000" },headerTintColor: "#fff",headerTitleStyle: {color: "#fff",},}} >
+    <Stack.Navigator  initialRouteName="Main" screenOptions={{ statusBarColor: "#0258FE",headerStyle: { backgroundColor: "#0258FE" },headerTintColor: "#fff",headerTitleStyle: {color: "#fff",},}} >
       <Stack.Screen name="Main" component={HomeView}  options={{headerShown:false}} />
       <Stack.Screen name="Login" component={LoginForm} />
       <Stack.Screen name="Register" component={RegisterForm} />
