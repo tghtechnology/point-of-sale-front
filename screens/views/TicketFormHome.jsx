@@ -23,7 +23,7 @@ const TicketFormHome = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState([]); // Nuevo estado para los descuentos seleccionados
   const [selectedClients, setSelectedClients] = useState([]); // Estado para almacenar el cliente seleccionado
-  const [selectedTaxes, setSelectedTaxes] = useState(null); // New state for selected taxes
+  const [selectedTaxes, setSelectedTaxes] = useState([]); // New state for selected taxes
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
   // Estado para almacenar los IDs de los productos seleccionados

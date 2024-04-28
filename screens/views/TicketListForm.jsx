@@ -52,33 +52,42 @@ const TicketListForm = () => {
     }, []);
 
 
+    const calculateSubtotalWithDiscount = (item) => {
+        let subtotal = item.precio * item.quantity;
+        let itemDiscount = 0;
+    
+        // Aplicar descuentos al subtotal del artículo
+        selectedDiscounts.forEach(discount => {
+            if (discount.tipo_descuento === 'MONTO') {
+                // No hacer nada para descuentos de tipo "MONTO" ya que se aplican al total
+            } else if (discount.tipo_descuento === 'PORCENTAJE') {
+                // Aplicar descuentos de tipo "PORCENTAJE" al subtotal del artículo
+                itemDiscount += subtotal * (discount.valor / 100);
+            }
+        });
+    
+        return (subtotal - itemDiscount).toFixed(2);
+    };
+    
     useEffect(() => {
+        // Calcular el precio total sin descuento sumando los subtotales de los artículos
         const totalPrice = selectedItem.reduce((acc, item) => {
             const subtotal = calculateSubtotalWithDiscount(item);
             return acc + parseFloat(subtotal);
         }, 0);
         setTotalPrice(totalPrice);
-    }, [selectedItem, selectedDiscounts]); // Añade selectedDiscounts aquí para que el efecto se ejecute cuando cambie
+    }, [selectedItem, selectedDiscounts]); // Ajusta los dependencias del efecto
     
     useEffect(() => {
-        // Usamos el precio total con descuento como el total
-        setTotal(totalPrice);
-    }, [totalPrice]); // Solo necesitamos totalPrice aquí
-
-    //Funcion sacar Sub Total con Descuento
-    const calculateSubtotalWithDiscount = (item) => {
-        let subtotal = item.precio * item.quantity;
-        if (selectedDiscounts.length > 0) {
-            selectedDiscounts.forEach(discount => {
-                if (discount.tipo_descuento === 'MONTO') {
-                    subtotal -= discount.valor;
-                } else if (discount.tipo_descuento === 'PORCENTAJE') {
-                    subtotal -= subtotal * (discount.valor / 100);
-                }
-            });
-        }
-        return subtotal.toFixed(2);
-    };
+        // Aplicar descuentos tipo "MONTO" al total
+        let discountedTotal = totalPrice;
+        selectedDiscounts.forEach(discount => {
+            if (discount.tipo_descuento === 'MONTO') {
+                discountedTotal -= discount.valor;
+            }
+        });
+        setTotal(discountedTotal);
+    }, [totalPrice, selectedDiscounts]); // Ajusta los dependencias del efecto
     //
 
     return (
