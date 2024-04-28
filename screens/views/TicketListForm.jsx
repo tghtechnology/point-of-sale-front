@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -18,6 +19,7 @@ const TicketListForm = () => {
     const [selectedClients, setSelectedClients] = useState([]); // Estado para almacenar el cliente seleccionado
     const [total, setTotal] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0); // Nuevo estado para almacenar el precio total sin descuento
+    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -90,6 +92,11 @@ const TicketListForm = () => {
     }, [totalPrice, selectedDiscounts]); // Ajusta los dependencias del efecto
     //
 
+    const showSaleTicket = () => {
+        navigation.navigate('SaleTicket');
+      };
+
+
     return (
         <ScrollView>
             <View>
@@ -133,6 +140,7 @@ const TicketListForm = () => {
                         </View>
                     ))}
                 </View>
+                <TouchableOpacity onPress={showSaleTicket} style={styles.cobrarButton}>Continuar</TouchableOpacity>
             </View>
         </ScrollView>
     );
