@@ -9,11 +9,13 @@ import CustomAlert from '../componentes/CustomAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useClient from '../hooks/useClient'
 import useImpuesto from "../hooks/useImpuesto";
+import useSale from "../hooks/useSale"
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showSaveChangesAlert, setShowSaveChangesAlert] = useState(false);
   const [showAlertDeselect, setShowAlertDeselect] = useState(false);
+  const {handleCreateSale} = useSale();
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const { client } = useClient();
@@ -94,6 +96,21 @@ const TicketFormHome = () => {
     fetchSelectedClient();
     fetchSelectedTaxes();
   }, []);
+
+  //Consumo Api
+  // Prepare the sale data using the selected items
+  const saleData = {
+    detalles: selectedItems,
+    impuestoId: selectedTaxes.id,
+    descuentoId: selectedDiscounts.id,
+    usuarioId: 1,
+    clienteId: selectedClients.id,
+  };
+
+  // Call the createSale function with the sale data
+  // handleCreateSale(saleData);
+  console.log('Sale data:', saleData);
+  //
 
   useEffect(() => {
     // Calculate total amount
