@@ -10,30 +10,33 @@ import AuthProvider from "./screens/context/auth/AuthProvider.jsx";
 import ImpuestoProvider from "./screens/context/impuesto/ImpuestoProvider.jsx";
 import ClientProvider from "./screens/context/cliente/ClientProvider.jsx";
 import WorkerProvider from "./screens/context/worker/WorkerProvider.jsx";
+import SaleProvider from "./screens/context/sale/SaleProvider.jsx";
 
 
 export default function App() {
   return (
-    <WorkerProvider>
-    <ClientProvider>
-      <ImpuestoProvider>
-        <EmailProvider>
-          <AuthProvider>
-            <UsuarioProvider>
-              <CountryProvider>
-                <DiscountProvider>
-                  <CategoryProvider>
-                    <ArticleProvider>
-                      <Navigation />
-                    </ArticleProvider>
-                  </CategoryProvider>
-                </DiscountProvider>
-              </CountryProvider>
-            </UsuarioProvider>
-          </AuthProvider>
-        </EmailProvider>
-      </ImpuestoProvider>
-    </ClientProvider>
-    </WorkerProvider>
+    <SaleProvider>
+      <WorkerProvider>
+        <ClientProvider>
+          <ImpuestoProvider>
+            <EmailProvider>
+              <AuthProvider>
+                <UsuarioProvider>
+                  <CountryProvider>
+                    <DiscountProvider>
+                      <CategoryProvider>
+                        <ArticleProvider>
+                          <Navigation />
+                        </ArticleProvider>
+                      </CategoryProvider>
+                    </DiscountProvider>
+                  </CountryProvider>
+                </UsuarioProvider>
+              </AuthProvider>
+            </EmailProvider>
+          </ImpuestoProvider>
+        </ClientProvider>
+      </WorkerProvider>
+    </SaleProvider>
   );
 }

@@ -2,28 +2,43 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const TicketSaleForm = () => {
+const TicketSaleForm = (total) => {
+    const [receivedAmount, setReceivedAmount] = useState('');
+    const [change, setChange] = useState('');
+
+    useEffect(() => {
+        if (receivedAmount && total) {
+            const calculatedChange = parseFloat(receivedAmount) - parseFloat(total);
+            setChange(calculatedChange.toFixed(2));
+        }
+    }, [receivedAmount, total]);
+
     return (
         <View style={styles.container}>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Ingresa Monto Recibido</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Monto"
-                />
-            </View>
+        <Text style={styles.label}>Ingresa Monto Recibido</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Monto"
+          value={receivedAmount}
+          onChangeText={setReceivedAmount}
+          keyboardType="numeric"
+        />
+      </View>
 
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Vuelto</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Valor"
-                />
-            </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Vuelto</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Valor"
+          value={change}
+          editable={false}
+        />
+      </View>
 
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Completar Venta</Text>
-            </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => {}}>
+        <Text style={styles.buttonText}>Completar Venta</Text>
+      </TouchableOpacity>
         </View>
     );
 };
