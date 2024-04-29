@@ -15,9 +15,9 @@ const SaleProvider = ({ children }) => {
 };
 
   return (
-    <ImpuestoContext.Provider value={{handleCreateSale}}> 
+    <SaleContext.Provider value={handleCreateSale}> 
         {children}
-    </ImpuestoContext.Provider>
+    </SaleContext.Provider>
   );
 };
 
