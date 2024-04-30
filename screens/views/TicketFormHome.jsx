@@ -103,7 +103,7 @@ const TicketFormHome = () => {
   const saleData = {
     detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
     impuestoId: selectedTaxes.id,
-    descuentoId: selectedDiscounts.id,
+    descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
     usuarioId: 1,
     clienteId: selectedClients.id,
   };
