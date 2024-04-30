@@ -70,9 +70,8 @@ const RegisterForm = () => {
       alert("problema interno del servidor")
     }
     console.log("valor del formulario"  + JSON.stringify(objectSend));
-  }
+  };
   return (
-    
       <View style={styles.container}>
         {/* IMPUT DE CORREO ELECTRONICO */}
         <View style={styles.box}>
@@ -156,8 +155,8 @@ const RegisterForm = () => {
         </TouchableOpacity>
         <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
         <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/> 
+      </View>   
       </View>
-      
   )
 }
 
@@ -280,6 +279,5 @@ const styles = StyleSheet.create({
       borderRadius: 5,
     },
   })
-
 
 export default RegisterForm;

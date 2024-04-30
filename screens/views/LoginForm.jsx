@@ -100,9 +100,10 @@ const LoginForm = () => {
       <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
       <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
     </View>
-    
+    </View>
   )
 }
+
 
 const styles = StyleSheet.create({
 
