@@ -182,24 +182,14 @@ const TicketFormHome = () => {
   };
 
   const handleSelectTax = async (tax) => {
-    let updatedTaxes = [...selectedTaxes];
-    const taxIndex = updatedTaxes.findIndex((t) => t.id === tax.id);
-
-    if (taxIndex !== -1) {
-      // If the tax is already selected, deselect it
-      updatedTaxes.splice(taxIndex, 1);
-    } else {
-      // If the tax is not selected, select it
-      updatedTaxes.push(tax);
-    }
-
-    setSelectedTaxes(updatedTaxes);
-
     try {
-      await AsyncStorage.setItem('selectedTax', JSON.stringify(updatedTaxes));
-      console.log('Selected tax saved:', tax);
+      await AsyncStorage.setItem('selectedTax', JSON.stringify(tax));
+      console.log('Impuesto seleccionado guardado:', tax);
+      setSelectedTaxes(tax); // Use setSelectedClients here
+      //   Verificar el estado actual de selectedClients en la consola
+      console.log('selectedTaxes:', selectedTaxes);
     } catch (error) {
-      console.error('Error saving tax to AsyncStorage:', error);
+      console.error('Error al guardar el impuesto seleccionado:', error);
     }
   };
 
