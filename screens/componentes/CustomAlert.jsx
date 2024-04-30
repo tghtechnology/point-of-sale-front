@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   iconWrapper: {
     backgroundColor: '#4CAF50', // Fondo verde para el icono de éxito
     borderRadius: 50,
-    padding: 15,
+    padding: 5,
     marginBottom: 20,
   },
   title: {

@@ -4,6 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import useAuth from '../hooks/useAuth';
 import useCountry from '../hooks/useCountry';
 import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 
 const INITIAL_STATE = {
   nombre: '',
@@ -22,6 +23,7 @@ const ProfileEdit = ({ route }) => {
   const [editedData, setEditedData] = useState(INITIAL_STATE);
   const [selectedCountry, setSelectedCountry] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
 
   useEffect(() => {
     fetchCountries();
@@ -55,6 +57,7 @@ const ProfileEdit = ({ route }) => {
       setShowAlert(true);
       setUser(editedData);
     } catch (error) {
+      setErrorAlertVisible(true);
       console.error('Error al editar el usuario:', error);
     }
   };
@@ -65,7 +68,11 @@ const ProfileEdit = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
+      <View style={styles.topBanner}>
+      </View>
+
+      <View style={styles.profileCard}>
+        <TextInput
         style={styles.input}
         placeholder="Nombre"
         value={editedData.nombre || ''}
@@ -99,15 +106,9 @@ const ProfileEdit = ({ route }) => {
       <TouchableOpacity onPress={handleSubmit} style={styles.button}>
         <Text style={styles.buttonText}>Guardar Cambios</Text>
       </TouchableOpacity>
-    
-      <CustomAlert
-        isVisible={showAlert}
-        onClose={handleCloseAlert}
-        title="Edición Exitosa"
-        message="El usuario se ha editado correctamente."
-        buttonColor="#2196F3"
-        iconName="check-circle" 
-      />
+      </View>
+      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+      <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
     </View>
   );
 };
@@ -115,9 +116,39 @@ const ProfileEdit = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
+    position: 'relative',
+  },
+  topBanner: {
+    position:'absolute',
+    width: '100%',
+    height: '50%',
+    backgroundColor: '#0258FE',
     justifyContent: 'center',
-    padding: 16,
-    backgroundColor: '#F5F5F5',
+    borderBottomLeftRadius : 8,
+    borderBottomRightRadius: 8,
+  },
+  profileCard: {
+    backgroundColor: '#F9F7F7',
+    borderRadius: 10,
+    shadowColor: '#000',
+    height: '80%',
+    top: 50, 
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    padding: 20,
+    margin: 15,
+  },
+  label: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 2
   },
   input: {
     height: 50,
@@ -125,13 +156,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 15,
-    borderRadius: 5,
+    borderRadius: 10,
     fontSize: 16,
     backgroundColor: '#FFFFFF',
   },
   button: {
     marginTop: 20,
-    backgroundColor: 'red',
+    backgroundColor: '#0258FE',
     borderRadius: 5,
     alignItems: 'center',
     padding: 10,
@@ -140,12 +171,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#374151',
   },
   picker: {
     height: 50,

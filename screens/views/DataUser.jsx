@@ -1,87 +1,117 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import useAuth from '../hooks/useAuth'
+import useAuth from '../hooks/useAuth';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const DataUser = (props) => {
+const DataUser = () => {
   const navigation = useNavigation();
-  const {user} = useAuth()
-  console.log('dats:',user)
+  const { user } = useAuth();
 
   const handleEdit = () => {
-    navigation.navigate('Editar usuario', {user});
-};
-return (
-  <View style={styles.container}>
-    <Text style={styles.header}>Perfil de Usuario</Text>
-    <View style={styles.fieldContainer}>
-      <Text style={styles.label}>Nombre:</Text>
-      <Text style={styles.field}>{user.nombre}</Text>
-    </View>
-    <View style={styles.fieldContainer}>
-      <Text style={styles.label}>Email:</Text>
-      <Text style={styles.field}>{user.email}</Text>
-    </View>
-    <View style={styles.fieldContainer}>
-      <Text style={styles.label}>Teléfono:</Text>
-      <Text style={styles.field}>{user.telefono}</Text>
-    </View>
-    <View style={styles.fieldContainer}>
-      <Text style={styles.label}>País:</Text>
-      <Text style={styles.field}>{user.pais}</Text>
-    </View>
+    navigation.navigate('Editar usuario', { user });
+  };
 
-    <TouchableOpacity style={styles.optionButton} onPress= {handleEdit}>
-      <MaterialCommunityIcons name="pencil" size={30} color="white" />
-    </TouchableOpacity>
-  </View>
-);
+  return (
+    <View style={styles.container}>
+      <View style={styles.topBanner}>
+      </View>
+
+      <View style={styles.profileCard}>
+        <View style={styles.avatarWrapper}>
+        <MaterialCommunityIcons name="account-circle" size={150} color="black" />
+        <Text style={styles.name}>{user.nombre}</Text>
+        </View>
+        <Text style={styles.label}><MaterialCommunityIcons name="at" size={'150%'} color="#517EF2"/> {user.email}</Text>
+        <Text style={styles.label}><MaterialCommunityIcons name="phone" size={'150%'} color="#517EF2"/> {user.telefono}</Text>
+        <Text style={styles.label}><MaterialCommunityIcons name="map" size={'150%'} color="#517EF2"/> {user.pais}</Text>
+        <Text style={styles.label}><MaterialCommunityIcons name="purse-outline" size={'150%'} color="#517EF2"/> {user.cargo}</Text>
+        <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+          <MaterialCommunityIcons name="pencil" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-container: {
-  flex: 1,
-  padding: 16,
-  backgroundColor: '#F5F5F5',
-},
-header: {
-  fontSize: 24,
-  fontWeight: 'bold',
-  marginBottom: 20,
-  color: '#374151',
-},
-fieldContainer: {
-  backgroundColor: '#FFFFFF',
-  padding: 10,
-  borderRadius: 5,
-  marginBottom: 10,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-  elevation: 5,
-},
-label: {
-  fontSize: 16,
-  fontWeight: 'bold',
-  marginBottom: 5,
-  color: '#374151',
-},
-field: {
-  fontSize: 16,
-  color: '#374151',
-},
-optionButton: {
-  position: 'absolute',
-  right: 20,
-  bottom: 20,
-  backgroundColor: '#1E90FF',
-  padding: 10,
-  borderRadius: 50,
-  alignItems: 'center',
-  justifyContent: 'center',
-},
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    position: 'relative',
+  },
+  topBanner: {
+    position:'absolute',
+    width: '100%',
+    height: '50%',
+    backgroundColor: '#0258FE',
+    justifyContent: 'center',
+    borderBottomLeftRadius : 8,
+    borderBottomRightRadius: 8,
+  },
+  profileTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: 'white',
+    textAlign: 'center',
+  },
+  smallCircle: {
+    width: 20,
+    height: 20,
+    backgroundColor: '#FFFDFD',
+    borderRadius: 10,
+    position: 'absolute',
+    top: 20,
+    left: 8,
+  },
+  profileCard: {
+    backgroundColor: '#F9F7F7',
+    borderRadius: 10,
+    shadowColor: '#000',
+    height: '80%',
+    top: 50, 
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    padding: 20,
+    margin: 15,
+  },
+  avatarWrapper: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderColor: 'black',
+    borderWidth: 2,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  label: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 2
+  },
+  editButton: {
+    position: 'absolute',
+    right: 20,
+    top:'80%',
+    backgroundColor: '#1E90FF',
+    padding: 10,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default DataUser;
