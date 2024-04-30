@@ -329,7 +329,7 @@ const TicketFormHome = () => {
   const renderItemTaxes = ({ item }) => (
     <View style={styles.item}>
       <TouchableOpacity
-        style={[styles.circle]}
+        style={[styles.circle, selectedTaxes && selectedTaxes.id === item.id && styles.selectedCircle]}
         onPress={() => handleSelectTax(item)}
       />
       <Text style={styles.itemText}>{item.nombre}</Text>
