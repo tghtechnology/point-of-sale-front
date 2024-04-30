@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   cargo:'',
   telefono:'',
   password:'',
+  nombreNegocio:''
 }
 
 const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
@@ -79,6 +80,15 @@ const RegisterForm = () => {
       <View style={styles.container}>
         {/* IMPUT DE CORREO ELECTRONICO */}
         <Text style={styles.Tittle}>Registro</Text>
+
+        <TextInput
+          style={styles.input} 
+          placeholder="Nombre"
+          placeholderTextColor="#546574"
+          value={dataForm.nombre}
+          onChangeText={text => getValues('nombre', text)}
+        />
+
         <TextInput
           style={styles.input} 
           placeholder="Correo Electrónico"

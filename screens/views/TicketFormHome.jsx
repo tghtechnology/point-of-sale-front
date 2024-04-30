@@ -246,7 +246,7 @@ const TicketFormHome = () => {
   };
 
   const RemoveItem = async () => {
-    await AsyncStorage.removeItem('selectedItem', JSON.stringify(selectedItems));
+    //await AsyncStorage.removeItem('selectedItem', JSON.stringify(selectedItems));
     await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
   }
 
