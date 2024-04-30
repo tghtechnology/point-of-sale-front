@@ -252,7 +252,7 @@ const TicketFormHome = () => {
 
   const handleSaveChanges = async () => {
     try {
-      RemoveItem();
+      await RemoveItem();
       await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts)); // Guardar los descuentos
       await AsyncStorage.setItem('selectedTax', JSON.stringify(selectedTaxes));
       console.log('Cambios guardados exitosamente');
