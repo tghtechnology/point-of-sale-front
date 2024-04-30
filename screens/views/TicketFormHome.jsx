@@ -23,9 +23,9 @@ const TicketFormHome = () => {
   const [selectedValue, setSelectedValue] = useState('default');
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedDiscounts, setSelectedDiscounts] = useState([]); // Nuevo estado para los descuentos seleccionados
-  const [selectedClients, setSelectedClients] = useState([]); // Estado para almacenar el cliente seleccionado
-  const [selectedTaxes, setSelectedTaxes] = useState([]); // New state for selected taxes
+  const [selectedDiscounts, setSelectedDiscounts] = useState([]);
+  const [selectedClients, setSelectedClients] = useState([]);
+  const [selectedTaxes, setSelectedTaxes] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
   // Estado para almacenar los IDs de los productos seleccionados
@@ -47,65 +47,42 @@ const TicketFormHome = () => {
   //
 
   useEffect(() => {
-    const fetchSelectedItems = async () => {
-      try {
-        const storedItems = await AsyncStorage.getItem('selectedItem');
-        if (storedItems !== null) {
-          setSelectedItems(JSON.parse(storedItems));
-        }
-      } catch (error) {
-        console.error('Error fetching selected items from AsyncStorage:', error);
-      }
-    };
+  const fetchDataFromAsyncStorage = async () => {
+    try {
+      const storedItems = await AsyncStorage.getItem('selectedItems');
+      const storedDiscounts = await AsyncStorage.getItem('selectedDiscounts');
+      const storedClient = await AsyncStorage.getItem('selectedClients');
+      const storedTaxes = await AsyncStorage.getItem('selectedTaxes');
 
-    const fetchSelectedDiscounts = async () => {
-      try {
-        const storedDiscounts = await AsyncStorage.getItem('selectedDiscount');
-        if (storedDiscounts !== null) {
-          setSelectedDiscounts(JSON.parse(storedDiscounts));
-        }
-      } catch (error) {
-        console.error('Error fetching selected discounts from AsyncStorage:', error);
+      if (storedItems !== null) {
+        setSelectedItems(JSON.parse(storedItems));
       }
-    };
-
-    const fetchSelectedClient = async () => {
-      try {
-        const storedClient = await AsyncStorage.getItem('selectedClient');
-        if (storedClient !== null) {
-          setSelectedClients(JSON.parse(storedClient));
-        }
-      } catch (error) {
-        console.error('Error fetching selected client from AsyncStorage:', error);
+      if (storedDiscounts !== null) {
+        setSelectedDiscounts(JSON.parse(storedDiscounts));
       }
-    };
-
-    const fetchSelectedTaxes = async () => {
-      try {
-        const storedTaxes = await AsyncStorage.getItem('selectedTax');
-        if (storedTaxes !== null) {
-          setSelectedTaxes(JSON.parse(storedTaxes));
-        }
-      } catch (error) {
-        console.error('Error fetching selected taxes from AsyncStorage:', error);
+      if (storedClient !== null) {
+        setSelectedClients(JSON.parse(storedClient));
       }
-    };
+      if (storedTaxes !== null) {
+        setSelectedTaxes(JSON.parse(storedTaxes));
+      }
+    } catch (error) {
+      console.error('Error fetching data from AsyncStorage:', error);
+    }
+  };
 
-    fetchSelectedItems();
-    fetchSelectedDiscounts();
-    fetchSelectedClient();
-    fetchSelectedTaxes();
-  }, []);
+  fetchDataFromAsyncStorage();
+}, []);
 
   
   //Consumo Api
   // Prepare the sale data using the selected items
   const saleData = {
     detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
-    impuestoId: selectedTaxes.id,
+    impuestoId: selectedTaxes ? selectedTaxes.id : null,
     descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
     usuarioId: 1,
-    clienteId: selectedClients.id,
+    clienteId: selectedClients ? selectedClients.id: null,
   };
 
   // Call the createSale function with the sale data
@@ -128,15 +105,13 @@ const TicketFormHome = () => {
     const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
 
     if (itemIndex !== -1) {
-      // Si el elemento ya está seleccionado, deseleccione
       updatedItems.splice(itemIndex, 1);
       setShowAlertDeselect(true);
-      setSelectedItems(updatedItems); // Actualizar el estado con la nueva lista de artículos
+      setSelectedItems(updatedItems); 
     } else {
-      // Si el elemento no está seleccionado, seleccione con una cantidad predeterminada
       updatedItems.push({ ...item, quantity });
       setShowAlert(true);
-      setSelectedItems(updatedItems); // Actualizar el estado con la nueva lista de artículos
+      setSelectedItems(updatedItems);
     }
 
     setSelectedItems(updatedItems);
@@ -154,10 +129,8 @@ const TicketFormHome = () => {
     const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
 
     if (discountIndex !== -1) {
-      // Si el descuento ya está seleccionado, deseleccionarlo
       updatedDiscounts.splice(discountIndex, 1);
     } else {
-      // Si el descuento no está seleccionado, deseleccionar cualquier descuento previamente seleccionado y luego seleccionarlo
       updatedDiscounts = [discount];
     }
 
@@ -172,24 +145,30 @@ const TicketFormHome = () => {
   };
 
   const handleSelectClient = async (client) => {
+    if (selectedClients && selectedClients.id === client.id) {
+      setSelectedClients(null);
+    } else {
+      setSelectedClients(client);
+    }
+  
     try {
       await AsyncStorage.setItem('selectedClient', JSON.stringify(client));
       console.log('Cliente seleccionado guardado:', client);
-      setSelectedClients(client); // Use setSelectedClients here
-      //   Verificar el estado actual de selectedClients en la consola
-      console.log('selectedClients:', selectedClients);
     } catch (error) {
       console.error('Error al guardar el cliente seleccionado:', error);
     }
   };
-
+  
   const handleSelectTax = async (tax) => {
+    if (selectedTaxes && selectedTaxes.id === tax.id) {
+      setSelectedTaxes(null);
+    } else {
+      setSelectedTaxes(tax);
+    }
+  
     try {
       await AsyncStorage.setItem('selectedTax', JSON.stringify(tax));
       console.log('Impuesto seleccionado guardado:', tax);
-      setSelectedTaxes(tax); // Use setSelectedClients here
-      //   Verificar el estado actual de selectedClients en la consola
-      console.log('selectedTaxes:', selectedTaxes);
     } catch (error) {
       console.error('Error al guardar el impuesto seleccionado:', error);
     }
@@ -246,11 +225,11 @@ const TicketFormHome = () => {
   };
 
   const RemoveItem = async () => {
-    await AsyncStorage.removeItem('selectedItem', JSON.stringify(selectedItems));
+    //await AsyncStorage.removeItem('selectedItem', JSON.stringify(selectedItems));
     await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
   }
 
-  const handleSaveChanges = async () => {
+ const handleSaveChanges = async () => {
     try {
       await RemoveItem();
       await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts)); // Guardar los descuentos
@@ -317,7 +296,8 @@ const TicketFormHome = () => {
     <View style={styles.item}>
       <TouchableOpacity
         style={[
-          styles.circle
+          styles.circle,
+          selectedClients && selectedClients.id === item.id && styles.circleSelected
         ]}
         onPress={() => handleSelectClient(item)}
       />
@@ -325,11 +305,14 @@ const TicketFormHome = () => {
       <Text style={styles.priceText}>{item.email}</Text>
     </View>
   );
-
+  
   const renderItemTaxes = ({ item }) => (
     <View style={styles.item}>
       <TouchableOpacity
-        style={[styles.circle, selectedTaxes && selectedTaxes.id === item.id && styles.selectedCircle]}
+        style={[
+          styles.circle,
+          selectedTaxes && selectedTaxes.id === item.id && styles.circleSelected
+        ]}
         onPress={() => handleSelectTax(item)}
       />
       <Text style={styles.itemText}>{item.nombre}</Text>
