@@ -97,11 +97,11 @@ const TicketFormHome = () => {
     fetchSelectedTaxes();
   }, []);
 
-  /*
+  
   //Consumo Api
   // Prepare the sale data using the selected items
   const saleData = {
-    detalles: selectedItems,
+    detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
     impuestoId: selectedTaxes.id,
     descuentoId: selectedDiscounts.id,
     usuarioId: 1,
@@ -112,7 +112,7 @@ const TicketFormHome = () => {
   // handleCreateSale(saleData);
   console.log('Sale data:', saleData);
   //
-  */
+  
 
   useEffect(() => {
     // Calculate total amount
