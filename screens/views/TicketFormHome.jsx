@@ -15,7 +15,7 @@ const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showSaveChangesAlert, setShowSaveChangesAlert] = useState(false);
   const [showAlertDeselect, setShowAlertDeselect] = useState(false);
-  const {handleCreateSale} = useSale();
+  //const {handleCreateSale} = useSale();
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const { client } = useClient();
@@ -97,6 +97,7 @@ const TicketFormHome = () => {
     fetchSelectedTaxes();
   }, []);
 
+  /*
   //Consumo Api
   // Prepare the sale data using the selected items
   const saleData = {
@@ -111,6 +112,7 @@ const TicketFormHome = () => {
   // handleCreateSale(saleData);
   console.log('Sale data:', saleData);
   //
+  */
 
   useEffect(() => {
     // Calculate total amount
@@ -330,8 +332,7 @@ const TicketFormHome = () => {
   const renderItemTaxes = ({ item }) => (
     <View style={styles.item}>
       <TouchableOpacity
-        style={[styles.circle,
-        selectedTaxes.some(selectedTax => selectedTax.id === item.id) && styles.circleSelected]}
+        style={[styles.circle]}
         onPress={() => handleSelectTax(item)}
       />
       <Text style={styles.itemText}>{item.nombre}</Text>
