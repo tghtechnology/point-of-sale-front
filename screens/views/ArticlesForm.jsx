@@ -1,42 +1,52 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity,Image,ScrollView} from "react-native";
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,Image,ScrollView,} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
-import CustomAlert from '../componentes/CustomAlert';
-import {MaterialIcons} from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
+import CustomAlert from "../componentes/CustomAlert";
+import { MaterialIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 const INITIAL_STATE = {
   nombre: "",
   tipo_venta: "",
   precio: "",
-  representacion:"",
-  color:"",
-  imagen:"",
+  representacion: "",
+  color: "",
+  imagen: "",
   id_categoria: "",
 };
-const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+const colors = [
+  "#FF0000",
+  "#00FF00",
+  "#0000FF",
+  "#FFFF00",
+  "#00FFFF",
+  "#FF00FF",
+  "#C0C0C0",
+  "#808080",
+];
 
-const ColorBox = ({ color,setDatos }) => (
-  <TouchableOpacity 
-    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} 
-    onPress={() => setDatos(prevDatos => ({ ...prevDatos, color }))} 
+const ColorBox = ({ color, setDatos }) => (
+  <TouchableOpacity
+    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }}
+    onPress={() => setDatos((prevDatos) => ({ ...prevDatos, color }))}
   />
 );
 export default function ArticlesForm() {
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null);
   const [datos, setDatos] = useState(INITIAL_STATE);
-  const [categoriaSelect,setCategoriaSelect] =useState('')
+  const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const { handleCreateArticle,listArticle,setListArticle} = useArticle();
+  const { handleCreateArticle, listArticle, setListArticle } = useArticle();
   const { listCategoria } = useCategory();
 
   const openImagePickerAsync = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if(permissionResult.granted === false){
-      alert('Permission to acces camera is required');
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("Permission to acces camera is required");
       return;
     }
 
@@ -46,20 +56,19 @@ export default function ArticlesForm() {
       aspect: [4, 3],
       quality: 1,
     });
-    
-    if(pickerResult.canceled === true){
+
+    if (pickerResult.canceled === true) {
       return;
     }
 
-    setSelectedImage({localUri: pickerResult.assets[0].uri});
-   console.log(pickerResult)
-  }
+    setSelectedImage(pickerResult.assets[0].uri);
+    console.log(pickerResult);
+  };
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
   };
 
-  
   const getValues = (name, value) => {
     setDatos({
       ...datos,
@@ -74,42 +83,41 @@ export default function ArticlesForm() {
     });
   };
 
-  const handleRepresentacion = (value) =>{
+  const handleRepresentacion = (value) => {
     setDatos({
       ...datos,
-      representacion:value,
-    })
-
-  }
-
+      representacion: value,
+    });
+  };
 
   const SubmitArticle = async () => {
     try {
+      
       const articleData = {
         ...datos,
         precio: parseFloat(datos.precio),
-        id_categoria:categoriaSelect,
-
+        id_categoria: categoriaSelect,
+        imagen: selectedImage,
       };
+
       console.log("Datos a enviar al servidor:", articleData);
       const newArticle = await handleCreateArticle(articleData);
       if (newArticle && newArticle.id) {
         setShowAlert(true);
         setDatos(INITIAL_STATE);
-        setCategoriaSelect('');
-        setListArticle([...listArticle,newArticle]);
+        setCategoriaSelect("");
+        setListArticle([...listArticle, newArticle]);
       } else {
-        alert("El articulo no se pudo crear");
+        alert("El artículo no se pudo crear");
       }
     } catch (error) {
-      alert("problema interno del servidor");
+      alert("Problema interno del servidor");
     }
-    console.log("valor del formulario" + JSON.stringify(datos));
   };
 
   const handleCloseAlert = () => {
     setShowAlert(false);
-};
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -127,7 +135,9 @@ export default function ArticlesForm() {
       </View>
       <View style={styles.pickeContainer}>
         <Picker
-          onValueChange={(itemValue, itemIndex) => setCategoriaSelect(itemValue)}
+          onValueChange={(itemValue, itemIndex) =>
+            setCategoriaSelect(itemValue)
+          }
           selectedValue={categoriaSelect}
           style={styles.picker}
         >
@@ -156,34 +166,26 @@ export default function ArticlesForm() {
       </RadioButton.Group>
       {/* Input Precio */}
       <TextInput
-  style={styles.input}
-  placeholder="Precio"
-  placeholderTextColor="#546574"
-  value={datos.precio.toString()}
-  onChangeText={(text) => getValues("precio", text)}
-/>
+        style={styles.input}
+        placeholder="Precio"
+        placeholderTextColor="#546574"
+        value={datos.precio.toString()}
+        onChangeText={(text) => getValues("precio", text)}
+      />
       <View>
         <Text style={styles.info}>
           Deje el campo en blanco para indicar el precio durante la venta{" "}
         </Text>
       </View>
-      {/* Input REF*/}
-      <View>
-        <Text style={styles.label}>REF</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="10000"
-        placeholderTextColor="black"
-        value={datos.ref}
-        onChangeText={(text) => getValues("ref", text)}
-      />
       {/* Input representacion*/}
       <View>
         <Text style={styles.label}>Representacion</Text>
       </View>
-       
-        <RadioButton.Group onValueChange={(value) => handleRepresentacion (value)} value={datos.representacion} >
+
+      <RadioButton.Group
+        onValueChange={(value) => handleRepresentacion(value)}
+        value={datos.representacion}
+      >
         <View style={styles.radioContainer}>
           <RadioButton value="color" />
           <Text>Color</Text>
@@ -193,40 +195,56 @@ export default function ArticlesForm() {
           <Text>Imagen</Text>
         </View>
       </RadioButton.Group>
-      {datos.representacion === 'imagen' && (
-  <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
-    <TouchableOpacity style={styles.uploadImagen} onPress={openImagePickerAsync}>
-      {selectedImage ? 
-        (
-          <Image style={{ width: 190, height: 190, borderRadius: 8 }} source={{ uri: selectedImage.localUri }} />
-        ) :
-        (
-          <Text style={styles.text}>Subir Imagen</Text>
-        )
-      }
-      <TouchableOpacity style={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          backgroundColor: 'white',
-          borderRadius: 50,
-          padding: 2,
-          zIndex: 1 
-        }} onPress={removeSelectedImage}>
-        <MaterialIcons name="close" size={24} color="#696969" style={{backgroundColor: 'white', borderRadius: 12}}/>
-      </TouchableOpacity> 
-    </TouchableOpacity>
-  </View>
-)}
+      {datos.representacion === "imagen" && (
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          <TouchableOpacity
+            style={styles.uploadImagen}
+            onPress={openImagePickerAsync}
+          >
+            {selectedImage ? (
+              <Image
+                style={{ width: 190, height: 190, borderRadius: 8 }}
+                source={{ uri: selectedImage }}
+              />
+            ) : (
+              <Text style={styles.text}>Subir Imagen</Text>
+            )}
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                right: 0,
+                top: 0,
+                backgroundColor: "white",
+                borderRadius: 50,
+                padding: 2,
+                zIndex: 1,
+              }}
+              onPress={removeSelectedImage}
+            >
+              <MaterialIcons
+                name="close"
+                size={24}
+                color="#696969"
+                style={{ backgroundColor: "white", borderRadius: 12 }}
+              />
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+      )}
 
-
-      {datos.representacion === 'color' && (
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center'}}>
+      {datos.representacion === "color" && (
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
           {colors.map((color, index) => (
             <ColorBox key={index} color={color} setDatos={setDatos} />
           ))}
         </View>
-      )} 
+      )}
 
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={SubmitArticle} style={styles.buttonContainer}>
@@ -239,7 +257,7 @@ export default function ArticlesForm() {
         message="El articulo se ha creado correctamente."
         buttonColor="#2196F3"
         iconName="check-circle"
-        />
+      />
     </ScrollView>
   );
 }
@@ -291,21 +309,20 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     fontSize: 15,
-   
   },
-  uploadImagen:{
-    backgroundColor: '#fcfcfc',
-    width:200,
-    height:200,
-    alignItems: 'center',
+  uploadImagen: {
+    backgroundColor: "#fcfcfc",
+    width: 200,
+    height: 200,
+    alignItems: "center",
     padding: 10,
   },
   text: {
     marginTop: 80,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: "#dcdcdc",
     textAlign: "center",
-    alignItems:"center",
+    alignItems: "center",
     fontSize: 20,
   },
 });

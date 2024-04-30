@@ -24,9 +24,9 @@ const ArticleProvider = ({children}) => {
     }, []);
 
     const handleCreateArticle = async (newArticle) => {
-        const { nombre, tipo_venta, precio, representacion, color, id_categoria} = newArticle; 
+        const { nombre, tipo_venta, precio, representacion, color,imagen, id_categoria} = newArticle; 
         try {
-            const res= await createArticle({ nombre, tipo_venta, precio, representacion, color, id_categoria}); 
+            const res= await createArticle({ nombre, tipo_venta, precio, representacion, color,imagen, id_categoria}); 
             if(res.status === 200 || res.status === 201){
               return res.data;
             } else {
@@ -65,9 +65,9 @@ const ArticleProvider = ({children}) => {
         
   
 
-    const handleDeleteArticle = async (text_id) => {
+    const handleDeleteArticle = async (id) => {
         try {
-            const { status } = await deleteArticles(text_id);
+            const { status } = await deleteArticles(id);
             if (status === 200) {
                 return true;
             } else {
