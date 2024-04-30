@@ -115,13 +115,7 @@ function ArticulosScreen() {
       
       <Stack.Screen name="Crear Descuento" component={DiscountForm}  ></Stack.Screen>
       <Stack.Screen name="Editar Categoria" component={CategoryEdit}  ></Stack.Screen>
-      <Stack.Screen name="Crear Categoria" component={CategoryForm}  options={{
-          headerRight: () => (
-            <View style={{ marginRight: 10 }}>
-              <Text style={{ color: 'white', fontSize: 16 }}>Guardar</Text>
-            </View>
-          ),
-        }}></Stack.Screen>
+      <Stack.Screen name="Crear Categoria" component={CategoryForm} ></Stack.Screen>
       <Stack.Screen name="Descuento" component={PlusDiscount}  options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
       <Stack.Screen name="Impuestos" component={PlusImpuesto}  ></Stack.Screen>
       <Stack.Screen name="Creación de un impuesto" component={ImpuestoForm}  ></Stack.Screen>

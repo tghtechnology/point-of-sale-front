@@ -50,6 +50,16 @@ useEffect(() => {
     setSelectedItem(item); 
     setModal(true);
   };
+  const colorMapping = {
+    'Rojo': '#FF0000',
+    'Verde_limon': '#00FF00',
+    'Azul': '#0000FF',
+    'Amarillo': '#FFFF00',
+    'Turquesa': '#00FFFF',
+    'Fucsia': '#FF00FF',
+    'Gris_claro': '#C0C0C0',
+    'Gris_oscuro': '#808080',
+  };
 
   return (
     <View style={styles.container}>
@@ -57,6 +67,9 @@ useEffect(() => {
         data={listCategoria}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
+            <View style={styles.colorContainer}>
+                <View style={{...styles.colorSquare, backgroundColor: colorMapping[item.color]}} />
+            </View>
             <View style={styles.itemContent}>
             <Text style={styles.itemText}>{item.nombre}</Text>
             
@@ -121,10 +134,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  colorSquare: {
+    width: 50,
+    height: 50,
+  },
   text: {
     marginTop: 20,
     fontSize: 20,
     color: '#808080',
+  },
+  colorContainer: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   text_: {
     marginTop: 5,
@@ -135,7 +157,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#ff0000', 
+    backgroundColor: '#0258FE', 
     borderRadius: 20,
     padding: 10,
   },
@@ -159,6 +181,8 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: 'bold',
     marginBottom: 5,
+    marginLeft:40,
+    textAlign: 'justify',
   },
   container: {
     flex: 1,
@@ -254,7 +278,7 @@ const styles = StyleSheet.create({
   }, 
   optionsButton: {
     position: 'absolute',
-    top: 10,
+    
     right: 10,
 },  
 });

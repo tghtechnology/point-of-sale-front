@@ -75,7 +75,16 @@ const RegisterForm = () => {
     
       <View style={styles.container}>
         {/* IMPUT DE CORREO ELECTRONICO */}
-        <Text style={styles.Tittle}>Registro</Text>
+        <View style={styles.box}>
+        <TextInput
+          style={styles.input} 
+          placeholder="Nombre"
+          placeholderTextColor="#546574"
+          keyboardType='default'
+          value={dataForm.nombre}
+          onChangeText={text => getValues('nombre', text)}
+        />
+
         <TextInput
           style={styles.input} 
           placeholder="Nombre"
@@ -148,7 +157,7 @@ const RegisterForm = () => {
         <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
         <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/> 
       </View>
-    
+      
   )
 }
 
@@ -156,7 +165,8 @@ const styles = StyleSheet.create({
 
   container: {
     marginTop: 100, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
+    paddingHorizontal: 25, 
+    
   },
     Tittle: {
       fontSize: 34,
@@ -164,19 +174,36 @@ const styles = StyleSheet.create({
       marginBottom: 50,
     },
     input: {
-    marginBottom: 25,
+    marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
+    borderBottomColor: '#0258FE', // Cambiado de borderColor
     height: 40,
     color: '#546574',
     padding: 10,
     borderRadius: 5,
     },
+    box:{
+    
+      backgroundColor:'#D9D9D9',
+      padding:40,
+      borderRadius: 15,
+      zIndex: 1,
+  
+    },
+    redSection: {
+      position: 'absolute', 
+      borderRadius: 15,
+      top: '50%', 
+      width: '100%', 
+      height: '50%', 
+      paddingVertical:'80%',
+      paddingHorizontal:'58%',
+      backgroundColor: '#0258FE',
+    },
     buttonRegister: {
-      backgroundColor: 'red',
+      backgroundColor: '#0258FE',
       paddingVertical: 12,
-      borderRadius: 5,
       alignItems: 'center',
       marginTop: 5,
     },

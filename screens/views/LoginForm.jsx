@@ -46,6 +46,7 @@ const LoginForm = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.box}>
       {/* INPUT DE USUARIO */}
       <TextInput
         style={styles.input}
@@ -99,14 +100,35 @@ const LoginForm = () => {
       <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
       <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
     </View>
+    
   )
 }
 
 const styles = StyleSheet.create({
 
   container: {
-    marginTop: 300, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
+    marginTop: 190, // Puedes ajustar este valor según tus necesidades
+    paddingHorizontal: 25,
+  },
+
+  box:{
+    
+    backgroundColor:'#D9D9D9',
+    padding:40,
+    borderRadius: 15,
+    zIndex: 1,
+
+  },
+
+  redSection: {
+    position: 'absolute', 
+    borderRadius: 15,
+    top: '50%', 
+    width: '100%', 
+    height: '50%', 
+    paddingVertical:'80%',
+    paddingHorizontal:'58%',
+    backgroundColor: '#0258FE',
   },
 
   passwordContainer: {
@@ -120,10 +142,10 @@ const styles = StyleSheet.create({
   passwordInput: {
     marginBottom:35 ,
     fontSize: 17,
-    borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
+    borderBottomWidth: 1, 
+    borderBottomColor: 'blue',
     height: 40,
-    width: 350,
+    width: 250,
     color: '#546574',
     padding: 10,
     borderRadius: 5,
@@ -140,16 +162,15 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     fontSize: 17,
     borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
+    borderBottomColor: 'blue', // Cambiado de borderColor
     height: 40,
     color: '#546574',
     padding: 10,
-    borderRadius: 5,
+    
   },
   button: {
-    backgroundColor: 'red',
+    backgroundColor: '#0258FE',
     paddingVertical: 12,
-    borderRadius: 5,
     alignItems: 'center',
     marginTop: 5,
   },

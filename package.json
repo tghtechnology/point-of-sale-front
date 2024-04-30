@@ -18,6 +18,9 @@
     "@react-navigation/native-stack": "^6.9.20",
     "axios": "^1.6.7",
     "expo": "~50.0.15",
+    "expo-app-loading": "^2.1.1",
+    "expo-font": "~11.10.3",
+    "expo-image-picker": "~14.7.1",
     "expo-status-bar": "~1.11.1",
     "punycode": "^2.3.1",
     "react": "18.2.0",
@@ -34,7 +37,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.6",
-    "react-native-web-refresh-control": "^1.1.2"
+    "react-native-web-refresh-control": "^1.1.2",
+    "expo-splash-screen": "~0.26.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

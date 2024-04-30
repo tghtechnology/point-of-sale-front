@@ -7,11 +7,14 @@ const INITIAL_STATE = {
   nombre:'',
   color:'',
 }
-// const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
 
-// const ColorBox = ({ color }) => (
-//   <TouchableOpacity style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} />
-// );
+const ColorBox = ({ color,setDatos }) => (
+  <TouchableOpacity 
+    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} 
+    onPress={() => setDatos(prevDatos => ({ ...prevDatos, color }))} 
+  />
+);
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
@@ -59,13 +62,13 @@ const CategoryForm = () => {
         onChangeText={(text) => getValues('nombre', text)}  
       />
       {/* Input del color de la categoría */}
-      <TextInput
-        style={styles.input}
-        placeholder='Color de la categoría'
-        placeholderTextColor="#546574"
-        value={datos.color}
-        onChangeText={(text) => getValues('color', text)}
-      />
+    
+      <Text style={styles.label}>Color de Categoría</Text>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center', marginTop:20}}>
+          {colors.map((color, index) => (
+            <ColorBox key={index} color={color}  setDatos={setDatos}/>
+          ))}
+        </View>
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={SubmitCategory} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar</Text>
@@ -78,20 +81,8 @@ const CategoryForm = () => {
         buttonColor="#2196F3"
         iconName="check-circle" 
         />
-      <View style={{ height: 20 }} />
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>ASIGNAR ARTÍCULOS</Text>
-      </TouchableOpacity>
-      <View style={{ height: 30 }} />
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>CREAR ARTÍCULO</Text>
-      </TouchableOpacity>
-      {/* <Text style={styles.label}>Color de Categoría</Text>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center', marginTop:20}}>
-          {colors.map((color, index) => (
-            <ColorBox key={index} color={color} />
-          ))}
-        </View> */}
+      
+      
       </View>
     
   );
