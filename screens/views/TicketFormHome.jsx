@@ -131,10 +131,12 @@ const TicketFormHome = () => {
       // Si el elemento ya está seleccionado, deseleccione
       updatedItems.splice(itemIndex, 1);
       setShowAlertDeselect(true);
+      setSelectedItems(updatedItems); // Actualizar el estado con la nueva lista de artículos
     } else {
       // Si el elemento no está seleccionado, seleccione con una cantidad predeterminada
       updatedItems.push({ ...item, quantity });
       setShowAlert(true);
+      setSelectedItems(updatedItems); // Actualizar el estado con la nueva lista de artículos
     }
 
     setSelectedItems(updatedItems);
@@ -243,9 +245,14 @@ const TicketFormHome = () => {
     }
   };
 
+  const RemoveItem = async () => {
+    await AsyncStorage.removeItem('selectedItem', JSON.stringify(selectedItems));
+    await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
+  }
+
   const handleSaveChanges = async () => {
     try {
-      await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
+      RemoveItem();
       await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts)); // Guardar los descuentos
       await AsyncStorage.setItem('selectedTax', JSON.stringify(selectedTaxes));
       console.log('Cambios guardados exitosamente');
