@@ -56,14 +56,14 @@ const CategoryForm = () => {
   {/* IMPUT DEL NOMBRE DE LA CATEGORIA */}
       <TextInput
         style={styles.input}
-        placeholder='El nombre de la categoría'
+        placeholder='Nombre'
         placeholderTextColor="#546574"
         value={datos.nombre}
         onChangeText={(text) => getValues('nombre', text)}  
       />
       {/* Input del color de la categoría */}
     
-      <Text style={styles.label}>Color de Categoría</Text>
+      <Text style={styles.label}>Color</Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center', marginTop:20}}>
           {colors.map((color, index) => (
             <ColorBox key={index} color={color}  setDatos={setDatos}/>
@@ -96,23 +96,27 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: 'red',
+    borderBottomColor: "#0258FE",
     height: 40,
     color: '#546574',
     padding: 10,
     borderRadius: 5,
   },
   buttonContainer: {
-    overflow: 'hidden', 
+    overflow: "hidden",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor:'#0258FE',
+    backgroundColor:'#0258FE',
+    width:237,
+    height:39,
+    marginLeft:55,
     padding: 10,
   },
   buttonText: {
-    color: 'red',
+    color: 'white',
     textAlign: 'center',
-    fontSize:15,
+    fontSize:16,
   },
   label: {
     marginTop: 30,

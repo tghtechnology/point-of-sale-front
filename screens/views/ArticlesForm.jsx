@@ -55,15 +55,16 @@ export default function ArticlesForm() {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+     
     });
 
-    if (pickerResult.canceled === true) {
-      return;
-    }
-
-    setSelectedImage(pickerResult.assets[0].uri);
     console.log(pickerResult);
+
+    if (!pickerResult.canceled) {
+      setSelectedImage(pickerResult.assets[0].uri)
+    }
   };
+
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
@@ -178,9 +179,7 @@ export default function ArticlesForm() {
         </Text>
       </View>
       {/* Input representacion*/}
-      <View>
-        <Text style={styles.label}>Representacion</Text>
-      </View>
+      
 
       <RadioButton.Group
         onValueChange={(value) => handleRepresentacion(value)}
@@ -271,7 +270,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: "red",
+    borderBottomColor: "#0258FE",
     height: 40,
     color: "#546574",
     padding: 10,
@@ -283,7 +282,7 @@ const styles = StyleSheet.create({
   pickeContainer: {
     marginBottom: 25,
     borderBottomWidth: 1,
-    borderBottomColor: "red",
+    borderBottomColor: "#0258FE",
     height: 40,
     color: "#546574",
     borderRadius: 5,
@@ -302,13 +301,17 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: "red",
+    borderColor:'#0258FE',
+    backgroundColor:'#0258FE',
+    width:237,
+    height:39,
+    marginLeft:55,
     padding: 10,
   },
   buttonText: {
-    color: "red",
+    color: "white",
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 16,
   },
   uploadImagen: {
     backgroundColor: "#fcfcfc",
