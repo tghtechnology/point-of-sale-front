@@ -3,13 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { useTotal } from '../Global State/TotalContext'; 
 
 const TicketListForm = () => {
     const [selectedItem, setSelectedItem] = useState([]);
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [selectedTaxes, setSelectedTaxes] = useState([]);
     const [selectedClients, setSelectedClients] = useState([]);
-    const [total, setTotal] = useState(0);
+    const { total, setTotal } = useTotal();
     const [taxValue, setTaxValue] = useState(0);
     const navigation = useNavigation();
 
@@ -133,7 +134,7 @@ const TicketListForm = () => {
 )}
 
 {/* Sección de clientes */}
-{selectedClients !== null && (
+{selectedClients !== null && selectedClients.length > 0 && (
     <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Cliente:</Text>
         {selectedClients.map((client, index) => (
@@ -141,6 +142,7 @@ const TicketListForm = () => {
         ))}
     </View>
 )}
+
             <TouchableOpacity onPress={showSaleTicket} style={styles.button}>Continuar</TouchableOpacity>
         </ScrollView>
     );

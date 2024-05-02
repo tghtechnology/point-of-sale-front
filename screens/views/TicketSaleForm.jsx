@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Text, TextInput, FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-native';
+import { useTotal } from '../Global State/TotalContext';
 
-const TicketSaleForm = (total) => {
+const TicketSaleForm = () => {
     const [receivedAmount, setReceivedAmount] = useState('');
     const [change, setChange] = useState('');
-    const [selectedPayment, setSelectedPayment] = useState(null);
+    const { total } = useTotal();
+    console.log("Valor de total:", total);
 
-
-    useEffect(() => {
-        if (receivedAmount && total) {
-            const calculatedChange = parseFloat(receivedAmount) - parseFloat(total);
-            setChange(calculatedChange.toFixed(2));
-        }
-    }, [receivedAmount, total]);
-
-    const handlePaymentSelection = (paymentType) => {
-        setSelectedPayment(paymentType);
+    const handleChangeReceivedAmount = (amount) => {
+        setReceivedAmount(amount);
+        const calculatedChange = parseFloat(amount) - parseFloat(total);
+        setChange(calculatedChange.toFixed(2));
     };
-
 
     return (
         <View style={styles.container}>
@@ -28,7 +22,7 @@ const TicketSaleForm = (total) => {
                     style={styles.input}
                     placeholder="Monto"
                     value={receivedAmount}
-                    onChangeText={setReceivedAmount}
+                    onChangeText={handleChangeReceivedAmount}
                     keyboardType="numeric"
                 />
             </View>
@@ -44,21 +38,21 @@ const TicketSaleForm = (total) => {
             </View>
 
             <View style={styles.itemList}>
-                <TouchableOpacity
-                    style={[styles.circle, selectedPayment === 'Efectivo' && styles.circleSelected]}
-                    onPress={() => handlePaymentSelection('Efectivo')}
-                >
+                <View style={styles.item}>
+                    <TouchableOpacity
+                        style={styles.circle}
+                    />
                     <Text style={styles.itemText}>Efectivo</Text>
-                </TouchableOpacity>
+                </View>
             </View>
 
             <View style={styles.itemList}>
-                <TouchableOpacity
-                    style={[styles.circle, selectedPayment === 'Tarjeta' && styles.circleSelected]}
-                    onPress={() => handlePaymentSelection('Tarjeta')}
-                >
+                <View style={styles.item}>
+                    <TouchableOpacity
+                        style={styles.circle}
+                    />
                     <Text style={styles.itemText}>Tarjeta</Text>
-                </TouchableOpacity>
+                </View>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={() => { }}>
@@ -90,19 +84,6 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontSize: 20,
     },
-    inputWithIcon: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        borderColor: 'gray',
-    },
-    iconContainer: {
-        padding: 5,
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginLeft: 120,
-    },
     button: {
         backgroundColor: 'red',
         padding: 10,
@@ -114,34 +95,26 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
-    //Estilos para el Select
     itemList: {
         marginTop: 10,
     },
     item: {
         flexDirection: 'row',
-        alignItems: 'center', // Align items in a row
+        padding: 10,
+        alignItems: 'center',
     },
     circle: {
-        width: 20, // Adjust size of the circle if necessary
-        height: 20,
+        width: 23.59,
+        height: 19.59,
         borderWidth: 2,
         borderColor: '#517EF2',
         backgroundColor: '#FFF',
-        marginRight: 5, // Add some space between circle and text
-        justifyContent: 'center', // Center the content inside the circle
-        alignItems: 'center', // Center the content inside the circle
-        borderRadius: 10, // Make the circle half the size of width and height to create a perfect circle
-    },
-    circleSelected: {
-        backgroundColor: 'blue',
-        borderColor: 'blue',
+        marginRight: 10,
     },
     itemText: {
+        flex: 1,
         fontSize: 14,
-        marginLeft: 90
     },
-    //
 });
 
 export default TicketSaleForm;
