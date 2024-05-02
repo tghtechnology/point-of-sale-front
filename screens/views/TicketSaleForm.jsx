@@ -6,12 +6,17 @@ const TicketSaleForm = () => {
     const [receivedAmount, setReceivedAmount] = useState('');
     const [change, setChange] = useState('');
     const { total } = useTotal();
+    const [selectedPayment, setSelectedPayment] = useState(null);
     console.log("Valor de total:", total);
 
     const handleChangeReceivedAmount = (amount) => {
         setReceivedAmount(amount);
         const calculatedChange = parseFloat(amount) - parseFloat(total);
         setChange(calculatedChange.toFixed(2));
+    };
+
+    const handlePaymentSelection = (paymentType) => {
+        setSelectedPayment(paymentType);
     };
 
     return (
@@ -40,7 +45,8 @@ const TicketSaleForm = () => {
             <View style={styles.itemList}>
                 <View style={styles.item}>
                     <TouchableOpacity
-                        style={styles.circle}
+                        style={[styles.circle, selectedPayment === 'Efectivo' && styles.circleSelected]}
+                        onPress={() => handlePaymentSelection('Efectivo')}
                     />
                     <Text style={styles.itemText}>Efectivo</Text>
                 </View>
@@ -49,7 +55,8 @@ const TicketSaleForm = () => {
             <View style={styles.itemList}>
                 <View style={styles.item}>
                     <TouchableOpacity
-                        style={styles.circle}
+                        style={[styles.circle, selectedPayment === 'Tarjeta' && styles.circleSelected]}
+                        onPress={() => handlePaymentSelection('Tarjeta')}
                     />
                     <Text style={styles.itemText}>Tarjeta</Text>
                 </View>
@@ -111,6 +118,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         marginRight: 10,
     },
+    circleSelected: {
+        backgroundColor: 'blue', // Color del círculo seleccionado
+        borderColor: 'blue', // Color del borde del círculo seleccionado
+      },
     itemText: {
         flex: 1,
         fontSize: 14,
