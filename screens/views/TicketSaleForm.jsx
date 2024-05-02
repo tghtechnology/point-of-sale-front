@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const TicketSaleForm = (total) => {
     const [receivedAmount, setReceivedAmount] = useState('');
     const [change, setChange] = useState('');
+    const [selectedPayment, setSelectedPayment] = useState(null);
+
 
     useEffect(() => {
         if (receivedAmount && total) {
@@ -12,6 +14,10 @@ const TicketSaleForm = (total) => {
             setChange(calculatedChange.toFixed(2));
         }
     }, [receivedAmount, total]);
+
+    const handlePaymentSelection = (paymentType) => {
+        setSelectedPayment(paymentType);
+    };
 
 
     return (
@@ -38,25 +44,21 @@ const TicketSaleForm = (total) => {
             </View>
 
             <View style={styles.itemList}>
-                <View style={styles.item}>
-                    <TouchableOpacity
-                        style={[
-                            styles.circle
-                        ]}
-                    />
+                <TouchableOpacity
+                    style={[styles.circle, selectedPayment === 'Efectivo' && styles.circleSelected]}
+                    onPress={() => handlePaymentSelection('Efectivo')}
+                >
                     <Text style={styles.itemText}>Efectivo</Text>
-                </View>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.itemList}>
-                <View style={styles.item}>
-                    <TouchableOpacity
-                        style={[
-                            styles.circle
-                        ]}
-                    />
+                <TouchableOpacity
+                    style={[styles.circle, selectedPayment === 'Tarjeta' && styles.circleSelected]}
+                    onPress={() => handlePaymentSelection('Tarjeta')}
+                >
                     <Text style={styles.itemText}>Tarjeta</Text>
-                </View>
+                </TouchableOpacity>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={() => { }}>
@@ -118,24 +120,26 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: 'row',
-        padding: 10,
-        alignItems: 'center',
+        alignItems: 'center', // Align items in a row
     },
     circle: {
-        width: 23.59, // Aumenta el ancho del círculo cuadrado
-        height: 19.59, // Aumenta la altura del círculo cuadrado
+        width: 20, // Adjust size of the circle if necessary
+        height: 20,
         borderWidth: 2,
         borderColor: '#517EF2',
         backgroundColor: '#FFF',
-        marginRight: 10,
+        marginRight: 5, // Add some space between circle and text
+        justifyContent: 'center', // Center the content inside the circle
+        alignItems: 'center', // Center the content inside the circle
+        borderRadius: 10, // Make the circle half the size of width and height to create a perfect circle
     },
     circleSelected: {
-        backgroundColor: 'blue', // Color del círculo seleccionado
-        borderColor: 'blue', // Color del borde del círculo seleccionado
+        backgroundColor: 'blue',
+        borderColor: 'blue',
     },
     itemText: {
-        flex: 1,
         fontSize: 14,
+        marginLeft: 90
     },
     //
 });
