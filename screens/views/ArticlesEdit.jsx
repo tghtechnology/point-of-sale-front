@@ -1,4 +1,4 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity,} from "react-native";
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,Image,ScrollView} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 import React, { useState, useEffect } from "react";
@@ -6,22 +6,37 @@ import { useRoute } from "@react-navigation/native";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
 import CustomAlert from '../componentes/CustomAlert';
-
+import {MaterialIcons} from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 const INITIAL_STATE = {
   nombre: "",
   tipo_venta: "",
   precio: "",
-  ref: "",
-  representacion: "",
+  representacion:"",
+  color:"",
+  imagen:"",
   id_categoria: "",
 };
+
+const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+
+const ColorBox = ({ color,setEditedData}) => (
+  <TouchableOpacity 
+    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} 
+    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color }))} 
+  />
+);
+
 export default function ArticlesEdit() {
   const [editedData, setEditedData] = useState(INITIAL_STATE)
   const route = useRoute();
   const [showAlert, setShowAlert] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null)
   const {handleEditArticle} = useArticle();
   const {listCategoria} = useCategory();
+
+  
 
 
   useEffect(() => {
@@ -33,6 +48,32 @@ export default function ArticlesEdit() {
     });
   }, [route.params]);
   
+  const openImagePickerAsync = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if(permissionResult.granted === false){
+      alert('Permission to acces camera is required');
+      return;
+    }
+
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    
+    if(pickerResult.canceled === true){
+      return;
+    }
+
+    setSelectedImage({localUri: pickerResult.assets[0].uri});
+   console.log(pickerResult)
+  }
+
+  const removeSelectedImage = () => {
+    setSelectedImage(null);
+  };
+
 
   const handleChange = (name, value) => {
     setEditedData({
@@ -54,6 +95,16 @@ export default function ArticlesEdit() {
       id_categoria: value,
     });
   };
+
+  const handleRepresentacion = (value) =>{
+    setEditedData({
+      ...editedData,
+      representacion:value,
+    })
+
+  }
+
+
   const handleSubmit = async () => {
     try {
       const articleData = {
@@ -145,13 +196,55 @@ export default function ArticlesEdit() {
       <View>
         <Text style={styles.label}>Representacion</Text>
       </View>
-      <TextInput
-        style={styles.input}
-        placeholder="img"
-        placeholderTextColor="black"
-        value={editedData.representacion}
-        onChangeText={(text) => handleChange("representacion", text)}
-      />
+      <RadioButton.Group onValueChange={(value) => handleRepresentacion (value)} value={editedData.representacion} >
+        <View style={styles.radioContainer}>
+          <RadioButton value="color" />
+          <Text>Color</Text>
+        </View>
+        <View style={styles.radioContainer}>
+          <RadioButton value="imagen" />
+          <Text>Imagen</Text>
+        </View>
+      </RadioButton.Group>
+      {editedData.representacion === 'imagen' && (
+  <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
+    <TouchableOpacity style={styles.uploadImagen} onPress={openImagePickerAsync}>
+      {selectedImage ? 
+        (
+          <Image style={{ width: 190, height: 190, borderRadius: 8 }} source={{ uri: selectedImage.localUri }} />
+        ) :
+        (
+          <Text style={styles.text}>Subir Imagen</Text>
+        )
+      }
+      <TouchableOpacity style={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          backgroundColor: 'white',
+          borderRadius: 50,
+          padding: 2,
+          zIndex: 1 
+        }} onPress={removeSelectedImage}>
+        <MaterialIcons name="close" size={24} color="#696969" style={{backgroundColor: 'white', borderRadius: 12}}/>
+      </TouchableOpacity> 
+    </TouchableOpacity>
+  </View>
+)}
+
+
+      {editedData.representacion === 'color' && (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center'}}>
+          {colors.map((color, index) => (
+            <ColorBox key={index} color={color} setEditedData={setEditedData} />
+          ))}
+        </View>
+      )} 
+
+
+
+
+
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar</Text>
@@ -177,7 +270,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: "red",
+    borderBottomColor: "#0258FE",
     height: 40,
     color: "#546574",
     padding: 10,
@@ -189,7 +282,7 @@ const styles = StyleSheet.create({
   pickeContainer: {
     marginBottom: 25,
     borderBottomWidth: 1,
-    borderBottomColor: "red",
+    borderBottomColor: "#0258FE",
     height: 40,
     color: "#546574",
     borderRadius: 5,
@@ -208,16 +301,31 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: "red",
+    borderColor:'#0258FE',
+    backgroundColor:'#0258FE',
+    width:237,
+    height:39,
+    marginLeft:55,
     padding: 10,
   },
   buttonText: {
-    color: "red",
+    color: "white",
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 16,
   },
-  label: {
-    marginTop: 4,
-    color: "#546574",
+  uploadImagen:{
+    backgroundColor: '#fcfcfc',
+    width:200,
+    height:200,
+    alignItems: 'center',
+    padding: 10,
+  },
+  text: {
+    marginTop: 80,
+    fontWeight: 'bold',
+    color: "#dcdcdc",
+    textAlign: "center",
+    alignItems:"center",
+    fontSize: 20,
   },
 });

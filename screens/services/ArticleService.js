@@ -12,11 +12,14 @@ const getToken = async () => {
 };
 
 const createArticle = async (newArticle) => {
+    console.log("ARTICLES",newArticle)
     try {
         const token = await getToken();
+       
         const { data, status } = await apiClient.post(`/articulo/crear`, newArticle, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
             }
         });
         return {
@@ -28,7 +31,6 @@ const createArticle = async (newArticle) => {
         return { status: 500, error: error.message };
     }
 }
-
 const listArticles = async () => {
     try {
         const token = await getToken();
@@ -64,10 +66,10 @@ const editArticles = async (id, updateArticle) => {
     }
 };
 
-const deleteArticles = async (text_id) => {
+const deleteArticles = async (id) => {
     try {
         const token = await getToken();
-        const { data, status } = await apiClient.delete(`/articulo/eliminar/${text_id}`, {
+        const { data, status } = await apiClient.delete(`/articulo/eliminar/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

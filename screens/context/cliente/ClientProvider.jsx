@@ -4,12 +4,20 @@ import ClientContext from "./ClientContext";
 const ClientProvider = ({children}) => {
   const [client,setClient] = useState([])
     const handleCreateClient = async (newClient) => {
-        const { status } = await createClient(newClient);
-        if(status === 200 || status === 201){
-          return true;
-        }else {     
-          return false;
+      try {
+        const res= await createClient(newClient);
+        if(res.status === 200 || res.status === 201){
+          return res.data;
         }
+        else {     
+          return null;
+        }
+      }catch(error){
+
+          console.log("Error creating impuesto:", error);
+          return null;
+      }
+
     }
 
     const fetchMyClients = async () => {

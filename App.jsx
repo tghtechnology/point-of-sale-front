@@ -12,6 +12,7 @@ import ClientProvider from "./screens/context/cliente/ClientProvider.jsx";
 import WorkerProvider from "./screens/context/worker/WorkerProvider.jsx";
 import SaleProvider from "./screens/context/sale/SaleProvider.jsx";
 
+import {useFont} from 'expo-font';
 
 export default function App() {
   return (

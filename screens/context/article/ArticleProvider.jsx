@@ -24,17 +24,17 @@ const ArticleProvider = ({children}) => {
     }, []);
 
     const handleCreateArticle = async (newArticle) => {
-        const {nombre, tipo_venta, precio, ref, representacion, id_categoria} = newArticle; 
+        const { nombre, tipo_venta, precio, representacion, color,imagen, id_categoria} = newArticle; 
         try {
-            const { status } = await createArticle({nombre, tipo_venta, precio, ref, representacion, id_categoria}); 
-            if(status === 200 || status === 201){
-              return true;
+            const res= await createArticle({ nombre, tipo_venta, precio, representacion, color,imagen, id_categoria}); 
+            if(res.status === 200 || res.status === 201){
+              return res.data;
             } else {
-              return false;
+              return null;
             }
         } catch (error) {
             console.error("Error creating article:", error);
-            return false; 
+            return null; 
         }
     }
 
@@ -65,9 +65,9 @@ const ArticleProvider = ({children}) => {
         
   
 
-    const handleDeleteArticle = async (text_id) => {
+    const handleDeleteArticle = async (id) => {
         try {
-            const { status } = await deleteArticles(text_id);
+            const { status } = await deleteArticles(id);
             if (status === 200) {
                 return true;
             } else {

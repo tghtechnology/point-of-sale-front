@@ -88,12 +88,14 @@ const PlusDiscount = (props) => {
               <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
             </TouchableOpacity> 
             <Text style={styles.itemText}>{item.nombre}</Text>
-            <Text style={styles.itemText}>Tipo: {item.tipo_descuento}</Text>
-            <Text style={styles.itemText}>Valor: {item.valor}</Text>
-            <Text>Estado: {item.estado ? 'Activado' : 'Desactivado'}</Text>
+        
+            <Text style={styles.itemText}>{item.valor + (item.tipo_descuento === 'MONTO' ? ' $' : ' %')}</Text>
+         
             <Switch
             value={item.estado == true}
-            onValueChange={() => handleToggleStatus(item.id, item.estado)}/>      
+            onValueChange={() => handleToggleStatus(item.id, item.estado)}
+        
+          />   
             <View style={styles.container}>
             </View>
             </View>
@@ -216,6 +218,7 @@ const styles = StyleSheet.create({
         color: '#333',
         fontWeight: 'bold',
         marginBottom: 5,
+        textAlign: 'justify',
       },
       addButton: {
         position: 'absolute',

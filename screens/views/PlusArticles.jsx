@@ -53,6 +53,16 @@ useEffect(() => {
     setModal(true);
   };
 
+  const colorMapping = {
+    'Rojo': '#FF0000',
+    'Verde_limon': '#00FF00',
+    'Azul': '#0000FF',
+    'Amarillo': '#FFFF00',
+    'Turquesa': '#00FFFF',
+    'Fucsia': '#FF00FF',
+    'Gris_claro': '#C0C0C0',
+    'Gris_oscuro': '#808080',
+  };
 
 
   return (
@@ -61,13 +71,16 @@ useEffect(() => {
         data={listArticle}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
+            <View style={styles.colorContainer}>
+                <View style={{...styles.colorSquare, backgroundColor: colorMapping[item.color]}} />
+            </View>
             <View style={styles.itemContent}>
-            <Text style={styles.itemText}>{item.nombre}</Text>
-                <Text style={styles.itemText}>{item.precio}</Text>
+                <Text style={styles.itemText}>{item.nombre}</Text>
+                <Text style={styles.itemText1}>S/.{item.precio}</Text>
+            </View>
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
-              <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
-            </TouchableOpacity> 
-        </View>
+                  <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+            </TouchableOpacity>                 
         </View>
     )}
     keyExtractor={(item, index) => index.toString()}
@@ -113,17 +126,10 @@ useEffect(() => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+ 
+  colorContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  circle: {
-    width: 170,
-    height: 170,
-    borderRadius: 170,
-    backgroundColor: '#E7E7E7',
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
   },
   text: {
@@ -140,9 +146,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#ff0000', 
+    backgroundColor: '#0258FE', 
     borderRadius: 20,
     padding: 10,
+  },
+  optionButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  optionButton: {
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginVertical: 5,
+    backgroundColor: '#007bff', 
   },
   itemContainer: {
     marginBottom: 10,
@@ -158,18 +177,33 @@ const styles = StyleSheet.create({
     elevation: 3,
     flexDirection: 'row', 
     alignItems: 'center',
+    
+    
   },
   itemText: {
     fontSize: 18,
     color: '#333',
     fontWeight: 'bold',
+   marginLeft:40,
     marginBottom: 5,
-    textAlign: 'left',
+    textAlign: 'justify',
+  },
+  itemText1: {
+    fontSize: 18,
+    color: '#C30000',
+    fontWeight: 'bold',
+    marginLeft:40,
+    marginBottom: 5,
+    textAlign: 'justify',
   },
   container: {
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+  },
+  colorSquare: {
+    width: 50,
+    height: 50,
   },
   modalContainer: {
     flex: 1,
@@ -187,69 +221,11 @@ const styles = StyleSheet.create({
   itemContent: {
     flex:1,
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: 'center',
+ 
+  
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  inputContainer: {
-    marginBottom: 15,
-  },
-  label: {
-    marginBottom: 5,
-    fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-  },
-  button: {
-    borderRadius: 5,
-    padding: 15,
-    alignItems: 'center',
-    marginTop: 10,
-    backgroundColor: 'green',
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  editButton: {
-    backgroundColor: 'green',
-    borderRadius: 5,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    marginTop:10,
-  },
-  optionButton: {
-    borderRadius: 5,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    marginVertical: 5,
-    backgroundColor: '#007bff', 
-  },
-  optionButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    width: '80%',
-    maxWidth: 400,
-  },
+
   cancelButton: {
     backgroundColor: 'red',
     borderRadius: 5,

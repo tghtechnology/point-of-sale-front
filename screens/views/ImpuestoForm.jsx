@@ -35,18 +35,21 @@ export default function ImpuestoForm() {
   const SubmitImpuesto = async () => {
     try {
       console.log("Datos a enviar al servidor:", datos);
-      const response = await handleCreateImp(datos);
-      if (response) {
+      const nuevoImpuesto = await handleCreateImp(datos);
+      if (nuevoImpuesto && nuevoImpuesto.id) {
+        setListImpuesto([...listImpuesto, nuevoImpuesto]);
+        setShowAlert(true);
         setDatos(INITIAL_STATE);
       } else {
-        setListImpuesto([...listImpuesto,datos]);
-        setShowAlert(true);
+        throw new Error("La respuesta del servidor no contiene un impuesto válido.");
       }
     } catch (error) {
-      console.log("Problema interno del servidor", error);
+      console.log("Error al crear el impuesto:", error.message);
+    
     }
-    console.log("Valor del formulario: " + JSON.stringify(datos));
   };
+  
+  
 
   const handleCloseAlert = () => {
     setShowAlert(false);
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: 'red',
+    borderBottomColor: '#0258FE',
     height: 40,
     color: '#546574',
     padding: 10,
@@ -114,9 +117,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     overflow: 'hidden',
-    borderRadius: 5,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'red',
+    backgroundColor:'#0258FE',
+    borderColor:'#0258FE',
     padding: 10,
   },
   label: {
@@ -126,13 +130,13 @@ const styles = StyleSheet.create({
   pickerContainer: {
     marginBottom: 25,
     borderBottomWidth: 1,
-    borderBottomColor: "red",
+    borderBottomColor: "#0258FE",
     height: 40,
     color: "#546574",
     borderRadius: 5,
   },
   buttonText: {
-    color: "red",
+    color: "white",
     textAlign: "center",
     fontSize: 15,
   },
