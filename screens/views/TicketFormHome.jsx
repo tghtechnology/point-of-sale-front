@@ -372,7 +372,7 @@ const handleSelectTax = async (tax) => {
 
         {/* Icono del carrito con contador */}
         <TouchableOpacity style={styles.cartButton} onPress={handleSaveChanges}>
-          <Icon name="cart" size={24} color="black" />
+          <Icon name="cart" size={24} color="#517EF2" />
           {cartCount > 0 && (
             <View style={styles.cartBadge}>
               <Text style={styles.cartBadgeText}>{cartCount}</Text>
