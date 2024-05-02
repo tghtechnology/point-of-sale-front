@@ -10,16 +10,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-
-
 const TicketListForm = () => {
     const [selectedItem, setSelectedItem] = useState([]);
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
-    const [selectedTaxes, setSelectedTaxes] = useState([]); // New state for selected taxes
-    const [selectedClients, setSelectedClients] = useState([]); // Estado para almacenar el cliente seleccionado
+    const [selectedTaxes, setSelectedTaxes] = useState([]); // Asegúrate de inicializarlo como un array vacío
+    const [selectedClients, setSelectedClients] = useState([]);
     const [total, setTotal] = useState(0);
-    const [totalPrice, setTotalPrice] = useState(0); // Nuevo estado para almacenar el precio total sin descuento
+    const [totalPrice, setTotalPrice] = useState(0);
     const navigation = useNavigation();
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,13 +35,14 @@ const TicketListForm = () => {
                 if (discount !== null) {
                     setSelectedDiscounts(JSON.parse(discount));
                 }
-
+                console.log('Valor de impuestos recuperados:', JSON.parse(tax));
                 if (tax !== null) {
-                    setSelectedTaxes(JSON.parse(tax));
+                        setSelectedTaxes([JSON.parse(tax)]); // Ensure selectedTaxes remains an array
+                    
                 }
 
                 if (cli !== null) {
-                    setSelectedClients(JSON.parse(cli))
+                    setSelectedClients([JSON.parse(cli)])
                 }
 
             } catch (error) {
@@ -60,10 +60,7 @@ const TicketListForm = () => {
     
         // Aplicar descuentos al subtotal del artículo
         selectedDiscounts.forEach(discount => {
-            if (discount.tipo_descuento === 'MONTO') {
-                // No hacer nada para descuentos de tipo "MONTO" ya que se aplican al total
-            } else if (discount.tipo_descuento === 'PORCENTAJE') {
-                // Aplicar descuentos de tipo "PORCENTAJE" al subtotal del artículo
+            if (discount.tipo_descuento === 'PORCENTAJE') {
                 itemDiscount += subtotal * (discount.valor / 100);
             }
         });
@@ -77,10 +74,7 @@ const TicketListForm = () => {
             const subtotal = calculateSubtotalWithDiscount(item);
             return acc + parseFloat(subtotal);
         }, 0);
-        setTotalPrice(totalPrice);
-    }, [selectedItem, selectedDiscounts]); // Ajusta los dependencias del efecto
-    
-    useEffect(() => {
+        
         // Aplicar descuentos tipo "MONTO" al total
         let discountedTotal = totalPrice;
         selectedDiscounts.forEach(discount => {
@@ -88,10 +82,17 @@ const TicketListForm = () => {
                 discountedTotal -= discount.valor;
             }
         });
-        setTotal(discountedTotal);
-    }, [totalPrice, selectedDiscounts]); // Ajusta los dependencias del efecto
-    //
 
+        // Aplicar impuestos al total después de aplicar descuentos
+        selectedTaxes.forEach(tax => {
+            if (tax.tipo_impuesto === 'Anadido_al_precio') {
+                discountedTotal += discountedTotal * (tax.tasa / 100);
+            }
+        });
+        
+        setTotalPrice(totalPrice);
+        setTotal(discountedTotal);
+    }, [selectedItem, selectedDiscounts, selectedTaxes]);
     const showSaleTicket = () => {
         navigation.navigate('SaleTicket');
       };
@@ -132,19 +133,41 @@ const TicketListForm = () => {
                 </View>
                 {/* Descuento */}
                 {selectedDiscounts.length > 0 && (
-    <View style={styles.discountContainer}>
-        <Text style={styles.discountTitle}>Descuentos Seleccionados:</Text>
-        {selectedDiscounts.map((discount, index) => (
-            <View key={index} style={styles.discountItem}>
-                <Text style={styles.discountText}>
-                    {discount.tipo_descuento === 'MONTO' ? 'Descuento: S/ ' : 'Descuento: '}
-                    {discount.valor}
-                    {discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}
-                </Text>
-            </View>
-        ))}
-    </View>
+                <View style={styles.discountContainer}>
+                    <Text style={styles.discountTitle}>Descuentos Seleccionados:</Text>
+                    {selectedDiscounts.map((discount, index) => (
+                        <View key={index} style={styles.discountItem}>
+                            <Text style={styles.discountText}>
+                                {discount.tipo_descuento === 'MONTO' ? 'Descuento: S/ ' : 'Descuento: '}
+                                {discount.valor}
+                                {discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}
+                            </Text>
+                        </View>
+                        ))}
+                    </View>
+                    
 )}
+{/* Mostrar información de impuestos */}
+            <View style={styles.taxContainer}>
+                <Text style={styles.taxTitle}>Impuestos Aplicados:</Text>
+                {selectedTaxes.map((tax, index) => (
+                    <View key={index} style={styles.taxItem}>
+                        <Text style={styles.taxText}>
+                            {tax.nombre}: {tax.tasa}% {tax.tipo_impuesto === 'Anadido_al_precio' ? 'del subtotal de cada artículo' : ''}
+                        </Text>
+                    </View>
+                ))}
+            </View>
+
+            {/* Mostrar información de clientes */}
+            <View style={styles.clientContainer}>
+                <Text style={styles.clientTitle}>Cliente Seleccionado:</Text>
+                {selectedClients.map((client, index) => (
+                    <View key={index} style={styles.clientItem}>
+                        <Text style={styles.clientText}>{client.nombre}</Text>
+                    </View>
+                ))}
+            </View>
 
                 <TouchableOpacity onPress={showSaleTicket} style={styles.cobrarButton}>Continuar</TouchableOpacity>
             </View>
@@ -321,6 +344,45 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 3, // Añade un margen arriba del subtotal
         color: '#C30000',
+    },
+    taxContainer: {
+        marginTop: 20,
+        paddingHorizontal: 10,
+    },
+    taxTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    taxItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    taxText: {
+        fontSize: 14,
+        marginLeft: 5,
+        color: '#4CAF50',
+    },
+
+    clientContainer: {
+        marginTop: 20,
+        paddingHorizontal: 10,
+    },
+    clientTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    clientItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    clientText: {
+        fontSize: 14,
+        marginLeft: 5,
+        color: '#4CAF50',
     },
     footer: {
         position: 'absolute',
