@@ -5,7 +5,7 @@ import UsuarioProvider from '../context/usuarios/UsuarioProvider';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import {useFonts} from 'expo-font';
-import Icono from '../img/Icono.png';
+import Icono from '../img/Icono.png'
 
 
  function HomeView() {
@@ -51,38 +51,22 @@ import Icono from '../img/Icono.png';
   }
 
   return (
+<UsuarioProvider>
+      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.blueSection}>
+        <View style={styles.redSection}>
+          <Image source={Icono} style={styles.logo} />
+          <Text style={styles.mainText}>Home Shop</Text>
+          <Text style={styles.subText}>Tu Sitio Ideal</Text>
+        </View>  
+        <View style={styles.buttonSection}>
+          <TouchableOpacity style={styles.button} onPress={showLoginView}>
+            <Text style={styles.buttonText}>Iniciar Sesión</Text>
+          </TouchableOpacity>
 
-    <UsuarioProvider>
-      <ScrollView >
-      <View style={[ styles.blueSection]}></View>
-      <View style={[ styles.redSection]}>
-        
-          <Text style={styles.text}>Home Shop</Text>
-          <Text style={[styles.text, styles.textod]}>Tu Sitio Ideal</Text>
-        </View>
-      
-      <Image source={Icono} style={styles.logo} />
-      
-        
-       
-        <View style={styles.section}>
-          <View style={[styles.container2]}>
-            {/* botón de inicio de sesión */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={showLoginView}
-            >
-              <Text style={styles.buttonText}>Iniciar Sesión</Text>
-            </TouchableOpacity>
-            {/* botón de registro */}
-            
-            <TouchableOpacity
-              style={styles.button}
-              onPress={showViewRegister}
-            >
-              <Text style={styles.buttonText}> Registrarse </Text>
-            </TouchableOpacity>
-            
+          <TouchableOpacity style={styles.button} onPress={showViewRegister}>
+            <Text style={styles.buttonText}>Registrarse</Text>
+          </TouchableOpacity>
         </View>
         </View>
       </ScrollView>
@@ -92,60 +76,57 @@ import Icono from '../img/Icono.png';
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column', 
-  },
-  container2: {
-    display:'flex',
-    flexDirection: 'column',
-    marginTop:-45,
-  },
-    section: {
-    
-    width: '100%',
-    alignItems: 'center',
-  },
-    redSection: {
-     backgroundColor: '#051EFF', 
-     paddingVertical: '50%',
-     position: 'absolute',
-     paddingHorizontal: '21.5%',
-     justifyContent: 'center',
-  },
-
-  blueSection:{
-    backgroundColor: '#0258FE', 
-    paddingVertical: '80%',
-    paddingHorizontal:'20%',
+    flexGrow: 1,
     justifyContent: 'center',
-    borderRadius:8,
+    alignItems: 'center',
+    bottom: '80px' // Esto centra horizontalmente todo el contenido
   },
-
-  text: {
+  blueSection: {
+    position: 'absolute',
+    backgroundColor: '#0258FE',
+    height: '90%',
+    width: '100%',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  redSection: {
+    backgroundColor: '#051EFF',
+    height: '90%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    
+  },
+  mainText: {
     fontSize: 50,
     fontWeight: 'bold',
     color: 'white',
-    top:'200%',
-    textAlign: 'center',
     fontFamily: 'Inika',
+    textAlign: 'center', // Para centrar el texto
   },
-  textod:{
+  subText: {
     fontSize: 25,
     fontWeight: 'bold',
     color: 'white',
-  }, 
-  button: {
+    textAlign: 'center', // Para centrar el texto
+  },
+  buttonSection: {
+    alignItems: 'center',
+    marginBottom: '50px',
     
+  },
+  button: {
     backgroundColor: '#0258FE',
     paddingVertical: 12,
     alignItems: 'center',
-    marginTop: 5,
     borderRadius: 8,
-    width:275,
-    height:71,
-    textAlign:'center',
-    marginBottom:20,
-    borderWidth:2,
-    borderColor:'white',
+    width: 275,
+    height: 71,
+    borderColor: 'white',
+    borderWidth: 2,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -154,22 +135,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  
-     
-  },
- 
-  logo: {
-    position: 'absolute',
-    
-    top: 10,
-    left: 30,
   },
   buttonText: {
     color: 'white',
-    fontWeight:'400',
-    textAlign:'center',
-    alignItems:'center',
-    fontSize:24
+    fontSize: 24,
+    fontWeight: '400',
+    textAlign: 'center', // Asegura que el texto esté centrado en el botón
+  },
+  logo: {
+    alignSelf: 'center', // Centra la imagen horizontalmente
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '70%',
+    height: '50%',
+    borderRadius: 8,
   },
 });
 export default HomeView;
