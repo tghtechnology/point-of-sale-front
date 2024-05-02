@@ -17,8 +17,8 @@ const TicketListForm = () => {
         try {
             const item = await AsyncStorage.getItem('selectedItem');
             const discount = await AsyncStorage.getItem('selectedDiscount');
-            const tax = await AsyncStorage.getItem('selectedTax');
-            const cli = await AsyncStorage.getItem('selectedClient');
+            const tax = await AsyncStorage.getItem('selectedTaxes');
+            const cli = await AsyncStorage.getItem('selectedClients');
 
             if (item !== null) setSelectedItem(JSON.parse(item));
             if (discount !== null) setSelectedDiscounts(JSON.parse(discount));
@@ -133,7 +133,7 @@ const TicketListForm = () => {
 )}
 
 {/* Sección de clientes */}
-{selectedClients !== null && (
+{selectedClients !== null && selectedClients.length > 0 && (
     <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Cliente:</Text>
         {selectedClients.map((client, index) => (

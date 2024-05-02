@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Text, TextInput, FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-native';
 
-const TicketSaleForm = (total) => {
+const TicketSaleForm = ({ total }) => {
+    console.log("Valor de total:", total);
     const [receivedAmount, setReceivedAmount] = useState('');
     const [change, setChange] = useState('');
 
-    useEffect(() => {
-        if (receivedAmount && total) {
-            const calculatedChange = parseFloat(receivedAmount) - parseFloat(total);
-            setChange(calculatedChange.toFixed(2));
-        }
-    }, [receivedAmount, total]);
-
+    const handleChangeReceivedAmount = (amount) => {
+        setReceivedAmount(amount);
+        const calculatedChange = parseFloat(amount) - parseFloat(total);
+        setChange(calculatedChange.toFixed(2));
+    };
 
     return (
         <View style={styles.container}>
@@ -22,7 +20,7 @@ const TicketSaleForm = (total) => {
                     style={styles.input}
                     placeholder="Monto"
                     value={receivedAmount}
-                    onChangeText={setReceivedAmount}
+                    onChangeText={handleChangeReceivedAmount}
                     keyboardType="numeric"
                 />
             </View>
@@ -40,9 +38,7 @@ const TicketSaleForm = (total) => {
             <View style={styles.itemList}>
                 <View style={styles.item}>
                     <TouchableOpacity
-                        style={[
-                            styles.circle
-                        ]}
+                        style={styles.circle}
                     />
                     <Text style={styles.itemText}>Efectivo</Text>
                 </View>
@@ -51,9 +47,7 @@ const TicketSaleForm = (total) => {
             <View style={styles.itemList}>
                 <View style={styles.item}>
                     <TouchableOpacity
-                        style={[
-                            styles.circle
-                        ]}
+                        style={styles.circle}
                     />
                     <Text style={styles.itemText}>Tarjeta</Text>
                 </View>
@@ -88,19 +82,6 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontSize: 20,
     },
-    inputWithIcon: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        borderColor: 'gray',
-    },
-    iconContainer: {
-        padding: 5,
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginLeft: 120,
-    },
     button: {
         backgroundColor: 'red',
         padding: 10,
@@ -112,7 +93,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
-    //Estilos para el Select
     itemList: {
         marginTop: 10,
     },
@@ -122,22 +102,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     circle: {
-        width: 23.59, // Aumenta el ancho del círculo cuadrado
-        height: 19.59, // Aumenta la altura del círculo cuadrado
+        width: 23.59,
+        height: 19.59,
         borderWidth: 2,
         borderColor: '#517EF2',
         backgroundColor: '#FFF',
         marginRight: 10,
     },
-    circleSelected: {
-        backgroundColor: 'blue', // Color del círculo seleccionado
-        borderColor: 'blue', // Color del borde del círculo seleccionado
-    },
     itemText: {
         flex: 1,
         fontSize: 14,
     },
-    //
 });
 
 export default TicketSaleForm;
