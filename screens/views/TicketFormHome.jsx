@@ -24,12 +24,34 @@ const TicketFormHome = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState([]);
-  const [selectedClients, setSelectedClients] = useState([]);
-  const [selectedTaxes, setSelectedTaxes] = useState([]);
+const [selectedTaxes, setSelectedTaxes] = useState(null);
+const [selectedClients, setSelectedClients] = useState(null);
+
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
-  // Estado para almacenar los IDs de los productos seleccionados
   const [selectedProductIds, setSelectedProductIds] = useState([]);
+  useEffect(() => {
+    // Función para borrar los datos de AsyncStorage al iniciar sesión
+    const clearAsyncStorage = async () => {
+      try {
+        // Eliminar los datos necesarios de AsyncStorage
+        await AsyncStorage.removeItem('selectedItems');
+        await AsyncStorage.removeItem('selectedDiscounts');
+        await AsyncStorage.removeItem('selectedClients');
+        await AsyncStorage.removeItem('selectedTaxes');
+        setSelectedItems([]);
+    setSelectedDiscounts([]);
+    setSelectedClients([]);
+    setSelectedTaxes([]);
+        console.log('Datos de AsyncStorage eliminados al iniciar sesión');
+      } catch (error) {
+        console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
+      }
+    };
+
+    // Llamar a la función cuando el componente se monte
+    clearAsyncStorage();
+  }, []);
   //Metodos para Conteo
   useEffect(() => {
     // Almacena los IDs de los productos seleccionados al cargar el componente
@@ -100,79 +122,100 @@ const TicketFormHome = () => {
     setTotalAmount(total);
   }, [selectedItems]);
 
-  const handleSelectItem = async (item) => {
-    let updatedItems = [...selectedItems];
-    const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
+const handleSelectItem = async (item) => {
+  let updatedItems = [...selectedItems];
+  const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
 
-    if (itemIndex !== -1) {
-      updatedItems.splice(itemIndex, 1);
-      setShowAlertDeselect(true);
-      setSelectedItems(updatedItems); 
+  if (itemIndex !== -1) {
+    updatedItems.splice(itemIndex, 1);
+    setShowAlertDeselect(true);
+  } else {
+    updatedItems.push({ ...item, quantity });
+    setShowAlert(true);
+  }
+
+  setSelectedItems(updatedItems);
+
+  try {
+    if (updatedItems.length > 0) {
+      await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
+      console.log('Lista de artículos seleccionados guardada en AsyncStorage:', updatedItems);
     } else {
-      updatedItems.push({ ...item, quantity });
-      setShowAlert(true);
-      setSelectedItems(updatedItems);
+      await AsyncStorage.removeItem('selectedItems');
+      console.log('Lista de artículos seleccionados eliminada de AsyncStorage');
     }
+  } catch (error) {
+    console.error('Error al guardar/eliminar la lista de artículos seleccionados en AsyncStorage:', error);
+  }
+};
 
-    setSelectedItems(updatedItems);
+const handleSelectDiscount = async (discount) => {
+  let updatedDiscounts = [...selectedDiscounts];
+  const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
 
+  if (discountIndex !== -1) {
+    updatedDiscounts.splice(discountIndex, 1);
+  } else {
+    updatedDiscounts = [discount];
+  }
+
+  setSelectedDiscounts(updatedDiscounts);
+
+  try {
+    // Si updatedDiscounts no está vacío, lo guardamos en AsyncStorage; de lo contrario, lo eliminamos
+    if (updatedDiscounts.length > 0) {
+      await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(updatedDiscounts));
+      console.log('Lista de descuentos seleccionados guardada en AsyncStorage:', updatedDiscounts);
+    } else {
+      await AsyncStorage.removeItem('selectedDiscounts');
+      console.log('Lista de descuentos seleccionados eliminada de AsyncStorage');
+    }
+  } catch (error) {
+    console.error('Error al guardar/eliminar la lista de descuentos seleccionados en AsyncStorage:', error);
+  }
+};
+
+
+const handleSelectClient = async (client) => {
+  if (selectedClients && selectedClients.id === client.id) {
+    setSelectedClients(null);
     try {
-      await AsyncStorage.setItem('selectedItem', JSON.stringify(updatedItems));
-      console.log('Artículo seleccionado guardado:', item);
+      await AsyncStorage.removeItem('selectedClients'); // Cambia 'selectedClient' a 'selectedClients'
+      console.log('Cliente deseleccionado eliminado del AsyncStorage.');
     } catch (error) {
-      console.error('Error saving item to AsyncStorage:', error);
+      console.error('Error al eliminar cliente deseleccionado del AsyncStorage:', error);
     }
-  };
-
-  const handleSelectDiscount = async (discount) => {
-    let updatedDiscounts = [...selectedDiscounts];
-    const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
-
-    if (discountIndex !== -1) {
-      updatedDiscounts.splice(discountIndex, 1);
-    } else {
-      updatedDiscounts = [discount];
-    }
-
-    setSelectedDiscounts(updatedDiscounts);
-
+  } else {
+    setSelectedClients(client);
     try {
-      await AsyncStorage.setItem('selectedDiscount', JSON.stringify(updatedDiscounts));
-      console.log('Descuento seleccionado guardado:', discount);
+      await AsyncStorage.setItem('selectedClients', JSON.stringify(client)); // Cambia 'selectedClient' a 'selectedClients'
+      console.log('Cliente seleccionado guardado en AsyncStorage:', client);
     } catch (error) {
-      console.error('Error saving discount to AsyncStorage:', error);
+      console.error('Error al guardar cliente seleccionado en AsyncStorage:', error);
     }
-  };
+  }
+};
 
-  const handleSelectClient = async (client) => {
-    if (selectedClients && selectedClients.id === client.id) {
-      setSelectedClients(null);
-    } else {
-      setSelectedClients(client);
-    }
   
+const handleSelectTax = async (tax) => {
+  if (selectedTaxes && selectedTaxes.id === tax.id) {
+    setSelectedTaxes(null);
     try {
-      await AsyncStorage.setItem('selectedClient', JSON.stringify(client));
-      console.log('Cliente seleccionado guardado:', client);
+      await AsyncStorage.removeItem('selectedTaxes'); // Cambia 'selectedTax' a 'selectedTaxes'
+      console.log('Impuesto deseleccionado eliminado del AsyncStorage.');
     } catch (error) {
-      console.error('Error al guardar el cliente seleccionado:', error);
+      console.error('Error al eliminar impuesto deseleccionado del AsyncStorage:', error);
     }
-  };
-  
-  const handleSelectTax = async (tax) => {
-    if (selectedTaxes && selectedTaxes.id === tax.id) {
-      setSelectedTaxes(null);
-    } else {
-      setSelectedTaxes(tax);
-    }
-  
+  } else {
+    setSelectedTaxes(tax);
     try {
-      await AsyncStorage.setItem('selectedTax', JSON.stringify(tax));
-      console.log('Impuesto seleccionado guardado:', tax);
+      await AsyncStorage.setItem('selectedTaxes', JSON.stringify(tax)); // Cambia 'selectedTax' a 'selectedTaxes'
+      console.log('Impuesto seleccionado guardado en AsyncStorage:', tax);
     } catch (error) {
-      console.error('Error al guardar el impuesto seleccionado:', error);
+      console.error('Error al guardar impuesto seleccionado en AsyncStorage:', error);
     }
-  };
+  }
+};
 
   const showListArticles = () => {
     navigation.navigate('ListarTicket');
