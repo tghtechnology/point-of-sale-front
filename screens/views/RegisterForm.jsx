@@ -155,7 +155,7 @@ const RegisterForm = () => {
             </TouchableOpacity>
           </View>
         </Modal>
-        <View style={[styles.section, styles.redSection]}></View>
+        <View style={styles.redSection}></View>
       </View>
       
   )
@@ -165,8 +165,9 @@ const styles = StyleSheet.create({
 
   container: {
     marginTop: 100, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25, 
-    
+    flex: 1,
+    justifyContent: 'center',
+   
   },
     Tittle: {
       fontSize: 34,
@@ -184,21 +185,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     },
     box:{
-    
+      position: 'relative',
       backgroundColor:'#D9D9D9',
       padding:40,
       borderRadius: 15,
       zIndex: 1,
-  
+      margin: 20,
+      bottom: '10%',
     },
     redSection: {
       position: 'absolute', 
-      borderRadius: 15,
-      top: '50%', 
+      top: '30%',
       width: '100%', 
-      height: '50%', 
-      paddingVertical:'80%',
-      paddingHorizontal:'58%',
+      height: '100%', 
+      borderTopLeftRadius:10,
+      BorderTopRightRadius:10,
       backgroundColor: '#0258FE',
     },
     buttonRegister: {
@@ -277,7 +278,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#FFFFFF',
       borderColor: '#D3D3D3',
       borderWidth: 1,
-      borderRadius: 5,
+      borderRadius: 8,
     },
   })
 
