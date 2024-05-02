@@ -75,20 +75,13 @@ const CategoryForm = () => {
   {/* IMPUT DEL NOMBRE DE LA CATEGORIA */}
       <TextInput
         style={styles.input}
-        placeholder='El nombre de la categoría'
+        placeholder='Nombre'
         placeholderTextColor="#546574"
         value={editedData.nombre}
         onChangeText={(text) => handleChange('nombre', text)}  
       />
-      {/* Input del color de la categoría */}
-      {/* <TextInput
-        style={styles.input}
-        placeholder='Color de la categoría'
-        placeholderTextColor="#546574"
-        value={editedData.color}
-        onChangeText={(text) => handleChange('color', text)}
-      /> */}
-      <Text style={styles.label}>Color de Categoría</Text>
+     
+     <Text style={styles.label}>Color</Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center', marginTop:20}}>
           {Object.values(colorMapping).map((color, index) => (
             <ColorBox key={index} color={color}   setEditedData={setEditedData} selectedColor={editedData.color}/>
@@ -119,23 +112,32 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: 'red',
+    borderBottomColor: '#0258FE',
     height: 40,
     color: '#546574',
     padding: 10,
     borderRadius: 5,
   },
   buttonContainer: {
-    overflow: 'hidden', 
+    overflow: "hidden",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor:'#0258FE',
+    backgroundColor:'#0258FE',
+    width:237,
+    height:39,
+    marginLeft:55,
     padding: 10,
   },
   buttonText: {
-    color: 'red',
+    color: 'white',
     textAlign: 'center',
-    fontSize:15,
+    fontSize:16,
+  },
+  label: {
+    marginTop: 30,
+    color: "#546574",
+    fontSize: 18,
   },
 });
 export default CategoryForm;
