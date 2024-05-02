@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-native';
+import { useTotal } from '../Global State/TotalContext';
 
-const TicketSaleForm = ({ total }) => {
-    console.log("Valor de total:", total);
+const TicketSaleForm = () => {
     const [receivedAmount, setReceivedAmount] = useState('');
     const [change, setChange] = useState('');
+    const { total } = useTotal();
+    console.log("Valor de total:", total);
 
     const handleChangeReceivedAmount = (amount) => {
         setReceivedAmount(amount);
