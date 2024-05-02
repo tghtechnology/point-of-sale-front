@@ -96,10 +96,10 @@ const LoginForm = () => {
       <TouchableOpacity onPress={handleIniciarPress}>
         <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
-
       <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
       <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
     </View>
+    <View style={styles.redSection}></View>
     </View>
   )
 }
@@ -108,27 +108,28 @@ const LoginForm = () => {
 const styles = StyleSheet.create({
 
   container: {
-    marginTop: 190, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25,
+    marginTop: 100, // Puedes ajustar este valor según tus necesidades
+    flex: 1,
+    justifyContent: 'center',
   },
 
-  box:{
-    
+  box:{ 
+    position: 'relative',
     backgroundColor:'#D9D9D9',
     padding:40,
     borderRadius: 15,
     zIndex: 1,
-
+    margin: 20,
+    bottom: '20%',
   },
 
   redSection: {
     position: 'absolute', 
-    borderRadius: 15,
-    top: '50%', 
+    top: '30%',
     width: '100%', 
-    height: '50%', 
-    paddingVertical:'80%',
-    paddingHorizontal:'58%',
+    height: '100%', 
+    borderTopLeftRadius:10,
+    borderTopRightRadius:10,
     backgroundColor: '#0258FE',
   },
 
