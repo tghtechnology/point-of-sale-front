@@ -24,8 +24,9 @@ const TicketFormHome = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState([]);
-  const [selectedClients, setSelectedClients] = useState([]);
-  const [selectedTaxes, setSelectedTaxes] = useState([]);
+const [selectedTaxes, setSelectedTaxes] = useState(null);
+const [selectedClients, setSelectedClients] = useState(null);
+
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
   const [selectedProductIds, setSelectedProductIds] = useState([]);
@@ -136,7 +137,6 @@ const handleSelectItem = async (item) => {
   setSelectedItems(updatedItems);
 
   try {
-    // Si updatedItems no está vacío, lo guardamos en AsyncStorage; de lo contrario, lo eliminamos
     if (updatedItems.length > 0) {
       await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
       console.log('Lista de artículos seleccionados guardada en AsyncStorage:', updatedItems);
@@ -176,45 +176,46 @@ const handleSelectDiscount = async (discount) => {
 };
 
 
-  const handleSelectClient = async (client) => {
-    if (selectedClients && selectedClients.id === client.id) {
-      setSelectedClients(null);
-      try {
-        await AsyncStorage.removeItem('selectedClient');
-        console.log('Cliente deseleccionado eliminado del AsyncStorage.');
-      } catch (error) {
-        console.error('Error al eliminar cliente deseleccionado del AsyncStorage:', error);
-      }
-    } else {
-      setSelectedClients(client);
-      try {
-        await AsyncStorage.setItem('selectedClient', JSON.stringify(client));
-        console.log('Cliente seleccionado guardado en AsyncStorage:', client);
-      } catch (error) {
-        console.error('Error al guardar cliente seleccionado en AsyncStorage:', error);
-      }
+const handleSelectClient = async (client) => {
+  if (selectedClients && selectedClients.id === client.id) {
+    setSelectedClients(null);
+    try {
+      await AsyncStorage.removeItem('selectedClients'); // Cambia 'selectedClient' a 'selectedClients'
+      console.log('Cliente deseleccionado eliminado del AsyncStorage.');
+    } catch (error) {
+      console.error('Error al eliminar cliente deseleccionado del AsyncStorage:', error);
     }
-  };
+  } else {
+    setSelectedClients(client);
+    try {
+      await AsyncStorage.setItem('selectedClients', JSON.stringify(client)); // Cambia 'selectedClient' a 'selectedClients'
+      console.log('Cliente seleccionado guardado en AsyncStorage:', client);
+    } catch (error) {
+      console.error('Error al guardar cliente seleccionado en AsyncStorage:', error);
+    }
+  }
+};
+
   
-  const handleSelectTax = async (tax) => {
-    if (selectedTaxes && selectedTaxes.id === tax.id) {
-      setSelectedTaxes(null);
-      try {
-        await AsyncStorage.removeItem('selectedTax');
-        console.log('Impuesto deseleccionado eliminado del AsyncStorage.');
-      } catch (error) {
-        console.error('Error al eliminar impuesto deseleccionado del AsyncStorage:', error);
-      }
-    } else {
-      setSelectedTaxes(tax);
-      try {
-        await AsyncStorage.setItem('selectedTax', JSON.stringify(tax));
-        console.log('Impuesto seleccionado guardado en AsyncStorage:', tax);
-      } catch (error) {
-        console.error('Error al guardar impuesto seleccionado en AsyncStorage:', error);
-      }
+const handleSelectTax = async (tax) => {
+  if (selectedTaxes && selectedTaxes.id === tax.id) {
+    setSelectedTaxes(null);
+    try {
+      await AsyncStorage.removeItem('selectedTaxes'); // Cambia 'selectedTax' a 'selectedTaxes'
+      console.log('Impuesto deseleccionado eliminado del AsyncStorage.');
+    } catch (error) {
+      console.error('Error al eliminar impuesto deseleccionado del AsyncStorage:', error);
     }
-  };
+  } else {
+    setSelectedTaxes(tax);
+    try {
+      await AsyncStorage.setItem('selectedTaxes', JSON.stringify(tax)); // Cambia 'selectedTax' a 'selectedTaxes'
+      console.log('Impuesto seleccionado guardado en AsyncStorage:', tax);
+    } catch (error) {
+      console.error('Error al guardar impuesto seleccionado en AsyncStorage:', error);
+    }
+  }
+};
 
   const showListArticles = () => {
     navigation.navigate('ListarTicket');

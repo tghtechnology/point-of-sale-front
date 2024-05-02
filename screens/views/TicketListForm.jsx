@@ -80,13 +80,16 @@ const TicketListForm = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-             <TouchableOpacity style={styles.cobrarButton}>
-                    <View style={styles.totalTextContainer}>
-                        <Icon name="cart" size={35} color="#517EF2" />
-                        <Text style={styles.cobrarText}>Total</Text>
-                        <Text style={styles.amountText}>S/ {total.toFixed(2)}</Text>
-                    </View>
-                </TouchableOpacity>
+            {/* Sección del total */}
+            <TouchableOpacity style={styles.cobrarButton}>
+                <View style={styles.totalTextContainer}>
+                    <Icon name="cart" size={35} color="#517EF2" />
+                    <Text style={styles.cobrarText}>Total</Text>
+                    <Text style={styles.amountText}>S/ {total.toFixed(2)}</Text>
+                </View>
+            </TouchableOpacity>
+
+            {/* Sección de artículos */}
             <View style={styles.itemList}>
                 {selectedItem.map(itm => (
                     <View key={itm.id} style={styles.item}>
@@ -102,6 +105,8 @@ const TicketListForm = () => {
                     </View>
                 ))}
             </View>
+
+            {/* Sección de descuentos */}
             {selectedDiscounts.length > 0 && (
                 <View style={styles.sectionContainer}>
                     <Text style={styles.sectionTitle}>Descuentos:</Text>
@@ -113,24 +118,29 @@ const TicketListForm = () => {
                     ))}
                 </View>
             )}
-            {selectedTaxes.length > 0 && (
-                <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Impuestos:</Text>
-                    {selectedTaxes.map((tax, index) => (
-                        <Text key={index} style={styles.sectionItem}>
-                            {tax.nombre}: {tax.tasa}% {tax.tipo_impuesto === 'Anadido_al_precio' ? `(S/ ${taxValue.toFixed(2)})` : ''}
-                        </Text>
-                    ))}
-                </View>
-            )}
-            {selectedClients.length > 0 && (
-                <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Cliente:</Text>
-                    {selectedClients.map((client, index) => (
-                        <Text key={index} style={styles.sectionItem}>{client.nombre}</Text>
-                    ))}
-                </View>
-            )}
+
+            {/* Sección de impuestos */}
+            {selectedTaxes !== null && selectedTaxes.length > 0 && (
+
+    <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Impuestos:</Text>
+        {selectedTaxes.map((tax, index) => (
+            <Text key={index} style={styles.sectionItem}>
+                {tax.nombre}: {tax.tasa}% {tax.tipo_impuesto === 'Anadido_al_precio' ? `(S/ ${taxValue.toFixed(2)})` : ''}
+            </Text>
+        ))}
+    </View>
+)}
+
+{/* Sección de clientes */}
+{selectedClients !== null && (
+    <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Cliente:</Text>
+        {selectedClients.map((client, index) => (
+            <Text key={index} style={styles.sectionItem}>{client.nombre}</Text>
+        ))}
+    </View>
+)}
             <TouchableOpacity onPress={showSaleTicket} style={styles.button}>Continuar</TouchableOpacity>
         </ScrollView>
     );
