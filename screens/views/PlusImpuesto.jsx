@@ -1,55 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput } from 'react-native';
-import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import React, {useState,useEffect} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} from 'react-native';
+import { MaterialCommunityIcons,FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useImpuesto from "../hooks/useImpuesto";
 import CustomAlert from '../componentes/CustomAlert';
 
 
-const PlusImpuesto = () => {
+ const PlusImpuesto = () => {
   const navigation = useNavigation();
   const [modal, setModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null)
   const [impuestos, setImpuestos] = useState([]);
   const [deletedClientId, setDeletedClientId] = useState(null);
-  const { listImpuesto, handleDeleteImp, setListImpuesto } = useImpuesto();
+ const {listImpuesto, handleDeleteImp,setListImpuesto} = useImpuesto();
 
   useEffect(() => {
-    setImpuestos(listImpuesto);
+    setImpuestos(listImpuesto); 
   }, [listImpuesto]);
 
-  const handleEdit = () => {
+  const handleEdit = () => { 
     navigation.navigate("Editar Impuestos", { impuesto: selectedItem });
     console.log(selectedItem)
     setModal(false);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id) => { 
     try {
       await handleDeleteImp(id);
       setShowAlert(true);
       setDeletedClientId(id);
       setModal(false);
-    } catch (error) {
+  } catch (error) {
       console.error('Error al borrar al cliente:', error);
-    }
+  }
   };
 
   const handleCloseAlert = () => {
     setShowAlert(false);
     setDeletedClientId(null);
-  };
+};
 
-  useEffect(() => {
-    if (deletedClientId !== null) {
-
-      setListImpuesto(impuestos.filter(impuesto => impuesto.id !== deletedClientId));
-    }
-  }, [deletedClientId]);
+useEffect(() => {
+  if (deletedClientId !== null) {
+      
+    setListImpuesto(impuestos.filter(impuesto => impuesto.id !== deletedClientId));
+  }
+}, [deletedClientId]);
 
   const handleOptionsPress = (item) => {
-    setSelectedItem(item);
+    setSelectedItem(item); 
     setModal(true);
   };
 
@@ -60,18 +60,18 @@ const PlusImpuesto = () => {
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <View style={styles.itemContent}>
-              <Text style={styles.itemText}>{item.nombre}</Text>
-              <Text style={styles.itemText}>{item.tasa}</Text>
-              <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
-                <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingHorizontal: 16 }}
-        ListEmptyComponent={() => (
-          <View>
+            <Text style={styles.itemText}>{item.nombre}</Text>
+            <Text style={styles.itemText}>{item.tasa}</Text>
+            <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
+              <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+            </TouchableOpacity> 
+        </View>
+        </View>
+    )}
+    keyExtractor={(item, index) => index.toString()}
+    contentContainerStyle={{ paddingHorizontal: 16 }}
+    ListEmptyComponent={() => (
+      <View>
             <View style={styles.circle}>
               <FontAwesome5 name="percentage" size={100} color="#808080" />
             </View>
@@ -79,8 +79,8 @@ const PlusImpuesto = () => {
             <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
           </View>
         )}
-      />
-      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate("Creación de un impuesto")}>
+        />
+      <TouchableOpacity style={styles.addButton} onPress= {() => navigation.navigate("Creación de un impuesto")}>
         <MaterialCommunityIcons name="plus" size={30} color="white" />
       </TouchableOpacity>
       <CustomAlert
@@ -89,8 +89,8 @@ const PlusImpuesto = () => {
         title="Impuesto Eliminado"
         message="El impuesto se ha eliminado correctamente."
         buttonColor="#2196F3"
-        iconName="check-circle"
-      />
+        iconName="check-circle" 
+        />
       <Modal visible={modal} animationType="slide" transparent onRequestClose={() => setModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#ff0000',
+    backgroundColor: '#0258FE', 
     borderRadius: 20,
     padding: 10,
   },
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 3,
-    flexDirection: 'row',
+    flexDirection: 'row', 
     alignItems: 'center',
   },
   itemText: {
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     maxWidth: 400,
   },
   itemContent: {
-    flex: 1,
+    flex:1,
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop:10,
   },
   optionButton: {
     borderRadius: 5,
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     marginVertical: 5,
-    backgroundColor: '#007bff',
+    backgroundColor: '#007bff', 
   },
   optionButtonText: {
     fontSize: 16,
@@ -255,13 +255,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginTop: 10,
-  },
+    marginTop:10,
+  }, 
   optionsButton: {
     position: 'absolute',
     top: 10,
     right: 10,
-  },
+},  
 });
 
 export default PlusImpuesto;

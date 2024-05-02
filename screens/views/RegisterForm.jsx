@@ -12,16 +12,13 @@ import CountryProvider from '../context/country/CountryProvider';
 const INITIAL_STATE = {
   nombre:'',
   email:'',
-  cargo:'',
   telefono:'',
   password:'',
-  nombreNegocio:''
 }
 
 const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
 
 const RegisterForm = () => {
-  const [cargo, setCargo] = useState(INITIAL_STATE.cargo);
   const [isModalVisible, setModalVisible] = useState(false);
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
   const [countrySelect, setCountrySelect] = useState('');
@@ -29,10 +26,7 @@ const RegisterForm = () => {
   const {handleCreateUser} = useUser();
   const { countries,fetchCountries } = useCountry();
   
-  const handleCargoChange = (cargoSeleccionado) => {
-    setCargo(cargoSeleccionado);
-
-  };
+  
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -56,14 +50,13 @@ const RegisterForm = () => {
     const objectSend = {
       ...dataForm,
       pais:countrySelect,
-      cargo: cargo
+
     }
     
     //control de errores para el crear un usuario
     try {
       const response = await handleCreateUser(objectSend);
       if(response){
-        alert("Usuario creado con exito")
         setDataForm(INITIAL_STATE);
         setWorker([...worker, objectSend]);
         setCountrySelect('');
@@ -79,12 +72,12 @@ const RegisterForm = () => {
     
       <View style={styles.container}>
         {/* IMPUT DE CORREO ELECTRONICO */}
-        <Text style={styles.Tittle}>Registro</Text>
-
+        <View style={styles.box}>
         <TextInput
           style={styles.input} 
           placeholder="Nombre"
           placeholderTextColor="#546574"
+          keyboardType='default'
           value={dataForm.nombre}
           onChangeText={text => getValues('nombre', text)}
         />
@@ -102,7 +95,7 @@ const RegisterForm = () => {
           style={styles.input} 
           placeholder="Telefono"
           placeholderTextColor="#546574"
-          keyboardType='number'
+          keyboardType='numeric'
           value={dataForm.telefono}
           onChangeText={text => getValues('telefono', text)}
         />
@@ -110,40 +103,31 @@ const RegisterForm = () => {
         {/* INPUT PARA ENTRADA DE PASSWORD */}
         
         <TextInput
-          style={styles.passwordInput}
+          style={styles.input}
           placeholder=" Contraseña"
           placeholderTextColor="#546574"
           secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
+          keyboardType='default'
           value={dataForm.password}
-          keyboardType=''
           onChangeText={text => getValues('password', text)}
         />
       
 
         {/* IMPUT PARA ENTRADA DE NOMBRE DE NEGOCIO */}
         <TextInput
-        style={styles.input} 
+          style={styles.input} 
           placeholder="Nombre del Negocio"
           placeholderTextColor="#546574"
+          keyboardType='default'
           value={dataForm.nombreNegocio}
           onChangeText={text => getValues('nombreNegocio', text)}
         />
-        
-        <Text>Seleccione un cargo:</Text>
-        <Picker
-        selectedValue={cargo}
-        onValueChange={handleCargoChange}
-        >
-        <Picker.Item label="Seleccionar cargo" value="" />
-        {cargosDisponibles.map((cargo, index) => (
-          <Picker.Item label={cargo} value={cargo} key={index} />
-        ))}
-        </Picker>
-
+        <View style={styles.pickerContainer}>
+    
         {/* INPUT PARA SELECCIONAR PAIS */}
         <Text>Selecciona un país:</Text>
-        {console.log("countries:", countries)}
         <Picker
+        style={styles.picker}
         selectedValue={countrySelect}
         onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
         >
@@ -152,11 +136,14 @@ const RegisterForm = () => {
         <Picker.Item key={index} label={country} value={country} />
         ))}
       </Picker>
+      </View>
 
         {/* BOTON DE ACCION DE REGISTRO */}
         <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
+
+        </View>
 
         {/* MODAL DE ALERTA EN CASO SE HIZO CORRECTO */}
         <Modal isVisible={isModalVisible} animationIn="slideInUp" animationOut="slideOutDown">
@@ -168,8 +155,9 @@ const RegisterForm = () => {
             </TouchableOpacity>
           </View>
         </Modal>
+        <View style={[styles.section, styles.redSection]}></View>
       </View>
-    
+      
   )
 }
 
@@ -177,7 +165,8 @@ const styles = StyleSheet.create({
 
   container: {
     marginTop: 100, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
+    paddingHorizontal: 25, 
+    
   },
     Tittle: {
       fontSize: 34,
@@ -185,19 +174,36 @@ const styles = StyleSheet.create({
       marginBottom: 50,
     },
     input: {
-    marginBottom: 25,
+    marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
+    borderBottomColor: '#0258FE', // Cambiado de borderColor
     height: 40,
     color: '#546574',
     padding: 10,
     borderRadius: 5,
     },
+    box:{
+    
+      backgroundColor:'#D9D9D9',
+      padding:40,
+      borderRadius: 15,
+      zIndex: 1,
+  
+    },
+    redSection: {
+      position: 'absolute', 
+      borderRadius: 15,
+      top: '50%', 
+      width: '100%', 
+      height: '50%', 
+      paddingVertical:'80%',
+      paddingHorizontal:'58%',
+      backgroundColor: '#0258FE',
+    },
     buttonRegister: {
-      backgroundColor: 'red',
+      backgroundColor: '#0258FE',
       paddingVertical: 12,
-      borderRadius: 5,
       alignItems: 'center',
       marginTop: 5,
     },
@@ -226,15 +232,15 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     passwordInput: {
-      flex:1,
-      marginBottom: 25,
-      fontSize: 17,
-      borderBottomWidth: 1, // Cambiado de borderWidth
-      borderBottomColor: 'red', // Cambiado de borderColor
-      height: 40,
-      color: '#546574',
-      padding: 10,
-      borderRadius: 5,
+        flex:1,
+        marginBottom: 25,
+        fontSize: 17,
+        borderBottomWidth: 1, // Cambiado de borderWidth
+        borderBottomColor: 'red', // Cambiado de borderColor
+        height: 40,
+        color: '#546574',
+        padding: 10,
+        borderRadius: 5,
     },
     showPasswordButton: {
       padding: 5,
@@ -263,6 +269,17 @@ const styles = StyleSheet.create({
       color: 'white',
       fontSize: 25,
     },
+    pickerContainer: {
+      marginBottom: 20,
+    },
+    picker: {
+      height: 50,
+      backgroundColor: '#FFFFFF',
+      borderColor: '#D3D3D3',
+      borderWidth: 1,
+      borderRadius: 5,
+    },
   })
+
 
 export default RegisterForm;

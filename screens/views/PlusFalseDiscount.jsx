@@ -26,9 +26,8 @@ function PlusFalseDiscount() {
       renderItem={({ item }) => (
         <View style={styles.itemContainer}>
           <Text style={styles.itemText}>{item.nombre}</Text>
-          <Text style={styles.itemText}>Tipo: {item.tipo_descuento}</Text>
-          <Text style={styles.itemText}>Valor: {item.valor}</Text>
-          <Text>Estado: {item.estado === false ? 'Desactivado' : 'Activado'}</Text>
+          <Text style={styles.itemText}>{item.valor + (item.tipo_descuento === 'MONTO' ? ' $' : ' %')}</Text>
+         
           <Switch
           value={item.estado === true}
           onValueChange={() => handleToggleStatus(item.id, item.estado)}

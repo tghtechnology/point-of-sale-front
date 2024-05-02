@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import {ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useWorker from '../hooks/useWorker';
@@ -55,15 +55,14 @@ const FormRegisEmpleado = () => {
     }
     //control de errores para el crear un usuario
     try {
-      const response = await handleCreateWorker(objectSend);
-      if (response) {
-        alert("Empleado creado con exito")
+      const nuevoEmpleado = await handleCreateWorker(objectSend);
+      if (nuevoEmpleado && nuevoEmpleado.id) {
         setData(INITIAL_STATE);
         setWorker([...worker, objectSend]);
         setCountrySelect('');
         setSuccessAlertVisible(true)
       } else {
-        alert("El Empleado no se pudo crear");
+        throw new Error("La respuesta del servidor no contiene un empleado válido.");
       }
     } catch (error) {
       alert("problema interno del servidor")
@@ -73,6 +72,7 @@ const FormRegisEmpleado = () => {
   }
 
   return (
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
     <View style={styles.container}>
       <Text style={styles.Tittle}>Registro Empleado</Text>
       <Icon name="user-circle" size={100} color="#900" style={styles.icon} />
@@ -154,11 +154,17 @@ const FormRegisEmpleado = () => {
         iconName="times-circle"
       />
     </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
   container: {
     marginTop: 100, // Puedes ajustar este valor según tus necesidades
     paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
