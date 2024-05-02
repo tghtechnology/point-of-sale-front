@@ -13,6 +13,7 @@ const TicketSaleForm = (total) => {
         }
     }, [receivedAmount, total]);
 
+
     return (
         <View style={styles.container}>
             <View style={styles.inputContainer}>

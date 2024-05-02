@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   email:'',
   telefono:'',
   password:'',
+  nombreNegocio:''
 }
 
 const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
