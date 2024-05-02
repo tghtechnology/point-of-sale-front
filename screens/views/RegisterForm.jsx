@@ -8,11 +8,12 @@ import CountryProvider from '../context/country/CountryProvider';
 import CustomAlert from '../componentes/CustomAlert';
 import ErrorAlert from '../componentes/ErrorAlert';
 
-const INITIAL_STATE = {
+const INITIAL_STATE = { 
   nombre:'',
   email:'',
   telefono:'',
   password:'',
+  nombreNegocio: '',
 }
 
 const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
@@ -47,12 +48,14 @@ const RegisterForm = () => {
   }
 
   const handleSubmit = async () => {
-    
+    if (!dataForm.nombre || !dataForm.email || !dataForm.telefono || !dataForm.password || !dataForm.nombreNegocio) {
+      console.error("Campos requeridos faltantes"); // Indicar errores de formulario
+      return;}
     const objectSend = {
       ...dataForm,
       pais:countrySelect,
 
-    }
+    } 
     
     //control de errores para el crear un usuario
     try {
@@ -83,16 +86,6 @@ const RegisterForm = () => {
           value={dataForm.nombre}
           onChangeText={text => getValues('nombre', text)}
         />
-
-        <TextInput
-          style={styles.input} 
-          placeholder="Nombre"
-          placeholderTextColor="#546574"
-          keyboardType='default'
-          value={dataForm.nombre}
-          onChangeText={text => getValues('nombre', text)}
-        />
-
         <TextInput
           style={styles.input} 
           placeholder="Correo Electrónico"
@@ -116,7 +109,7 @@ const RegisterForm = () => {
         <TextInput
           style={styles.input}
           placeholder=" Contraseña"
-          placeholderTextColor="#546574"
+          placeholderTextColor="#546574"  
           secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
           keyboardType='default'
           value={dataForm.password}
@@ -129,8 +122,8 @@ const RegisterForm = () => {
           style={styles.input} 
           placeholder="Nombre del Negocio"
           placeholderTextColor="#546574"
-          keyboardType='default'
-          value={dataForm.nombreNegocio}
+          keyboardType=''
+          value={dataForm.nombreNegocio || ""}
           onChangeText={text => getValues('nombreNegocio', text)}
         />
         <View style={styles.pickerContainer}>

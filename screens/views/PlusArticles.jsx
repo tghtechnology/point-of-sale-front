@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,FlatList, TextInput,Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,FlatList, Image,Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
 import { useNavigation } from '@react-navigation/native';
@@ -71,12 +71,21 @@ useEffect(() => {
         data={listArticle}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
+            {/* Verificar si el artículo tiene imagen o color */}
+            {item.imagen ? (
+           <Image source={{ uri: item.imagen }} style={styles.image} /> // Mostrar imagen
+) : item.color ? (
+  <View style={{ ...styles.colorSquare, backgroundColor: item.color }} /> // Mostrar color
+) : (
+  <Text>No hay representación</Text> // Alternativa si no hay imagen ni color
+)}
             <View style={styles.colorContainer}>
                 <View style={{...styles.colorSquare, backgroundColor: colorMapping[item.color]}} />
             </View>
             <View style={styles.itemContent}>
                 <Text style={styles.itemText}>{item.nombre}</Text>
                 <Text style={styles.itemText1}>S/.{item.precio}</Text>
+                
             </View>
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
                   <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
@@ -239,5 +248,28 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
 },  
+image: {
+  width: 50,
+  height: 50,
+  borderRadius: 25, // Para imágenes circulares
+  marginRight: 10, // Espacio entre la imagen y el contenido
+},
+colorSquare: {
+  width: 50,
+  height: 50, // Tamaño del cuadrado de color
+  borderRadius: 25, // Para mantener consistencia con imágenes
+  marginRight: 10,
+},
+itemContent: {
+  justifyContent: 'center',
+  flex: 1,
+},
+itemText: {
+  fontSize: 18,
+  fontWeight: 'bold',
+},
+itemText1: {
+  fontSize: 18,
+  color: '#C30000', // Color del precio
+},
 });
-
