@@ -120,17 +120,7 @@ const TicketListForm = () => {
                                 {/* Nombre del artículo */}
                                 <Text style={styles.itemText}>{itm.nombre}</Text>
 
-                                <Text style={styles.quantityText}>Cantidad: {itm.quantity}</Text>
-
-                                {/* Descuento */}
-                                {selectedDiscounts.length > 0 && (
-                                    <Text style={[styles.discountText]}>
-                                        {selectedDiscounts.map(discount => (
-                                            `Descuento: ${discount.tipo_descuento === 'MONTO' ? 'S/ ' : ''}${discount.valor}${discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}`
-                                        ))}
-                                    </Text>
-                                )}
-
+                                <Text style={styles.quantityText}>x: {itm.quantity}</Text>
                                 {/* Precio */}
                                 <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
 
@@ -140,6 +130,22 @@ const TicketListForm = () => {
                         </View>
                     ))}
                 </View>
+                {/* Descuento */}
+                {selectedDiscounts.length > 0 && (
+    <View style={styles.discountContainer}>
+        <Text style={styles.discountTitle}>Descuentos Seleccionados:</Text>
+        {selectedDiscounts.map((discount, index) => (
+            <View key={index} style={styles.discountItem}>
+                <Text style={styles.discountText}>
+                    {discount.tipo_descuento === 'MONTO' ? 'Descuento: S/ ' : 'Descuento: '}
+                    {discount.valor}
+                    {discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}
+                </Text>
+            </View>
+        ))}
+    </View>
+)}
+
                 <TouchableOpacity onPress={showSaleTicket} style={styles.cobrarButton}>Continuar</TouchableOpacity>
             </View>
         </ScrollView>
@@ -290,6 +296,24 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         marginTop: 3, // Añade un margen arriba del precio
+        color: '#4CAF50',
+    },
+    discountContainer: {
+        marginTop: 20,
+    },
+    discountTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    discountItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    discountText: {
+        fontSize: 14,
+        marginLeft: 5,
         color: '#4CAF50',
     },
     subtotalText: {
