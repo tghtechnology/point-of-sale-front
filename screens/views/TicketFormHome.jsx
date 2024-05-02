@@ -9,13 +9,11 @@ import CustomAlert from '../componentes/CustomAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useClient from '../hooks/useClient'
 import useImpuesto from "../hooks/useImpuesto";
-import useSale from "../hooks/useSale"
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showSaveChangesAlert, setShowSaveChangesAlert] = useState(false);
   const [showAlertDeselect, setShowAlertDeselect] = useState(false);
-  //const {handleCreateSale} = useSale();
   const { listArticle } = useArticle();
   const { discounts } = useDiscount();
   const { client } = useClient();
@@ -31,42 +29,34 @@ const [selectedClients, setSelectedClients] = useState(null);
   const navigation = useNavigation();
   const [selectedProductIds, setSelectedProductIds] = useState([]);
   useEffect(() => {
-    // Función para borrar los datos de AsyncStorage al iniciar sesión
     const clearAsyncStorage = async () => {
       try {
-        // Eliminar los datos necesarios de AsyncStorage
         await AsyncStorage.removeItem('selectedItems');
         await AsyncStorage.removeItem('selectedDiscounts');
         await AsyncStorage.removeItem('selectedClients');
         await AsyncStorage.removeItem('selectedTaxes');
         setSelectedItems([]);
-    setSelectedDiscounts([]);
-    setSelectedClients([]);
-    setSelectedTaxes([]);
+        setSelectedDiscounts([]);
+        setSelectedClients([]);
+        setSelectedTaxes([]);
         console.log('Datos de AsyncStorage eliminados al iniciar sesión');
       } catch (error) {
         console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
       }
     };
 
-    // Llamar a la función cuando el componente se monte
     clearAsyncStorage();
   }, []);
-  //Metodos para Conteo
   useEffect(() => {
-    // Almacena los IDs de los productos seleccionados al cargar el componente
     calculateSelectedProductIds();
-  }, [selectedItems]); // Asegúrate de incluir todos los estados que afectan a la selección de productos
+  }, [selectedItems]);
 
-  // Función para calcular los IDs de los productos seleccionados
   const calculateSelectedProductIds = () => {
     const productIds = selectedItems.map(item => item.id);
     setSelectedProductIds(productIds);
   };
 
-  // Contador de productos seleccionados (número de elementos únicos)
   const cartCount = selectedProductIds.length;
-  //
 
   useEffect(() => {
   const fetchDataFromAsyncStorage = async () => {
@@ -96,9 +86,6 @@ const [selectedClients, setSelectedClients] = useState(null);
   fetchDataFromAsyncStorage();
 }, []);
 
-  
-  //Consumo Api
-  // Prepare the sale data using the selected items
   const saleData = {
     detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
     impuestoId: selectedTaxes ? selectedTaxes.id : null,
@@ -107,14 +94,9 @@ const [selectedClients, setSelectedClients] = useState(null);
     clienteId: selectedClients ? selectedClients.id: null,
   };
 
-  // Call the createSale function with the sale data
-  // handleCreateSale(saleData);
   console.log('Sale data:', saleData);
-  //
-  
 
   useEffect(() => {
-    // Calculate total amount
     let total = 0;
     selectedItems.forEach(item => {
       total += item.precio * item.quantity;
@@ -162,7 +144,6 @@ const handleSelectDiscount = async (discount) => {
   setSelectedDiscounts(updatedDiscounts);
 
   try {
-    // Si updatedDiscounts no está vacío, lo guardamos en AsyncStorage; de lo contrario, lo eliminamos
     if (updatedDiscounts.length > 0) {
       await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(updatedDiscounts));
       console.log('Lista de descuentos seleccionados guardada en AsyncStorage:', updatedDiscounts);
@@ -180,7 +161,7 @@ const handleSelectClient = async (client) => {
   if (selectedClients && selectedClients.id === client.id) {
     setSelectedClients(null);
     try {
-      await AsyncStorage.removeItem('selectedClients'); // Cambia 'selectedClient' a 'selectedClients'
+      await AsyncStorage.removeItem('selectedClients');
       console.log('Cliente deseleccionado eliminado del AsyncStorage.');
     } catch (error) {
       console.error('Error al eliminar cliente deseleccionado del AsyncStorage:', error);
@@ -188,7 +169,7 @@ const handleSelectClient = async (client) => {
   } else {
     setSelectedClients(client);
     try {
-      await AsyncStorage.setItem('selectedClients', JSON.stringify(client)); // Cambia 'selectedClient' a 'selectedClients'
+      await AsyncStorage.setItem('selectedClients', JSON.stringify(client)); 
       console.log('Cliente seleccionado guardado en AsyncStorage:', client);
     } catch (error) {
       console.error('Error al guardar cliente seleccionado en AsyncStorage:', error);
@@ -201,7 +182,7 @@ const handleSelectTax = async (tax) => {
   if (selectedTaxes && selectedTaxes.id === tax.id) {
     setSelectedTaxes(null);
     try {
-      await AsyncStorage.removeItem('selectedTaxes'); // Cambia 'selectedTax' a 'selectedTaxes'
+      await AsyncStorage.removeItem('selectedTaxes'); 
       console.log('Impuesto deseleccionado eliminado del AsyncStorage.');
     } catch (error) {
       console.error('Error al eliminar impuesto deseleccionado del AsyncStorage:', error);
@@ -209,7 +190,7 @@ const handleSelectTax = async (tax) => {
   } else {
     setSelectedTaxes(tax);
     try {
-      await AsyncStorage.setItem('selectedTaxes', JSON.stringify(tax)); // Cambia 'selectedTax' a 'selectedTaxes'
+      await AsyncStorage.setItem('selectedTaxes', JSON.stringify(tax));
       console.log('Impuesto seleccionado guardado en AsyncStorage:', tax);
     } catch (error) {
       console.error('Error al guardar impuesto seleccionado en AsyncStorage:', error);
@@ -268,21 +249,18 @@ const handleSelectTax = async (tax) => {
   };
 
   const RemoveItem = async () => {
-    //await AsyncStorage.removeItem('selectedItem', JSON.stringify(selectedItems));
     await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
   }
 
  const handleSaveChanges = async () => {
     try {
       await RemoveItem();
-      await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts)); // Guardar los descuentos
+      await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts));
       await AsyncStorage.setItem('selectedTax', JSON.stringify(selectedTaxes));
       console.log('Cambios guardados exitosamente');
       showListArticles();
-      // Puedes mostrar una alerta o mensaje de éxito aquí si lo deseas
     } catch (error) {
       console.error('Error al guardar cambios:', error);
-      // Puedes mostrar una alerta o mensaje de error aquí si lo deseas
     }
   };
 
@@ -446,7 +424,7 @@ const handleSelectTax = async (tax) => {
         title="Producto Seleccionado"
         message="El producto se guardo correctamente."
         buttonColor="#FF0000"
-        iconName="list" // Puedes cambiar el icono según lo desees
+        iconName="list" 
       />
 
       <CustomAlert
@@ -455,7 +433,7 @@ const handleSelectTax = async (tax) => {
         title="Producto Deseleccionado"
         message="El producto se guardo correctamente."
         buttonColor="#FF0000"
-        iconName="list" // Puedes cambiar el icono según lo desees
+        iconName="list"
       />
 
       <CustomAlert
@@ -464,7 +442,7 @@ const handleSelectTax = async (tax) => {
         title="Cambios Guardados"
         message="Los cambios se guardaron correctamente."
         buttonColor="#008CBA"
-        iconName="check" // Puedes cambiar el icono según lo desees
+        iconName="check" 
       />
     </View>
   );
@@ -479,7 +457,7 @@ const styles = StyleSheet.create({
     width: '120%',
     height: 1,
     backgroundColor: 'black',
-    marginBottom: 10, // Espacio entre la línea divisoria y el botón
+    marginBottom: 10, 
   },
   buttonContainer: {
     alignItems: 'center',
@@ -489,7 +467,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 200, // Agrega un margen entre el icono de búsqueda y el icono de guardar
+    marginLeft: 200,
   },
   saveButtonText: {
     color: 'white',
@@ -539,26 +517,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemInfo: {
-    flex: 1, // Asegura que el texto del nombre del artículo y el precio ocupen todo el espacio disponible
+    flex: 1, 
   },
   magnifies: {
-    flexDirection: 'row', // Alinear los elementos horizontalmente
-    alignItems: 'center', // Alinear los elementos verticalmente
+    flexDirection: 'row', 
+    alignItems: 'center', 
     border: 1,
     marginRight: 10,
     padding: 15,
   },
   circle: {
-    width: 23.59, // Aumenta el ancho del círculo cuadrado
-    height: 19.59, // Aumenta la altura del círculo cuadrado
+    width: 23.59, 
+    height: 19.59,
     borderWidth: 2,
     borderColor: '#517EF2',
     backgroundColor: '#FFF',
     marginRight: 10,
   },
   circleSelected: {
-    backgroundColor: 'blue', // Color del círculo seleccionado
-    borderColor: 'blue', // Color del borde del círculo seleccionado
+    backgroundColor: 'blue', 
+    borderColor: 'blue', 
   }, quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -567,11 +545,11 @@ const styles = StyleSheet.create({
   quantityInput: {
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 5, // Quita el borde redondeado
+    borderRadius: 5, 
     paddingHorizontal: 5,
     marginRight: 5,
     width: 30,
-    height: 30, // Ajusta la altura para hacerlo cuadrado
+    height: 30, 
     textAlign: 'center',
   },
   quantityButton: {
@@ -596,9 +574,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopWidth: 1,
     borderTopColor: '#DDD',
-    // Define the rest of your footer styles here
   },
-  //Estilos para Conteo de Articulos seleccionaodos
   cartButton: {
     position: 'absolute',
     bottom: 20,
@@ -621,6 +597,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
   },
-  //
 });
 export default TicketFormHome
