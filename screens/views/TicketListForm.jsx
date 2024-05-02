@@ -1,12 +1,9 @@
 import React, { FlatList } from 'react-native';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
@@ -17,6 +14,8 @@ const TicketListForm = () => {
     const [selectedClients, setSelectedClients] = useState([]);
     const [total, setTotal] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [discountedTotal, setDiscountedTotal] = useState(0);
+    const [taxValue, setTaxValue] = useState(0);
     const navigation = useNavigation();
 
 
@@ -82,16 +81,23 @@ const TicketListForm = () => {
                 discountedTotal -= discount.valor;
             }
         });
-
-        // Aplicar impuestos al total después de aplicar descuentos
+        
+        // Actualizar el estado del total sin impuestos
+        setTotalPrice(totalPrice);
+        setDiscountedTotal(discountedTotal);
+    
+        // Calcular impuestos después de aplicar descuentos
+        let totalWithTaxes = discountedTotal;
+        let valor=0;
         selectedTaxes.forEach(tax => {
             if (tax.tipo_impuesto === 'Anadido_al_precio') {
-                discountedTotal += discountedTotal * (tax.tasa / 100);
+                valor = discountedTotal * (tax.tasa / 100);
+                totalWithTaxes += valor;
+                setTaxValue(valor);
             }
         });
-        
-        setTotalPrice(totalPrice);
-        setTotal(discountedTotal);
+    
+        setTotal(totalWithTaxes);
     }, [selectedItem, selectedDiscounts, selectedTaxes]);
     const showSaleTicket = () => {
         navigation.navigate('SaleTicket');
@@ -132,33 +138,28 @@ const TicketListForm = () => {
                     ))}
                 </View>
                 {/* Descuento */}
-                {selectedDiscounts.length > 0 && (
                 <View style={styles.discountContainer}>
-                    <Text style={styles.discountTitle}>Descuentos Seleccionados:</Text>
-                    {selectedDiscounts.map((discount, index) => (
-                        <View key={index} style={styles.discountItem}>
-                            <Text style={styles.discountText}>
-                                {discount.tipo_descuento === 'MONTO' ? 'Descuento: S/ ' : 'Descuento: '}
-                                {discount.valor}
-                                {discount.tipo_descuento === 'PORCENTAJE' ? '%' : ''}
-                            </Text>
-                        </View>
-                        ))}
-                    </View>
-                    
-)}
+    <Text style={styles.discountTitle}>Descuentos Seleccionados:</Text>
+    {selectedDiscounts.map((discount, index) => (
+        <View key={index} style={styles.discountItem}>
+            <Text style={styles.discountText}>
+                {discount.tipo_descuento === 'MONTO' ? 'Descuento: S/ ' : 'Descuento: '}
+                {discount.tipo_descuento === 'PORCENTAJE' ? `${discount.valor}%` : discount.valor}
+            </Text>
+        </View>
+    ))}
+</View>
 {/* Mostrar información de impuestos */}
-            <View style={styles.taxContainer}>
-                <Text style={styles.taxTitle}>Impuestos Aplicados:</Text>
-                {selectedTaxes.map((tax, index) => (
-                    <View key={index} style={styles.taxItem}>
-                        <Text style={styles.taxText}>
-                            {tax.nombre}: {tax.tasa}% {tax.tipo_impuesto === 'Anadido_al_precio' ? 'del subtotal de cada artículo' : ''}
-                        </Text>
-                    </View>
-                ))}
-            </View>
-
+<View style={styles.taxContainer}>
+    <Text style={styles.taxTitle}>Impuestos Aplicados:</Text>
+    {selectedTaxes.map((tax, index) => (
+        <View key={index} style={styles.taxItem}>
+            <Text style={styles.taxText}>
+            {tax.nombre}: {tax.tasa}% {tax.tipo_impuesto === 'Anadido_al_precio' ? `(S/ ${taxValue.toFixed(2)})` : ''}
+            </Text>
+        </View>
+    ))}
+</View>
             {/* Mostrar información de clientes */}
             <View style={styles.clientContainer}>
                 <Text style={styles.clientTitle}>Cliente Seleccionado:</Text>
