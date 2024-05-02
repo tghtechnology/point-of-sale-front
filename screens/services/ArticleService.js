@@ -12,25 +12,37 @@ const getToken = async () => {
 };
 
 const createArticle = async (newArticle) => {
-    console.log("ARTICLES",newArticle)
     try {
-        const token = await getToken();
-       
-        const { data, status } = await apiClient.post(`/articulo/crear`, newArticle, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-        return {
-            data,
-            status
+      const token = await getToken();
+  
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      };
+  
+      const { data, status } = await apiClient.post(
+        `/articulo/crear`,
+        newArticle,
+        {
+          headers,
         }
+      );
+  
+      if (status === 200 || status === 201) {
+        return { data, status };
+      } else {
+        console.error("Respuesta inesperada:", status);
+        return { status, data: null };
+      }
     } catch (error) {
-        console.error("Error creating article:", error);
-        return { status: 500, error: error.message };
+      console.error("Error creando artículo:", error);
+      if (error.response) {
+        return { status: error.response.status, data: error.response.data };
+      } else {
+        return { status: 500, data: null };
+      }
     }
-}
+  };
 const listArticles = async () => {
     try {
         const token = await getToken();

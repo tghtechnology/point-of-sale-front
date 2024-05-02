@@ -1,267 +1,212 @@
-import React, { useState, useEffect } from 'react'
-import {ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useWorker from '../hooks/useWorker';
 import useCountry from '../hooks/useCountry';
-import WorkerProvider from '../context/worker/WorkerProvider';
 import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 
 const INITIAL_STATE = {
   nombre: '',
   email: '',
   password: '',
   telefono: '',
-  cargo: '', // Establecer el valor inicial del cargo aquí
-}
+  cargo: '',
+};
 
-//Contante para Seleccionar Cargos
+// Constante para seleccionar cargos
 const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
-//
 
 const FormRegisEmpleado = () => {
-  const [cargo, setCargo] = useState(INITIAL_STATE.cargo); // Inicializar el estado del cargo con el valor predeterminado
-  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  const [cargo, setCargo] = useState(INITIAL_STATE.cargo);
+  const [showAlert, setShowAlert] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
-  const { countries,fetchCountries } = useCountry();
+  const { countries, fetchCountries } = useCountry();
   const [countrySelect, setCountrySelect] = useState('');
   const [data, setData] = useState(INITIAL_STATE);
   const { handleCreateWorker, worker, setWorker } = useWorker();
 
-  // Función para manejar cambios en la selección del cargo
   const handleCargoChange = (cargoSeleccionado) => {
     setCargo(cargoSeleccionado);
-
   };
-  //
 
-  //para los paises
   useEffect(() => {
-    fetchCountries(); // Llama a fetchCountries cuando el componente se monta
+    fetchCountries();
   }, []);
 
   const getValues = (name, value) => {
     setData({
       ...data,
-      [name]: value
-    })
-  }
+      [name]: value,
+    });
+  };
 
   const handleSubmit = async () => {
     const objectSend = {
       ...data,
-      pais:countrySelect,
-      cargo: cargo // Incluir el valor del cargo en el objeto a enviar
-    }
-    //control de errores para el crear un usuario
+      pais: countrySelect,
+      cargo,
+    };
+
     try {
       const nuevoEmpleado = await handleCreateWorker(objectSend);
       if (nuevoEmpleado && nuevoEmpleado.id) {
         setData(INITIAL_STATE);
         setWorker([...worker, objectSend]);
         setCountrySelect('');
-        setSuccessAlertVisible(true)
+        setShowAlert(true);
       } else {
+        setErrorAlertVisible(true);
         throw new Error("La respuesta del servidor no contiene un empleado válido.");
       }
     } catch (error) {
-      alert("problema interno del servidor")
-      setErrorAlertVisible(true)
+      setErrorAlertVisible(true);
     }
-    console.log("valor del formulario" + JSON.stringify(objectSend));
-  }
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-    <View style={styles.container}>
-      <Text style={styles.Tittle}>Registro Empleado</Text>
-      <Icon name="user-circle" size={100} color="#900" style={styles.icon} />
-      <TextInput
-        style={styles.input}
-        placeholder="Nombre"
-        placeholderTextColor="#546574"
-        value={data.nombre}
-        onChangeText={text => getValues('nombre', text)}
-      />
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.topBanner}>
+        </View>
+        <View style={styles.formBackground}>
+        <Text style={styles.label}>Nombre:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre"
+          placeholderTextColor="#546574"
+          value={data.nombre}
+          onChangeText={(text) => getValues('nombre', text)}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Correo Electronico"
-        placeholderTextColor="#546574"
-        value={data.email}
-        onChangeText={text => getValues('email', text)}
-      />
+        <Text style={styles.label}>Correo:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Correo Electrónico"
+          placeholderTextColor="#546574"
+          value={data.email}
+          onChangeText={(text) => getValues('email', text)}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        placeholderTextColor="#546574"
-        secureTextEntry={true}
-        value={data.password}
-        onChangeText={text => getValues('password', text)}
-      />
+        <Text style={styles.label}>Contraseña:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña"
+          secureTextEntry={true}
+          value={data.password}
+          onChangeText={(text) => getValues('password', text)}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Numero de Telefono"
-        placeholderTextColor="#546574"
-        value={data.telefono}
-        onChangeText={text => getValues('telefono', text)}
-      />
-
-      <Text style={styles.label}>Seleccione un cargo:</Text>
-      <Picker
-        selectedValue={cargo}
-        onValueChange={handleCargoChange}
-        style={styles.picker}
-      >
-        <Picker.Item label="Seleccionar cargo" value="" />
-        {cargosDisponibles.map((cargo, index) => (
-          <Picker.Item label={cargo} value={cargo} key={index} />
-        ))}
-      </Picker>
-      
-      <Text>Selecciona un país:</Text>
+        <Text style={styles.label}>Teléfono:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Teléfono"
+          value={data.telefono}
+          onChangeText={(text) => getValues('telefono', text)}
+        />
+        <Text style={styles.label}>Seleccione un cargo:</Text>
+        <View style= {styles.pickerContainer}>
         <Picker
-        selectedValue={countrySelect}
-        onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
+          selectedValue={cargo}
+          onValueChange={handleCargoChange}
+          style={styles.picker}
         >
-        <Picker.Item label="Seleccionar país" value="" />
-        {countries && countries.map((country, index) => (
-        <Picker.Item key={index} label={country} value={country} />
-        ))}
-      </Picker>
-
-      <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Registrar</Text>
-      </TouchableOpacity>
-
-      <CustomAlert
-        isVisible={successAlertVisible}
-        onClose={() => setSuccessAlertVisible(false)}
-        title="Registro exitoso"
-        message="Registro de Empleado Exitoso."
-        buttonColor="green"
-        iconName="check"
-      />
-
-      <CustomAlert
-        isVisible={errorAlertVisible}
-        onClose={() => setErrorAlertVisible(false)}
-        title="Error"
-        message="Error al Registrar"
-        buttonColor="red"
-        iconName="times-circle"
-      />
-    </View>
-    </ScrollView>
-  )
-}
+          <Picker.Item label="Cargo:" value="" />
+          {cargosDisponibles.map((cargo, index) => (
+            <Picker.Item label={cargo} value={cargo} key={index} />
+          ))}
+        </Picker>
+        </View>
+        <Text style={styles.label}>Seleccione un país:</Text>
+        <View style= {styles.pickerContainer}>
+        <Picker
+          selectedValue={countrySelect}
+          onValueChange={(itemValue) => setCountrySelect(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="País:" value="" />
+          {countries && countries.map((country, index) => (
+            <Picker.Item key={index} label={country} value={country} />
+          ))}
+        </Picker>
+        </View>
+        <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Registrar</Text>
+        </TouchableOpacity>
+        </View>
+        <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+        <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
+      </View>
+      </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
-  scrollViewContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
   container: {
-    marginTop: 100, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
+    flex: 1,
+    position: 'relative',
+    backgroundColor: '#F9F7F7'
   },
-  Tittle: {
-    fontSize: 34,
-    textAlign: 'center',
-    marginBottom: 50,
+  topBanner: {
+    position: 'absolute',
+    width: '100%',
+    height: '30%', // Suficiente para dar espacio a elementos como el icono y el título
+    backgroundColor: '#0258FE',
+    justifyContent: 'center', // Centrar contenido verticalmente
+    alignItems: 'center', // Centrar contenido horizontalmente
   },
-  pickeContainer: {
-    marginBottom: 25,
-    borderBottomWidth: 1,
-    borderBottomColor: "red",
-    height: 40,
-    color: "#546574",
-    borderRadius: 5,
+  formBackground: {
+    width: '100%',
+    backgroundColor: '#F9F7F7',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    padding: 20,
+    borderBottomLeftRadius : 40,
+    borderBottomRightRadius: 40,
+    top:100
+  },
+  label: {
+    fontSize: 16,
+    color: '#517EF2',
+    fontWeight: '700',
+    marginBottom: 10,
   },
   input: {
-    marginBottom: 25,
-    fontSize: 17,
-    borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
-    height: 40,
-    color: '#546574',
+    borderRadius: 8,
+    backgroundColor: '#D9D9D9',
     padding: 10,
-    borderRadius: 5,
+    fontSize: 16,
+    color: '#546574',
+    marginBottom: 20,
+  },
+  pickerContainer: {
+    justifyContent: 'center', // Centrar contenido verticalmente
+    alignItems: 'center',
+  },
+  picker: {
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 20,
+    width: '300px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#517EF2',
+    fontWeight: '600',
   },
   buttonRegister: {
-    backgroundColor: 'red',
+    backgroundColor: '#0258FE',
+    borderRadius: 10,
     paddingVertical: 12,
-    borderRadius: 5,
     alignItems: 'center',
-    marginTop: 5,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  selectedItem: {
-    width: '100%',
-    marginBottom: 9,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: 'red',
-    height: 30,
-    color: '#546574',
-    textAlign: 'center',
-    padding: 4,
-    borderRadius: 5
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: 'gray',
-
-    padding: 10,
-  },
-  passwordInput: {
-    flex: 1,
-    marginBottom: 25,
-    fontSize: 17,
-    borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
-    height: 40,
-    color: '#546574',
-    padding: 10,
-    borderRadius: 5,
-  },
-  showPasswordButton: {
-    padding: 5,
-    paddingBottom: 25,
-  },
-  //alerta modal
-  modalContainer: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 50,
-    alignItems: 'center',
-  },
-  icon: {
-    marginBottom: 20,
-    paddingLeft: 120
-  },
-  modalText: {
-    fontSize: 25,
-    marginBottom: 20,
-  },
-  modalButton: {
-    backgroundColor: 'green',
-    padding: 20,
-    borderRadius: 10,
-  },
-  modalButtonText: {
     color: 'white',
-    fontSize: 25,
+    fontWeight: '700',
+    fontSize: 16,
   },
-})
+});
 
-export default FormRegisEmpleado
+export default FormRegisEmpleado;

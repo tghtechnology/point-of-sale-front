@@ -1,20 +1,19 @@
 import { useState,useEffect   } from 'react'
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 import useUser from '../hooks/useUser';
 import useCountry from '../hooks/useCountry';
 import UsuarioProvider from '../context/usuarios/UsuarioProvider';
 import CountryProvider from '../context/country/CountryProvider';
+import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 
-
-const INITIAL_STATE = {
+const INITIAL_STATE = { 
   nombre:'',
   email:'',
   telefono:'',
   password:'',
-  nombreNegocio:''
+  nombreNegocio: '',
 }
 
 const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
@@ -24,6 +23,8 @@ const RegisterForm = () => {
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
   const [countrySelect, setCountrySelect] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const {handleCreateUser} = useUser();
   const { countries,fetchCountries } = useCountry();
   
@@ -47,30 +48,33 @@ const RegisterForm = () => {
   }
 
   const handleSubmit = async () => {
-    
+    if (!dataForm.nombre || !dataForm.email || !dataForm.telefono || !dataForm.password || !dataForm.nombreNegocio) {
+      console.error("Campos requeridos faltantes"); // Indicar errores de formulario
+      return;}
     const objectSend = {
       ...dataForm,
       pais:countrySelect,
 
-    }
+    } 
     
     //control de errores para el crear un usuario
     try {
       const response = await handleCreateUser(objectSend);
       if(response){
+        setSuccessAlertVisible(true);
         setDataForm(INITIAL_STATE);
         setWorker([...worker, objectSend]);
         setCountrySelect('');
       }else{
-        alert("El usuarios no se pudo crear");
+        setErrorAlertVisible(true);
       }
     } catch (error) {
+      setErrorAlertVisible(true);
       alert("problema interno del servidor")
     }
     console.log("valor del formulario"  + JSON.stringify(objectSend));
-  }
+  };
   return (
-    
       <View style={styles.container}>
         {/* IMPUT DE CORREO ELECTRONICO */}
         <View style={styles.box}>
@@ -82,7 +86,6 @@ const RegisterForm = () => {
           value={dataForm.nombre}
           onChangeText={text => getValues('nombre', text)}
         />
-
         <TextInput
           style={styles.input} 
           placeholder="Correo Electrónico"
@@ -106,7 +109,7 @@ const RegisterForm = () => {
         <TextInput
           style={styles.input}
           placeholder=" Contraseña"
-          placeholderTextColor="#546574"
+          placeholderTextColor="#546574"  
           secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
           keyboardType='default'
           value={dataForm.password}
@@ -119,8 +122,8 @@ const RegisterForm = () => {
           style={styles.input} 
           placeholder="Nombre del Negocio"
           placeholderTextColor="#546574"
-          keyboardType='default'
-          value={dataForm.nombreNegocio}
+          keyboardType=''
+          value={dataForm.nombreNegocio || ""}
           onChangeText={text => getValues('nombreNegocio', text)}
         />
         <View style={styles.pickerContainer}>
@@ -143,22 +146,10 @@ const RegisterForm = () => {
         <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
-
-        </View>
-
-        {/* MODAL DE ALERTA EN CASO SE HIZO CORRECTO */}
-        <Modal isVisible={isModalVisible} animationIn="slideInUp" animationOut="slideOutDown">
-          <View style={styles.modalContainer}>
-            <Icon name="check-circle" size={80} color="green" style={styles.icon} />
-            <Text style={styles.modalText}>Registro Exitoso</Text>
-            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
-              <Text style={styles.modalButtonText}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-        <View style={[styles.section, styles.redSection]}></View>
+        <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
+        <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/> 
+      </View>   
       </View>
-      
   )
 }
 
@@ -281,6 +272,5 @@ const styles = StyleSheet.create({
       borderRadius: 5,
     },
   })
-
 
 export default RegisterForm;

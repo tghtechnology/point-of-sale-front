@@ -6,6 +6,7 @@ import useWorker from '../hooks/useWorker';
 import useCountry from '../hooks/useCountry';
 import WorkerProvider from '../context/worker/WorkerProvider';
 import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 
 const INITIAL_STATE = {
     nombre: '',
@@ -26,9 +27,7 @@ const EditWorker = () => {
     const [cargo, setCargo] = useState('');
     const { countries,fetchCountries} = useCountry();
     const [showAlert, setShowAlert] = useState(false);
-    const [successEditAlertVisible, setSuccessEditAlertVisible] = useState(false);
-    const [errorEditAlertVisible, setErrorEditAlertVisible] = useState(false);
-
+    const [errorAlertVisible, setErrorAlertVisible] = useState(false);
     const handleCargoChange = (cargoSeleccionado) => {
       setCargo(cargoSeleccionado);
       handleChange('cargo', cargoSeleccionado);
@@ -62,6 +61,7 @@ const EditWorker = () => {
         setShowAlert(true);
         //navigation.goBack();
       } catch (error) {
+        setErrorAlertVisible(true);
         console.error('Error al editar el cliente:', error);
       }
     };
@@ -71,6 +71,8 @@ const EditWorker = () => {
 
 return (
     <View style={styles.container}>
+      <View style={styles.topBanner}></View>
+      <View style={styles.formBackground}>
       <TextInput
         style={styles.input}
         placeholder="Nombre"
@@ -96,6 +98,7 @@ return (
         onChangeText={(text) => handleChange('password', text)}
       />
       <Text style={styles.label}>Cargo</Text>
+      <View style={styles.pickerContainer}>
       <Picker
           style={styles.picker}
           selectedValue={cargo}
@@ -105,8 +108,9 @@ return (
           <Picker.Item label={cargo} value={cargo} key={index} />
         ))}
       </Picker>
-      <View style={styles.pickerContainer}>
+      </View>
         <Text style={styles.label}>País</Text>
+        <View style={styles.pickerContainer}>
         <Picker
           style={styles.picker}
           selectedValue={selectedCountry}
@@ -123,75 +127,76 @@ return (
       <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar Cambios</Text>
       </TouchableOpacity>
-      <CustomAlert
-        isVisible={showAlert}
-        onClose={handleCloseAlert}
-        title="Edición Exitosa"
-        message="El cliente se ha editado correctamente."
-        buttonColor="#2196F3"
-        iconName="check-circle" 
-      />
-      <CustomAlert
-        isVisible={successEditAlertVisible}
-        onClose={() => setSuccessEditAlertVisible(false)}
-        title="Actualizacion exitoso"
-        message="Empleado Actualizado Exitoso."
-        buttonColor="green"
-        iconName="check"
-      />
-
-      <CustomAlert
-        isVisible={errorEditAlertVisible}
-        onClose={() => setErrorEditAlertVisible(false)}
-        title="Error"
-        message="Error al Actualizar Empleado"
-        buttonColor="red"
-        iconName="times-circle"
-      />
+      </View>
+      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+      <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
-    paddingHorizontal: 25,
+    flex: 1,
+    position: 'relative',
+    backgroundColor: '#F9F7F7'
+  },
+  topBanner: {
+    position: 'absolute',
+    width: '100%',
+    height: '30%', // Suficiente para dar espacio a elementos como el icono y el título
+    backgroundColor: '#0258FE',
+    justifyContent: 'center', // Centrar contenido verticalmente
+    alignItems: 'center', // Centrar contenido horizontalmente
+  },
+  formBackground: {
+    width: '100%',
+    backgroundColor: '#F9F7F7',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    padding: 20,
+    borderBottomLeftRadius : 40,
+    borderBottomRightRadius: 40,
+    top:100
+  },
+  label: {
+    fontSize: 16,
+    color: '#517EF2',
+    fontWeight: '700',
+    marginBottom: 10,
   },
   input: {
-    marginBottom: 10,
-    fontSize: 17,
-    borderBottomWidth: 1,
-    borderBottomColor: 'red',
-    height: 40,
-    color: '#546574',
+    borderRadius: 8,
+    backgroundColor: '#D9D9D9',
     padding: 10,
-    borderRadius: 5,
+    fontSize: 16,
+    color: '#546574',
+    marginBottom: 20,
+  },
+  pickerContainer: {
+    justifyContent: 'center', // Centrar contenido verticalmente
+    alignItems: 'center',
+  },
+  picker: {
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 20,
+    width: '300px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    
   },
   buttonContainer: {
-    backgroundColor: 'red',
-    borderRadius: 5,
+    backgroundColor: '#0258FE',
+    borderRadius: 10,
     paddingVertical: 12,
-    paddingHorizontal: 20,
     alignItems: 'center',
-    marginTop: 10,
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  pickerContainer: {
-    marginBottom: 10,
-  },
-  picker: {
-    height: 40,
-    borderBottomWidth: 1,
-    borderBottomColor: 'red',
-  },
-  label: {
-    marginBottom: 5,
+    fontWeight: '700',
     fontSize: 16,
-    color: '#546574',
   },
 });
 export default EditWorker

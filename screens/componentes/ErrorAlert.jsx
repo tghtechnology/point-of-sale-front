@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Importa los iconos de FontAwesome
 
-const CustomAlert = ({ isVisible, onClose, title, message, iconName }) => {
+const ErrorAlert = ({ isVisible, onClose, title, message, iconName }) => {
   return (
     <Modal
   animationType="fade"
@@ -12,14 +12,14 @@ const CustomAlert = ({ isVisible, onClose, title, message, iconName }) => {
 >
   <View style={styles.centeredView}>
     <View style={styles.modalView}>
-      {/* Icono de éxito */}
+      {/* Icono */}
       <View style={styles.iconWrapper}>
-        <Icon name="check-circle" size={40} color="#fff" />
+        <Icon name="warning" size={30} color="#fff" />
       </View>
       {/* Título */}
-      <Text style={styles.title}>¡Éxito!</Text>
+      <Text style={styles.title}>¡Error!</Text>
       {/* Mensaje */}
-      <Text style={styles.message}>Solicitud hecha con exito</Text>
+      <Text style={styles.message}>No se pudo hacer la solicitud</Text>
       {/* Botón de cierre */}
       <TouchableOpacity style={styles.button} onPress={onClose}>
         <Text style={styles.buttonText}>Cerrar</Text>
@@ -28,51 +28,50 @@ const CustomAlert = ({ isVisible, onClose, title, message, iconName }) => {
   </View>
 </Modal>
 );
-} 
+}
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.8)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
   },
   modalView: {
     margin: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 25,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 20,
+    padding: 35,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 7,
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   iconWrapper: {
-    backgroundColor: '#4CAF50', // Fondo verde para el icono de éxito
+    backgroundColor: 'red', // Fondo naranja para el icono
     borderRadius: 50,
-    padding: 5,
+    padding: 10,
     marginBottom: 20,
   },
   title: {
     marginBottom: 15,
     textAlign: 'center',
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
   },
   message: {
-    marginBottom: 20,
+    marginBottom: 15,
     textAlign: 'center',
-    fontSize: 16,
-    color: '#333',
+    color: '#555',
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: 'red',
     borderRadius: 20,
     padding: 12,
     elevation: 2,
@@ -84,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomAlert;
+export default ErrorAlert;

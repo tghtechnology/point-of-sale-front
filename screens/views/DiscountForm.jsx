@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import useDiscount from '../hooks/useDiscount';
 import DiscountProvider from '../context/discount/DiscountProvider';
 import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 
 const INITIAL_STATE = {
     nombre:'',
@@ -17,6 +18,7 @@ const DiscountForm = () => {
   const {handleCreateDiscount,discounts,setDiscounts} = useDiscount();
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
 
  
   const getValues = (name,value) => {
@@ -43,7 +45,7 @@ const DiscountForm = () => {
           setShowAlert(true);
           setDataForm(INITIAL_STATE);
       } else {
-          alert("El descuento no se pudo crear");
+        setErrorAlertVisible(true);
       }
   } catch (error) {
       console.error("Error en la solicitud:", error);
@@ -100,14 +102,8 @@ const handleCloseAlert = () => {
                 <Text style={styles.buttonText}>Guardar Descuento</Text>
             </TouchableOpacity>
 
-            <CustomAlert
-                isVisible={showAlert}
-                onClose={() => setShowAlert(false)}
-                title="Descuento Creado"
-                message="El descuento se ha creado correctamente."
-                buttonColor="#2196F3"
-                iconName="check-circle"
-            />
+            <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+            <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
         </View>
   );
 };

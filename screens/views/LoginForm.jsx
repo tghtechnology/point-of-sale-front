@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 import useAuth from '../hooks/useAuth';
 // import CustomAlert from '../../Alertas/CustomAlert';
 
@@ -11,8 +12,6 @@ const LoginForm = () => {
   const navigation = useNavigation();
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
-  const [inconAlertVisible, setConAlertVisible] = useState(false);
-  const [emailAlertVisible, setEmailAlertVisible] = useState(false);
   const { loginAccess } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
@@ -29,14 +28,14 @@ const LoginForm = () => {
   const handleSignIn = async () => {
     try {
       const response = await loginAccess(credentials);
-      if (response == true) {
-        alert("Sesion Iniada")
-        navigation.navigate("Home")
+      if (response) {
+        //setSuccessAlertVisible(true); // Mostrar alerta de inicio de sesión exitoso
+        navigation.navigate("Home");
       } else {
-        alert("Secion no iniciada");
+        setErrorAlertVisible(true); // Mostrar alerta de error de inicio de sesión
       }
     } catch (error) {
-      alert("Secion no iniciada");
+      setErrorAlertVisible(true); // Mostrar alerta de error de inicio de sesión
     }
   };
   //Aqui Termina
@@ -98,48 +97,13 @@ const LoginForm = () => {
         <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
 
-      <CustomAlert
-        isVisible={successAlertVisible}
-        onClose={() => setSuccessAlertVisible(false)}
-        title="Inicio de sesión exitoso"
-        message="Inicio de Sesión Exitoso."
-        buttonColor="green"
-        iconName="check"
-      />
-
-      <CustomAlert
-        isVisible={errorAlertVisible}
-        onClose={() => setErrorAlertVisible(false)}
-        title="Error"
-        message="Error al Iniciar Sesión"
-        buttonColor="red"
-        iconName="times-circle"
-      />
-
-      <CustomAlert
-        isVisible={inconAlertVisible}
-        onClose={() => setConAlertVisible(false)}
-        title="Campos Incompletos"
-        message="Ingresar Email o Password."
-        buttonColor="orange"
-        iconName="question"
-      />
-
-      <CustomAlert
-        isVisible={emailAlertVisible}
-        onClose={() => setEmailAlertVisible(false)}
-        title="Formato Incorrecto"
-        message="Ingresar Email."
-        buttonColor="lightblue"
-        iconName="exclamation-triangle"
-      />
-      </View>
-      <View style={[styles.section, styles.redSection]}></View>
-
+      <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
+      <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
     </View>
-    
+    </View>
   )
 }
+
 
 const styles = StyleSheet.create({
 

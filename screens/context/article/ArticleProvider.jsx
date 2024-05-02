@@ -24,19 +24,21 @@ const ArticleProvider = ({children}) => {
     }, []);
 
     const handleCreateArticle = async (newArticle) => {
-        const { nombre, tipo_venta, precio, representacion, color,imagen, id_categoria} = newArticle; 
-        try {
-            const res= await createArticle({ nombre, tipo_venta, precio, representacion, color,imagen, id_categoria}); 
-            if(res.status === 200 || res.status === 201){
-              return res.data;
-            } else {
-              return null;
-            }
-        } catch (error) {
-            console.error("Error creating article:", error);
-            return null; 
+      try {
+        const res = await createArticle(newArticle);
+        if (res.status === 200 || res.status === 201) {
+          setListArticle((prevList) => [...prevList, res.data]);
+          return res.data;
+        } else {
+          console.error("Error al crear el artículo:", res.status);
+          return null;
         }
-    }
+      } catch (error) {
+        console.error("Error creando el artículo:", error);
+        return null;
+      }
+    };
+        
 
     const handleEditArticle = async (updateArticle) => {
         const { nombre, tipo_venta, precio, ref, representacion, id_categoria } = updateArticle;

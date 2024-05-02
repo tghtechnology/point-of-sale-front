@@ -1,7 +1,7 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity,Image,ScrollView,} from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
 import CustomAlert from "../componentes/CustomAlert";
@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   imagen: "",
   id_categoria: "",
 };
+
 const colors = [
   "#FF0000",
   "#00FF00",
@@ -34,37 +35,67 @@ const ColorBox = ({ color, setDatos }) => (
     onPress={() => setDatos((prevDatos) => ({ ...prevDatos, color }))}
   />
 );
-export default function ArticlesForm() {
+
+const buildFormData = (datos, selectedImage, categoriaSelect) => {
+  const formData = new FormData();
+
+  formData.append("nombre", datos.nombre);
+  formData.append("tipo_venta", datos.tipo_venta);
+  formData.append("precio", parseFloat(datos.precio));
+  formData.append("id_categoria", categoriaSelect);
+
+  // Ajustar según la representación elegida
+  if (datos.representacion === "imagen") {
+    formData.append("representacion", "imagen");
+    if (selectedImage) {
+      const fileName = selectedImage.split("/").pop();
+      formData.append("imagen", {
+        uri: selectedImage,
+        name: fileName,
+        type: "image/jpeg",
+      });
+    }
+    formData.append("color", null); // Establecer `color` como null cuando se representa por imagen
+  } else if (datos.representacion === "color" && datos.color) {
+    formData.append("representacion", "color");
+    formData.append("color", datos.color);
+    formData.append("imagen", null); // Establecer `imagen` como null cuando se representa por color
+  }
+
+  return formData;
+};
+
+
+
+const ArticlesForm = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const { handleCreateArticle, listArticle, setListArticle } = useArticle();
+  const { handleCreateArticle } = useArticle();
   const { listCategoria } = useCategory();
 
   const openImagePickerAsync = async () => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
     if (permissionResult.granted === false) {
-      alert("Permission to acces camera is required");
+      alert("Permission to access camera is required");
       return;
     }
 
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-     
     });
 
-    console.log(pickerResult);
-
-    if (!pickerResult.canceled) {
-      setSelectedImage(pickerResult.assets[0].uri)
+    if (pickerResult.canceled) {
+      return;
     }
-  };
 
+    setSelectedImage(pickerResult.assets[0].uri);
+  };
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
@@ -77,42 +108,31 @@ export default function ArticlesForm() {
     });
   };
 
-  const handleTipoVentaChange = (value) => {
-    setDatos({
-      ...datos,
-      tipo_venta: value,
-    });
-  };
-
-  const handleRepresentacion = (value) => {
-    setDatos({
-      ...datos,
-      representacion: value,
-    });
-  };
-
   const SubmitArticle = async () => {
     try {
-      
-      const articleData = {
-        ...datos,
-        precio: parseFloat(datos.precio),
-        id_categoria: categoriaSelect,
-        imagen: selectedImage,
-      };
-
-      console.log("Datos a enviar al servidor:", articleData);
-      const newArticle = await handleCreateArticle(articleData);
+      const formData = buildFormData(datos, selectedImage, categoriaSelect);
+  
+      console.log("Datos a enviar al servidor:", formData); // Verificar el contenido del FormData
+  
+      const newArticle = await handleCreateArticle(formData);
+  
       if (newArticle && newArticle.id) {
         setShowAlert(true);
         setDatos(INITIAL_STATE);
         setCategoriaSelect("");
-        setListArticle([...listArticle, newArticle]);
+        setSelectedImage(null);
       } else {
-        alert("El artículo no se pudo crear");
+        alert("El artículo no se pudo crear.");
       }
     } catch (error) {
-      alert("Problema interno del servidor");
+      console.error("Error al crear el artículo:", error); // Registro detallado
+      if (error.response) {
+        console.error("Error del servidor:", error.response.status, error.response.data);
+        alert(`Error del servidor: ${error.response.data?.message || "Error desconocido"}`);
+      } else {
+        console.error("Error general:", error.message);
+        alert("Problema interno del servidor.");
+      }
     }
   };
 
@@ -122,7 +142,6 @@ export default function ArticlesForm() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Input nombre */}
       <TextInput
         style={styles.input}
         placeholder="Nombre"
@@ -130,13 +149,12 @@ export default function ArticlesForm() {
         value={datos.nombre}
         onChangeText={(text) => getValues("nombre", text)}
       />
-      {/* Opcion de categoria */}
       <View>
         <Text style={styles.label}>Categoría</Text>
       </View>
       <View style={styles.pickeContainer}>
         <Picker
-          onValueChange={(itemValue, itemIndex) =>
+          onValueChange={(itemValue) =>
             setCategoriaSelect(itemValue)
           }
           selectedValue={categoriaSelect}
@@ -148,12 +166,11 @@ export default function ArticlesForm() {
           ))}
         </Picker>
       </View>
-      {/* Opcion vendido*/}
       <View>
         <Text>Vendido por</Text>
       </View>
       <RadioButton.Group
-        onValueChange={(value) => handleTipoVentaChange(value)}
+        onValueChange={(value) => getValues("tipo_venta", value)}
         value={datos.tipo_venta}
       >
         <View style={styles.radioContainer}>
@@ -165,24 +182,25 @@ export default function ArticlesForm() {
           <Text>Peso</Text>
         </View>
       </RadioButton.Group>
-      {/* Input Precio */}
       <TextInput
         style={styles.input}
         placeholder="Precio"
         placeholderTextColor="#546574"
+        a
         value={datos.precio.toString()}
         onChangeText={(text) => getValues("precio", text)}
       />
       <View>
         <Text style={styles.info}>
-          Deje el campo en blanco para indicar el precio durante la venta{" "}
+          Deje el campo en blanco para indicar el precio durante la venta.
         </Text>
       </View>
-      {/* Input representacion*/}
-      
+      <View>
+        <Text style={styles.label}>Representación</Text>
+      </View>
 
       <RadioButton.Group
-        onValueChange={(value) => handleRepresentacion(value)}
+        onValueChange={(value) => getValues("representacion", value)}
         value={datos.representacion}
       >
         <View style={styles.radioContainer}>
@@ -194,6 +212,7 @@ export default function ArticlesForm() {
           <Text>Imagen</Text>
         </View>
       </RadioButton.Group>
+
       {datos.representacion === "imagen" && (
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           <TouchableOpacity
@@ -220,12 +239,7 @@ export default function ArticlesForm() {
               }}
               onPress={removeSelectedImage}
             >
-              <MaterialIcons
-                name="close"
-                size={24}
-                color="#696969"
-                style={{ backgroundColor: "white", borderRadius: 12 }}
-              />
+              <MaterialIcons name="close" size={24} color="#696969" />
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
@@ -233,11 +247,7 @@ export default function ArticlesForm() {
 
       {datos.representacion === "color" && (
         <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
+          style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}
         >
           {colors.map((color, index) => (
             <ColorBox key={index} color={color} setDatos={setDatos} />
@@ -252,14 +262,14 @@ export default function ArticlesForm() {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Articulo Creado"
-        message="El articulo se ha creado correctamente."
+        title="Artículo creado"
+        message="El artículo se ha creado correctamente."
         buttonColor="#2196F3"
         iconName="check-circle"
       />
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -270,7 +280,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: "#0258FE",
+    borderBottomColor: "red",
     height: 40,
     color: "#546574",
     padding: 10,
@@ -282,36 +292,30 @@ const styles = StyleSheet.create({
   pickeContainer: {
     marginBottom: 25,
     borderBottomWidth: 1,
-    borderBottomColor: "#0258FE",
+    borderBottomColor: "red",
     height: 40,
     color: "#546574",
     borderRadius: 5,
   },
-
   label: {
     marginTop: 4,
     color: "#546574",
   },
   radioContainer: {
-    marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
+    marginTop: 8,
   },
   buttonContainer: {
-    overflow: "hidden",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor:'#0258FE',
-    backgroundColor:'#0258FE',
-    width:237,
-    height:39,
-    marginLeft:55,
+    borderColor: "red",
     padding: 10,
   },
   buttonText: {
-    color: "white",
+    color: "red",
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 15,
   },
   uploadImagen: {
     backgroundColor: "#fcfcfc",
@@ -325,7 +329,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#dcdcdc",
     textAlign: "center",
-    alignItems: "center",
     fontSize: 20,
   },
 });
+
+export default ArticlesForm;
