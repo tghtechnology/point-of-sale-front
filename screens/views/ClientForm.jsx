@@ -6,6 +6,7 @@ import useClient from '../hooks/useClient';
 import ClientProvider from '../context/cliente/ClientProvider';
 import CountryProvider from '../context/country/CountryProvider';
 import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 
 const INITIAL_STATE = {
     nombre:'',
@@ -22,6 +23,7 @@ const INITIAL_STATE = {
     const { countries,fetchCountries } = useCountry();
     const {handleCreateClient,client, setClient} = useClient();
     const [showAlert, setShowAlert] = useState(false);
+    const [errorAlertVisible, setErrorAlertVisible] = useState(false);
 
     useEffect(() => {
         fetchCountries(); // Llama a fetchCountries cuando el componente se monta
@@ -48,10 +50,11 @@ const INITIAL_STATE = {
             setClient([...client, nuevoCliente]);
             setShowAlert(true);
           }else{
+            setErrorAlertVisible(true);
             throw new Error("La respuesta del servidor no contiene un impuesto válido.");
           }
         } catch (error) {
-          alert("problema interno del servidor")
+          setErrorAlertVisible(true);
         }
         console.log("valor del formulario"  + JSON.stringify(objectSend));
       }
@@ -60,10 +63,10 @@ const INITIAL_STATE = {
         setShowAlert(false);
     };
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+    <ScrollView>
       <View style={styles.container}>
-          {/* Contenido del formulario */}
-          <View style={styles.inputContainer}>
+        <View style={styles.topBanner}></View>
+        <View style={styles.formBackground}>
           <Text style={styles.label}>Nombre Cliente</Text>
           <TextInput
             style={styles.input}
@@ -71,8 +74,6 @@ const INITIAL_STATE = {
             value={data.nombre}
             onChangeText={text => getValues('nombre', text)}
           />
-          </View>
-          <View style={styles.inputContainer}>
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
@@ -80,8 +81,6 @@ const INITIAL_STATE = {
             value={data.email}
             onChangeText={text => getValues('email', text)}
           />
-          </View>
-          <View style={styles.inputContainer}>
           <Text style={styles.label}>Telefono</Text>
           <TextInput
             style={styles.input}
@@ -89,8 +88,6 @@ const INITIAL_STATE = {
             value={data.telefono}
             onChangeText={number => getValues('telefono', number)}
           />
-          </View>
-          <View style={styles.inputContainer}>
           <Text style={styles.label}>Direccion</Text>
           <TextInput
             style={styles.input}
@@ -98,8 +95,6 @@ const INITIAL_STATE = {
             value={data.direccion}
             onChangeText={text => getValues('direccion', text)}
           />
-          </View>
-          <View style={styles.inputContainer}>
           <Text style={styles.label}>Ciudad</Text>
           <TextInput
             style={styles.input}
@@ -107,8 +102,6 @@ const INITIAL_STATE = {
             value={data.ciudad}
             onChangeText={text => getValues('ciudad', text)}
           />
-          </View>
-          <View style={styles.inputContainer}>
           <Text style={styles.label}>Region</Text>
           <TextInput
             style={styles.input}
@@ -116,8 +109,6 @@ const INITIAL_STATE = {
             value={data.region}
             onChangeText={text => getValues('region', text)}
           />
-          </View>
-          <View style={styles.inputContainer}>
           <Text style={styles.label}>Codigo Postal</Text>
           <TextInput
               style={styles.input}
@@ -126,82 +117,97 @@ const INITIAL_STATE = {
               onChangeText={text => getValues('codigo_postal', text)}
               keyboardType="numeric"
           />
-          </View>
           {/* INPUT PARA SELECCIONAR PAIS */}
-        <View style={styles.inputContainer}>
+        
         <Text style={styles.label}>Selecciona un país:</Text>
+        <View style={styles.pickerContainer}>
         <Picker
+        style={styles.picker}
         selectedValue={countrySelect}
         onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
         >
-        <Picker.Item label="Seleccionar país" value="" />
+        <Picker.Item label="País:" value="" />
         {countries && countries.map((country, index) => (
         <Picker.Item key={index} label={country} value={country} />
         ))}
         </Picker>
-        <Text>País seleccionado: {countrySelect}</Text>
-            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-            <Text style={styles.buttonText}>Crear Cliente</Text>
-            </TouchableOpacity>
-          </View>
-          <CustomAlert
-        isVisible={showAlert}
-        onClose={handleCloseAlert}
-        title="Cliente Creado"
-        message="El cliente se ha creado correctamente."
-        buttonColor="#2196F3"
-        iconName="check-circle" // Puedes cambiar el icono según lo desees
-        />
+        </View>
+        <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+        <Text style={styles.buttonText}>Crear Cliente</Text>
+        </TouchableOpacity>
+        </View>
+          
+        <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+        <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
   </View>
   </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  scrollViewContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
   container: {
     flex: 1,
-    marginTop: 30,
+    position: 'relative',
+    backgroundColor: '#F9F7F7'
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
+  topBanner: {
+    position: 'absolute',
+    width: '100%',
+    height: '30%', // Suficiente para dar espacio a elementos como el icono y el título
+    backgroundColor: '#0258FE',
+    justifyContent: 'center', // Centrar contenido verticalmente
+    alignItems: 'center', // Centrar contenido horizontalmente
   },
-  inputContainer: {
-    marginBottom: 20,
+  formBackground: {
+    width: '100%',
+    backgroundColor: '#F9F7F7',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    padding: 20,
+    borderBottomLeftRadius : 40,
+    borderBottomRightRadius: 40,
+    top:100
   },
   label: {
     fontSize: 16,
-    marginBottom: 5,
-    fontWeight: 'bold',
+    color: '#517EF2',
+    fontWeight: '700',
+    marginBottom: 10,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 15,
+    borderRadius: 8,
+    backgroundColor: '#D9D9D9',
+    padding: 10,
     fontSize: 16,
+    color: '#546574',
+    marginBottom: 20,
+  },
+  pickerContainer: {
+    justifyContent: 'center', // Centrar contenido verticalmente
+    alignItems: 'center',
+  },
+  picker: {
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 20,
+    width: '300px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#517EF2',
+    fontWeight: '600',
   },
   button: {
-    backgroundColor: 'red',
+    backgroundColor: '#0258FE',
     borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingVertical: 12,
     alignItems: 'center',
-    marginTop: 10,
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '700',
+    fontSize: 16,
   },
 });
 

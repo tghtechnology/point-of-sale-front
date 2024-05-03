@@ -143,7 +143,9 @@ const TicketListForm = () => {
     </View>
 )}
 
-            <TouchableOpacity onPress={showSaleTicket} style={styles.button}>Continuar</TouchableOpacity>
+            <TouchableOpacity onPress={showSaleTicket} style={styles.button}>
+                <Text>Continuar</Text>
+                </TouchableOpacity>
         </ScrollView>
     );
 };

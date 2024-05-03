@@ -1,33 +1,69 @@
 import React,{useState} from "react";
 import AuthContext from "./AuthContext";
-import {createToken,logout} from "../../services/authService";
+import {createToken,obtenerDatosUsuarioPorId,editarUsuarioPorId,cambiarContraseña,logout} from "../../services/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
+    const [user, setUser] = useState(null);
   
 
     const loginAccess = async (email, password) => {
-      const { status, data } = await createToken(email, password);
-      if (status === 200) {
-        const usuario_id = data.usuario_id;
-        const token = data.token
-        AsyncStorage.setItem("token", token);
-        AsyncStorage.setItem("usuarioid", usuario_id.toString());
-        const storedToken = AsyncStorage.getItem("token");
-        console.log("Token: ", storedToken);
-        const stored = AsyncStorage.getItem("usuarioid");
-        console.log("Usuario_d: ", stored);
-        setIsAuth(true);
-  
-        alert("Autenticación exitosa");
-        return true;
-      } else {
+      try {
+        const { status, data } = await createToken(email, password);
+        if (status === 200) {
+          const { usuario_id, token } = data;
+          AsyncStorage.setItem("token", token);
+          AsyncStorage.setItem("usuarioid", usuario_id.toString());
+          setIsAuth(true);
+          const userData = await obtenerDatosUsuarioPorId(usuario_id);
+          setUser(userData);
+          return status, data;
+        } else {
+          setIsAuth(false);
+          return false;
+        }
+      } catch (error) {
+        console.error("Error al iniciar sesión:", error);
         setIsAuth(false);
-        alert("Datos incorrectos, intente de nuevo");
         return false;
       }
     };
+    
+    const editarUsuario = async (id, newData) => {
+      try {
+        const editedUser = await editarUsuarioPorId(id, newData);
+        setUser(editedUser);
+        return true;
+      } catch (error) {
+        console.error("Error al editar usuario:", error);
+        return false;
+      }
+    };
+
+    const changePassword = async (currentPassword, newPassword, confirmPassword) => {
+      // Validación para verificar que todos los campos sean requeridos
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        throw new Error("Todos los campos son requeridos");
+      }
+    
+      // Verificación para confirmar que las nuevas contraseñas coincidan
+      if (newPassword !== confirmPassword) {
+        throw new Error("La nueva contraseña y su confirmación deben coincidir");
+      }
+    
+      try {
+        const result = await cambiarContraseña(currentPassword, newPassword, confirmPassword);
+        
+        alert("Contraseña cambiada con éxito"); // Notificación de éxito al usuario
+        return result;
+      } catch (error) {
+        console.error("Error al cambiar la contraseña:", error.message);
+        alert(error.message); // Notificación de error al usuario
+        throw error; // Lanza el error para otros manejadores
+      }
+    };
+    
 
     const logautAccess = async () => {
       const token = await AsyncStorage.getItem("token");
@@ -37,6 +73,7 @@ const AuthProvider = ({children}) => {
           if (response.status === 200) {
             await AsyncStorage.removeItem("token");
             setIsAuth(false);
+            setUser(null); // Borra los datos del usuario cuando cierra sesión
             alert("Cierre de sesión exitoso");
             return true;
           } else {
@@ -57,8 +94,12 @@ const AuthProvider = ({children}) => {
   return (
     <AuthContext.Provider value={{
         isAuth,
+        user,
+        setUser,
+        editarUsuario,
         loginAccess,
         logautAccess,
+        changePassword
     }}>
         {children}
     </AuthContext.Provider>

@@ -1,19 +1,59 @@
 import React,{useState,useEffect} from "react";
-import {createUser,eliminarTemporal,eliminarPermanente } from "../../services/UserService"
+import {createUser,getUsers,editUser,eliminarTemporal,eliminarPermanente } from "../../services/UserService"
 import UsuarioContext from "./UsuarioContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UsuarioProvider = ({children}) => {
   const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState([])
 
     const handleCreateUser = async (newUser) => {
-        const { status } = await createUser(newUser);
-        if(status === 200 || status === 201){
-          return true;
-        }else {
-          return false;
+      try{
+        const res = await createUser(newUser);
+        if(res.status === 200 || res.status === 201){
+          return res.data;
         }
+         else {     
+          return null;
+        }
+      }catch(error){
+
+          console.log("Error creating user:", error);
+          return null;
+      }
+
     }
+
+    const fetchUsers = async () =>{
+      try {
+        const user = await getUsers();
+        setUser(user);
+      } catch (error) {
+        
+      }
+    }
+    useEffect(() => {
+      fetchUsers();
+    }, []);
+
+    const handleEditUser = async (id,updatedData) => {
+      console.log(id)
+      try {
+        const response = await editUser(id,updatedData);
+        if (response && response.status === 200) {
+          const updatedUsers = user.map((users)=>
+          users.id === id ? {...users, ...updatedData} : users
+        );
+        setWorker(updatedUsers);
+        console.log('edicion correcta')
+      } else if (response && response.status === 204) {
+        console.log('Usuario editado exitosamente');
+      }
+    } catch (error) {
+      console.error('Error editing user:', error);
+    }
+  };
+
     const handleDeleteTemporary = async (password) => {
       const { status, data } = await eliminarTemporal(password);
       if (status === 200) {
@@ -67,6 +107,9 @@ const UsuarioProvider = ({children}) => {
     <UsuarioContext.Provider value={{
       
       handleCreateUser,
+      handleEditUser,
+      user,
+      setUser,
       handleDeleteTemporary,
       handleDeletePermanent,
               
