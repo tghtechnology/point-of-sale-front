@@ -280,12 +280,14 @@ const handleSelectTax = async (tax) => {
           <Text style={styles.quantityButton}>-</Text>
         </TouchableOpacity>
         <TextInput
-          style={styles.quantityInput}
-          value={selectedItems.find(selectedItem => selectedItem.id === item.id)?.quantity || ''}
-          onChangeText={(text) => handleQuantityChange(item, text)}
-          keyboardType="numeric"
-          editable={false}
-        />
+            style={styles.quantityInput}
+            value={String(selectedItems.find(selectedItem => selectedItem.id === item.id)?.quantity) || '0'}
+            onChangeText={(text) => handleQuantityChange(item, text)}
+            keyboardType="numeric"
+            editable={false}
+          />
+
+
         <TouchableOpacity onPress={() => handleAddQuantity(item)}>
           <Text style={styles.quantityButton}>+</Text>
         </TouchableOpacity>
