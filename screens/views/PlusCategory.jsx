@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
   colorSquare: {
     width: 50,
     height: 50,
+    borderRadius:25,
   },
   text: {
     marginTop: 20,

@@ -74,14 +74,14 @@ useEffect(() => {
             {/* Verificar si el artículo tiene imagen o color */}
             {item.imagen ? (
            <Image source={{ uri: item.imagen }} style={styles.image} /> // Mostrar imagen
-) : item.color ? (
-  <View style={{ ...styles.colorSquare, backgroundColor: item.color }} /> // Mostrar color
-) : (
-  <Text>No hay representación</Text> // Alternativa si no hay imagen ni color
-)}
-            <View style={styles.colorContainer}>
+              ) : item.color ? (
+                <View style={styles.colorContainer}>
                 <View style={{...styles.colorSquare, backgroundColor: colorMapping[item.color]}} />
-            </View>
+            </View>  // Mostrar color
+              ) : (
+                <Text>No hay representación</Text> // Alternativa si no hay imagen ni color
+              )}
+           
             <View style={styles.itemContent}>
                 <Text style={styles.itemText}>{item.nombre}</Text>
                 <Text style={styles.itemText1}>S/.{item.precio}</Text>
@@ -210,10 +210,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
   },
-  colorSquare: {
-    width: 50,
-    height: 50,
-  },
+  
   modalContainer: {
     flex: 1,
     justifyContent: 'center',

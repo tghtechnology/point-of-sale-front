@@ -9,12 +9,20 @@ const INITIAL_STATE = {
 }
 const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
 
-const ColorBox = ({ color,setDatos }) => (
+const ColorBox = ({ color, selectedColor, setDatos }) => (
   <TouchableOpacity 
-    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} 
+    style={{ 
+      backgroundColor: color, 
+      width: 70, 
+      height: 70, 
+      margin: 5, 
+      borderWidth: color === selectedColor ? 3  : 0, 
+      borderColor: 'black' 
+    }} 
     onPress={() => setDatos(prevDatos => ({ ...prevDatos, color }))} 
   />
 );
+
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
@@ -66,7 +74,7 @@ const CategoryForm = () => {
       <Text style={styles.label}>Color</Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center', marginTop:20}}>
           {colors.map((color, index) => (
-            <ColorBox key={index} color={color}  setDatos={setDatos}/>
+            <ColorBox key={index} color={color} selectedColor={datos.color} setDatos={setDatos}/>
           ))}
         </View>
       <View style={{ height: 20 }} />
