@@ -368,7 +368,8 @@ const handleSelectTax = async (tax) => {
           onValueChange={(itemValue, itemIndex) =>
             setSelectedValue(itemValue)
           }>
-          <Picker.Item label="Todos los artículos" value="default" />
+          <Picker.Item label="Selecciona" value="default" />
+          <Picker.Item label="Articulos" value="items" />
           <Picker.Item label="Descuentos" value="discounts" />
           <Picker.Item label="Clientes" value="clients" />
           <Picker.Item label="Impuestos" value="impuestos" />
@@ -376,7 +377,7 @@ const handleSelectTax = async (tax) => {
       </View>
 
       {/* List Items */}
-      {selectedValue === 'default' && (
+      {selectedValue === 'items' && (
         <View style={styles.itemList}>
           <FlatList
             data={listArticle}
