@@ -386,7 +386,7 @@ const handleSelectTax = async (tax) => {
       )}
 
       {/* List Discounts */}
-      {selectedValue === 'discounts' && (
+      {selectedValue === 'discounts' &&  (
         <View style={styles.itemList}>
           <FlatList
             data={discounts}

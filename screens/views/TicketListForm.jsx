@@ -144,7 +144,7 @@ const TicketListForm = () => {
 )}
 
             <TouchableOpacity onPress={showSaleTicket} style={styles.button}>
-                <Text>Continuar</Text>
+                <Text style={styles.buttonText}>Continuar</Text>
                 </TouchableOpacity>
         </ScrollView>
     );
@@ -237,6 +237,7 @@ const styles = StyleSheet.create({
     },
     sectionContainer: {
         marginBottom: 10,
+        marginLeft: 20
     },
     sectionTitle: {
         fontSize: 16,
@@ -248,12 +249,18 @@ const styles = StyleSheet.create({
         color: '#666666',
     },
     button: {
-        backgroundColor: '#517EF2',
+        backgroundColor: '#0258FE',
         paddingVertical: 15,
         paddingHorizontal: 20,
         alignItems: 'center',
-        borderRadius: 5,
+        borderRadius: 20,
         marginTop: 20,
+        width: '50%', // Modifica el ancho del botón según sea necesario
+        marginLeft: 110
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
     },
 });
 

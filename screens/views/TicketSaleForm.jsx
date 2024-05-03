@@ -22,7 +22,6 @@ const TicketSaleForm = () => {
     return (
         <View style={styles.container}>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Ingresa Monto Recibido</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Monto"
@@ -33,7 +32,6 @@ const TicketSaleForm = () => {
             </View>
 
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Vuelto</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Valor"
@@ -42,24 +40,18 @@ const TicketSaleForm = () => {
                 />
             </View>
 
-            <View style={styles.itemList}>
-                <View style={styles.item}>
-                    <TouchableOpacity
-                        style={[styles.circle, selectedPayment === 'Efectivo' && styles.circleSelected]}
-                        onPress={() => handlePaymentSelection('Efectivo')}
-                    />
-                    <Text style={styles.itemText}>Efectivo</Text>
-                </View>
-            </View>
+            <View style={styles.paymentContainer}>
+                <TouchableOpacity
+                    style={[styles.circleLeft, selectedPayment === 'Efectivo' && styles.circleSelectedLeft]}
+                    onPress={() => handlePaymentSelection('Efectivo')}
+                />
+                <Text style={styles.itemTextLeft}>Efectivo</Text>
 
-            <View style={styles.itemList}>
-                <View style={styles.item}>
-                    <TouchableOpacity
-                        style={[styles.circle, selectedPayment === 'Tarjeta' && styles.circleSelected]}
-                        onPress={() => handlePaymentSelection('Tarjeta')}
-                    />
-                    <Text style={styles.itemText}>Tarjeta</Text>
-                </View>
+                <TouchableOpacity
+                    style={[styles.circleRight, selectedPayment === 'Tarjeta' && styles.circleSelectedRight]}
+                    onPress={() => handlePaymentSelection('Tarjeta')}
+                />
+                <Text style={styles.itemTextRight}>Tarjeta</Text>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={() => { }}>
@@ -75,9 +67,15 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#FFF',
     },
+    paymentContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center', // Centra los elementos horizontalmente
+        marginBottom: 10,
+        marginTop: 30
+    },
     inputContainer: {
-        borderBottomWidth: 1,
-        borderBottomColor: 'gray',
+        borderBottomWidth: 2,
+        borderBottomColor: '#0258FE', // Color de la línea azul debajo del título
         marginBottom: 10,
     },
     input: {
@@ -86,17 +84,14 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 15
     },
-    label: {
-        fontWeight: 'bold',
-        marginBottom: 5,
-        fontSize: 20,
-    },
     button: {
-        backgroundColor: 'red',
+        backgroundColor: '#0258FE',
         padding: 10,
         alignItems: 'center',
-        borderRadius: 5,
+        borderRadius: 20,
         marginTop: 20,
+        marginLeft: 95,
+        width: '50%'
     },
     buttonText: {
         color: 'white',
@@ -110,19 +105,36 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: 'center',
     },
-    circle: {
+    circleLeft: {
         width: 23.59,
         height: 19.59,
         borderWidth: 2,
-        borderColor: '#517EF2',
+        borderColor: '#00FF00',
+        backgroundColor: '#FFF',
+        marginLeft: 70,
+    },
+    circleRight: {
+        width: 23.59,
+        height: 19.59,
+        borderWidth: 2,
+        borderColor: '#FF0000',
         backgroundColor: '#FFF',
         marginRight: 10,
     },
-    circleSelected: {
-        backgroundColor: 'blue', // Color del círculo seleccionado
-        borderColor: 'blue', // Color del borde del círculo seleccionado
-      },
-    itemText: {
+    circleSelectedLeft: {
+        backgroundColor: '#00FF00', // Color del círculo seleccionado
+        borderColor: '#00FF00', // Color del borde del círculo seleccionado
+    },
+    circleSelectedRight: {
+        backgroundColor: '#FF0000', // Color del círculo seleccionado
+        borderColor: '#FF0000', // Color del borde del círculo seleccionado
+    },
+    itemTextLeft: {
+        flex: 1,
+        fontSize: 14,
+        marginLeft: 15
+    },
+    itemTextRight: {
         flex: 1,
         fontSize: 14,
     },
