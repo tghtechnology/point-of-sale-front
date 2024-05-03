@@ -63,7 +63,7 @@ const LoginForm = () => {
       <View style={styles.passwordContainer}>
         {/* INPUT PARA CONTRASEÑA */}
         <TextInput
-          style={styles.passwordInput}
+          style={styles.input}
           placeholder='Contraseña'
           placeholderTextColor="#546574"
           secureTextEntry={!showPassword} // Utiliza SecureTextEntry para ocultar la contraseña
@@ -74,16 +74,7 @@ const LoginForm = () => {
             }))
           }
         />
-        <TouchableOpacity
-          onPress={() => setShowPassword(!showPassword)} // Cambia la visibilidad de la contraseña al tocar el botón
-          style={styles.showPasswordButton}
-        >
-          <Icon
-            name={showPassword ? 'eye' : 'eye-slash'}
-            size={20}
-            color="#546574"
-          />
-        </TouchableOpacity>
+        
       </View>
 
 
@@ -134,6 +125,7 @@ const styles = StyleSheet.create({
   },
 
   passwordContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: 'gray',
@@ -141,23 +133,11 @@ const styles = StyleSheet.create({
     textAlign:'left'
   },
 
-  passwordInput: {
-    marginBottom:35 ,
-    fontSize: 17,
-    borderBottomWidth: 1, 
-    borderBottomColor: 'blue',
-    height: 40,
-    width: 250,
-    color: '#546574',
-    padding: 10,
-    borderRadius: 5,
-    paddingLeft:10,
-    textAlign: 'left'
-  },
-
   showPasswordButton: {
+    position: 'absolute',
     padding: 5,
     paddingBottom: 25,
+    right: '15%',
   },
 
   input: {

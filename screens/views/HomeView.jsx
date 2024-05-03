@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   buttonSection: {
     position: 'relative',
     alignItems: 'center',
-    marginBottom: '50px',
+    top: '10%',
     zIndex: 1,
   },
   button: {

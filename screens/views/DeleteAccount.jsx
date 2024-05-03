@@ -83,9 +83,8 @@ export default function DeleteAccount(props) {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalText}>Introduzca su contraseña</Text>
-                        <Text style={styles.subText}>Por temas de seguridad, por favor introduzca su contraseña para continuar</Text>
-                        <View style={[styles.inputContainer, { borderBottomColor: isFocused ? 'red' : 'red' }]}>
+                        <Text style={styles.subText}>Por favor introduzca su contraseña para continuar</Text>
+                        <View style={[styles.inputContainer, { borderBottomColor: isFocused ? '#0258FE' : '#0258FE' }]}>
                             <Text style={[styles.inputLabel, { top: isFocused || password ? -25 : 10 }]}>Contraseña</Text>
                             <TextInput
                                 style={styles.input}
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
         
     },
     buttonText: {
-        color: 'red',
+        color: '#0258FE',
         fontSize: 16,
         fontWeight: 'bold'
     },
