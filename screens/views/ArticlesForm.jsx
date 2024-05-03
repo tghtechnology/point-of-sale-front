@@ -29,12 +29,20 @@ const colors = [
   "#808080",
 ];
 
-const ColorBox = ({ color, setDatos }) => (
-  <TouchableOpacity
-    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }}
-    onPress={() => setDatos((prevDatos) => ({ ...prevDatos, color }))}
+const ColorBox = ({ color, selectedColor, setDatos }) => (
+  <TouchableOpacity 
+    style={{ 
+      backgroundColor: color, 
+      width: 70, 
+      height: 70, 
+      margin: 5, 
+      borderWidth: color === selectedColor ? 3  : 0, 
+      borderColor: 'black' 
+    }} 
+    onPress={() => setDatos(prevDatos => ({ ...prevDatos, color }))} 
   />
 );
+
 
 const buildFormData = (datos, selectedImage, categoriaSelect) => {
   const formData = new FormData();
@@ -250,7 +258,7 @@ const ArticlesForm = () => {
           style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}
         >
           {colors.map((color, index) => (
-            <ColorBox key={index} color={color} setDatos={setDatos} />
+            <ColorBox key={index}  selectedColor={datos.color} color={color} setDatos={setDatos} />
           ))}
         </View>
       )}
