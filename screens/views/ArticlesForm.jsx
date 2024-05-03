@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     height: 40,
     color: "#546574",
     padding: 10,
-    borderRadius: 5,
+   
   },
   info: {
     color: "#546574",

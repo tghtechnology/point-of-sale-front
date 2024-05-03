@@ -80,12 +80,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center', 
     position: 'relative',
-    bottom: '3%',
+    bottom: '5%',
   },
   blueSection: {
     position: 'absolute',
     backgroundColor: '#0258FE',
-    height: '90%',
+    height: '85%',
     width: '100%',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   buttonSection: {
     position: 'relative',
     alignItems: 'center',
-    top: '10%',
+    top: '5%',
     zIndex: 1,
   },
   button: {
