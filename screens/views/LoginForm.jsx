@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 5,
     textAlign: 'left',
-    left:'15%'
+    left:'20%'
   },
 
   showPasswordButton: {
