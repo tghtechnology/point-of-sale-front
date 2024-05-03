@@ -78,23 +78,22 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: 0,
-    paddingBottom: '200px',
-    position: 'relative'
+    alignItems: 'center', 
+    position: 'relative',
+    bottom: '3%',
   },
   blueSection: {
     position: 'absolute',
     backgroundColor: '#0258FE',
-    height: '100%',
+    height: '90%',
     width: '100%',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-   
+    bottom: '10%',
   },
   redSection: {
     backgroundColor: '#051EFF',
-    height: '90%',
+    height: '80%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',

@@ -126,7 +126,7 @@ export default function ArticlesEdit() {
 };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* Input nombre */}
       <TextInput
         style={styles.input}
@@ -257,7 +257,7 @@ export default function ArticlesEdit() {
         buttonColor="#2196F3"
         iconName="check-circle" 
         />
-    </View>
+    </ScrollView>
   );
 }
 
