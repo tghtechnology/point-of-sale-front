@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useState } from 'react'
 import CustomAlert from '../componentes/CustomAlert';
 import useAuth from '../hooks/useAuth';
+import ErrorAlert from "../componentes/ErrorAlert";
 // import CustomAlert from '../../Alertas/CustomAlert';
 
 const LoginForm = () => {
