@@ -19,12 +19,29 @@ const INITIAL_STATE = {
   id_categoria: "",
 };
 
-const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+const colorMapping = {
+  'Rojo': '#FF0000',
+  'Verde_limon': '#00FF00',
+  'Azul': '#0000FF',
+  'Amarillo': '#FFFF00',
+  'Turquesa': '#00FFFF',
+  'Fucsia': '#FF00FF',
+  'Gris_claro': '#C0C0C0',
+  'Gris_oscuro': '#808080',
+};
 
-const ColorBox = ({ color,setEditedData}) => (
+
+const ColorBox = ({ color, setEditedData, selectedColor }) => (
   <TouchableOpacity 
-    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} 
-    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color }))} 
+    style={{ 
+      backgroundColor: color, 
+      width: 70, 
+      height: 70, 
+      margin: 5,
+      borderWidth: colorMapping[selectedColor] === color ? 3 : 0, // Compara con el valor hexadecimal
+      borderColor: 'black', // Elige el color del borde
+    }} 
+    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: Object.keys(colorMapping).find(key => colorMapping[key] === color) }))} 
   />
 );
 
@@ -235,8 +252,8 @@ export default function ArticlesEdit() {
 
       {editedData.representacion === 'color' && (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center'}}>
-          {colors.map((color, index) => (
-            <ColorBox key={index} color={color} setEditedData={setEditedData} />
+          {Object.values(colorMapping).map((color, index) => (
+            <ColorBox key={index} color={color} setEditedData={setEditedData} selectedColor={editedData.color} />
           ))}
         </View>
       )} 

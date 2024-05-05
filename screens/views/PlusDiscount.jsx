@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList,Switch,Modal,TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useDiscount from '../hooks/useDiscount';
 import DiscountProvider from '../context/discount/DiscountProvider';
@@ -83,21 +83,31 @@ const PlusDiscount = (props) => {
         data={discounts}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            <View style={styles.clientData}>
+            <View  >
+            <MaterialIcons   name="discount" size={24} color="#517EF2" />
+            </View>
+            
+            <View >
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
               <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
             </TouchableOpacity> 
-            <Text style={styles.itemText}>{item.nombre}</Text>
-            <Text style={styles.itemText}>Tipo: {item.tipo_descuento}</Text>
-            <Text style={styles.itemText}>Valor: {item.valor}</Text>
-            <Text>Estado: {item.estado ? 'Activado' : 'Desactivado'}</Text>
+            </View>
+            <View>
+            <Text style={styles.itemText1}>{item.nombre}</Text>
+        
+            <Text style={styles.itemText}>{(item.tipo_descuento === 'MONTO' ? 'S/. ' : '') + item.valor + (item.tipo_descuento !== 'MONTO' ? ' %' : '')}</Text>
+            </View>
+            <View style={styles.toggle}>
             <Switch
             value={item.estado == true}
-            onValueChange={() => handleToggleStatus(item.id, item.estado)}/>      
+            onValueChange={() => handleToggleStatus(item.id, item.estado)}
+             />  
+             </View> 
             <View style={styles.container}>
             </View>
             </View>
-    </View>
+            
+   
     )}
     keyExtractor={(item, index) => index.toString()}
     contentContainerStyle={{ paddingHorizontal: 16 }}
@@ -190,127 +200,147 @@ const PlusDiscount = (props) => {
   )
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20 ,
-      },
-      itemContainer: {
-        marginBottom: 10,
-        padding: 16,
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 3,
-      },
-      clientData: {
-        flex: 1, // Para que ocupe el espacio restante
-      },
-      itemText: {
-        fontSize: 18,
-        color: '#333',
-        fontWeight: 'bold',
-        marginBottom: 5,
-      },
-      addButton: {
+  container: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: 20 ,
+    },
+    itemContent: {
+      flex:1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    itemContainer: {
+      marginBottom: 10,
+      padding: 16,
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#ddd',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 3,
+      height:130,
+    },
+    
+    itemText: {
+      fontSize: 16,
+      color: '#666666',
+      fontWeight: 'bold',
+      marginBottom: 5,
+      textAlign: 'justify',
+      marginLeft:40,
+      top:-23,
+    },
+   
+    itemText1: {
+      fontSize: 20,
+      color: '#517EF2',
+      fontWeight: '900',
+      marginBottom: 5,
+      textAlign: 'justify',
+      marginLeft:40,
+      top:-25,
+    },
+    toggle:{
+      top:-20,
+    },
+    addButton: {
+      position: 'absolute',
+      bottom: 20,
+      right: 20,
+      backgroundColor: '#ff0000', // Color del botón
+      borderRadius: 20,
+      padding: 10,
+    },
+    descButton:{
+      position: 'absolute',
+      bottom: 80,
+      right: 20,
+      backgroundColor: 'blue', // Color del botón
+      borderRadius: 20,
+      padding: 10,
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 20,
+      width: '80%',
+      maxWidth: 400,
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      textAlign: 'center',
+    },
+    inputContainer: {
+      marginBottom: 15,
+    },
+    label: {
+      marginBottom: 5,
+      fontSize: 16,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 5,
+      padding: 10,
+      fontSize: 16,
+    },
+    button: {
+      borderRadius: 5,
+      padding: 15,
+      alignItems: 'center',
+      marginTop: 10,
+      backgroundColor: 'green',
+    },
+    buttonText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: 'white',
+    },
+    editButton: {
+      backgroundColor: 'green',
+      borderRadius: 5,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      marginTop:10,
+    },
+    optionButton: {
+      borderRadius: 5,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      marginVertical: 5,
+      backgroundColor: '#007bff', // Color del botón de opciones
+    },
+    optionButtonText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: 'white',
+    },
+    cancelButton: {
+      borderRadius: 5,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      marginVertical: 5,
+      backgroundColor: 'gray', // Color del botón de cancelar
+    },
+    optionsButton: {
         position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: '#ff0000', // Color del botón
-        borderRadius: 20,
-        padding: 10,
-      },
-      descButton:{
-        position: 'absolute',
-        bottom: 80,
-        right: 20,
-        backgroundColor: 'blue', // Color del botón
-        borderRadius: 20,
-        padding: 10,
-      },
-      modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-      modalContent: {
-        backgroundColor: 'white',
-        borderRadius: 10,
-        padding: 20,
-        width: '80%',
-        maxWidth: 400,
-      },
-      modalTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
-      },
-      inputContainer: {
-        marginBottom: 15,
-      },
-      label: {
-        marginBottom: 5,
-        fontSize: 16,
-      },
-      input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        padding: 10,
-        fontSize: 16,
-      },
-      button: {
-        borderRadius: 5,
-        padding: 15,
-        alignItems: 'center',
-        marginTop: 10,
-        backgroundColor: 'green',
-      },
-      buttonText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'white',
-      },
-      editButton: {
-        backgroundColor: 'green',
-        borderRadius: 5,
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        marginTop:10,
-      },
-      optionButton: {
-        borderRadius: 5,
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        marginVertical: 5,
-        backgroundColor: '#007bff', // Color del botón de opciones
-      },
-      optionButtonText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'white',
-      },
-      cancelButton: {
-        borderRadius: 5,
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        marginVertical: 5,
-        backgroundColor: 'gray', // Color del botón de cancelar
-      },
-      optionsButton: {
-          position: 'absolute',
-          top: 10,
-          right: 10,
-      },
-    })
+        top: -23,
+        right: 10,
+    },
+  })
 export default PlusDiscount
