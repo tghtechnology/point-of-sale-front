@@ -91,8 +91,6 @@ const pickerOptions = {
   fetchDataFromAsyncStorage();
 }, []);
 
- 
-
   useEffect(() => {
     let total = 0;
     selectedItems.forEach(item => {
@@ -153,7 +151,6 @@ const handleSelectDiscount = async (discount) => {
   }
 };
 
-
 const handleSelectClient = async (client) => {
   if (selectedClients && selectedClients.id === client.id) {
     setSelectedClients(null);
@@ -174,7 +171,6 @@ const handleSelectClient = async (client) => {
   }
 };
 
-  
 const handleSelectTax = async (tax) => {
   if (selectedTaxes && selectedTaxes.id === tax.id) {
     setSelectedTaxes(null);
@@ -289,8 +285,6 @@ const handleSelectTax = async (tax) => {
             keyboardType="numeric"
             editable={false}
           />
-
-
         <TouchableOpacity onPress={() => handleAddQuantity(item)}>
           <Text style={styles.quantityButton}>+</Text>
         </TouchableOpacity>
