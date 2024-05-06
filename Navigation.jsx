@@ -38,7 +38,9 @@ import ReceiptForm from './screens/views/ReceiptForm';
 import EditWorker from './screens/views/EditWorker';
 import TicketListForm from './screens/views/TicketListForm';
 import TicketSaleForm from './screens/views/TicketSaleForm';
-
+import ProfileEdit from './screens/views/ProfileEdit';
+import DataUser from './screens/views/DataUser';
+import ResetPassword from './screens/views/ResetPassword';
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -64,6 +66,10 @@ return (
         }}
       ></Stack.Screen> 
       <Stack.Screen name="Profile" component={DeleteAccount}></Stack.Screen>
+      <Stack.Screen name="perfil" component={DataUser}></Stack.Screen>
+      <Stack.Screen name="Contraseña" component={ResetPassword}></Stack.Screen>
+
+      <Stack.Screen name="Editar usuario" component={ProfileEdit}></Stack.Screen>
     </Stack.Navigator>
   );
 };
@@ -160,8 +166,8 @@ function MiembrosScreen() {
   return (
     <Stack.Navigator
       screenOptions={{
-        statusBarColor: "#ff0000",
-        headerStyle: { backgroundColor: "#ff0000" },
+        statusBarColor: "#0258FE",
+        headerStyle: { backgroundColor: "#0258FE" },
         headerTintColor: "#fff",
         headerTitleStyle: {
           color: "#fff",

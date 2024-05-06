@@ -5,6 +5,7 @@ import { useTotal } from '../Global State/TotalContext';
 import useSale from '../hooks/useSale';
 import CustomAlert from '../componentes/CustomAlert';
 import ErrorAlert from '../componentes/ErrorAlert';
+import PaymentSelection from '../componentes/PaymentSelection';
 
 const INITIAL_STATE = {
     detalles:'',
@@ -113,19 +114,7 @@ const TicketSaleForm = () => {
                 />
             </View>
 
-            <View style={styles.paymentContainer}>
-                <TouchableOpacity
-                    style={[styles.circleLeft, selectedPayment === 'Efectivo' && styles.circleSelectedLeft]}
-                    onPress={() => handlePaymentSelection('Efectivo')}
-                />
-                <Text style={styles.itemTextLeft}>Efectivo</Text>
-
-                <TouchableOpacity
-                    style={[styles.circleRight, selectedPayment === 'Tarjeta' && styles.circleSelectedRight]}
-                    onPress={() => handlePaymentSelection('Tarjeta')}
-                />
-                <Text style={styles.itemTextRight}>Tarjeta</Text>
-            </View>
+            <PaymentSelection selectedPayment={selectedPayment} onSelectPayment={handlePaymentSelection} />
 
             <TouchableOpacity style={styles.button} onPress={handleCompleteSale}>
                 <Text style={styles.buttonText}>Completar Venta</Text>
@@ -144,75 +133,51 @@ const styles = StyleSheet.create({
     },
     paymentContainer: {
         flexDirection: 'row',
-        justifyContent: 'center', // Centra los elementos horizontalmente
-        marginBottom: 10,
-        marginTop: 30
+        justifyContent: 'space-between',
+        marginBottom: 20,
     },
     inputContainer: {
         borderBottomWidth: 2,
-        borderBottomColor: '#0258FE', // Color de la línea azul debajo del título
-        marginBottom: 10,
+        borderBottomColor: '#0258FE',
+        marginTop: 40,
     },
     input: {
         color: 'black',
         paddingHorizontal: 10,
         padding: 10,
-        fontSize: 15
+        fontSize: 15,
     },
     button: {
         backgroundColor: '#0258FE',
-        padding: 10,
+        padding: 15,
         alignItems: 'center',
-        borderRadius: 20,
-        marginTop: 20,
-        marginLeft: 95,
-        width: '50%'
+        borderRadius: 0,
+        marginTop: 200,
     },
     buttonText: {
         color: 'white',
         fontWeight: 'bold',
-    },
-    itemList: {
-        marginTop: 10,
-    },
-    item: {
-        flexDirection: 'row',
-        padding: 10,
-        alignItems: 'center',
+        fontSize: 16,
     },
     circleLeft: {
-        width: 23.59,
-        height: 19.59,
+        width: 20,
+        height: 20,
+        borderRadius: 10,
         borderWidth: 2,
-        borderColor: '#00FF00',
-        backgroundColor: '#FFF',
-        marginLeft: 70,
+        borderColor: '#0258FE',
     },
     circleRight: {
-        width: 23.59,
-        height: 19.59,
+        width: 20,
+        height: 20,
+        borderRadius: 10,
         borderWidth: 2,
-        borderColor: '#FF0000',
-        backgroundColor: '#FFF',
-        marginRight: 10,
+        borderColor: '#0258FE',
     },
-    circleSelectedLeft: {
-        backgroundColor: '#00FF00', 
-        borderColor: '#00FF00', 
+    circleSelected: {
+        backgroundColor: '#0258FE',
     },
-    circleSelectedRight: {
-        backgroundColor: '#FF0000', // Color del círculo seleccionado
-        borderColor: '#FF0000', // Color del borde del círculo seleccionado
-    },
-    itemTextLeft: {
-        flex: 1,
-        fontSize: 14,
-        marginLeft: 15
-    },
-    itemTextRight: {
-        flex: 1,
-        fontSize: 14,
+    paymentText: {
+        fontSize: 16,
     },
 });
-
 export default TicketSaleForm;

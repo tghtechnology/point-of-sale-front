@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -78,7 +78,6 @@ const TicketListForm = () => {
     const showSaleTicket = () => {
         navigation.navigate('SaleTicket');
     };
-
     return (
         <ScrollView contentContainerStyle={styles.container}>
             {/* Sección del total */}
@@ -93,17 +92,23 @@ const TicketListForm = () => {
             {/* Sección de artículos */}
             <View style={styles.itemList}>
                 {selectedItem.map(itm => (
-                    <View key={itm.id} style={styles.item}>
-                        <View style={styles.leftContainer}>
-                            <Icon name="image" size={70} color="black" style={styles.icon} />
-                        </View>
-                        <View style={styles.rightContainer}>
-                            <Text style={styles.itemText}>{itm.nombre}</Text>
-                            <Text style={styles.quantityText}>x: {itm.quantity}</Text>
-                            <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
-                            <Text style={styles.subtotalText}>Subtotal: S/ {calculateSubtotalWithDiscount(itm)}</Text>
-                        </View>
-                    </View>
+                   <View key={itm.id} style={styles.item}>
+                   <View style={styles.leftContainer}>
+                       {itm.imagen ? (
+                           <Image source={{ uri: itm.imagen }} style={styles.image} />
+                       ) : itm.color ? (
+                           <View style={[styles.colorSquare, { backgroundColor: itm.color }]} />
+                       ) : (
+                           <Text>No hay representación</Text>
+                       )}
+                   </View>
+                   <View style={styles.rightContainer}>
+                       <Text style={styles.itemText}>{itm.nombre}</Text>
+                       <Text style={styles.quantityText}>x: {itm.quantity}</Text>
+                       <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
+                       <Text style={styles.subtotalText}>Subtotal: S/ {calculateSubtotalWithDiscount(itm)}</Text>
+                   </View>
+               </View>               
                 ))}
             </View>
 
@@ -144,8 +149,8 @@ const TicketListForm = () => {
 )}
 
             <TouchableOpacity onPress={showSaleTicket} style={styles.button}>
-                <Text>Continuar</Text>
-                </TouchableOpacity>
+                <Text style={styles.buttonText}>Continuar</Text>
+            </TouchableOpacity>
         </ScrollView>
     );
 };
@@ -237,6 +242,7 @@ const styles = StyleSheet.create({
     },
     sectionContainer: {
         marginBottom: 10,
+        marginLeft:25
     },
     sectionTitle: {
         fontSize: 16,
@@ -249,11 +255,17 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#517EF2',
-        paddingVertical: 15,
-        paddingHorizontal: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 50,
         alignItems: 'center',
         borderRadius: 5,
-        marginTop: 20,
+        marginHorizontal: 20,
+        marginTop: 100,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 

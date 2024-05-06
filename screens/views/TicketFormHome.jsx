@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList,Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../hooks/useArticle";
@@ -262,34 +262,49 @@ const handleSelectTax = async (tax) => {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <TouchableOpacity
-        style={[styles.circle,
-        selectedItems.some(selectedItem => selectedItem.id === item.id) && styles.circleSelected]}
-        onPress={() => handleSelectItem(item)}
-      />
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemText}>{item.nombre}</Text>
-        <Text style={styles.priceText}>S/ {item.precio}</Text>
-      </View>
-      <View style={styles.quantityContainer}>
-        <TouchableOpacity onPress={() => handleSubtractQuantity(item)}>
-          <Text style={styles.quantityButton}>-</Text>
-        </TouchableOpacity>
-        <TextInput
-            style={styles.quantityInput}
-            value={String(selectedItems.find(selectedItem => selectedItem.id === item.id)?.quantity) || '0'}
-            onChangeText={(text) => handleQuantityChange(item, text)}
-            keyboardType="numeric"
-            editable={false}
-          />
-        <TouchableOpacity onPress={() => handleAddQuantity(item)}>
-          <Text style={styles.quantityButton}>+</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    const selectedItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
+    const quantity = selectedItem ? selectedItem.quantity : 0; 
+    console.log('Imagen:', item.imagen); // Verifica la URL de la imagen
+  console.log('Color:', item.color); 
+    return (
+        <View style={styles.item}>
+            <TouchableOpacity
+                style={[styles.circle,selectedItem && styles.circleSelected ]}
+                onPress={() => handleSelectItem(item)}
+            />
+            <View style={styles.leftContainer}>
+                       {item.imagen  ? (
+                        
+                           <Image source={{ uri: item.imagen }} style={styles.image} />
+                       ) : item.color ? (
+                           <View style={[styles.colorSquare, { backgroundColor: item.color }]} />
+                       ) : (
+                           <Text>No hay representación</Text>
+                       )}
+            </View>
+
+            <View style={styles.itemInfo}>
+                <Text style={styles.itemText}>{item.nombre}</Text>
+                <Text style={styles.priceText}>S/ {item.precio}</Text>
+            </View>
+            <View style={styles.quantityContainer}>
+                <TouchableOpacity onPress={() => handleSubtractQuantity(item)}>
+                    <Text style={styles.quantityButton}>-</Text>
+                </TouchableOpacity>
+                <TextInput
+                    style={[styles.quantityInput,selectedItem && { color: 'black' }]}
+                    value={String(quantity)}
+                    onChangeText={(text) => handleQuantityChange(item, text)}
+                    keyboardType="numeric"
+                />
+                <TouchableOpacity onPress={() => handleAddQuantity(item)}>
+                    <Text style={styles.quantityButton}>+</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+};
 
   const renderItemDiscounts = ({ item }) => {
     let discountValue = '';
@@ -338,6 +353,16 @@ const handleSelectTax = async (tax) => {
       <Text style={styles.priceText}>{item.tasa} %</Text>
     </View>
   );
+      const colorMapping = {
+        'Rojo': '#FF0000',
+        'Verde_limon': '#00FF00',
+        'Azul': '#0000FF',
+        'Amarillo': '#FFFF00',
+        'Turquesa': '#00FFFF',
+        'Fucsia': '#FF00FF',
+        'Gris_claro': '#C0C0C0',
+        'Gris_oscuro': '#808080',
+      };
 
   return (
     <View style={styles.container}>
@@ -348,7 +373,7 @@ const handleSelectTax = async (tax) => {
 
         {/* Icono del carrito con contador */}
         <TouchableOpacity style={styles.cartButton} onPress={handleSaveChanges}>
-          <Icon name="cart" size={24} color="black" />
+          <Icon name="cart" size={32} color="#517EF2" />
           {cartCount > 0 && (
             <View style={styles.cartBadge}>
               <Text style={styles.cartBadgeText}>{cartCount}</Text>
@@ -513,7 +538,7 @@ const styles = StyleSheet.create({
   },
   quantityInput: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: 'black',
     borderRadius: 5, 
     paddingHorizontal: 5,
     marginRight: 5,
@@ -546,10 +571,10 @@ const styles = StyleSheet.create({
   },
   cartButton: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 10,
     right: 20,
-    backgroundColor: 'lightgray',
-    borderRadius: 20,
+    backgroundColor: 'white',
+    borderRadius: 5,
     padding: 5,
     flexDirection: 'row',
     alignItems: 'center',
@@ -566,5 +591,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
   },
+  leftContainer: {
+    marginRight: 10,
+},
 });
 export default TicketFormHome

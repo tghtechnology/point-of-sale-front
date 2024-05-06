@@ -8,7 +8,6 @@ const SaleProvider = ({ children }) => {
     const { detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido } = newSal;
     try {
         const usuarioId = await AsyncStorage.getItem("usuarioid");
-        console.log(usuarioId);
         const res = await createSale({ detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido }, usuarioId);
         if (res.status === 200 || res.status === 201){
             return res.data
