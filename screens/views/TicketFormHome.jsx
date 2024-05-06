@@ -24,6 +24,12 @@ const TicketFormHome = () => {
   const [selectedDiscounts, setSelectedDiscounts] = useState([]);
 const [selectedTaxes, setSelectedTaxes] = useState(null);
 const [selectedClients, setSelectedClients] = useState(null);
+const pickerOptions = {
+  default: "Todos los artículos",
+  discounts: "Descuentos",
+  clients: "Clientes",
+  impuestos: "Impuestos"
+};
 
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
@@ -361,16 +367,14 @@ const handleSelectTax = async (tax) => {
 
       {/* Search Bar */}
       <View style={styles.searchSection}>
-        <Picker
+      <Picker
           style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedValue(itemValue)
-          }>
-          <Picker.Item label="Todos los artículos" value="default" />
-          <Picker.Item label="Descuentos" value="discounts" />
-          <Picker.Item label="Clientes" value="clients" />
-          <Picker.Item label="Impuestos" value="impuestos" />
-        </Picker>
+          selectedValue={selectedValue}
+          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}>
+          {Object.keys(pickerOptions).map((value) => (
+            <Picker.Item key={value} label={pickerOptions[value]} value={value} />
+          ))}
+      </Picker>
       </View>
 
       {/* List Items */}
