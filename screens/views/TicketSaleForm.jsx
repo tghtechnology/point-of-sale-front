@@ -24,7 +24,7 @@ const TicketSaleForm = () => {
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [selectedTaxes, setSelectedTaxes] = useState(null);
     const [selectedClients, setSelectedClients] = useState(null);
-    const { handleCreateSale } = useSale();
+    const  handleCreateSale  = useSale();
 
     useEffect(() => {
         const fetchDataFromAsyncStorage = async () => {
@@ -76,7 +76,7 @@ const TicketSaleForm = () => {
               };
               console.log('Sale data:', data);
 
-            const newSale = await handleCreateSale(data);
+            const success = await handleCreateSale(data);
             if (success) {
                 Alert.alert("Venta completada correctamente");
             } else {

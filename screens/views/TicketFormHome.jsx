@@ -202,11 +202,17 @@ const handleSelectTax = async (tax) => {
     setShowAlertDeselect(false);
   };
 
-  const handleAddQuantity = (item) => {
-    setSelectedItems(selectedItems.map(selectedItem =>
-      selectedItem.id === item.id ? { ...item, quantity: selectedItem.quantity + 1 } : selectedItem
-    ));
-  };
+  const handleAddQuantity = async (item) => {
+    const updatedItems = selectedItems.map(selectedItem =>
+        selectedItem.id === item.id ? { ...selectedItem, quantity: selectedItem.quantity + 1 } : selectedItem
+    );
+    setSelectedItems(updatedItems);
+    try {
+        await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
+    } catch (error) {
+        console.error('Error al guardar la lista de artículos seleccionados en AsyncStorage:', error);
+    }
+};
 
   const handleSubtractQuantity = (item) => {
     const updatedItems = selectedItems.map((selectedItem) => {
