@@ -140,7 +140,7 @@ const TicketListForm = () => {
         {selectedClients.map((client, index) => (
             <Text key={index} style={styles.sectionItem}>{client.nombre}</Text>
         ))}
-    </View>
+    </View> 
 )}
 
             <TouchableOpacity onPress={showSaleTicket} style={styles.button}>

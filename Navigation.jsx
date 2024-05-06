@@ -49,8 +49,6 @@ return (
       <Stack.Screen name="Login" component={LoginForm} />
       <Stack.Screen name="Register" component={RegisterForm} />
       <Stack.Screen name="Envio" component={EnvioCorreoForm} />
-      <Stack.Screen name="ListarTicket" component={TicketListForm} />
-      <Stack.Screen name="SaleTicket" component={TicketSaleForm} />
       <Stack.Screen name="Home" component={HomeScreen}
         options={{title: "Soporte",
           headerLeft: () => {
@@ -150,6 +148,8 @@ function VentaScreen() {
       }}></Stack.Screen>
       <Stack.Screen name="Ticket" component={TicketFormHome}></Stack.Screen>
       <Stack.Screen name="Recibos" component={ReceiptForm}></Stack.Screen>
+      <Stack.Screen name="ListarTicket" component={TicketListForm} />
+      <Stack.Screen name="SaleTicket" component={TicketSaleForm} />
     </Stack.Navigator>
   );
 };
