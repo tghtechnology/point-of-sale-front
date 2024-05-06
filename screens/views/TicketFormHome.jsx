@@ -21,14 +21,14 @@ const TicketFormHome = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState([]);
-const [selectedTaxes, setSelectedTaxes] = useState(null);
-const [selectedClients, setSelectedClients] = useState(null);
-const pickerOptions = {
-  default: "Artículos",
-  discounts: "Descuentos",
-  clients: "Clientes",
-  impuestos: "Impuestos"
-};
+  const [selectedTaxes, setSelectedTaxes] = useState(null);
+  const [selectedClients, setSelectedClients] = useState(null);
+  const pickerOptions = {
+    default: "Artículos",
+    discounts: "Descuentos",
+    clients: "Clientes",
+    impuestos: "Impuestos"
+  };
 
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
@@ -49,7 +49,6 @@ const pickerOptions = {
         console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
       }
     };
-
     clearAsyncStorage();
   }, []);
   useEffect(() => {
