@@ -86,15 +86,7 @@ const [selectedClients, setSelectedClients] = useState(null);
   fetchDataFromAsyncStorage();
 }, []);
 
-  const saleData = {
-    detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
-    impuestoId: selectedTaxes ? selectedTaxes.id : null,
-    descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
-    usuarioId: 1,
-    clienteId: selectedClients ? selectedClients.id: null,
-  };
-
-  console.log('Sale data:', saleData);
+ 
 
   useEffect(() => {
     let total = 0;
