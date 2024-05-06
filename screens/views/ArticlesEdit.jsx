@@ -76,8 +76,8 @@ const buildFormData = (editedData, selectedImage, categoriaSelect) => {
 export default function ArticlesEdit() {
   const [editedData, setEditedData] = useState(INITIAL_STATE)
   const route = useRoute();
+  const [selectedImage, setSelectedImage] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null)
   const {handleEditArticle} = useArticle();
   const {listCategoria} = useCategory();
 
@@ -91,29 +91,32 @@ export default function ArticlesEdit() {
       ...article,
       id_categoria: article.categoria?.id || "", 
     });
+    if (article.imagen) {
+      setSelectedImage(article.imagen);
+    }
   }, [route.params]);
   
   const openImagePickerAsync = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if(permissionResult.granted === false){
-      alert('Permission to acces camera is required');
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera is required");
       return;
     }
 
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    
-    if(pickerResult.canceled === true){
+
+    if (pickerResult.canceled) {
       return;
     }
 
-    setSelectedImage({localUri: pickerResult.assets[0].uri});
-   console.log(pickerResult)
-  }
+    setSelectedImage(pickerResult.assets[0].uri);
+  };
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
@@ -141,18 +144,17 @@ export default function ArticlesEdit() {
     });
   };
 
-  const handleRepresentacion = (value) =>{
+  const handleRepresentacion = (value) => {
     setEditedData({
       ...editedData,
-      representacion:value,
-    })
-
-  }
+      representacion: value,
+    });
+  };
 
 
   const handleSubmit = async () => {
     try {
-      const formData = buildFormData(datos, selectedImage, categoriaSelect);
+      const formData = buildFormData(editedData, selectedImage, categoriaSelect);
   
       console.log("Datos a enviar al servidor:", formData);
       
@@ -239,7 +241,10 @@ export default function ArticlesEdit() {
       <View>
         <Text style={styles.label}>Representacion</Text>
       </View>
-      <RadioButton.Group onValueChange={(value) => handleRepresentacion (value)} value={editedData.representacion} >
+      <RadioButton.Group 
+      onValueChange={(value) => handleRepresentacion(value)}
+      value={editedData.representacion}
+      >
         <View style={styles.radioContainer}>
           <RadioButton value="color" />
           <Text>Color</Text>
@@ -254,7 +259,7 @@ export default function ArticlesEdit() {
     <TouchableOpacity style={styles.uploadImagen} onPress={openImagePickerAsync}>
       {selectedImage ? 
         (
-          <Image style={{ width: 190, height: 190, borderRadius: 8 }} source={{ uri: selectedImage.localUri }} />
+          <Image style={{ width: 190, height: 190, borderRadius: 8 }} source={{ uri: selectedImage }} />
         ) :
         (
           <Text style={styles.text}>Subir Imagen</Text>
