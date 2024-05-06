@@ -265,8 +265,7 @@ const handleSelectTax = async (tax) => {
   const renderItem = ({ item }) => {
     const selectedItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
     const quantity = selectedItem ? selectedItem.quantity : 0; 
-    console.log('Imagen:', item.imagen); // Verifica la URL de la imagen
-  console.log('Color:', item.color); 
+ 
     return (
         <View style={styles.item}>
             <TouchableOpacity
@@ -275,10 +274,9 @@ const handleSelectTax = async (tax) => {
             />
             <View style={styles.leftContainer}>
                        {item.imagen  ? (
-                        
                            <Image source={{ uri: item.imagen }} style={styles.image} />
                        ) : item.color ? (
-                           <View style={[styles.colorSquare, { backgroundColor: item.color }]} />
+                        <View style={{...styles.colorSquare, backgroundColor: colorMapping[item.color]}} />
                        ) : (
                            <Text>No hay representación</Text>
                        )}
@@ -594,5 +592,13 @@ const styles = StyleSheet.create({
   leftContainer: {
     marginRight: 10,
 },
+image:{
+  width: 50,
+  height: 50,
+},
+colorSquare: {
+  width: 50,
+  height: 50,
+}
 });
 export default TicketFormHome
