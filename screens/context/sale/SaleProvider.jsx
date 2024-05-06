@@ -1,17 +1,20 @@
 import { useEffect,useState } from "react";
 import {createSale} from "../../services/SaleService";
 import SaleContext from "./SaleContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SaleProvider = ({ children }) => {
   const handleCreateSale = async (newSal) => {
-    const {detalles,tipoPago,impuestoId,descuentoId,clienteId,usuarioId,dineroRecibido} = newSal;
+    const { detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido } = newSal;
     try {
-        const res = await createSale({detalles,tipoPago,impuestoId,descuentoId,clienteId,usuarioId,dineroRecibido});
+        const usuarioId = await AsyncStorage.getItem("usuarioid");
+        console.log(usuarioId);
+        const res = await createSale({ detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido }, usuarioId);
         if (res.status === 200 || res.status === 201){
-          return res.data
-        }else {
-          console.error("Error al crear el venta:", res.status);
-          return null;
+            return res.data
+        } else {
+            console.error("Error al crear la venta:", res.status);
+            return null;
         }
     } catch (error) {
         console.log("Error creating venta:", error);

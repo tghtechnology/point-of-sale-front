@@ -10,14 +10,17 @@ const getToken = async () => {
         throw new Error('Error al obtener el token');
     }
 };
-const createSale = async (newSal) => {
+const createSale = async (newSal, usuarioId) => {
     try {
         const token = await getToken();
-        const { data, status } = await apiClient.post(`/venta`, newSal,{
-            headers:{
-                    Authorization: `Bearer ${token}` 
-                }
-            });
+        const usuarioId = await AsyncStorage.getItem("usuarioid");
+        const userIdInt = parseInt(usuarioId, 10); 
+        console.log(userIdInt)
+        const { data, status } = await apiClient.post(`/venta`, {...newSal, usuarioId: userIdInt}, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
         return {
             data,
             status,
