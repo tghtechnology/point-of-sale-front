@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../hooks/useArticle";
 import useDiscount from '../hooks/useDiscount';
 import { useNavigation } from '@react-navigation/native';
-import CustomAlert from '../componentes/CustomAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useClient from '../hooks/useClient'
 import useImpuesto from "../hooks/useImpuesto";
@@ -25,7 +24,7 @@ const TicketFormHome = () => {
 const [selectedTaxes, setSelectedTaxes] = useState(null);
 const [selectedClients, setSelectedClients] = useState(null);
 const pickerOptions = {
-  default: "Todos los artículos",
+  default: "Artículos",
   discounts: "Descuentos",
   clients: "Clientes",
   impuestos: "Impuestos"
@@ -421,33 +420,6 @@ const handleSelectTax = async (tax) => {
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
       </View>
-
-      <CustomAlert
-        isVisible={showAlert}
-        onClose={handleCloseAlert}
-        title="Producto Seleccionado"
-        message="El producto se guardo correctamente."
-        buttonColor="#FF0000"
-        iconName="list" 
-      />
-
-      <CustomAlert
-        isVisible={showAlertDeselect}
-        onClose={handleCloseAlertDeselect}
-        title="Producto Deseleccionado"
-        message="El producto se guardo correctamente."
-        buttonColor="#FF0000"
-        iconName="list"
-      />
-
-      <CustomAlert
-        isVisible={showSaveChangesAlert}
-        onClose={() => setShowSaveChangesAlert(false)}
-        title="Cambios Guardados"
-        message="Los cambios se guardaron correctamente."
-        buttonColor="#008CBA"
-        iconName="check" 
-      />
     </View>
   );
 };

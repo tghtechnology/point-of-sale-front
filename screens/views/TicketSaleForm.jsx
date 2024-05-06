@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, TouchableOpacity, StyleSheet, Text, TextInput, Alert } from 'react-native';
 import { useTotal } from '../Global State/TotalContext';
 import useSale from '../hooks/useSale';
+import CustomAlert from '../componentes/CustomAlert';
+import ErrorAlert from '../componentes/ErrorAlert';
 
 const INITIAL_STATE = {
     detalles:'',
@@ -25,6 +27,8 @@ const TicketSaleForm = () => {
     const [selectedTaxes, setSelectedTaxes] = useState(null);
     const [selectedClients, setSelectedClients] = useState(null);
     const  handleCreateSale  = useSale();
+    const [showAlert, setShowAlert] = useState(false);
+    const [errorAlertVisible, setErrorAlertVisible] = useState(false);
 
     useEffect(() => {
         const fetchDataFromAsyncStorage = async () => {
@@ -77,14 +81,15 @@ const TicketSaleForm = () => {
 
             const success = await handleCreateSale(data);
             if (success) {
-                Alert.alert("Venta completada correctamente");
-            } else {
-                Alert.alert("Error al completar la venta");
+                setShowAlert(true);
+              console.log('Sale data:', data);
+            } else{
+                setErrorAlertVisible(true);
+                throw new Error("La respuesta del servidor no contiene un impuesto válido.");
+              }
+            } catch (error) {
+              setErrorAlertVisible(true);
             }
-        } catch (error) {
-            console.error("Error al completar la venta:", error);
-            Alert.alert("Error al completar la venta");
-        }
     }
 
     return (
@@ -125,6 +130,8 @@ const TicketSaleForm = () => {
             <TouchableOpacity style={styles.button} onPress={handleCompleteSale}>
                 <Text style={styles.buttonText}>Completar Venta</Text>
             </TouchableOpacity>
+            <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+        <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
         </View>
     );
 };
