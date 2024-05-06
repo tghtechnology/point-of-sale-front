@@ -45,6 +45,34 @@ const ColorBox = ({ color, setEditedData, selectedColor }) => (
   />
 );
 
+const buildFormData = (editedData, selectedImage, categoriaSelect) => {
+  const formData = new FormData();
+
+  formData.append("nombre", editedData.nombre);
+  formData.append("tipo_venta", editedData.tipo_venta);
+  formData.append("precio", parseFloat(editedData.precio));
+  formData.append("id_categoria", categoriaSelect);
+
+  // Ajustar según la representación elegida
+  if (editedData.representacion === "imagen") {
+    formData.append("representacion", "imagen");
+    if (selectedImage) {
+      const fileName = selectedImage.split("/").pop();
+      formData.append("imagen", {
+        uri: selectedImage,
+        name: fileName,
+        type: "image/jpeg",
+      });
+    }
+    formData.append("color", null); // Establecer `color` como null cuando se representa por imagen
+  } else if (editedData.representacion === "color" && editedData.color) {
+    formData.append("representacion", "color");
+    formData.append("color", editedData.color);
+    formData.append("imagen", null); // Establecer `imagen` como null cuando se representa por color
+  }
+
+  return formData;
+};
 export default function ArticlesEdit() {
   const [editedData, setEditedData] = useState(INITIAL_STATE)
   const route = useRoute();
@@ -124,14 +152,12 @@ export default function ArticlesEdit() {
 
   const handleSubmit = async () => {
     try {
-      const articleData = {
-        ...editedData,
-        precio: parseFloat(editedData.precio),
-        id_categoria: parseInt(editedData.id_categoria)
-      };
+      const formData = buildFormData(datos, selectedImage, categoriaSelect);
+  
+      console.log("Datos a enviar al servidor:", formData);
       
-      console.log("Datos a enviar al servidor:", articleData);
-      await handleEditArticle(articleData,editedData.id_categoria);
+      console.log("Datos a enviar al servidor:", formData);
+      await handleEditArticle(formData,editedData.id_categoria);
       setShowAlert(true);
       console.log("Articulos ha sido editado exitosamente");
     } catch (error) {
