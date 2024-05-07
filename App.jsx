@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import Navigation from "./screens/componentes/Navigation.jsx";
+import Navigation from "./Navigation.jsx";
 import UsuarioProvider from "./screens/context/usuarios/UsuarioProvider.jsx";
 import CategoryProvider from "./screens/context/category/CategoryProvider.jsx";
 import CountryProvider from "./screens/context/country/CountryProvider.jsx";
@@ -10,30 +10,36 @@ import AuthProvider from "./screens/context/auth/AuthProvider.jsx";
 import ImpuestoProvider from "./screens/context/impuesto/ImpuestoProvider.jsx";
 import ClientProvider from "./screens/context/cliente/ClientProvider.jsx";
 import WorkerProvider from "./screens/context/worker/WorkerProvider.jsx";
+import SaleProvider from "./screens/context/sale/SaleProvider.jsx";
+import { TotalProvider } from "./screens/Global State/TotalProvider.jsx";
 import {useFont} from 'expo-font';
 
 export default function App() {
   return (
-    <WorkerProvider>
-    <ClientProvider>
-      <ImpuestoProvider>
-        <EmailProvider>
-          <AuthProvider>
-            <UsuarioProvider>
-              <CountryProvider>
-                <DiscountProvider>
-                  <CategoryProvider>
-                    <ArticleProvider>
-                      <Navigation />
-                    </ArticleProvider>
-                  </CategoryProvider>
-                </DiscountProvider>
-              </CountryProvider>
-            </UsuarioProvider>
-          </AuthProvider>
-        </EmailProvider>
-      </ImpuestoProvider>
-    </ClientProvider>
-    </WorkerProvider>
+    <TotalProvider>
+    <SaleProvider>
+      <WorkerProvider>
+        <ClientProvider>
+          <ImpuestoProvider>
+            <EmailProvider>
+              <AuthProvider>
+                <UsuarioProvider>
+                  <CountryProvider>
+                    <DiscountProvider>
+                      <CategoryProvider>
+                        <ArticleProvider>
+                          <Navigation />
+                        </ArticleProvider>
+                      </CategoryProvider>
+                    </DiscountProvider>
+                  </CountryProvider>
+                </UsuarioProvider>
+              </AuthProvider>
+            </EmailProvider>
+          </ImpuestoProvider>
+        </ClientProvider>
+      </WorkerProvider>
+    </SaleProvider>
+    </TotalProvider>
   );
 }

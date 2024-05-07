@@ -38,22 +38,22 @@ const ColorBox = ({ color, setEditedData, selectedColor }) => (
       width: 70, 
       height: 70, 
       margin: 5,
-      borderWidth: colorMapping[selectedColor] === color ? 3 : 0, // Compara con el valor hexadecimal
-      borderColor: 'black', // Elige el color del borde
+      borderWidth: colorMapping[selectedColor] === color ? 3 : 0,
+      borderColor: 'black',
     }} 
     onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: Object.keys(colorMapping).find(key => colorMapping[key] === color) }))} 
   />
 );
 
-const buildFormData = (editedData, selectedImage, categoriaSelect) => {
+const buildFormData = (editedData, selectedImage) => {
   const formData = new FormData();
 
   formData.append("nombre", editedData.nombre);
   formData.append("tipo_venta", editedData.tipo_venta);
   formData.append("precio", parseFloat(editedData.precio));
-  formData.append("id_categoria", categoriaSelect);
+  formData.append("id_categoria", editedData.id_categoria);
 
-  // Ajustar según la representación elegida
+  
   if (editedData.representacion === "imagen") {
     formData.append("representacion", "imagen");
     if (selectedImage) {
@@ -64,11 +64,11 @@ const buildFormData = (editedData, selectedImage, categoriaSelect) => {
         type: "image/jpeg",
       });
     }
-    formData.append("color", null); // Establecer `color` como null cuando se representa por imagen
+    formData.append("color", null);
   } else if (editedData.representacion === "color" && editedData.color) {
     formData.append("representacion", "color");
     formData.append("color", editedData.color);
-    formData.append("imagen", null); // Establecer `imagen` como null cuando se representa por color
+    formData.append("imagen", null); 
   }
 
   return formData;
@@ -77,20 +77,19 @@ export default function ArticlesEdit() {
   const [editedData, setEditedData] = useState(INITIAL_STATE)
   const route = useRoute();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const {handleEditArticle} = useArticle();
   const {listCategoria} = useCategory();
 
   
-
-
   useEffect(() => {
     const { article } = route.params;
     console.log("Objeto del artículo:", article);
     setEditedData({
       ...article,
       id_categoria: article.categoria?.id || "", 
-     
+
     });
     if (article.imagen) {
       setSelectedImage(article.imagen);
@@ -155,7 +154,7 @@ export default function ArticlesEdit() {
 
   const handleSubmit = async () => {
     try {
-      const formData = buildFormData(editedData, selectedImage, categoriaSelect);
+      const formData = buildFormData(editedData, selectedImage);
   
       console.log("Datos a enviar al servidor:", formData);
       
@@ -187,7 +186,7 @@ export default function ArticlesEdit() {
       </View>
       <View style={styles.pickeContainer}>
       <Picker
-      selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : ''} // Convertimos a cadena el ID de la categoría si está definido
+      selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : ''} 
       onValueChange={(value) => handleCategoryChange(value)}
       style={styles.picker}
       >
@@ -289,9 +288,6 @@ export default function ArticlesEdit() {
           ))}
         </View>
       )} 
-
-
-
 
 
       <View style={{ height: 20 }} />

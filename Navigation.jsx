@@ -4,52 +4,89 @@ import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {NavigationContainer, useNavigation, DrawerActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from '../views/HomeScreen';
-import DeleteAccount from '../views/DeleteAccount';
-import ArticlesNavigate from '../views/ArticlesNavigate';
-import MiembNavigate from '../views/MiembNavigate'
-import PlusArticles from '../views/PlusArticles';
-import PlusCategory from '../views/PlusCategory';
-import ArticlesForm from '../views/ArticlesForm';
+import HomeScreen from './screens/views/HomeScreen';
+import DeleteAccount from './screens/views/DeleteAccount';
+import ArticlesNavigate from './screens/views/ArticlesNavigate';
+import MiembNavigate from './screens/views/MiembNavigate'
+import PlusArticles from './screens/views/PlusArticles';
+import PlusCategory from './screens/views/PlusCategory';
+import ArticlesForm from './screens/views/ArticlesForm';
 import Icon from "react-native-vector-icons/Entypo";
-import CategoryForm from '../views/CategoryForm';
-import { Ionicons, MaterialCommunityIcons,FontAwesome } from '@expo/vector-icons';
-import HomeView from '../views/HomeView';
-import LoginForm from "../views/LoginForm"
-import RegisterForm from '../views/RegisterForm';
-import EnvioCorreoForm from '../views/EnvioCorreoForm';
-import DiscountForm from '../views/DiscountForm';
-import FormRegisEmpleado from '../views/FormRegisEmpleado';
-import ArticlesEdit from '../views/ArticlesEdit';
-import PlusDiscount from '../views/PlusDiscount';
-import PlusFalseDiscount from '../views/PlusFalseDiscount';
-import PlusImpuesto from '../views/PlusImpuesto';
-import ImpuestoForm from '../views/ImpuestoForm';
-import ImpuestoEdit from '../views/ImpuestoEdit';
-import CategoryEdit from '../views/CategoryEdit';
-import ClientForm from '../views/ClientForm';
-import PlusClients from '../views/PlusClients';
-import ClientEdit from '../views/ClientEdit'
-import PlusWorkers from '../views/PlusWorkers';
-import RecibosScreen from '../views/RecibosScreen';
-import VentNavigate from '../views/VentNavigate';
-import TicketFormHome from '../views/TicketFormHome';
-import ReceiptForm from '../views/ReceiptForm';
-import EditWorker from '../views/EditWorker';
-import ProfileEdit from '../views/ProfileEdit';
-import ResetPassword from '../views/ResetPassword';
-import DataUser from '../views/DataUser';
+import CategoryForm from './screens/views/CategoryForm';
+import { Ionicons, MaterialCommunityIcons,FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import HomeView from './screens/views/HomeView';
+import LoginForm from "./screens/views/LoginForm"
+import RegisterForm from './screens/views/RegisterForm';
+import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
+import DiscountForm from './screens/views/DiscountForm';
+import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
+import ArticlesEdit from './screens/views/ArticlesEdit';
+import PlusDiscount from './screens/views/PlusDiscount';
+import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
+import PlusImpuesto from './screens/views/PlusImpuesto';
+import ImpuestoForm from './screens/views/ImpuestoForm';
+import ImpuestoEdit from './screens/views/ImpuestoEdit';
+import CategoryEdit from './screens/views/CategoryEdit';
+import ClientForm from './screens/views/ClientForm';
+import PlusClients from './screens/views/PlusClients';
+import ClientEdit from './screens/views/ClientEdit'
+import PlusWorkers from './screens/views/PlusWorkers';
 
+
+import TicketFormHome from './screens/views/TicketFormHome';
+import ReceiptForm from './screens/views/ReceiptForm';
+import EditWorker from './screens/views/EditWorker';
+import TicketListForm from './screens/views/TicketListForm';
+import TicketSaleForm from './screens/views/TicketSaleForm';
+import ProfileEdit from './screens/views/ProfileEdit';
+import DataUser from './screens/views/DataUser';
+import ResetPassword from './screens/views/ResetPassword';
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
 return (
-    <Stack.Navigator  initialRouteName="Main" screenOptions={{ statusBarColor: "#0258FE",headerStyle: { backgroundColor: "#0258FE" },headerTintColor: "#fff",headerTitleStyle: {color: "#fff",},}} >
+    <Stack.Navigator  initialRouteName="Main" screenOptions={{ statusBarColor: "blue",headerStyle: { backgroundColor: "blue" },headerTintColor: "#fff",headerTitleStyle: {color: "#fff",},}} >
       <Stack.Screen name="Main" component={HomeView}  options={{headerShown:false}} />
       <Stack.Screen name="Login" component={LoginForm} />
       <Stack.Screen name="Register" component={RegisterForm} />
       <Stack.Screen name="Envio" component={EnvioCorreoForm} />
+      <Stack.Screen name="Home" component={TicketFormHome}
+        options={{title: "Venta",
+          headerLeft: () => {
+            return (
+              <Icon
+                name="menu"
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                size={24}
+                color="#fff"
+              />
+            );
+          },
+        }}
+      ></Stack.Screen> 
+      <Stack.Screen name="Ticket" component={TicketFormHome}></Stack.Screen>
+      <Stack.Screen name="ListarTicket" component={TicketListForm} />
+      <Stack.Screen name="SaleTicket" component={TicketSaleForm} />
+      
+    </Stack.Navigator>
+  );
+};
+
+function SoporteScreen(){
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        statusBarColor: "#0258FE",
+        headerStyle: { backgroundColor: "#0258FE" },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          color: "#fff",
+        },
+      }}
+    >
       <Stack.Screen name="Home" component={HomeScreen}
         options={{title: "Soporte",
           headerLeft: () => {
@@ -70,6 +107,8 @@ return (
 
       <Stack.Screen name="Editar usuario" component={ProfileEdit}></Stack.Screen>
     </Stack.Navigator>
+
+
   );
 };
 function ArticulosScreen() {
@@ -78,8 +117,8 @@ function ArticulosScreen() {
   return (
     <Stack.Navigator
       screenOptions={{
-        statusBarColor: "#051EFF",
-        headerStyle: { backgroundColor: "#051EFF" },
+        statusBarColor: "#0258FE",
+        headerStyle: { backgroundColor: "#0258FE" },
         headerTintColor: "#fff",
         headerTitleStyle: {
           color: "#fff",
@@ -126,7 +165,7 @@ function ArticulosScreen() {
   );
 };
 
-function VentaScreen() {
+function Recibos(){
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
   return (
@@ -140,7 +179,7 @@ function VentaScreen() {
         },
       }}
     >
-    <Stack.Screen name="Ventas" component={VentNavigate} options={{ headerLeft: () => {
+      <Stack.Screen name="Recibos" component={ReceiptForm} options={{ headerLeft: () => {
         return (
             <Icon
               name="menu"
@@ -151,11 +190,12 @@ function VentaScreen() {
           );
         },
       }}></Stack.Screen>
-      <Stack.Screen name="Ticket" component={TicketFormHome}></Stack.Screen>
-      <Stack.Screen name="Recibos" component={ReceiptForm}></Stack.Screen>
+     
     </Stack.Navigator>
-  );
-};
+  
+
+    )
+}
 
 function MiembrosScreen() {
   const Stack = createNativeStackNavigator();
@@ -198,35 +238,7 @@ function MiembrosScreen() {
   );
 };
 
-function Recibos(){
-  const Stack = createNativeStackNavigator();
-  const navigation = useNavigation();
-  return (
-    <Stack.Navigator
-        screenOptions={{
-          statusBarColor: "#0258FE",
-          headerStyle: { backgroundColor: "#0258FE" },
-          headerTintColor: "#fff",
-          headerTitleStyle: {
-            color: "#fff",
-          },
-        }}
-      >
-      <Stack.Screen name="Recibos" component={RecibosScreen} options={{ headerLeft: () => {
-          return (
-              <Icon
-                name="menu"
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-                size={24}
-                color="#fff"
-              />
-            );
-          },
-        }}></Stack.Screen>
-        </Stack.Navigator>
-  );
 
-};
 
 
 const DrawerNav =()=> {
@@ -234,10 +246,12 @@ const DrawerNav =()=> {
   return (
     <Drawer.Navigator 
      screenOptions={{headerShown:false}}>
-      <Drawer.Screen name="Soporte" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Ventas" component={VentaScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cash-multiple" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Ventas" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Recibos" component={Recibos}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cash-multiple" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cart" size={25} color="#778899" />), }}/>
       <Drawer.Screen name="Miembros" component={MiembrosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "account-group" size={25} color="#778899" />), }}/>
+      <Drawer.Screen name="Soporte" component={SoporteScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cash-multiple" size={25} color="#778899" />), }}/>
+      
     </Drawer.Navigator>
   );
 };
