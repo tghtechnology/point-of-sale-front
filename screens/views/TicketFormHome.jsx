@@ -591,14 +591,14 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: 10,
-},
-image:{
-  width: 50,
-  height: 50,
-},
-colorSquare: {
-  width: 50,
-  height: 50,
-}
-});
+  },
+  image:{
+    width: 50,
+    height: 50,
+  },
+  colorSquare: {
+    width: 50,
+    height: 50,
+  }
+  });
 export default TicketFormHome
