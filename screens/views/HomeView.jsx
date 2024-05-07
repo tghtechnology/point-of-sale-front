@@ -53,7 +53,7 @@ import Icono from '../img/Icono.png'
   return (
 <UsuarioProvider>
       <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.blueSection}>
+        <View style={styles.blueSection}>
         <View style={styles.redSection}>
           <Image source={Icono} style={styles.logo} />
           <Text style={styles.mainText}>Home Shop</Text>
@@ -78,20 +78,22 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    bottom: '80px' // Esto centra horizontalmente todo el contenido
+    alignItems: 'center', 
+    position: 'relative',
+    bottom: '5%',
   },
   blueSection: {
     position: 'absolute',
     backgroundColor: '#0258FE',
-    height: '90%',
+    height: '85%',
     width: '100%',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
+    bottom: '10%',
   },
   redSection: {
     backgroundColor: '#051EFF',
-    height: '90%',
+    height: '80%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -113,9 +115,10 @@ const styles = StyleSheet.create({
     textAlign: 'center', // Para centrar el texto
   },
   buttonSection: {
+    position: 'relative',
     alignItems: 'center',
-    marginBottom: '50px',
-    
+    top: '5%',
+    zIndex: 1,
   },
   button: {
     backgroundColor: '#0258FE',
@@ -143,6 +146,7 @@ const styles = StyleSheet.create({
     textAlign: 'center', // Asegura que el texto esté centrado en el botón
   },
   logo: {
+    position: 'relative',
     alignSelf: 'center', // Centra la imagen horizontalmente
     alignItems: 'center',
     justifyContent: 'center',

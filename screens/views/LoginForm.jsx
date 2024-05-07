@@ -74,7 +74,7 @@ const LoginForm = () => {
             }))
           }
         />
-        <TouchableOpacity
+         <TouchableOpacity
           onPress={() => setShowPassword(!showPassword)} // Cambia la visibilidad de la contraseña al tocar el botón
           style={styles.showPasswordButton}
         >
@@ -119,8 +119,11 @@ const styles = StyleSheet.create({
     padding:40,
     borderRadius: 15,
     zIndex: 1,
-    margin: 20,
+    margin: 10,
     bottom: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center'
   },
 
   redSection: {
@@ -134,51 +137,54 @@ const styles = StyleSheet.create({
   },
 
   passwordContainer: {
+    position: 'absolute',
+    flex: 1,  
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: 'gray',
     padding: 1,
-    textAlign:'left',
-    position: 'relative',
+    top:'40%'
   },
 
   passwordInput: {
-    flex: 1,
-    marginBottom:35 ,
+    marginBottom:5 ,
     fontSize: 17,
     borderBottomWidth: 1, 
-    borderBottomColor: 'blue',
-    height: 40,
-    width: 250,
+    borderBottomColor: 'blue',  
+    width:'100%',
     color: '#546574',
-    padding: 10,
-    paddingLeft:10,
-    textAlign: 'left'
+    padding: 8,
+    borderRadius: 5,
+    textAlign: 'left',
+    left:'20%'
   },
 
   showPasswordButton: {
     position: 'absolute',
+    right: '8%',
     padding: 5,
-    paddingBottom: 25,
-    right: '5%',
-    top: '5%'
+    
+    
   },
 
   input: {
-    marginBottom: 25,
+    marginBottom: 20,
     fontSize: 17,
     borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'blue', // Cambiado de borderColor
-    height: 40,
+    borderBottomColor: 'blue', // Cambiado de borderColo
+    color: '#546574',
     color: '#546574',
     padding: 10,
-    
+    width:'100%',
+    textAlign: 'left'
   },
   button: {
     backgroundColor: '#0258FE',
     paddingVertical: 12,
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: '30%',
+    borderRadius: 10,
+    width: '100%'
   },
   buttonText: {
     color: '#fff',
@@ -188,7 +194,7 @@ const styles = StyleSheet.create({
 
   forgotPasswordText: {
     color: 'blue',
-    marginTop: 18,
+    marginTop: 12,
     textAlign: 'center',
     fontSize: 15,
   }

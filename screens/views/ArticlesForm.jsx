@@ -29,12 +29,20 @@ const colors = [
   "#808080",
 ];
 
-const ColorBox = ({ color, setDatos }) => (
-  <TouchableOpacity
-    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }}
-    onPress={() => setDatos((prevDatos) => ({ ...prevDatos, color }))}
+const ColorBox = ({ color, selectedColor, setDatos }) => (
+  <TouchableOpacity 
+    style={{ 
+      backgroundColor: color, 
+      width: 70, 
+      height: 70, 
+      margin: 5, 
+      borderWidth: color === selectedColor ? 3  : 0, 
+      borderColor: 'black' 
+    }} 
+    onPress={() => setDatos(prevDatos => ({ ...prevDatos, color }))} 
   />
 );
+
 
 const buildFormData = (datos, selectedImage, categoriaSelect) => {
   const formData = new FormData();
@@ -250,7 +258,7 @@ const ArticlesForm = () => {
           style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}
         >
           {colors.map((color, index) => (
-            <ColorBox key={index} color={color} setDatos={setDatos} />
+            <ColorBox key={index}  selectedColor={datos.color} color={color} setDatos={setDatos} />
           ))}
         </View>
       )}
@@ -280,11 +288,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: "red",
+    borderBottomColor: "#0258FE",
     height: 40,
     color: "#546574",
     padding: 10,
-    borderRadius: 5,
+   
   },
   info: {
     color: "#546574",
@@ -292,30 +300,36 @@ const styles = StyleSheet.create({
   pickeContainer: {
     marginBottom: 25,
     borderBottomWidth: 1,
-    borderBottomColor: "red",
+    borderBottomColor: "#0258FE",
     height: 40,
     color: "#546574",
     borderRadius: 5,
   },
+
   label: {
     marginTop: 4,
     color: "#546574",
   },
   radioContainer: {
+    marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
   },
   buttonContainer: {
+    overflow: "hidden",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: "red",
+    borderColor:'#0258FE',
+    backgroundColor:'#0258FE',
+    width:237,
+    height:39,
+    marginLeft:55,
     padding: 10,
   },
   buttonText: {
-    color: "red",
+    color: "white",
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 16,
   },
   uploadImagen: {
     backgroundColor: "#fcfcfc",
@@ -329,8 +343,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#dcdcdc",
     textAlign: "center",
+    alignItems: "center",
     fontSize: 20,
   },
 });
-
 export default ArticlesForm;

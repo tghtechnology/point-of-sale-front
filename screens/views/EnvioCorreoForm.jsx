@@ -60,7 +60,7 @@ const EnvioCorreoForm = () => {
     <View style={styles.container}>
       <Text>
         Introduzca su correo electronico para recibir
-        instrucciones para restablecer la contraseña
+        un mensaje para reestablecer su contraseña.
       </Text>
       <TextInput
         style={styles.input}
@@ -68,7 +68,7 @@ const EnvioCorreoForm = () => {
         placeholderTextColor="#546574"
         onChangeText={text => getValues('email', text)}
       />
-      <TouchableOpacity style={styles.buttonEnviar} onPress={handleSend}>
+      <TouchableOpacity style={styles.button} onPress={handleSend}>
         <Text style={styles.buttonText}>Enviar</Text>
       </TouchableOpacity>
     </View>
@@ -84,16 +84,15 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     fontSize: 17,
     borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'red', // Cambiado de borderColor
+    borderBottomColor: 'blue', // Cambiado de borderColor
     height: 40,
     color: '#546574',
     padding: 10,
-    borderRadius: 5,
+    
   },
-  buttonEnviar: {
-    backgroundColor: 'red',
+  button: {
+    backgroundColor: '#0258FE',
     paddingVertical: 12,
-    borderRadius: 5,
     alignItems: 'center',
     marginTop: 5,
   },
