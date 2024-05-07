@@ -86,6 +86,7 @@ const INITIAL_STATE = {
             style={styles.input}
             placeholder="Numero de telefono"
             value={data.telefono}
+            keyboardType="numeric"
             onChangeText={number => getValues('telefono', number)}
           />
           <Text style={styles.label}>Direccion</Text>
