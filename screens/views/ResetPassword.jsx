@@ -16,7 +16,7 @@ const ResetPassword = () => {
 
     try {
       await changePassword(currentPassword, newPassword, confirmPassword); // Usamos la función para cambiar la contraseña
-      showAlert(true);
+      setShowAlert(true);
       setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')

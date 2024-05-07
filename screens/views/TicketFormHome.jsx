@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList,Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList,Image, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../hooks/useArticle";
@@ -247,14 +247,14 @@ const handleSelectTax = async (tax) => {
   };
 
   const RemoveItem = async () => {
-    await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
+    await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
   }
 
  const handleSaveChanges = async () => {
     try {
       await RemoveItem();
-      await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts));
-      await AsyncStorage.setItem('selectedTax', JSON.stringify(selectedTaxes));
+      await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(selectedDiscounts));
+      await AsyncStorage.setItem('selectedTaxs', JSON.stringify(selectedTaxes));
       console.log('Cambios guardados exitosamente');
       showListArticles();
     } catch (error) {
@@ -363,7 +363,7 @@ const handleSelectTax = async (tax) => {
       };
 
   return (
-    <View style={styles.container}>
+      <ScrollView style={styles.container}>
       <View style={styles.searchSection}>
         <TouchableOpacity style={styles.magnifies}>
           <Icon name="magnify" size={30} color="#517EF2" />
@@ -381,7 +381,7 @@ const handleSelectTax = async (tax) => {
       </View>
 
       {/* Search Bar */}
-      <View style={styles.searchSection}>
+      <View style={styles.Sections}>
       <Picker
           style={styles.picker}
           selectedValue={selectedValue}
@@ -436,7 +436,7 @@ const handleSelectTax = async (tax) => {
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -483,12 +483,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  searchSection: {
+  Sections: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#DDD',
-    marginBottom: 10,
+    marginTop: 10,
+    marginHorizontal: 15,
   },
   picker: {
     flex: 1,
@@ -504,6 +503,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   item: {
+    flex: 1,
     flexDirection: 'row',
     padding: 10,
     alignItems: 'center',
@@ -591,14 +591,14 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: 10,
-},
-image:{
-  width: 50,
-  height: 50,
-},
-colorSquare: {
-  width: 50,
-  height: 50,
-}
-});
+  },
+  image:{
+    width: 50,
+    height: 50,
+  },
+  colorSquare: {
+    width: 50,
+    height: 50,
+  }
+  });
 export default TicketFormHome

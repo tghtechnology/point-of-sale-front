@@ -74,7 +74,7 @@ const LoginForm = () => {
             }))
           }
         />
-        <TouchableOpacity
+         <TouchableOpacity
           onPress={() => setShowPassword(!showPassword)} // Cambia la visibilidad de la contraseña al tocar el botón
           style={styles.showPasswordButton}
         >
@@ -138,10 +138,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: 'gray',
     padding: 1,
-    textAlign:'left'
+    textAlign:'left',
+    position: 'relative',
   },
 
   passwordInput: {
+    flex: 1,
     marginBottom:35 ,
     fontSize: 17,
     borderBottomWidth: 1, 
@@ -150,31 +152,37 @@ const styles = StyleSheet.create({
     width: 250,
     color: '#546574',
     padding: 10,
-    borderRadius: 5,
     paddingLeft:10,
     textAlign: 'left'
   },
 
   showPasswordButton: {
+    position: 'absolute',
     padding: 5,
-    paddingBottom: 25,
+    paddingBottom: 20,
+    right: '5%',
+    top: '5%'
   },
 
   input: {
-    marginBottom: 25,
+    marginBottom: 20,
     fontSize: 17,
     borderBottomWidth: 1, // Cambiado de borderWidth
-    borderBottomColor: 'blue', // Cambiado de borderColor
-    height: 40,
+    borderBottomColor: 'blue', // Cambiado de borderColo
+    color: '#546574',
     color: '#546574',
     padding: 10,
-    
+    width:'100%',
+    textAlign: 'left'
   },
   button: {
     backgroundColor: '#0258FE',
     paddingVertical: 12,
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: '30%',
+    borderRadius: 10,
+    width: '100%',
+    marginTop: 10, 
   },
   buttonText: {
     color: '#fff',
@@ -184,7 +192,7 @@ const styles = StyleSheet.create({
 
   forgotPasswordText: {
     color: 'blue',
-    marginTop: 18,
+    marginTop: 12,
     textAlign: 'center',
     fontSize: 15,
   }

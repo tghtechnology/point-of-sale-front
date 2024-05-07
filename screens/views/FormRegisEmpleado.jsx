@@ -102,6 +102,7 @@ const FormRegisEmpleado = () => {
         <TextInput
           style={styles.input}
           placeholder="Teléfono"
+          keyboardType='numeric'
           value={data.telefono}
           onChangeText={(text) => getValues('telefono', text)}
         />

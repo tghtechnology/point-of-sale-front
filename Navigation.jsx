@@ -31,8 +31,6 @@ import ClientForm from './screens/views/ClientForm';
 import PlusClients from './screens/views/PlusClients';
 import ClientEdit from './screens/views/ClientEdit'
 import PlusWorkers from './screens/views/PlusWorkers';
-
-
 import TicketFormHome from './screens/views/TicketFormHome';
 import ReceiptForm from './screens/views/ReceiptForm';
 import EditWorker from './screens/views/EditWorker';
@@ -224,7 +222,7 @@ function MiembrosScreen() {
       }}></Stack.Screen>
       <Stack.Screen name="Empleados" component={PlusWorkers}></Stack.Screen>
       <Stack.Screen name="Editar empleado" component={EditWorker}></Stack.Screen>
-      <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Todos los miembros",
+      <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Crear Empleado",
      headerRight: () => (
       
         <Ionicons name="search-outline" size={24} color="#fff" />

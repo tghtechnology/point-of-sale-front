@@ -54,8 +54,6 @@ const AuthProvider = ({children}) => {
     
       try {
         const result = await cambiarContraseña(currentPassword, newPassword, confirmPassword);
-        
-        alert("Contraseña cambiada con éxito"); // Notificación de éxito al usuario
         return result;
       } catch (error) {
         console.error("Error al cambiar la contraseña:", error.message);
