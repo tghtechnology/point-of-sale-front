@@ -164,9 +164,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     padding: 20,
-    borderBottomLeftRadius : 40,
-    borderBottomRightRadius: 40,
-    top:100
+    margin:'auto',
+    top:'10%',
+    marginBottom:'30%'
   },
   label: {
     fontSize: 16,
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     marginBottom: 20,
-    width: '300px',
+    width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
     color: '#517EF2',

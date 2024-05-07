@@ -26,10 +26,13 @@ const getToken = async () => {
   }
 };
 
-const createWorker = async (newWorker) => {
+const createWorker = async (newWorker, propietarioId) => {
     try {
         const token = await getToken();
-        const { data, status } = await apiClient.post(`/empleado`, newWorker, {
+        const propietarioId = await AsyncStorage.getItem("usuarioid");
+        const UserIdInt = parseInt(propietarioId,10);
+        console.log(UserIdInt)
+        const { data, status } = await apiClient.post(`/empleado`, {...newWorker, propietarioId: UserIdInt}, {
             headers: {
                 Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
             }

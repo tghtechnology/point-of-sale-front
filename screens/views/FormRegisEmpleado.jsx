@@ -66,7 +66,7 @@ const FormRegisEmpleado = () => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
         <View style={styles.topBanner}>
         </View>
@@ -102,6 +102,7 @@ const FormRegisEmpleado = () => {
         <TextInput
           style={styles.input}
           placeholder="Teléfono"
+          keyboardType='numeric'
           value={data.telefono}
           onChangeText={(text) => getValues('telefono', text)}
         />
@@ -143,10 +144,14 @@ const FormRegisEmpleado = () => {
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    
+    paddingBottom: 50, // Asegura que el contenido no esté cortado
+  },
   container: {
     flex: 1,
-    position: 'relative',
-    backgroundColor: '#F9F7F7'
+    backgroundColor: '#F9F7F7',
   },
   topBanner: {
     position: 'absolute',
@@ -162,9 +167,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     padding: 20,
-    borderBottomLeftRadius : 40,
-    borderBottomRightRadius: 40,
-    top:100
+    margin:'auto',
+    top:'10%',
+    marginBottom:'30%'
   },
   label: {
     fontSize: 16,
@@ -185,12 +190,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   picker: {
-    borderRadius: 8,
+    borderRadius: 10,
     backgroundColor: '#FFFFFF',
     padding: 10,
     fontSize: 16,
     marginBottom: 20,
-    width: '300px',
+    width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
     color: '#517EF2',

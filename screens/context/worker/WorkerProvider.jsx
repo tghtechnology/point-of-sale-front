@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { createWorker,getWorkers,editworker,deleteworker,updatedWorker} from "../../services/WorkerService"
 import WorkerContext from './WorkerContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WorkerProvider = ({ children }) => {
     const [worker, setWorker] = useState([])
 
     const handleCreateWorker = async (newWorker) => {
       try {
-        const res= await createWorker(newWorker);
+        const propietarioId =  await AsyncStorage.getItem("usuarioid");
+        const res= await createWorker(newWorker, propietarioId);
         if(res.status === 200 || res.status === 201){
           return res.data;
         }
