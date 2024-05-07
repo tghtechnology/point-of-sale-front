@@ -59,7 +59,7 @@ const TicketSaleForm = () => {
       
         fetchDataFromAsyncStorage();
       }, []);
-      
+
     const handleChangeReceivedAmount = (amount) => {
         setReceivedAmount(amount);
         const calculatedChange = parseFloat(amount) - parseFloat(total);
@@ -80,10 +80,10 @@ const TicketSaleForm = () => {
                 dineroRecibido: parseFloat(receivedAmount)
               };
               console.log('Sale data:', data);
-
             const success = await handleCreateSale(data);
             if (success) {
                 setShowAlert(true);
+                 
               console.log('Sale data:', data);
             } else{
                 setErrorAlertVisible(true);
@@ -94,9 +94,25 @@ const TicketSaleForm = () => {
             }
     }
     const handleAlertClose = () => {
-        setShowAlert(false);
+        setShowAlert(false); 
+        clearAsyncStorage();
         navigation.navigate('Ticket');
     };
+    useEffect(() => {
+        clearAsyncStorage();
+      }, []);
+    
+      const clearAsyncStorage = async () => {
+        try {
+          await AsyncStorage.removeItem('selectedItems');
+          await AsyncStorage.removeItem('selectedDiscounts');
+          await AsyncStorage.removeItem('selectedClients');
+          await AsyncStorage.removeItem('selectedTaxes');
+          console.log('Datos de AsyncStorage eliminados al iniciar sesión');
+        } catch (error) {
+          console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
+        }
+      };
 
     return (
         <View style={styles.container}>

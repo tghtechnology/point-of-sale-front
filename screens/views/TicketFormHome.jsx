@@ -247,14 +247,14 @@ const handleSelectTax = async (tax) => {
   };
 
   const RemoveItem = async () => {
-    await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItems));
+    await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
   }
 
  const handleSaveChanges = async () => {
     try {
       await RemoveItem();
-      await AsyncStorage.setItem('selectedDiscount', JSON.stringify(selectedDiscounts));
-      await AsyncStorage.setItem('selectedTax', JSON.stringify(selectedTaxes));
+      await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(selectedDiscounts));
+      await AsyncStorage.setItem('selectedTaxs', JSON.stringify(selectedTaxes));
       console.log('Cambios guardados exitosamente');
       showListArticles();
     } catch (error) {

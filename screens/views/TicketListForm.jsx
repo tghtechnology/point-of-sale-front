@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTotal } from '../Global State/TotalContext'; 
 
 const TicketListForm = () => {
-    const [selectedItem, setSelectedItem] = useState([]);
+    const [selectedItems, setSelectedItems] = useState([]);
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [selectedTaxes, setSelectedTaxes] = useState([]);
     const [selectedClients, setSelectedClients] = useState([]);
@@ -16,12 +16,12 @@ const TicketListForm = () => {
 
     const fetchData = async () => {
         try {
-            const item = await AsyncStorage.getItem('selectedItem');
-            const discount = await AsyncStorage.getItem('selectedDiscount');
+            const item = await AsyncStorage.getItem('selectedItems');
+            const discount = await AsyncStorage.getItem('selectedDiscounts');
             const tax = await AsyncStorage.getItem('selectedTaxes');
             const cli = await AsyncStorage.getItem('selectedClients');
 
-            if (item !== null) setSelectedItem(JSON.parse(item));
+            if (item !== null) setSelectedItems(JSON.parse(item));
             if (discount !== null) setSelectedDiscounts(JSON.parse(discount));
             if (tax !== null) setSelectedTaxes([JSON.parse(tax)]);
             if (cli !== null) setSelectedClients([JSON.parse(cli)]);
@@ -35,7 +35,7 @@ const TicketListForm = () => {
     }, []);
 
     const calculateTotal = () => {
-        const totalPrice = selectedItem.reduce((acc, item) => {
+        const totalPrice = selectedItems.reduce((acc, item) => {
             const subtotal = calculateSubtotalWithDiscount(item);
             return acc + parseFloat(subtotal);
         }, 0);
@@ -61,7 +61,7 @@ const TicketListForm = () => {
 
     useEffect(() => {
         calculateTotal();
-    }, [selectedItem, selectedDiscounts, selectedTaxes]);
+    }, [selectedItems, selectedDiscounts, selectedTaxes]);
 
     const calculateSubtotalWithDiscount = (item) => {
         let subtotal = item.precio * item.quantity;
@@ -91,7 +91,7 @@ const TicketListForm = () => {
 
             {/* Sección de artículos */}
             <View style={styles.itemList}>
-                {selectedItem.map(itm => (
+                {selectedItems.map(itm => (
                    <View key={itm.id} style={styles.item}>
                      <Text style={styles.itemText}>{itm.nombre} x{itm.quantity}</Text>
                      <Text style={styles.subtotalText}> Subtotal: S/ {calculateSubtotalWithDiscount(itm)}</Text>
