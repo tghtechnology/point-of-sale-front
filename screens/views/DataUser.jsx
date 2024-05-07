@@ -22,10 +22,10 @@ const DataUser = () => {
         <MaterialCommunityIcons name="account-circle" size={150} color="black" />
         <Text style={styles.name}>{user.nombre}</Text>
         </View>
-        <Text style={styles.label}><MaterialCommunityIcons name="at" size={'150%'} color="#517EF2"/> {user.email}</Text>
-        <Text style={styles.label}><MaterialCommunityIcons name="phone" size={'150%'} color="#517EF2"/> {user.telefono}</Text>
-        <Text style={styles.label}><MaterialCommunityIcons name="map" size={'150%'} color="#517EF2"/> {user.pais}</Text>
-        <Text style={styles.label}><MaterialCommunityIcons name="purse-outline" size={'150%'} color="#517EF2"/> {user.cargo}</Text>
+        <Text style={styles.label}><MaterialCommunityIcons name="at" size={20} color="#517EF2"/> {user.email}</Text>
+        <Text style={styles.label}><MaterialCommunityIcons name="phone" size={20} color="#517EF2"/> {user.telefono}</Text>
+        <Text style={styles.label}><MaterialCommunityIcons name="map" size={20} color="#517EF2"/> {user.pais}</Text>
+        <Text style={styles.label}><MaterialCommunityIcons name="purse-outline" size={20} color="#517EF2"/> {user.cargo}</Text>
         <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
           <MaterialCommunityIcons name="pencil" size={24} color="white" />
         </TouchableOpacity>

@@ -138,10 +138,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: 'gray',
     padding: 1,
-    textAlign:'left'
+    textAlign:'left',
+    position: 'relative',
   },
 
   passwordInput: {
+    flex: 1,
     marginBottom:35 ,
     fontSize: 17,
     borderBottomWidth: 1, 
@@ -150,14 +152,16 @@ const styles = StyleSheet.create({
     width: 250,
     color: '#546574',
     padding: 10,
-    borderRadius: 5,
     paddingLeft:10,
     textAlign: 'left'
   },
 
   showPasswordButton: {
+    position: 'absolute',
     padding: 5,
     paddingBottom: 25,
+    right: '5%',
+    top: '5%'
   },
 
   input: {
