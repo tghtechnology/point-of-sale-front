@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, TouchableOpacity, StyleSheet, Text, TextInput, Alert } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-native';
 import { useTotal } from '../Global State/TotalContext';
 import useSale from '../hooks/useSale';
+import { useNavigation } from '@react-navigation/native';
 import CustomAlert from '../componentes/CustomAlert';
 import ErrorAlert from '../componentes/ErrorAlert';
 import PaymentSelection from '../componentes/PaymentSelection';
@@ -22,7 +23,7 @@ const TicketSaleForm = () => {
     const { total } = useTotal();
     const [data, setData] = useState(INITIAL_STATE);
     const [selectedPayment, setSelectedPayment] = useState(null);
-    console.log("Valor de total:", total);
+    const navigation = useNavigation();
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [selectedTaxes, setSelectedTaxes] = useState(null);
@@ -92,6 +93,10 @@ const TicketSaleForm = () => {
               setErrorAlertVisible(true);
             }
     }
+    const handleAlertClose = () => {
+        setShowAlert(false);
+        navigation.navigate('Ticket');
+    };
 
     return (
         <View style={styles.container}>
@@ -119,7 +124,7 @@ const TicketSaleForm = () => {
             <TouchableOpacity style={styles.button} onPress={handleCompleteSale}>
                 <Text style={styles.buttonText}>Completar Venta</Text>
             </TouchableOpacity>
-            <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+            <CustomAlert isVisible={showAlert} onClose={handleAlertClose} />
         <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
         </View>
     );
