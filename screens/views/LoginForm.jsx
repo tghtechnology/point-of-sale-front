@@ -119,11 +119,8 @@ const styles = StyleSheet.create({
     padding:40,
     borderRadius: 15,
     zIndex: 1,
-    margin: 10,
+    margin: 20,
     bottom: '20%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center'
   },
 
   redSection: {
@@ -137,34 +134,34 @@ const styles = StyleSheet.create({
   },
 
   passwordContainer: {
-    position: 'absolute',
-    flex: 1,  
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: 'gray',
     padding: 1,
-    top:'40%'
+    textAlign:'left',
+    position: 'relative',
   },
 
   passwordInput: {
-    marginBottom:5 ,
+    flex: 1,
+    marginBottom:35 ,
     fontSize: 17,
     borderBottomWidth: 1, 
-    borderBottomColor: 'blue',  
-    width:'100%',
+    borderBottomColor: 'blue',
+    height: 40,
+    width: 250,
     color: '#546574',
-    padding: 8,
-    borderRadius: 5,
-    textAlign: 'left',
-    left:'20%'
+    padding: 10,
+    paddingLeft:10,
+    textAlign: 'left'
   },
 
   showPasswordButton: {
     position: 'absolute',
-    right: '8%',
     padding: 5,
-    
-    
+    paddingBottom: 20,
+    right: '5%',
+    top: '5%'
   },
 
   input: {
@@ -184,7 +181,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: '30%',
     borderRadius: 10,
-    width: '100%'
+    width: '100%',
+    marginTop: 10, 
   },
   buttonText: {
     color: '#fff',
