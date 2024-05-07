@@ -6,6 +6,7 @@ import useClient from '../hooks/useClient';
 import useCountry from "../hooks/useCountry";
 import CustomAlert from "../componentes/CustomAlert";
 import ErrorAlert from "../componentes/ErrorAlert";
+import { ScrollView } from "react-native-gesture-handler";
 
 
 const INITIAL_STATE = {
@@ -61,6 +62,7 @@ const ClientEdit = () => {
     setShowAlert(false);
   };
   return (
+    <ScrollView>
     <View style={styles.container}>
       <View style={styles.topBanner}></View>
       <View style={styles.formBackground}>
@@ -100,12 +102,6 @@ const ClientEdit = () => {
         value={editedData.region}
         onChangeText={(text) => handleChange('region', text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Código Postal"
-        value={editedData.codigo_postal}
-        onChangeText={(text) => handleChange('codigo_postal', text)}
-      />
         <Text style={styles.label}>País</Text>
         <View style={styles.pickerContainer}>
         <Picker
@@ -129,6 +125,7 @@ const ClientEdit = () => {
       <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
       <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
     </View>
+    </ScrollView>
   );
 }
 
@@ -152,9 +149,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     padding: 20,
-    borderBottomLeftRadius : 40,
-    borderBottomRightRadius: 40,
-    top:100
+    top:100,
+    marginBottom:'40%'
   },
   label: {
     fontSize: 16,
@@ -180,7 +176,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     marginBottom: 20,
-    width: '300px',
+    width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
     

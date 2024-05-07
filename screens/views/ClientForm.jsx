@@ -111,13 +111,7 @@ const INITIAL_STATE = {
             onChangeText={text => getValues('region', text)}
           />
           <Text style={styles.label}>Codigo Postal</Text>
-          <TextInput
-              style={styles.input}
-              placeholder="Codigo Postal"
-              value={data.codigo_postal}
-              onChangeText={text => getValues('codigo_postal', text)}
-              keyboardType="numeric"
-          />
+          
           {/* INPUT PARA SELECCIONAR PAIS */}
         
         <Text style={styles.label}>Selecciona un país:</Text>
