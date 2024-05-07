@@ -100,12 +100,7 @@ const ClientEdit = () => {
         value={editedData.region}
         onChangeText={(text) => handleChange('region', text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Código Postal"
-        value={editedData.codigo_postal}
-        onChangeText={(text) => handleChange('codigo_postal', text)}
-      />
+      
         <Text style={styles.label}>País</Text>
         <View style={styles.pickerContainer}>
         <Picker
@@ -180,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     marginBottom: 20,
-    width: '300px',
+    width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
     
