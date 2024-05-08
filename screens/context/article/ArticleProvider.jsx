@@ -41,9 +41,9 @@ const ArticleProvider = ({children}) => {
         
 
     const handleEditArticle = async (updateArticle) => {
-        const { nombre, tipo_venta, precio, ref, representacion, id_categoria } = updateArticle;
+        const { nombre, tipo_venta, precio, ref, representacion, color, imagen,id_categoria } = updateArticle;
         try {
-          const response = await editArticles(updateArticle.id, { nombre, tipo_venta, precio, ref, representacion, id_categoria });
+          const response = await editArticles(updateArticle.id, { nombre, tipo_venta, precio, ref, representacion,color, imagen, id_categoria });
           if (response && (response.status === 200 || response.status === 204)) {
             console.log('Artículo editado exitosamente');
             const updatedList = listArticle.map(article => {

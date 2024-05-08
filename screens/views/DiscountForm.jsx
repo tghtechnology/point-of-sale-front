@@ -66,17 +66,17 @@ const handleCloseAlert = () => {
   return (
     <View style={styles.container}>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Crear Nuevo Descuento</Text>
+               
                 <TextInput
                     style={styles.input}
-                    placeholder="Nombre del descuento"
+                    placeholder="Nombre "
                     value={dataForm.nombre}
                     onChangeText={text => getValues('nombre', text)}
                 />
             </View>
 
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Valor del descuento</Text>
+                
                 <View style={styles.inputWithIcon}>
                     <TextInput
                         style={styles.input}
@@ -91,8 +91,8 @@ const handleCloseAlert = () => {
                     >
                         <Icon
                             name={tipoDescuento === 'percent' ? 'percent' : 'dollar'}
-                            size={20}
-                            color={tipoDescuento === 'percent' ? '#00cc00' : '#0066ff'}
+                            size={18}
+                            color={tipoDescuento === 'percent' ? '#517EF2' : '#517EF2'}
                         />
                     </TouchableOpacity>
                 </View>
@@ -116,8 +116,9 @@ const styles = StyleSheet.create({
 },
 inputContainer: {
     borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-    marginBottom: 10,
+    borderBottomColor: '#0258FE',
+    marginBottom: 15,
+   
 },
 input: {
     color: 'black',
@@ -137,22 +138,29 @@ inputWithIcon: {
     borderColor: 'gray',
 },
 iconContainer: {
+    width: 29,
+    height: 29,
     padding: 5,
-    borderColor: 'gray',
+    alignItems: 'center',
+    borderColor: '#0258FE',
     borderWidth: 1,
-    borderRadius: 5,
-    marginLeft: 120,
+    borderRadius: 25,
+    marginLeft: 250,
 },
 button: {
-    backgroundColor: 'red',
-    padding: 10,
+    backgroundColor: '#0258FE',
+    width:227,
+    height:39,
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 10,
     marginTop: 20,
+    marginLeft:70,
 },
 buttonText: {
     color: 'white',
     fontWeight: 'bold',
+    textAlign:'center',
+    marginTop:8,
 },
 });
 

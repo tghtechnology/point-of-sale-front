@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 17,
     borderBottomWidth: 1,
-    borderBottomColor: 'red',
+    borderBottomColor: '#0258FE',
     height: 40,
     color: '#546574',
     padding: 10,
@@ -117,9 +117,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     overflow: 'hidden',
-    borderRadius: 5,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'red',
+    backgroundColor:'#0258FE',
+    borderColor:'#0258FE',
     padding: 10,
   },
   label: {
@@ -129,13 +130,13 @@ const styles = StyleSheet.create({
   pickerContainer: {
     marginBottom: 25,
     borderBottomWidth: 1,
-    borderBottomColor: "red",
+    borderBottomColor: "#0258FE",
     height: 40,
     color: "#546574",
     borderRadius: 5,
   },
   buttonText: {
-    color: "red",
+    color: "white",
     textAlign: "center",
     fontSize: 15,
   },

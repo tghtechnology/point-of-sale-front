@@ -64,11 +64,15 @@ const listArticles = async () => {
 const editArticles = async (id, updateArticle) => {
     try {
         const token = await getToken();
-        const { data, status } = await apiClient.put(`/articulo/actualizar/${id}`, updateArticle, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          };
+        const { data, status } = await apiClient.put(`/articulo/actualizar/${id}`, updateArticle,
+        {
+          headers,
+        }
+      );
         return {
             data,
             status

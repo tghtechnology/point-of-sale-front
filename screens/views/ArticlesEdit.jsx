@@ -19,56 +19,104 @@ const INITIAL_STATE = {
   id_categoria: "",
 };
 
-const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080'];
+const colorMapping = {
+  'Rojo': '#FF0000',
+  'Verde_limon': '#00FF00',
+  'Azul': '#0000FF',
+  'Amarillo': '#FFFF00',
+  'Turquesa': '#00FFFF',
+  'Fucsia': '#FF00FF',
+  'Gris_claro': '#C0C0C0',
+  'Gris_oscuro': '#808080',
+};
 
-const ColorBox = ({ color,setEditedData}) => (
+
+const ColorBox = ({ color, setEditedData, selectedColor }) => (
   <TouchableOpacity 
-    style={{ backgroundColor: color, width: 70, height: 70, margin: 5 }} 
-    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color }))} 
+    style={{ 
+      backgroundColor: color, 
+      width: 70, 
+      height: 70, 
+      margin: 5,
+      borderWidth: colorMapping[selectedColor] === color ? 3 : 0,
+      borderColor: 'black',
+    }} 
+    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: Object.keys(colorMapping).find(key => colorMapping[key] === color) }))} 
   />
 );
 
+const buildFormData = (editedData, selectedImage) => {
+  const formData = new FormData();
+
+  formData.append("nombre", editedData.nombre);
+  formData.append("tipo_venta", editedData.tipo_venta);
+  formData.append("precio", parseFloat(editedData.precio));
+  formData.append("id_categoria", editedData.id_categoria);
+
+  
+  if (editedData.representacion === "imagen") {
+    formData.append("representacion", "imagen");
+    if (selectedImage) {
+      const fileName = selectedImage.split("/").pop();
+      formData.append("imagen", {
+        uri: selectedImage,
+        name: fileName,
+        type: "image/jpeg",
+      });
+    }
+    formData.append("color", null);
+  } else if (editedData.representacion === "color" && editedData.color) {
+    formData.append("representacion", "color");
+    formData.append("color", editedData.color);
+    formData.append("imagen", null); 
+  }
+
+  return formData;
+};
 export default function ArticlesEdit() {
   const [editedData, setEditedData] = useState(INITIAL_STATE)
   const route = useRoute();
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null)
   const {handleEditArticle} = useArticle();
   const {listCategoria} = useCategory();
 
   
-
-
   useEffect(() => {
     const { article } = route.params;
     console.log("Objeto del artículo:", article);
     setEditedData({
       ...article,
       id_categoria: article.categoria?.id || "", 
+
     });
+    if (article.imagen) {
+      setSelectedImage(article.imagen);
+    }
   }, [route.params]);
   
   const openImagePickerAsync = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if(permissionResult.granted === false){
-      alert('Permission to acces camera is required');
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera is required");
       return;
     }
 
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    
-    if(pickerResult.canceled === true){
+
+    if (pickerResult.canceled) {
       return;
     }
 
-    setSelectedImage({localUri: pickerResult.assets[0].uri});
-   console.log(pickerResult)
-  }
+    setSelectedImage(pickerResult.assets[0].uri);
+  };
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
@@ -96,25 +144,22 @@ export default function ArticlesEdit() {
     });
   };
 
-  const handleRepresentacion = (value) =>{
+  const handleRepresentacion = (value) => {
     setEditedData({
       ...editedData,
-      representacion:value,
-    })
-
-  }
+      representacion: value,
+    });
+  };
 
 
   const handleSubmit = async () => {
     try {
-      const articleData = {
-        ...editedData,
-        precio: parseFloat(editedData.precio),
-        id_categoria: parseInt(editedData.id_categoria)
-      };
+      const formData = buildFormData(editedData, selectedImage);
+  
+      console.log("Datos a enviar al servidor:", formData);
       
-      console.log("Datos a enviar al servidor:", articleData);
-      await handleEditArticle(articleData,editedData.id_categoria);
+      console.log("Datos a enviar al servidor:", formData);
+      await handleEditArticle(formData,editedData.id_categoria);
       setShowAlert(true);
       console.log("Articulos ha sido editado exitosamente");
     } catch (error) {
@@ -141,7 +186,7 @@ export default function ArticlesEdit() {
       </View>
       <View style={styles.pickeContainer}>
       <Picker
-      selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : ''} // Convertimos a cadena el ID de la categoría si está definido
+      selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : ''} 
       onValueChange={(value) => handleCategoryChange(value)}
       style={styles.picker}
       >
@@ -196,7 +241,10 @@ export default function ArticlesEdit() {
       <View>
         <Text style={styles.label}>Representacion</Text>
       </View>
-      <RadioButton.Group onValueChange={(value) => handleRepresentacion (value)} value={editedData.representacion} >
+      <RadioButton.Group 
+      onValueChange={(value) => handleRepresentacion(value)}
+      value={editedData.representacion}
+      >
         <View style={styles.radioContainer}>
           <RadioButton value="color" />
           <Text>Color</Text>
@@ -211,7 +259,7 @@ export default function ArticlesEdit() {
     <TouchableOpacity style={styles.uploadImagen} onPress={openImagePickerAsync}>
       {selectedImage ? 
         (
-          <Image style={{ width: 190, height: 190, borderRadius: 8 }} source={{ uri: selectedImage.localUri }} />
+          <Image style={{ width: 190, height: 190, borderRadius: 8 }} source={{ uri: selectedImage }} />
         ) :
         (
           <Text style={styles.text}>Subir Imagen</Text>
@@ -235,14 +283,11 @@ export default function ArticlesEdit() {
 
       {editedData.representacion === 'color' && (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center'}}>
-          {colors.map((color, index) => (
-            <ColorBox key={index} color={color} setEditedData={setEditedData} />
+          {Object.values(colorMapping).map((color, index) => (
+            <ColorBox key={index} color={color} setEditedData={setEditedData} selectedColor={editedData.color} />
           ))}
         </View>
       )} 
-
-
-
 
 
       <View style={{ height: 20 }} />
