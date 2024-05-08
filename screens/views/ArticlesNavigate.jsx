@@ -12,7 +12,7 @@ export default function ArticlesNavigate() {
         onPress={() => navigation.navigate("Art")}
         style={styles.container}
       >
-        <MaterialCommunityIcons name="format-list-bulleted" size={24} color="#708090" />
+        <MaterialCommunityIcons name="audio-video" size={24} color="#708090" />
         <Text style={styles.text}>Artículos</Text>
       </TouchableOpacity>
       <TouchableOpacity
