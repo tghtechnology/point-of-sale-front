@@ -7,6 +7,7 @@ import useUser from '../hooks/useUser';
 import useCountry from '../hooks/useCountry';
 import UsuarioProvider from '../context/usuarios/UsuarioProvider';
 import CountryProvider from '../context/country/CountryProvider';
+import CustomAlert from '../componentes/CustomAlert'
 
 
 const INITIAL_STATE = {
@@ -23,6 +24,7 @@ const RegisterForm = () => {
   const [ dataForm, setDataForm] = useState(INITIAL_STATE);
   const [countrySelect, setCountrySelect] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const {handleCreateUser} = useUser();
   const { countries,fetchCountries } = useCountry();
   
@@ -57,6 +59,7 @@ const RegisterForm = () => {
     try {
       const response = await handleCreateUser(objectSend);
       if(response){
+        setShowAlert(true);
         setDataForm(INITIAL_STATE);
         setWorker([...worker, objectSend]);
         setCountrySelect('');
@@ -64,7 +67,7 @@ const RegisterForm = () => {
         alert("El usuarios no se pudo crear");
       }
     } catch (error) {
-      alert("problema interno del servidor")
+      console.log('error:',error)
     }
     console.log("valor del formulario"  + JSON.stringify(objectSend));
   }
@@ -156,6 +159,7 @@ const RegisterForm = () => {
           </View>
         </Modal>
         <View style={styles.redSection}></View>
+        <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
       </View>
       
   )
