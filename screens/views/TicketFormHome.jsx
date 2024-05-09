@@ -363,7 +363,7 @@ const handleSelectTax = async (tax) => {
       };
 
   return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
       <View style={styles.searchSection}>
         <TouchableOpacity style={styles.magnifies}>
           <Icon name="magnify" size={30} color="#517EF2" />
@@ -436,7 +436,7 @@ const handleSelectTax = async (tax) => {
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
