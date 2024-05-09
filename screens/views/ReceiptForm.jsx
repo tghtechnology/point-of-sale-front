@@ -1,17 +1,13 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity,FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import useRecibos from "../hooks/useRecibos";
 
-const DATA = [
-  {
-    id: '1-1005',
-    date: 'sábado, 6 de abril de 2024',
-    time: '10:48 a.m.',
-    amount: '$1.50',
-  },
-  // Agrega más datos aquí...
-];
+
+
  const ReceiptForm = () => {
+  const { listRecibo } = useRecibos();
+  console.log(listRecibo)
   return (
     <View style={styles.container}>
         <View style={styles.searchContainer}>
@@ -24,21 +20,15 @@ const DATA = [
         </TouchableOpacity>
         </View>
       <FlatList
-        data={DATA}
-        keyExtractor={item => item.id}
+        data={listRecibo}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
+            <View>
+            <Text style={styles.itemText}>{item.fecha_creacion}</Text>
+            </View>
             <TouchableOpacity>
             <MaterialCommunityIcons name="receipt" size={24} color="black" />
             </TouchableOpacity>
-            <View>
-              <Text style={styles.itemText}>{item.date}</Text>
-              <Text style={styles.itemText}>{item.time}</Text>
-            </View>
-            <View>
-              <Text style={styles.itemText}>{item.amount}</Text>
-              <Text style={styles.itemText}>#{item.id}</Text>
-            </View>
           </View>
         )}
       />
@@ -73,7 +63,12 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
       },
       itemText: {
-        color: 'black',
+        fontSize: 18,
+        color: '#333',
+        fontWeight: 'bold',
+       marginLeft:40,
+        marginBottom: 5,
+        textAlign: 'justify',
       },
       magnifies: {
         marginRight: 5,

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useTotal } from '../Global State/TotalContext'; 
 
 const TicketListForm = () => {
-    const [selectedItem, setSelectedItem] = useState([]);
+    const [selectedItems, setSelectedItems] = useState([]);
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [selectedTaxes, setSelectedTaxes] = useState([]);
     const [selectedClients, setSelectedClients] = useState([]);
@@ -16,12 +16,12 @@ const TicketListForm = () => {
 
     const fetchData = async () => {
         try {
-            const item = await AsyncStorage.getItem('selectedItem');
-            const discount = await AsyncStorage.getItem('selectedDiscount');
+            const item = await AsyncStorage.getItem('selectedItems');
+            const discount = await AsyncStorage.getItem('selectedDiscounts');
             const tax = await AsyncStorage.getItem('selectedTaxes');
             const cli = await AsyncStorage.getItem('selectedClients');
 
-            if (item !== null) setSelectedItem(JSON.parse(item));
+            if (item !== null) setSelectedItems(JSON.parse(item));
             if (discount !== null) setSelectedDiscounts(JSON.parse(discount));
             if (tax !== null) setSelectedTaxes([JSON.parse(tax)]);
             if (cli !== null) setSelectedClients([JSON.parse(cli)]);
@@ -35,7 +35,7 @@ const TicketListForm = () => {
     }, []);
 
     const calculateTotal = () => {
-        const totalPrice = selectedItem.reduce((acc, item) => {
+        const totalPrice = selectedItems.reduce((acc, item) => {
             const subtotal = calculateSubtotalWithDiscount(item);
             return acc + parseFloat(subtotal);
         }, 0);
@@ -61,7 +61,7 @@ const TicketListForm = () => {
 
     useEffect(() => {
         calculateTotal();
-    }, [selectedItem, selectedDiscounts, selectedTaxes]);
+    }, [selectedItems, selectedDiscounts, selectedTaxes]);
 
     const calculateSubtotalWithDiscount = (item) => {
         let subtotal = item.precio * item.quantity;
@@ -79,7 +79,7 @@ const TicketListForm = () => {
         navigation.navigate('SaleTicket');
     };
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+            <ScrollView container={styles.container}>
             {/* Sección del total */}
             <TouchableOpacity style={styles.cobrarButton}>
                 <View style={styles.totalTextContainer}>
@@ -91,24 +91,11 @@ const TicketListForm = () => {
 
             {/* Sección de artículos */}
             <View style={styles.itemList}>
-                {selectedItem.map(itm => (
+                {selectedItems.map(itm => (
                    <View key={itm.id} style={styles.item}>
-                   <View style={styles.leftContainer}>
-                       {itm.imagen ? (
-                           <Image source={{ uri: itm.imagen }} style={styles.image} />
-                       ) : itm.color ? (
-                           <View style={[styles.colorSquare, { backgroundColor: itm.color }]} />
-                       ) : (
-                           <Text>No hay representación</Text>
-                       )}
-                   </View>
-                   <View style={styles.rightContainer}>
-                       <Text style={styles.itemText}>{itm.nombre}</Text>
-                       <Text style={styles.quantityText}>x: {itm.quantity}</Text>
-                       <Text style={styles.priceText}>Precio: S/ {itm.precio}</Text>
-                       <Text style={styles.subtotalText}>Subtotal: S/ {calculateSubtotalWithDiscount(itm)}</Text>
-                   </View>
-               </View>               
+                     <Text style={styles.itemText}>{itm.nombre} x{itm.quantity}</Text>
+                     <Text style={styles.subtotalText}> Subtotal: S/ {calculateSubtotalWithDiscount(itm)}</Text>
+                 </View>                
                 ))}
             </View>
 
@@ -151,7 +138,7 @@ const TicketListForm = () => {
             <TouchableOpacity onPress={showSaleTicket} style={styles.button}>
                 <Text style={styles.buttonText}>Continuar</Text>
             </TouchableOpacity>
-        </ScrollView>
+            </ScrollView>
     );
 };
 
@@ -175,7 +162,7 @@ const styles = StyleSheet.create({
     },
     cobrarButton: {
         backgroundColor: '#F5F5F5',
-        paddingVertical: 30, // Ajusta la altura del botón aumentando el valor
+        paddingVertical: 30, 
         paddingHorizontal: 5,
         alignItems: 'center',
         borderRadius: 2,
@@ -211,17 +198,21 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#E0E0E0',
+        justifyContent: 'space-between',
     },
     leftContainer: {
-        marginRight: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      },
+      itemText: {
+        fontSize: 16,
+        color: '#000000',
     },
-    rightContainer: {
-        flex: 1,
-    },
-    itemText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginLeft: -2,
+    subtotalText: {
+        fontSize: 16,
+        color: '#666666',
+        fontWeight:'500'
     },
     quantityText: {
         fontSize: 14,
@@ -231,18 +222,13 @@ const styles = StyleSheet.create({
     priceText: {
         fontSize: 14,
         fontWeight: 'bold',
-        marginTop: 3, // Añade un margen arriba del precio
+        marginTop: 3, 
         color: '#4CAF50',
     },
-    subtotalText: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        marginTop: 3, // Añade un margen arriba del subtotal
-        color: '#C30000',
-    },
     sectionContainer: {
-        marginBottom: 10,
-        marginLeft:25
+        marginTop: 10,
+        marginLeft:25,
+        marginBottom: 25,
     },
     sectionTitle: {
         fontSize: 16,
@@ -259,12 +245,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 50,
         alignItems: 'center',
         borderRadius: 5,
-        marginHorizontal: 20,
-        marginTop: 100,
+        marginHorizontal: 25,
+        marginBottom: 25,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        shadowColor: '#000',
     },
     buttonText: {
         color: 'white',
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
     },
 });

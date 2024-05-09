@@ -89,7 +89,6 @@ export default function ArticlesEdit() {
     setEditedData({
       ...article,
       id_categoria: article.categoria?.id || "", 
-
     });
     if (article.imagen) {
       setSelectedImage(article.imagen);
