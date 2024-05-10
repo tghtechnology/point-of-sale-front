@@ -363,7 +363,7 @@ const TicketFormHome = () => {
   };
 
   return (
-    <View style={styles.container}>
+      <ScrollView style={styles.container}>
       <View style={styles.searchSection}>
         <TouchableOpacity style={styles.magnifies}>
           <Icon name="magnify" size={30} borderRadius={2} color="#517EF2" />
@@ -382,7 +382,7 @@ const TicketFormHome = () => {
 
       {/* Search Bar */}
       <View style={styles.Sections}>
-        <Picker
+      <Picker
           style={styles.picker}
           selectedValue={selectedValue}
           onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}>
@@ -436,7 +436,7 @@ const TicketFormHome = () => {
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
   leftContainer: {
     marginRight: 10,
   },
-  image: {
+  image:{
     width: 50,
     height: 50,
   },
@@ -602,5 +602,5 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   }
-});
+  });
 export default TicketFormHome

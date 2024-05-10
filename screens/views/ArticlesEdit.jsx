@@ -45,7 +45,7 @@ const ColorBox = ({ color, setEditedData, selectedColor }) => (
   />
 );
 
-const buildFormData = (editedData, selectedImage) => {
+const buildFormData = (editedData, selectedImage, categoriaSelect) => {
   const formData = new FormData();
 
   formData.append("nombre", editedData.nombre);
@@ -89,7 +89,6 @@ export default function ArticlesEdit() {
     setEditedData({
       ...article,
       id_categoria: article.categoria?.id || "", 
-
     });
     if (article.imagen) {
       setSelectedImage(article.imagen);
@@ -154,7 +153,7 @@ export default function ArticlesEdit() {
 
   const handleSubmit = async () => {
     try {
-      const formData = buildFormData(editedData, selectedImage);
+      const formData = buildFormData(editedData, selectedImage, categoriaSelect);
   
       console.log("Datos a enviar al servidor:", formData);
       
