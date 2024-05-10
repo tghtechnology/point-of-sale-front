@@ -6,8 +6,8 @@ import useRecibos from "../hooks/useRecibos";
 
 
  const ReceiptForm = () => {
-  const { listRecibo } = useRecibos();
-  console.log(listRecibo)
+  const { listRecibo} = useRecibos();
+  
   return (
     <View style={styles.container}>
         <View style={styles.searchContainer}>
@@ -23,12 +23,14 @@ import useRecibos from "../hooks/useRecibos";
         data={listRecibo}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            <View>
-            <Text style={styles.itemText}>{item.fecha_creacion}</Text>
-            </View>
             <TouchableOpacity>
             <MaterialCommunityIcons name="receipt" size={24} color="black" />
             </TouchableOpacity>
+            <View>
+            
+            <Text style={styles.itemText}>{item.ref}</Text>
+            </View>
+            
           </View>
         )}
       />

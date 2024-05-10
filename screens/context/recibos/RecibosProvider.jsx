@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react";
-import {listRecibos}from "../../services/RecibosService";
+import { listRecibos } from "../../services/RecibosService";
 import RecibosContext from "./RecibosContext";
 
 
@@ -7,7 +7,7 @@ const RecibosProvider = ({children}) => {
     const [listRecibo, setListRecibo] = useState([]);
 
     useEffect(() => {
-        const getArticle = async () => {
+        const getRecibos = async () => {
             try {
                 const { data, status } = await listRecibos();
                 if (status === 200) {
@@ -19,7 +19,7 @@ const RecibosProvider = ({children}) => {
                 console.error("Error al cargar recibos:", error);
             }
         }
-        getArticle();
+        getRecibos();
     }, []);
 
 
