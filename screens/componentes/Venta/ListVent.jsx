@@ -75,9 +75,6 @@ const ListVent = () => {
         return (subtotal - itemDiscount).toFixed(2);
     };
 
-    const showSaleTicket = () => {
-        navigation.navigate('SaleTicket');
-    };
     return (
             <ScrollView container={styles.container}>
             {/* Sección del total */}

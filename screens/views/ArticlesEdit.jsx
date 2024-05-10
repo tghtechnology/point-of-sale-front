@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
 import {MaterialIcons} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
