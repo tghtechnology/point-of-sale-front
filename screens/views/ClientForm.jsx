@@ -110,7 +110,7 @@ const INITIAL_STATE = {
             value={data.region}
             onChangeText={text => getValues('region', text)}
           />
-          
+          <Text style={styles.label}>Codigo Postal</Text>
           
           {/* INPUT PARA SELECCIONAR PAIS */}
         

@@ -152,14 +152,13 @@ const styles = StyleSheet.create({
     inputContainer: {
         position: 'relative',
         marginBottom: 15,
-        borderBottomWidth: 1,
         paddingBottom: 5,
     },
     inputLabel: {
         marginTop:2,
         position: 'absolute',
         left: 5,
-        color: 'gray',
+        color: 'blue',
     },
     input: {
         padding: 5,

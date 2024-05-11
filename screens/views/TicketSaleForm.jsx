@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, TouchableOpacity, StyleSheet, Text, TextInput, Alert } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-native';
 import { useTotal } from '../Global State/TotalContext';
 import useSale from '../hooks/useSale';
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import { useNavigation } from '@react-navigation/native';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
+import ErrorAlert from '../componentes/Alertas/ErrorAlert';
 import PaymentSelection from '../componentes/PaymentSelection';
 
 const INITIAL_STATE = {
@@ -22,7 +23,7 @@ const TicketSaleForm = () => {
     const { total } = useTotal();
     const [data, setData] = useState(INITIAL_STATE);
     const [selectedPayment, setSelectedPayment] = useState(null);
-    console.log("Valor de total:", total);
+    const navigation = useNavigation();
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [selectedTaxes, setSelectedTaxes] = useState(null);
@@ -58,7 +59,7 @@ const TicketSaleForm = () => {
       
         fetchDataFromAsyncStorage();
       }, []);
-      
+
     const handleChangeReceivedAmount = (amount) => {
         setReceivedAmount(amount);
         const calculatedChange = parseFloat(amount) - parseFloat(total);
@@ -79,10 +80,10 @@ const TicketSaleForm = () => {
                 dineroRecibido: parseFloat(receivedAmount)
               };
               console.log('Sale data:', data);
-
             const success = await handleCreateSale(data);
             if (success) {
                 setShowAlert(true);
+                 
               console.log('Sale data:', data);
             } else{
                 setErrorAlertVisible(true);
@@ -92,6 +93,26 @@ const TicketSaleForm = () => {
               setErrorAlertVisible(true);
             }
     }
+    const handleAlertClose = () => {
+        setShowAlert(false); 
+        clearAsyncStorage();
+        navigation.navigate('Ticket');
+    };
+    useEffect(() => {
+        clearAsyncStorage();
+      }, []);
+    
+      const clearAsyncStorage = async () => {
+        try {
+          await AsyncStorage.removeItem('selectedItems');
+          await AsyncStorage.removeItem('selectedDiscounts');
+          await AsyncStorage.removeItem('selectedClients');
+          await AsyncStorage.removeItem('selectedTaxes');
+          console.log('Datos de AsyncStorage eliminados al iniciar sesión');
+        } catch (error) {
+          console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
+        }
+      };
 
     return (
         <View style={styles.container}>
@@ -119,7 +140,7 @@ const TicketSaleForm = () => {
             <TouchableOpacity style={styles.button} onPress={handleCompleteSale}>
                 <Text style={styles.buttonText}>Completar Venta</Text>
             </TouchableOpacity>
-            <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+            <CustomAlert isVisible={showAlert} onClose={handleAlertClose} />
         <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
         </View>
     );
