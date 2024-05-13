@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text,TouchableOpacity, StyleSheet,Alert } from 'react-native';
 import useAuth from '../hooks/useAuth';
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
+import ErrorAlert from '../componentes/Alertas/ErrorAlert';
 
 const ResetPassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');

@@ -4,7 +4,7 @@ import { RadioButton } from "react-native-paper";
 import React, { useState } from "react";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
-import CustomAlert from "../componentes/CustomAlert";
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 

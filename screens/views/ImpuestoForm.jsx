@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
 import useImpuesto from "../hooks/useImpuesto";
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 
 const INITIAL_STATE = {
   nombre: "",

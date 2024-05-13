@@ -7,7 +7,7 @@ import useUser from '../hooks/useUser';
 import useCountry from '../hooks/useCountry';
 import UsuarioProvider from '../context/usuarios/UsuarioProvider';
 import CountryProvider from '../context/country/CountryProvider';
-import CustomAlert from '../componentes/CustomAlert'
+import CustomAlert from '../componentes/Alertas/CustomAlert'
 
 
 const INITIAL_STATE = {

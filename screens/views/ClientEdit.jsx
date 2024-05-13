@@ -4,8 +4,8 @@ import { Picker } from "@react-native-picker/picker";
 import { useRoute } from "@react-navigation/native";
 import useClient from '../hooks/useClient';
 import useCountry from "../hooks/useCountry";
-import CustomAlert from "../componentes/CustomAlert";
-import ErrorAlert from "../componentes/ErrorAlert";
+import CustomAlert from '../componentes/Alertas/CustomAlert';
+import ErrorAlert from '../componentes/Alertas/ErrorAlert';
 import { ScrollView } from "react-native-gesture-handler";
 
 
