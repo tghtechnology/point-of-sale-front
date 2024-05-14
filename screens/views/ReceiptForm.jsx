@@ -14,6 +14,10 @@ const ReceiptForm = () => {
     const venta = listSale.find(venta => venta.id === idVenta);
     return venta ? venta.tipoPago : 'No disponible';
   };
+  const getTotal = (idVenta) => {
+    const venta = listSale.find(venta => venta.id === idVenta);
+    return venta ? venta.total : 'No disponible';
+  };
 
   return (
     <View style={styles.container}>
@@ -32,10 +36,12 @@ const ReceiptForm = () => {
           <View style={styles.itemContainer}>
             <TouchableOpacity>
               <MaterialCommunityIcons name="receipt" size={24} color="black" />
+              <Text style={styles.itemText}>{`${new Date(item.fecha_creacion).toLocaleDateString('es-ES')} ${new Date(item.fecha_creacion).toLocaleTimeString('es-ES')}`}</Text>
             </TouchableOpacity>
             <View>
               <Text style={styles.itemText}>{`${item.ref}`}</Text>
-              <Text style={styles.itemText}>Tipo de Pago: {getTipoPago(item.id_venta)}</Text>
+              <Text style={styles.itemText}>{getTipoPago(item.id_venta)}</Text>
+              <Text style={styles.itemText}>S/. {getTotal(item.id_venta)}</Text>
             </View>
           </View>
         )}
