@@ -3,10 +3,17 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'r
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useRecibos from "../hooks/useRecibos";
 import { useTotal } from '../Global State/TotalContext';
+import useSale from '../hooks/useSale';
 
 const ReceiptForm = () => {
   const { listRecibo } = useRecibos();
-  const { tipoPago } = useTotal();
+  const { listSale } = useSale();
+  const { total, setTotal } = useTotal();
+
+  const getTipoPago = (idVenta) => {
+    const venta = listSale.find(venta => venta.id === idVenta);
+    return venta ? venta.tipoPago : 'No disponible';
+  };
 
   return (
     <View style={styles.container}>
@@ -27,8 +34,8 @@ const ReceiptForm = () => {
               <MaterialCommunityIcons name="receipt" size={24} color="black" />
             </TouchableOpacity>
             <View>
-            <Text style={styles.itemText}>{`${item.ref}`}</Text>
-            <Text style={styles.itemText}>Tipo de Pago: {`${item.tipoPago}`}</Text>
+              <Text style={styles.itemText}>{`${item.ref}`}</Text>
+              <Text style={styles.itemText}>Tipo de Pago: {getTipoPago(item.id_venta)}</Text>
             </View>
           </View>
         )}

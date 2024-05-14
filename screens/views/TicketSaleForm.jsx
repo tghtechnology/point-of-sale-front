@@ -28,7 +28,7 @@ const TicketSaleForm = () => {
     const [selectedDiscounts, setSelectedDiscounts] = useState([]);
     const [selectedTaxes, setSelectedTaxes] = useState(null);
     const [selectedClients, setSelectedClients] = useState(null);
-    const  handleCreateSale  = useSale();
+    const { handleCreateSale } = useSale();
     const [showAlert, setShowAlert] = useState(false);
     const [errorAlertVisible, setErrorAlertVisible] = useState(false);
 
@@ -96,7 +96,7 @@ const TicketSaleForm = () => {
     const handleAlertClose = () => {
         setShowAlert(false); 
         clearAsyncStorage();
-        navigation.navigate('Ticket');
+        navigation.navigate('Home');
     };
     useEffect(() => {
         clearAsyncStorage();
