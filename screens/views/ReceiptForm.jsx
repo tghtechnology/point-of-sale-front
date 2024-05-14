@@ -14,9 +14,41 @@ const ReceiptForm = () => {
     const venta = listSale.find(venta => venta.id === idVenta);
     return venta ? venta.tipoPago : 'No disponible';
   };
+
   const getTotal = (idVenta) => {
     const venta = listSale.find(venta => venta.id === idVenta);
     return venta ? venta.total : 'No disponible';
+  };
+
+  const getMontoReembolsado = (recibo) => {
+    if (recibo.monto_reembolsado !== null) {
+      const reciboReembolsado = listRecibo.find(item => item.id === recibo.id_venta);
+      return `Reembolsado: ${reciboReembolsado ? reciboReembolsado.ref : 'No disponible'}`;
+    }
+    return '';
+  };
+
+  const renderItem = ({ item }) => {
+    const isReembolsado = item.monto_reembolsado !== null;
+    return (
+      <View style={styles.itemContainer}>
+        <View style={styles.iconContainer}>
+          <MaterialCommunityIcons name="receipt" size={24} color="black" />
+        </View>
+        <View style={styles.totalDateContainer}>
+          <Text style={styles.itemText}>
+            {isReembolsado ? `S/. ${item.monto_reembolsado}` : `S/. ${getTotal(item.id_venta)}`}
+          </Text>
+          <Text style={styles.itemText}>
+            {`${new Date(item.fecha_creacion).toLocaleDateString('es-ES')} ${new Date(item.fecha_creacion).toLocaleTimeString('es-ES')}`}
+          </Text>
+        </View>
+        <View style={styles.refContainer}>
+          <Text style={styles.itemText}>{`${item.ref}`}</Text>
+          {isReembolsado && <Text style={styles.reembolsadoText}>{getMontoReembolsado(item)}</Text>}
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -25,31 +57,20 @@ const ReceiptForm = () => {
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar"
-          placeholderTextColor="black" />
+          placeholderTextColor="black"
+        />
         <TouchableOpacity>
           <MaterialCommunityIcons name="magnify" size={20} color="#000" style={styles.magnifies} />
         </TouchableOpacity>
       </View>
       <FlatList
         data={listRecibo}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <View style={styles.iconContainer}>
-              <MaterialCommunityIcons name="receipt" size={24} color="black" />
-            </View>
-            <View style={styles.totalDateContainer}>
-              <Text style={styles.itemText}>{`S/. ${getTotal(item.id_venta)}`}</Text>
-              <Text style={styles.itemText}>{`${new Date(item.fecha_creacion).toLocaleDateString('es-ES')} ${new Date(item.fecha_creacion).toLocaleTimeString('es-ES')}`}</Text>
-            </View>
-            <View style={styles.refContainer}>
-              <Text style={styles.itemText}>{`${item.ref}`}</Text>
-            </View>
-          </View>
-        )}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -94,8 +115,14 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   itemText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#333',
+    textAlign: 'justify',
+    marginBottom: 5,
+  },
+  reembolsadoText: {
+    fontSize: 13,
+    color: '#d9534f', 
     textAlign: 'justify',
     marginBottom: 5,
   },
