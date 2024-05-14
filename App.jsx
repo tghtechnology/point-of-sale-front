@@ -11,11 +11,13 @@ import ImpuestoProvider from "./screens/context/impuesto/ImpuestoProvider.jsx";
 import ClientProvider from "./screens/context/cliente/ClientProvider.jsx";
 import WorkerProvider from "./screens/context/worker/WorkerProvider.jsx";
 import SaleProvider from "./screens/context/sale/SaleProvider.jsx";
+import RecibosProvider from "./screens/context/recibos/RecibosProvider.jsx";
 import { TotalProvider } from "./screens/Global State/TotalProvider.jsx";
-import {useFont} from 'expo-font';
+
 
 export default function App() {
   return (
+    <RecibosProvider>
     <TotalProvider>
     <SaleProvider>
       <WorkerProvider>
@@ -41,5 +43,6 @@ export default function App() {
       </WorkerProvider>
     </SaleProvider>
     </TotalProvider>
+    </RecibosProvider>
   );
 }
