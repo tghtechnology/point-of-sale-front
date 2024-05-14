@@ -34,14 +34,15 @@ const ReceiptForm = () => {
         data={listRecibo}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            <TouchableOpacity>
+            <View style={styles.iconContainer}>
               <MaterialCommunityIcons name="receipt" size={24} color="black" />
+            </View>
+            <View style={styles.totalDateContainer}>
+              <Text style={styles.itemText}>{`S/. ${getTotal(item.id_venta)}`}</Text>
               <Text style={styles.itemText}>{`${new Date(item.fecha_creacion).toLocaleDateString('es-ES')} ${new Date(item.fecha_creacion).toLocaleTimeString('es-ES')}`}</Text>
-            </TouchableOpacity>
-            <View>
+            </View>
+            <View style={styles.refContainer}>
               <Text style={styles.itemText}>{`${item.ref}`}</Text>
-              <Text style={styles.itemText}>{getTipoPago(item.id_venta)}</Text>
-              <Text style={styles.itemText}>S/. {getTotal(item.id_venta)}</Text>
             </View>
           </View>
         )}
@@ -54,6 +55,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -62,28 +65,39 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
+    marginBottom: 10,
   },
   searchInput: {
     flex: 1,
     color: 'black',
     paddingHorizontal: 20,
-    padding: 10,
+    paddingVertical: 10,
   },
   itemContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'space-between',
+    paddingVertical: 10,
     borderBottomColor: 'gray',
     borderBottomWidth: 1,
   },
+  iconContainer: {
+    width: '10%',
+    alignItems: 'center',
+  },
+  totalDateContainer: {
+    width: '40%',
+    marginLeft: 10,
+  },
+  refContainer: {
+    width: '40%',
+    marginLeft: 10,
+  },
   itemText: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#333',
-    fontWeight: 'bold',
-    marginLeft: 40,
-    marginBottom: 5,
     textAlign: 'justify',
+    marginBottom: 5,
   },
   magnifies: {
     marginRight: 5,
