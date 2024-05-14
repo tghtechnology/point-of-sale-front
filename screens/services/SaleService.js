@@ -30,7 +30,24 @@ const createSale = async (newSal, usuarioId) => {
         throw error;
     }
 };
-
+const listSales =async()=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/venta`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data,
+            status,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 export {
     createSale,
+    listSales,
 }

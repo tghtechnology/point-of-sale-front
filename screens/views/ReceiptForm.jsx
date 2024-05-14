@@ -3,10 +3,23 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'r
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useRecibos from "../hooks/useRecibos";
 import { useTotal } from '../Global State/TotalContext';
+import useSale from '../hooks/useSale';
+import { useNavigation } from '@react-navigation/native';
 
 const ReceiptForm = () => {
+  const navigation = useNavigation();
   const { listRecibo } = useRecibos();
-  const { tipoPago } = useTotal();
+  const { listSale } = useSale();
+  const { total, setTotal } = useTotal();
+
+  const getTipoPago = (idVenta) => {
+    const venta = listSale.find(venta => venta.id === idVenta);
+    return venta ? venta.tipoPago : 'No disponible';
+  };
+  const getTotal = (idVenta) => {
+    const venta = listSale.find(venta => venta.id === idVenta);
+    return venta ? venta.total : 'No disponible';
+  };
 
   return (
     <View style={styles.container}>
@@ -20,19 +33,22 @@ const ReceiptForm = () => {
         </TouchableOpacity>
       </View>
       <FlatList
-        data={listRecibo}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <TouchableOpacity>
-              <MaterialCommunityIcons name="receipt" size={24} color="black" />
-            </TouchableOpacity>
-            <View>
-            <Text style={styles.itemText}>{`${item.ref}`}</Text>
-            <Text style={styles.itemText}>Tipo de Pago: {`${item.tipoPago}`}</Text>
-            </View>
-          </View>
-        )}
-      />
+  data={listRecibo}
+  renderItem={({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { item })}>
+      <View style={styles.itemContainer}>
+        <MaterialCommunityIcons name="receipt" size={24} color="black" />
+        <Text style={styles.itemText}>{`${new Date(item.fecha_creacion).toLocaleDateString('es-ES')} ${new Date(item.fecha_creacion).toLocaleTimeString('es-ES')}`}</Text>
+        <View>
+          <Text style={styles.itemText}>{`${item.ref}`}</Text>
+          <Text style={styles.itemText}>{getTipoPago(item.id_venta)}</Text>
+          <Text style={styles.itemText}>S/. {getTotal(item.id_venta)}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  )}
+/>
+
     </View>
   );
 }
