@@ -4,8 +4,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useRecibos from "../hooks/useRecibos";
 import { useTotal } from '../Global State/TotalContext';
 import useSale from '../hooks/useSale';
+import { useNavigation } from '@react-navigation/native';
 
 const ReceiptForm = () => {
+  const navigation = useNavigation();
   const { listRecibo } = useRecibos();
   const { listSale } = useSale();
   const { total, setTotal } = useTotal();
@@ -14,7 +16,6 @@ const ReceiptForm = () => {
     const venta = listSale.find(venta => venta.id === idVenta);
     return venta ? venta.tipoPago : 'No disponible';
   };
-
   const getTotal = (idVenta) => {
     const venta = listSale.find(venta => venta.id === idVenta);
     return venta ? venta.total : 'No disponible';
