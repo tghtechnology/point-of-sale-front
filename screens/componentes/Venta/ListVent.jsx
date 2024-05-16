@@ -14,7 +14,7 @@ const ListVent = () => {
     const [taxValue, setTaxValue] = useState(0);
     const navigation = useNavigation();
 
-    const fetchData = async () => {
+    const fetchData = async () => { 
         try {
             const item = await AsyncStorage.getItem('selectedItems');
             const discount = await AsyncStorage.getItem('selectedDiscounts');
@@ -147,13 +147,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 10, 
     },
-    totalText: {
-        color: '#4CAF50',
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginTop: 20,
-        textAlign: 'right',
-    },
     cobrarButton: {
         backgroundColor: '#F5F5F5',
         paddingVertical: 30, 
@@ -194,11 +187,6 @@ const styles = StyleSheet.create({
         borderColor: '#E0E0E0',
         justifyContent: 'space-between',
     },
-    leftContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      },
       itemText: {
         fontSize: 16,
         color: '#000000',
@@ -207,17 +195,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#666666',
         fontWeight:'500'
-    },
-    quantityText: {
-        fontSize: 14,
-        color: '#666666',
-        marginBottom: 5,
-    },
-    priceText: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        marginTop: 3, 
-        color: '#4CAF50',
     },
     sectionContainer: {
         marginTop: 10,
@@ -232,23 +209,6 @@ const styles = StyleSheet.create({
     sectionItem: {
         fontSize: 14,
         color: '#666666',
-    },
-    button: {
-        backgroundColor: '#517EF2',
-        paddingVertical: 20,
-        paddingHorizontal: 50,
-        alignItems: 'center',
-        borderRadius: 5,
-        marginHorizontal: 25,
-        marginBottom: 25,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        shadowColor: '#000',
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 20,
-        fontWeight: 'bold',
     },
 });
 

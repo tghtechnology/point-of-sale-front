@@ -4,8 +4,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useWorker from '../hooks/useWorker';
 import WorkerProvider from '../context/worker/WorkerProvider';
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
+import ErrorAlert from "../componentes/Alertas/ErrorAlert";
 
 
 //Contante para Seleccionar Cargos

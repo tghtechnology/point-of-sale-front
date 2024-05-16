@@ -4,8 +4,8 @@ import { View, TouchableOpacity, StyleSheet, Text, TextInput } from 'react-nativ
 import { useTotal } from '../Global State/TotalContext';
 import useSale from '../hooks/useSale';
 import { useNavigation } from '@react-navigation/native';
-import CustomAlert from '../componentes/Alertas/CustomAlert';
-import ErrorAlert from '../componentes/Alertas/ErrorAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
+import ErrorAlert from "../componentes/Alertas/ErrorAlert";
 import PaymentSelection from '../componentes/PaymentSelection';
 
 const INITIAL_STATE = {

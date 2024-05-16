@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} fr
 import { MaterialCommunityIcons,FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useImpuesto from "../hooks/useImpuesto";
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 
 
  const PlusImpuesto = () => {

@@ -5,8 +5,8 @@ import useCountry from '../hooks/useCountry';
 import useClient from '../hooks/useClient';
 import ClientProvider from '../context/cliente/ClientProvider';
 import CountryProvider from '../context/country/CountryProvider';
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
+import ErrorAlert from "../componentes/Alertas/ErrorAlert";
 
 const INITIAL_STATE = {
     nombre:'',

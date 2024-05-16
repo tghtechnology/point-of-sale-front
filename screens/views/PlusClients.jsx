@@ -5,8 +5,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useClient from '../hooks/useClient';
 import ClientProvider from '../context/cliente/ClientProvider';
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
+import ErrorAlert from "../componentes/Alertas/ErrorAlert";
 
 const PlusClients = (props) => {
     const navigation = useNavigation();

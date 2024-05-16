@@ -4,8 +4,8 @@ import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useWorker from '../hooks/useWorker';
 import useCountry from '../hooks/useCountry';
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
+import ErrorAlert from "../componentes/Alertas/ErrorAlert";
 
 const INITIAL_STATE = {
   nombre: '',

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} fr
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useCategory from '../hooks/useCategory';
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 
  const PlusCategory = () => {
   const navigation = useNavigation();

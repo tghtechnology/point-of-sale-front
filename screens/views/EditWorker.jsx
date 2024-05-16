@@ -5,8 +5,8 @@ import { useRoute } from "@react-navigation/native";
 import useWorker from '../hooks/useWorker';
 import useCountry from '../hooks/useCountry';
 import WorkerProvider from '../context/worker/WorkerProvider';
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
+import ErrorAlert from "../componentes/Alertas/ErrorAlert";
 
 const INITIAL_STATE = {
     nombre: '',

@@ -3,8 +3,8 @@ import { View, TouchableOpacity, StyleSheet,Text, TextInput} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useDiscount from '../hooks/useDiscount';
 import DiscountProvider from '../context/discount/DiscountProvider';
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
+import ErrorAlert from "../componentes/Alertas/ErrorAlert";
 
 const INITIAL_STATE = {
     nombre:'',

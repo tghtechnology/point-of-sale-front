@@ -1,35 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image, ScrollView } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../hooks/useArticle";
-import useDiscount from '../hooks/useDiscount';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import useClient from '../hooks/useClient'
-import useImpuesto from "../hooks/useImpuesto";
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const [showSaveChangesAlert, setShowSaveChangesAlert] = useState(false);
-  const [showAlertDeselect, setShowAlertDeselect] = useState(false);
   const { listArticle } = useArticle();
-  const { discounts } = useDiscount();
-  const { client } = useClient();
-  const { listImpuesto } = useImpuesto();
   const [selectedValue, setSelectedValue] = useState('default');
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedDiscounts, setSelectedDiscounts] = useState([]);
-  const [selectedTaxes, setSelectedTaxes] = useState(null);
-  const [selectedClients, setSelectedClients] = useState(null);
-  const pickerOptions = {
-    default: "Artículos",
-    discounts: "Descuentos",
-    clients: "Clientes",
-    impuestos: "Impuestos"
-  };
-
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
   const [selectedProductIds, setSelectedProductIds] = useState([]);
@@ -37,13 +18,7 @@ const TicketFormHome = () => {
     const clearAsyncStorage = async () => {
       try {
         await AsyncStorage.removeItem('selectedItems');
-        await AsyncStorage.removeItem('selectedDiscounts');
-        await AsyncStorage.removeItem('selectedClients');
-        await AsyncStorage.removeItem('selectedTaxes');
         setSelectedItems([]);
-        setSelectedDiscounts([]);
-        setSelectedClients([]);
-        setSelectedTaxes([]);
         console.log('Datos de AsyncStorage eliminados al iniciar sesión');
       } catch (error) {
         console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
@@ -66,22 +41,12 @@ const TicketFormHome = () => {
     const fetchDataFromAsyncStorage = async () => {
       try {
         const storedItems = await AsyncStorage.getItem('selectedItems');
-        const storedDiscounts = await AsyncStorage.getItem('selectedDiscounts');
-        const storedClient = await AsyncStorage.getItem('selectedClients');
-        const storedTaxes = await AsyncStorage.getItem('selectedTaxes');
+
 
         if (storedItems !== null) {
           setSelectedItems(JSON.parse(storedItems));
         }
-        if (storedDiscounts !== null) {
-          setSelectedDiscounts(JSON.parse(storedDiscounts));
-        }
-        if (storedClient !== null) {
-          setSelectedClients(JSON.parse(storedClient));
-        }
-        if (storedTaxes !== null) {
-          setSelectedTaxes(JSON.parse(storedTaxes));
-        }
+
       } catch (error) {
         console.error('Error fetching data from AsyncStorage:', error);
       }
@@ -100,19 +65,21 @@ const TicketFormHome = () => {
 
   const handleSelectItem = async (item) => {
     let updatedItems = [...selectedItems];
-    const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
-
-    if (itemIndex !== -1) {
-      updatedItems.splice(itemIndex, 1);
-      setShowAlertDeselect(true);
+    const selectedItemIndex = updatedItems.findIndex((i) => i.id === item.id);
+  
+    if (selectedItemIndex !== -1) {
+      // Si el artículo ya está seleccionado, lo eliminamos de la lista de selección
+      updatedItems.splice(selectedItemIndex, 1);
     } else {
+      // Si el artículo no está seleccionado, lo agregamos a la lista de selección
       updatedItems.push({ ...item, quantity });
-      setShowAlert(true);
     }
-
+  
+    // Actualizamos el estado de los artículos seleccionados
     setSelectedItems(updatedItems);
-
+  
     try {
+      // Guardamos la lista de artículos seleccionados en AsyncStorage para persistencia de datos
       if (updatedItems.length > 0) {
         await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
         console.log('Lista de artículos seleccionados guardada en AsyncStorage:', updatedItems);
@@ -124,82 +91,10 @@ const TicketFormHome = () => {
       console.error('Error al guardar/eliminar la lista de artículos seleccionados en AsyncStorage:', error);
     }
   };
-
-  const handleSelectDiscount = async (discount) => {
-    let updatedDiscounts = [...selectedDiscounts];
-    const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
-
-    if (discountIndex !== -1) {
-      updatedDiscounts.splice(discountIndex, 1);
-    } else {
-      updatedDiscounts = [discount];
-    }
-
-    setSelectedDiscounts(updatedDiscounts);
-
-    try {
-      if (updatedDiscounts.length > 0) {
-        await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(updatedDiscounts));
-        console.log('Lista de descuentos seleccionados guardada en AsyncStorage:', updatedDiscounts);
-      } else {
-        await AsyncStorage.removeItem('selectedDiscounts');
-        console.log('Lista de descuentos seleccionados eliminada de AsyncStorage');
-      }
-    } catch (error) {
-      console.error('Error al guardar/eliminar la lista de descuentos seleccionados en AsyncStorage:', error);
-    }
-  };
-
-  const handleSelectClient = async (client) => {
-    if (selectedClients && selectedClients.id === client.id) {
-      setSelectedClients(null);
-      try {
-        await AsyncStorage.removeItem('selectedClients');
-        console.log('Cliente deseleccionado eliminado del AsyncStorage.');
-      } catch (error) {
-        console.error('Error al eliminar cliente deseleccionado del AsyncStorage:', error);
-      }
-    } else {
-      setSelectedClients(client);
-      try {
-        await AsyncStorage.setItem('selectedClients', JSON.stringify(client));
-        console.log('Cliente seleccionado guardado en AsyncStorage:', client);
-      } catch (error) {
-        console.error('Error al guardar cliente seleccionado en AsyncStorage:', error);
-      }
-    }
-  };
-
-  const handleSelectTax = async (tax) => {
-    if (selectedTaxes && selectedTaxes.id === tax.id) {
-      setSelectedTaxes(null);
-      try {
-        await AsyncStorage.removeItem('selectedTaxes');
-        console.log('Impuesto deseleccionado eliminado del AsyncStorage.');
-      } catch (error) {
-        console.error('Error al eliminar impuesto deseleccionado del AsyncStorage:', error);
-      }
-    } else {
-      setSelectedTaxes(tax);
-      try {
-        await AsyncStorage.setItem('selectedTaxes', JSON.stringify(tax));
-        console.log('Impuesto seleccionado guardado en AsyncStorage:', tax);
-      } catch (error) {
-        console.error('Error al guardar impuesto seleccionado en AsyncStorage:', error);
-      }
-    }
-  };
+  
 
   const showListArticles = () => {
     navigation.navigate('ListarTicket');
-  };
-
-  const handleCloseAlert = () => {
-    setShowAlert(false);
-  };
-
-  const handleCloseAlertDeselect = () => {
-    setShowAlertDeselect(false);
   };
 
   const handleAddQuantity = async (item) => {
@@ -241,7 +136,6 @@ const TicketFormHome = () => {
           return selectedItem;
         }
       });
-
       setSelectedItems(updatedItems);
     }
   };
@@ -249,19 +143,15 @@ const TicketFormHome = () => {
   const RemoveItem = async () => {
     await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
   }
-
   const handleSaveChanges = async () => {
     try {
       await RemoveItem();
-      await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(selectedDiscounts));
-      await AsyncStorage.setItem('selectedTaxs', JSON.stringify(selectedTaxes));
       console.log('Cambios guardados exitosamente');
       showListArticles();
     } catch (error) {
       console.error('Error al guardar cambios:', error);
     }
   };
-
   const renderItem = ({ item }) => {
     const selectedItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
     const quantity = selectedItem ? selectedItem.quantity : 0;
@@ -304,53 +194,6 @@ const TicketFormHome = () => {
     );
   };
 
-  const renderItemDiscounts = ({ item }) => {
-    let discountValue = '';
-    if (item.tipo_descuento === 'MONTO') {
-      discountValue = `S/ ${parseFloat(item.valor).toFixed(2)}`;
-    } else if (item.tipo_descuento === 'PORCENTAJE') {
-      discountValue = `${item.valor}%`;
-    }
-    return (
-      <View style={styles.item}>
-        <TouchableOpacity
-          style={[styles.circle,
-          selectedDiscounts.some(selectedDiscount => selectedDiscount.id === item.id) && styles.circleSelected]}
-          onPress={() => handleSelectDiscount(item)}
-        />
-        <Text style={styles.itemText}>{item.nombre}</Text>
-        <Text style={styles.priceText}>{discountValue}</Text>
-      </View>
-    );
-  };
-
-  const renderItemClient = ({ item }) => (
-    <View style={styles.item}>
-      <TouchableOpacity
-        style={[
-          styles.circle,
-          selectedClients && selectedClients.id === item.id && styles.circleSelected
-        ]}
-        onPress={() => handleSelectClient(item)}
-      />
-      <Text style={styles.itemText}>{item.nombre}</Text>
-      <Text style={styles.priceText}>{item.email}</Text>
-    </View>
-  );
-
-  const renderItemTaxes = ({ item }) => (
-    <View style={styles.item}>
-      <TouchableOpacity
-        style={[
-          styles.circle,
-          selectedTaxes && selectedTaxes.id === item.id && styles.circleSelected
-        ]}
-        onPress={() => handleSelectTax(item)}
-      />
-      <Text style={styles.itemText}>{item.nombre}</Text>
-      <Text style={styles.priceText}>{item.tasa} %</Text>
-    </View>
-  );
   const colorMapping = {
     'Rojo': '#FF0000',
     'Verde_limon': '#00FF00',
@@ -363,7 +206,7 @@ const TicketFormHome = () => {
   };
 
   return (
-      <View style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.searchSection}>
         <TouchableOpacity style={styles.magnifies}>
           <Icon name="magnify" size={30} borderRadius={2} color="#517EF2" />
@@ -379,19 +222,7 @@ const TicketFormHome = () => {
           )}
         </TouchableOpacity>
       </View>
-
-      {/* Search Bar */}
-      <View style={styles.Sections}>
-      <Picker
-          style={styles.picker}
-          selectedValue={selectedValue}
-          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}>
-          {Object.keys(pickerOptions).map((value) => (
-            <Picker.Item key={value} label={pickerOptions[value]} value={value} />
-          ))}
-        </Picker>
-      </View>
-
+      <View style={styles.divider}/>
       {/* List Items */}
       {selectedValue === 'default' && (
         <View style={styles.itemList}>
@@ -401,37 +232,6 @@ const TicketFormHome = () => {
           />
         </View>
       )}
-
-      {/* List Discounts */}
-      {selectedValue === 'discounts' && (
-        <View style={styles.itemList}>
-          <FlatList
-            data={discounts}
-            renderItem={renderItemDiscounts}
-          />
-        </View>
-      )}
-
-      {/* List Client */}
-      {selectedValue === 'clients' && (
-        <View style={styles.itemList}>
-          <FlatList
-            data={client}
-            renderItem={renderItemClient}
-          />
-        </View>
-      )}
-
-      {/* List Client */}
-      {selectedValue === 'impuestos' && (
-        <View style={styles.itemList}>
-          <FlatList
-            data={listImpuesto}
-            renderItem={renderItemTaxes}
-          />
-        </View>
-      )}
-
       {/* Footer Navigation */}
       <View style={styles.footer}>
         {/* Icons like home, search, etc. */}
@@ -444,71 +244,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    alignContent: 'center',
+    padding: 0,
+    margin:0,
   },
   divider: {
-    width: '120%',
     height: 1,
-    backgroundColor: 'black',
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-  },
-  saveButton: {
-    width: 100,
-    height: 50,
+    width: '100%',
+    backgroundColor: '#D0D0D0',
+    marginHorizontal: 0,
+    marginVertical: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 200,
+    margin: 5,
   },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  cobrarButton: {
-    backgroundColor: 'red',
-    padding: 25,
-    alignItems: 'center',
-    borderRadius: 2,
-    margin: 15,
-  },
-  cobrarText: {
-    color: '#FFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  amountText: {
-    color: '#FFF',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  Sections: {
+  searchSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
-    marginHorizontal: 15,
-  },
-  picker: {
-    flex: 1,
-    height: 40,
-    borderBottomWidth: 1,
-    backgroundColor: '#EAEAEA',
-    borderRadius: 8,
-  },
-  searchInput: {
-    flex: 1,
-    marginLeft: 10,
+    paddingHorizontal: '2%', // Usando porcentaje en lugar de valor fijo
   },
   itemList: {
-    marginTop: 10,
+    flex: 1,
+    paddingHorizontal: '2%', // Usando porcentaje en lugar de valor fijo
+    margin: 10,
   },
   item: {
-    flex: 1,
     flexDirection: 'row',
-    padding: 10,
     alignItems: 'center',
+    marginBottom: 10,
+    paddingHorizontal: '2%', // Usando porcentaje en lugar de valor fijo
   },
   itemInfo: {
     flex: 1,
@@ -527,30 +290,32 @@ const styles = StyleSheet.create({
     borderColor: '#517EF2',
     backgroundColor: '#FFF',
     marginRight: 10,
+    borderRadius:3,
   },
   circleSelected: {
     backgroundColor: 'blue',
     borderColor: 'blue',
-  }, quantityContainer: {
+  },
+  quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 10,
   },
   quantityInput: {
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#999',
     borderRadius: 5,
-    paddingHorizontal: 5,
-    marginRight: 5,
-    width: 30,
+    paddingHorizontal: 10,
+    width: 40,
     height: 30,
     textAlign: 'center',
   },
   quantityButton: {
-    paddingHorizontal: 10,
+    backgroundColor: '#DDD',
     borderRadius: 5,
-    textAlign: 'center',
-    fontSize: 30,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    margin: 5,
   },
   itemText: {
     flex: 1,
@@ -594,13 +359,17 @@ const styles = StyleSheet.create({
   leftContainer: {
     marginRight: 10,
   },
-  image:{
+  image: {
     width: 50,
     height: 50,
+    marginRight: 10,
+    borderRadius: 3,
   },
   colorSquare: {
     width: 50,
     height: 50,
+    borderRadius: 3,
   }
-  });
+});
+
 export default TicketFormHome
