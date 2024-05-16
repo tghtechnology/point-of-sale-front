@@ -1,44 +1,43 @@
 import 'react-native-gesture-handler';
-import { View, Text } from 'react-native'
 import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {NavigationContainer, useNavigation, DrawerActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from './screens/views/HomeScreen';
-import DeleteAccount from './screens/views/DeleteAccount';
+import HomeScreen from './screens/views/Cuenta/HomeScreen';
+import DeleteAccount from './screens/views/Cuenta/DeleteAccount';
 import ArticlesNavigate from './screens/views/ArticlesNavigate';
+import PlusArticles from './screens/views/Articulos/PlusArticles';
+import ArticlesForm from './screens/views/Articulos/ArticlesForm';
+import ArticlesEdit from './screens/views/Articulos/ArticlesEdit';
 import MiembNavigate from './screens/views/MiembNavigate'
-import PlusArticles from './screens/views/PlusArticles';
-import PlusCategory from './screens/views/PlusCategory';
-import ArticlesForm from './screens/views/ArticlesForm';
+import PlusCategory from './screens/views/Categorias/PlusCategory';
 import Icon from "react-native-vector-icons/Entypo";
-import CategoryForm from './screens/views/CategoryForm';
+import CategoryForm from './screens/views/Categorias/CategoryForm';
 import { Ionicons, MaterialCommunityIcons,FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import HomeView from './screens/views/HomeView';
-import LoginForm from "./screens/views/LoginForm"
-import RegisterForm from './screens/views/RegisterForm';
-import EnvioCorreoForm from './screens/views/EnvioCorreoForm';
-import DiscountForm from './screens/views/DiscountForm';
-import FormRegisEmpleado from './screens/views/FormRegisEmpleado';
-import ArticlesEdit from './screens/views/ArticlesEdit';
-import PlusDiscount from './screens/views/PlusDiscount';
-import PlusFalseDiscount from './screens/views/PlusFalseDiscount';
-import PlusImpuesto from './screens/views/PlusImpuesto';
-import ImpuestoForm from './screens/views/ImpuestoForm';
-import ImpuestoEdit from './screens/views/ImpuestoEdit';
-import CategoryEdit from './screens/views/CategoryEdit';
-import ClientForm from './screens/views/ClientForm';
-import PlusClients from './screens/views/PlusClients';
-import ClientEdit from './screens/views/ClientEdit'
-import PlusWorkers from './screens/views/PlusWorkers';
-import TicketFormHome from './screens/views/TicketFormHome';
-import ReceiptForm from './screens/views/ReceiptForm';
-import EditWorker from './screens/views/EditWorker';
-import TicketListForm from './screens/views/TicketListForm';
-import TicketSaleForm from './screens/views/TicketSaleForm';
-import ProfileEdit from './screens/views/ProfileEdit';
-import DataUser from './screens/views/DataUser';
-import ResetPassword from './screens/views/ResetPassword';
+import HomeView from './screens/views/Inicio/HomeView';
+import LoginForm from "./screens/views/Login/LoginForm"
+import RegisterForm from './screens/views/Login/RegisterForm';
+import EnvioCorreoForm from './screens/views/Login/EnvioCorreoForm';
+import DiscountForm from './screens/views/Descuentos/DiscountForm';
+import FormRegisEmpleado from './screens/views/Empleados/FormRegisEmpleado';
+import PlusDiscount from './screens/views/Descuentos/PlusDiscount';
+import PlusFalseDiscount from './screens/views/Descuentos/PlusFalseDiscount';
+import PlusImpuesto from './screens/views/Impuestos/PlusImpuesto';
+import ImpuestoForm from './screens/views/Impuestos/ImpuestoForm';
+import ImpuestoEdit from './screens/views/Impuestos/ImpuestoEdit';
+import CategoryEdit from './screens/views/Categorias/CategoryEdit';
+import ClientForm from './screens/views/Clientes/ClientForm';
+import PlusClients from './screens/views/Clientes/PlusClients';
+import ClientEdit from './screens/views/Clientes/ClientEdit'
+import PlusWorkers from './screens/views/Empleados/PlusWorkers';
+import ReceiptForm from './screens/views/Ventas/ReceiptForm';
+import EditWorker from './screens/views/Empleados/EditWorker';
+import TicketFormHome from './screens/views/Ventas/TicketFormHome';
+import TicketListForm from './screens/views/Ventas/TicketListForm';
+import TicketSaleForm from './screens/views/Ventas/TicketSaleForm';
+import ProfileEdit from './screens/views/Usuario/ProfileEdit';
+import DataUser from './screens/views/Usuario/DataUser';
+import ResetPassword from './screens/views/Usuario/ResetPassword';
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
