@@ -13,10 +13,12 @@ import WorkerProvider from "./screens/context/worker/WorkerProvider.jsx";
 import SaleProvider from "./screens/context/sale/SaleProvider.jsx";
 import RecibosProvider from "./screens/context/recibos/RecibosProvider.jsx";
 import { TotalProvider } from "./screens/Global State/TotalProvider.jsx";
+import DetalleProvider from "./screens/context/detalle/DetalleProvider.jsx";
 
 
 export default function App() {
   return (
+    <DetalleProvider>
     <RecibosProvider>
     <TotalProvider>
     <SaleProvider>
@@ -44,5 +46,6 @@ export default function App() {
     </SaleProvider>
     </TotalProvider>
     </RecibosProvider>
+    </DetalleProvider>
   );
 }
