@@ -32,6 +32,7 @@ const ReceiptForm = () => {
   const renderItem = ({ item }) => {
     const isReembolsado = item.monto_reembolsado !== null;
     return (
+      <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { item })}>
       <View style={styles.itemContainer}>
         <View style={styles.iconContainer}>
           <MaterialCommunityIcons name="receipt" size={24} color="black" />
@@ -49,7 +50,8 @@ const ReceiptForm = () => {
           {isReembolsado && <Text style={styles.reembolsadoText}>{getMontoReembolsado(item)}</Text>}
         </View>
       </View>
-    );
+      </TouchableOpacity>
+    )
   };
 
   return (
