@@ -82,9 +82,45 @@ const getClientById=async(id)=>{
         throw error;
     }
 }
+const getDiscountById=async(id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/descuento/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data,
+            status,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+const getTaxById=async(id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/impuesto/listar/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data,
+            status,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 export {
     createSale,
     listSales,
     SaleById,
     getClientById,
+    getDiscountById,
+    getTaxById,
 }
