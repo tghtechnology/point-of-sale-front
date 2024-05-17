@@ -47,7 +47,44 @@ const listSales =async()=>{
         throw error;
     }
 }
+const SaleById=async(id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/venta/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data,
+            status,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+const getClientById=async(id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/cliente/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data,
+            status,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 export {
     createSale,
     listSales,
+    SaleById,
+    getClientById,
 }
