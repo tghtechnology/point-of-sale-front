@@ -55,10 +55,9 @@ const ReceiptDetail = ({ route }) => {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Detalles del Recibo</Text>
+      <Text style={styles.title}>Detalles de Venta</Text>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Referencia:</Text>
         <Text>{reciboDetails.ref}</Text>
@@ -73,58 +72,63 @@ const ReceiptDetail = ({ route }) => {
           <Text>{reciboDetails.monto_reembolsado}</Text>
         </View>
       )}
-      {reciboDetails.valorDescuentoTotal !== null && (
-        <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Valor Descuento Total:</Text>
-          <Text>{reciboDetails.valorDescuentoTotal}</Text>
-        </View>
-      )}
-      {reciboDetails.valorImpuestoTotal !== null && (
-        <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Valor Impuesto Total:</Text>
-          <Text>{reciboDetails.valorImpuestoTotal}</Text>
-        </View>
-      )}
-      {/* Mostrar detalles de la venta */}
-      <Text style={styles.title}>Detalles de la Venta</Text>
       {clienteDetails && clienteDetails.nombre && (
         <View style={styles.detailsContainer}>
           <Text style={styles.label}>Nombre del Cliente:</Text>
           <Text>{clienteDetails.nombre}</Text>
         </View>
       )}
-      {discountDetails && discountDetails.valor && (
-        <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Descuento:</Text>
-        <Text>
-          {discountDetails.tipo_descuento === "MONTO"
-            ? `S/. ${discountDetails.valor}`
-            : `${discountDetails.valor}%`}
-        </Text>
-      </View>
+      {(reciboDetails.monto_reembolsado === null) && (
+        <>
+          {reciboDetails.valorDescuentoTotal !== null && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Valor Descuento Total:</Text>
+              <Text>S/.-{reciboDetails.valorDescuentoTotal}</Text>
+            </View>
+          )}
+          {reciboDetails.valorImpuestoTotal !== null && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Valor Impuesto Total:</Text>
+              <Text>S/. {reciboDetails.valorImpuestoTotal}</Text>
+            </View>
+          )}
+              {discountDetails && discountDetails.valor && (
+            <View style={styles.detailsContainer}>
+            <Text style={styles.label}>Descuento:</Text>
+            <Text>
+              {discountDetails.tipo_descuento === "MONTO"
+                ? `S/. ${discountDetails.valor}`
+                : `${discountDetails.valor}%`}
+            </Text>
+            <Text>S/. -{saleDetails.vDescuento}</Text>
+          </View>
+          )}
+          {taxDetails && taxDetails.tasa && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Impuesto:</Text>
+              <Text>{taxDetails.tasa}%</Text>
+              <Text>S/.{saleDetails.VImpuesto}</Text>
+            </View>
+          )}
+          <View style={styles.detailsContainer}>
+            <Text style={styles.label}>Total:</Text>
+            <Text>S/. {saleDetails.total}</Text>
+          </View>
+          <View style={styles.detailsContainer}>
+            <Text style={styles.label}>Dinero Recibido:</Text>
+            <Text>S/. {saleDetails.dineroRecibido}</Text>
+          </View>
+          <View style={styles.detailsContainer}>
+            <Text style={styles.label}>Cambio:</Text>
+            <Text>S/. {saleDetails.cambio}</Text>
+          </View>
+        </>
+        
       )}
-      {taxDetails && taxDetails.tasa && (
-        <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Impuesto:</Text>
-          <Text>{taxDetails.tasa}%</Text>
-        </View>
-      )}
       <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Tipo de Pago:</Text>
-        <Text>{saleDetails.tipoPago}</Text>
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Total:</Text>
-        <Text>S/. {saleDetails.total}</Text>
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Dinero Recibido:</Text>
-        <Text>S/. {saleDetails.dineroRecibido}</Text>
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Cambio:</Text>
-        <Text>S/. {saleDetails.cambio}</Text>
-      </View>
+            <Text style={styles.label}>Tipo de Pago:</Text>
+            <Text>{saleDetails.tipoPago}</Text>
+          </View>
     </View>
   );
 };
