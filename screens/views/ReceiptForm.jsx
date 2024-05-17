@@ -31,7 +31,7 @@ const ReceiptForm = () => {
 
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { item })}>
+      <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { recibo: item })}>
         <View style={styles.itemContainer}>
           <View style={styles.iconContainer}>
             <MaterialCommunityIcons name="receipt" size={24} color="black" />
