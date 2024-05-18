@@ -24,12 +24,8 @@ const listDetalle = async () => {
 }
 const DetalleByVentaId=async(ventaId)=>{
     try {
-        const token = await getToken();
-        const { data, status } = await apiClient.get(`/detalle/${ventaId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        
+        const { data, status } = await apiClient.get(`/detalle/${ventaId}`);
         return {
             data,
             status

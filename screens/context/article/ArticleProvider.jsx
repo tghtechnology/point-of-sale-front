@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react";
-import { createArticle, listArticles, editArticles,deleteArticles } from "../../services/ArticleService";
+import { createArticle, listArticles, editArticles,deleteArticles,ArticleById } from "../../services/ArticleService";
 import ArticleContext from "./ArticleContext";
 
 
@@ -64,11 +64,6 @@ const ArticleProvider = ({children}) => {
         return false;
       }
     };
-    
-    
-      
-        
-  
 
     const handleDeleteArticle = async (id) => {
         try {
@@ -84,9 +79,23 @@ const ArticleProvider = ({children}) => {
         }
     }
 
+    const handleArticleById = async (id) => {
+      try {
+        const res = await ArticleById(id);
+        if (res.status === 200 || res.status === 201) {
+          return res.data;
+        } else {
+          console.error("Failed to get article:", res.status);
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching article:", error);
+        return null;
+      }
+    }
 
     return (
-        <ArticleContext.Provider value={{ handleCreateArticle,listArticle,setListArticle,handleEditArticle, handleDeleteArticle }}>
+        <ArticleContext.Provider value={{ handleCreateArticle,listArticle,setListArticle,handleEditArticle, handleDeleteArticle,handleArticleById }}>
             {children}
         </ArticleContext.Provider>
     )

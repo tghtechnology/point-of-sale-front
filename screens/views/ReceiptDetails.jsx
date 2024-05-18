@@ -5,19 +5,23 @@ import useSale from "../hooks/useSale";
 import useImpuesto from "../hooks/useImpuesto";
 import useClient from "../hooks/useClient";
 import useDiscount from "../hooks/useDiscount";
+import useArticle from "../hooks/useArticle";
 
 const ReceiptDetail = ({ route }) => {
   const { idVenta } = route.params;
   const { handleReciboById } = useRecibos();
-  const { handleSaleById} = useSale();
-  const { handleDiscountById} = useDiscount();
-  const { handleTaxById} = useImpuesto();
-  const {handleClientById} = useClient();
+  const { handleSaleById } = useSale();
+  const { handleDiscountById } = useDiscount();
+  const { handleTaxById } = useImpuesto();
+  const { handleClientById } = useClient();
+  const { handleArticleById } = useArticle();
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
   const [clienteDetails, setClienteDetails] = useState(null);
   const [discountDetails, setDiscountDetails] = useState(null);
   const [taxDetails, setTaxDetails] = useState(null);
+  const [articleDetails, setArticleDetails] = useState(null);
+
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -28,14 +32,16 @@ const ReceiptDetail = ({ route }) => {
           const fetchedSale = await handleSaleById(fetchedRecibo[0].id_venta);
           if (fetchedSale) {
             setSaleDetails(fetchedSale);
-            const [fetchedCliente, fetchedDiscount, fetchedTax] = await Promise.all([
+            const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedArticle] = await Promise.all([
               fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
               fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
-              fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null
+              fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
+              fetchedSale.articuloId ? handleArticleById(fetchedSale.articuloId) : null
             ]);
             setClienteDetails(fetchedCliente);
             setDiscountDetails(fetchedDiscount);
             setTaxDetails(fetchedTax);
+            setArticleDetails(fetchedArticle)
           } else {
             console.error(`Failed to fetch sale for ID: ${fetchedRecibo[0].id_venta}`);
           }
@@ -52,7 +58,7 @@ const ReceiptDetail = ({ route }) => {
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById]);
+  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById,handleArticleById]);
 
   if (!reciboDetails || !saleDetails) {
     return (
