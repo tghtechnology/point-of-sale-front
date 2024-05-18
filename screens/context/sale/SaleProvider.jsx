@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createSale, listSales, SaleById, getClientById, getDiscountById,getTaxById } from "../../services/SaleService";
+import { createSale, listSales, SaleById} from "../../services/SaleService";
 import SaleContext from "./SaleContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -55,51 +55,11 @@ const SaleProvider = ({ children }) => {
     }
   };
 
-  const handleClientById = async (id) => {
-    try {
-      const res = await getClientById(id);
-      if (res.status === 200 || res.status === 201) {
-        return res.data;
-      } else {
-        console.error("Failed to get client by ID:", res.status);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching client by ID:", error);
-      return null;
-    }
-  }
-  const handleDiscountById = async (id) => {
-    try {
-      const res = await getDiscountById(id);
-      if (res.status === 200 || res.status === 201) {
-        return res.data;
-      } else {
-        console.error("Failed to get discount by ID:", res.status);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching discount by ID:", error);
-      return null;
-    }
+  
  
-  }
-  const handleTaxById = async (id) => {
-    try {
-      const res = await getTaxById(id);
-      if (res.status === 200 || res.status === 201) {
-        return res.data;
-      } else {
-        console.error("Failed to get tax by ID:", res.status);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching tax by ID:", error);
-      return null;
-    }
-  }
+
   return (
-    <SaleContext.Provider value={{ handleCreateSale, listSale, handleSaleById, handleClientById,handleDiscountById,handleTaxById }}>
+    <SaleContext.Provider value={{ handleCreateSale, listSale, handleSaleById}}>
       {children}
     </SaleContext.Provider>
   );

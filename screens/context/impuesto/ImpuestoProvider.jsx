@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react";
-import {createImpuesto,listImpuestos,editImpuestos,deleteImpuesto,updateImpuesto} from "../../services/ImpuestoService";
+import {createImpuesto,listImpuestos,editImpuestos,deleteImpuesto,updateImpuesto,getTaxById} from "../../services/ImpuestoService";
 import ImpuestoContext from "./ImpuestoContext";
 
 const ImpuestoProvider = ({ children }) => {
@@ -74,6 +74,20 @@ const handleDeleteImp = async (id) => {
       console.error("Error deleting impuesto:", error);
       return false;
   }
+};
+const handleTaxById = async (id) => {
+  try {
+    const res = await getTaxById(id);
+    if (res.status === 200 || res.status === 201) {
+      return res.data;
+    } else {
+      console.error("Failed to get tax by ID:", res.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching tax by ID:", error);
+    return null;
+  }
 }
 
 
@@ -81,7 +95,7 @@ const handleDeleteImp = async (id) => {
 
 
   return (
-    <ImpuestoContext.Provider value={{handleCreateImp,listImpuesto,setListImpuesto,handleEditImp,handleDeleteImp}}> 
+    <ImpuestoContext.Provider value={{handleCreateImp,listImpuesto,setListImpuesto,handleEditImp,handleDeleteImp,handleTaxById }}> 
         {children}
     </ImpuestoContext.Provider>
   );
