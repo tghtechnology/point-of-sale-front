@@ -30,26 +30,28 @@ const ReceiptForm = () => {
   };
 
   const renderItem = ({ item }) => {
+    const isReembolsado = item.monto_reembolsado !== null;
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { recibo: item })}>
-        <View style={styles.itemContainer}>
-          <View style={styles.iconContainer}>
-            <MaterialCommunityIcons name="receipt" size={24} color="black" />
-          </View>
-          <View style={styles.totalDateContainer}>
-            <Text style={styles.itemText}>
-              S/. {getTotal(item.id_venta)}
-            </Text>
-            <Text style={styles.itemText}>
-              {`${new Date(item.fecha_creacion).toLocaleDateString('es-ES')} ${new Date(item.fecha_creacion).toLocaleTimeString('es-ES')}`}
-            </Text>
-          </View>
-          <View style={styles.refContainer}>
-            <Text style={styles.itemText}>{`${item.ref}`}</Text>
-          </View>
+      <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', {  idVenta: item.id })}>
+      <View style={styles.itemContainer}>
+        <View style={styles.iconContainer}>
+          <MaterialCommunityIcons name="receipt" size={24} color="black" />
         </View>
+        <View style={styles.totalDateContainer}>
+          <Text style={styles.itemText}>
+            {isReembolsado ? `S/. ${item.monto_reembolsado}` : `S/. ${getTotal(item.id_venta)}`}
+          </Text>
+          <Text style={styles.itemText}>
+            {`${new Date(item.fecha_creacion).toLocaleDateString('es-ES')} ${new Date(item.fecha_creacion).toLocaleTimeString('es-ES')}`}
+          </Text>
+        </View>
+        <View style={styles.refContainer}>
+          <Text style={styles.itemText}>{`${item.ref}`}</Text>
+          {isReembolsado && <Text style={styles.reembolsadoText}>{getMontoReembolsado(item)}</Text>}
+        </View>
+      </View>
       </TouchableOpacity>
-    );
+    )
   };
 
   return (

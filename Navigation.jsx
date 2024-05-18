@@ -64,7 +64,6 @@ return (
           },
         }}
       ></Stack.Screen> 
-      <Stack.Screen name="Ticket" component={TicketFormHome}></Stack.Screen>
       <Stack.Screen name="ListarTicket" component={TicketListForm} />
       <Stack.Screen name="SaleTicket" component={TicketSaleForm} />
       

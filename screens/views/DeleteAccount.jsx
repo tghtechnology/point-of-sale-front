@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'reac
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useUser from '../hooks/useUser';
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DeleteAccount(props) {
@@ -152,14 +152,13 @@ const styles = StyleSheet.create({
     inputContainer: {
         position: 'relative',
         marginBottom: 15,
-        borderBottomWidth: 1,
         paddingBottom: 5,
     },
     inputLabel: {
         marginTop:2,
         position: 'absolute',
         left: 5,
-        color: 'gray',
+        color: 'blue',
     },
     input: {
         padding: 5,

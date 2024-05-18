@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
 import useImpuesto from "../hooks/useImpuesto";
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 
 const INITIAL_STATE = {
   nombre: "",
@@ -74,12 +74,13 @@ export default function ImpuestoForm() {
       <View>
         <Text style={styles.label}>Tipo</Text>
       </View>
-      <View style={styles.pickerContainer}>
+      <View style={styles.pickerContainer} >
         <Picker
+          style={styles.picker}
           selectedValue={datos.tipo_impuesto}
           onValueChange={(value) => handleChange(value)}
         >
-          <Picker.Item label="" value="" />
+          <Picker.Item label="Seleccione el tipo de impuesto" value="" />
           <Picker.Item label="Incluido en el precio" value="Incluido_en_el_precio" />
           <Picker.Item label="Añadido al precio" value="Anadido_al_precio" />
         </Picker>
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 30,
     paddingHorizontal: 25,
+    alignContent: "center",
   },
   input: {
     marginBottom: 10,
@@ -113,7 +115,6 @@ const styles = StyleSheet.create({
     height: 40,
     color: '#546574',
     padding: 10,
-    borderRadius: 5,
   },
   buttonContainer: {
     overflow: 'hidden',
@@ -139,5 +140,20 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontSize: 15,
+  },
+  picker: {
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 20,
+    width: '90%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textColor: '#0258FE',
+  },
+  pickerContainer: {
+    justifyContent: 'center', // Centrar contenido verticalmente
+    alignItems: 'center',
   },
 });

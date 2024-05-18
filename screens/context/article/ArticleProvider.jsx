@@ -41,28 +41,31 @@ const ArticleProvider = ({children}) => {
         
 
     const handleEditArticle = async (updateArticle) => {
-        const { nombre, tipo_venta, precio, ref, representacion, color, imagen,id_categoria } = updateArticle;
-        try {
-          const response = await editArticles(updateArticle.id, { nombre, tipo_venta, precio, ref, representacion,color, imagen, id_categoria });
-          if (response && (response.status === 200 || response.status === 204)) {
-            console.log('Artículo editado exitosamente');
-            const updatedList = listArticle.map(article => {
-              if (article.id === updateArticle.id) {
-                return { ...article, ...updateArticle };
-              } else {
-                return article;
-              }
-            });
-            setListArticle(updatedList);
-            return true;
-          } else {
-            return false;
-          }
-        } catch (error) {
-          console.error('Error editing artículo:', error);
+      const articleId = updateArticle.id; // El ID debería estar aquí
+    
+      if (!articleId) {
+        console.error("El ID del artículo es undefined");
+        return false;
+      }
+    
+      const formData = updateArticle.formData;
+    
+      try {
+        const response = await editArticles(articleId, formData);
+    
+        if (response && (response.status === 200 || 204)) {
+          console.log("Artículo editado exitosamente");
+          return true;
+        } else {
           return false;
         }
-      };
+      } catch (error) {
+        console.error("Error al editar el artículo:", error);
+        return false;
+      }
+    };
+    
+    
       
         
   

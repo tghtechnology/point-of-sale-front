@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
 import useCategory from '../hooks/useCategory';
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 
 const INITIAL_STATE = {
   nombre:'',

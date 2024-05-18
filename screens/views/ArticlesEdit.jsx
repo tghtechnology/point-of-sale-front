@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import useArticle from "../hooks/useArticle";
 import useCategory from "../hooks/useCategory";
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from "../componentes/Alertas/CustomAlert";
 import {MaterialIcons} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   representacion:"",
   color:"",
   imagen:"",
+  ref:"",
   id_categoria: "",
 };
 
@@ -45,7 +46,7 @@ const ColorBox = ({ color, setEditedData, selectedColor }) => (
   />
 );
 
-const buildFormData = (editedData, selectedImage) => {
+const buildFormData = (editedData, selectedImage, categoriaSelect) => {
   const formData = new FormData();
 
   formData.append("nombre", editedData.nombre);
@@ -79,21 +80,43 @@ export default function ArticlesEdit() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [loading, setLoading] = useState(true);
   const {handleEditArticle} = useArticle();
   const {listCategoria} = useCategory();
 
   
   useEffect(() => {
-    const { article } = route.params;
-    console.log("Objeto del artículo:", article);
-    setEditedData({
-      ...article,
-      id_categoria: article.categoria?.id || "", 
-    });
-    if (article.imagen) {
-      setSelectedImage(article.imagen);
+    if (route.params?.article) {
+      const { article } = route.params;
+      let representacion = "";
+
+      if (article.imagen) {
+        representacion = "imagen";
+      } else if (article.color) {
+        representacion = "color";
+      }
+
+      setEditedData({
+        ...INITIAL_STATE,
+        ...article,
+        representacion,
+        id_categoria: article.categoria?.id || "",
+      });
+
+      if (article.imagen) {
+        setSelectedImage(article.imagen);
+      }
+
+      setLoading(false);
     }
   }, [route.params]);
+  if (loading) {
+    return <Text>Cargando...</Text>;
+  }
+  console.log("ID del artículo:", editedData.id);
+  console.log("Representacion después del montaje:", editedData.representacion);
+  
+
   
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -152,19 +175,31 @@ export default function ArticlesEdit() {
 
 
   const handleSubmit = async () => {
-    try {
-      const formData = buildFormData(editedData, selectedImage);
+    // Verifica que el ID esté presente antes de construir el FormData
+    const articleId = editedData.id;
   
-      console.log("Datos a enviar al servidor:", formData);
-      
-      console.log("Datos a enviar al servidor:", formData);
-      await handleEditArticle(formData,editedData.id_categoria);
+    if (!articleId) {
+      console.error("El ID del artículo es undefined");
+      return;
+    }
+  
+    const formData = buildFormData(editedData, selectedImage);
+    console.log("Datos a enviar:", [...formData]);
+    // Pasar el ID junto con el FormData
+    const updateArticle = { id: articleId, formData };
+  
+    const wasEdited = await handleEditArticle(updateArticle);
+  
+    if (wasEdited) {
+      console.log("Artículo editado exitosamente");
       setShowAlert(true);
-      console.log("Articulos ha sido editado exitosamente");
-    } catch (error) {
-      console.error("Error al editar el articulos:", error);
+    } else {
+      console.error("La edición no fue exitosa.");
     }
   };
+  
+  
+  
   const handleCloseAlert = () => {
     setShowAlert(false);
 };

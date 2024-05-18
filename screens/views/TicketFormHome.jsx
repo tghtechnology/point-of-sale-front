@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList,Image, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../hooks/useArticle";
@@ -63,32 +63,32 @@ const TicketFormHome = () => {
   const cartCount = selectedProductIds.length;
 
   useEffect(() => {
-  const fetchDataFromAsyncStorage = async () => {
-    try {
-      const storedItems = await AsyncStorage.getItem('selectedItems');
-      const storedDiscounts = await AsyncStorage.getItem('selectedDiscounts');
-      const storedClient = await AsyncStorage.getItem('selectedClients');
-      const storedTaxes = await AsyncStorage.getItem('selectedTaxes');
+    const fetchDataFromAsyncStorage = async () => {
+      try {
+        const storedItems = await AsyncStorage.getItem('selectedItems');
+        const storedDiscounts = await AsyncStorage.getItem('selectedDiscounts');
+        const storedClient = await AsyncStorage.getItem('selectedClients');
+        const storedTaxes = await AsyncStorage.getItem('selectedTaxes');
 
-      if (storedItems !== null) {
-        setSelectedItems(JSON.parse(storedItems));
+        if (storedItems !== null) {
+          setSelectedItems(JSON.parse(storedItems));
+        }
+        if (storedDiscounts !== null) {
+          setSelectedDiscounts(JSON.parse(storedDiscounts));
+        }
+        if (storedClient !== null) {
+          setSelectedClients(JSON.parse(storedClient));
+        }
+        if (storedTaxes !== null) {
+          setSelectedTaxes(JSON.parse(storedTaxes));
+        }
+      } catch (error) {
+        console.error('Error fetching data from AsyncStorage:', error);
       }
-      if (storedDiscounts !== null) {
-        setSelectedDiscounts(JSON.parse(storedDiscounts));
-      }
-      if (storedClient !== null) {
-        setSelectedClients(JSON.parse(storedClient));
-      }
-      if (storedTaxes !== null) {
-        setSelectedTaxes(JSON.parse(storedTaxes));
-      }
-    } catch (error) {
-      console.error('Error fetching data from AsyncStorage:', error);
-    }
-  };
+    };
 
-  fetchDataFromAsyncStorage();
-}, []);
+    fetchDataFromAsyncStorage();
+  }, []);
 
   useEffect(() => {
     let total = 0;
@@ -98,97 +98,97 @@ const TicketFormHome = () => {
     setTotalAmount(total);
   }, [selectedItems]);
 
-const handleSelectItem = async (item) => {
-  let updatedItems = [...selectedItems];
-  const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
+  const handleSelectItem = async (item) => {
+    let updatedItems = [...selectedItems];
+    const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
 
-  if (itemIndex !== -1) {
-    updatedItems.splice(itemIndex, 1);
-    setShowAlertDeselect(true);
-  } else {
-    updatedItems.push({ ...item, quantity });
-    setShowAlert(true);
-  }
-
-  setSelectedItems(updatedItems);
-
-  try {
-    if (updatedItems.length > 0) {
-      await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
-      console.log('Lista de artículos seleccionados guardada en AsyncStorage:', updatedItems);
+    if (itemIndex !== -1) {
+      updatedItems.splice(itemIndex, 1);
+      setShowAlertDeselect(true);
     } else {
-      await AsyncStorage.removeItem('selectedItems');
-      console.log('Lista de artículos seleccionados eliminada de AsyncStorage');
+      updatedItems.push({ ...item, quantity });
+      setShowAlert(true);
     }
-  } catch (error) {
-    console.error('Error al guardar/eliminar la lista de artículos seleccionados en AsyncStorage:', error);
-  }
-};
 
-const handleSelectDiscount = async (discount) => {
-  let updatedDiscounts = [...selectedDiscounts];
-  const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
+    setSelectedItems(updatedItems);
 
-  if (discountIndex !== -1) {
-    updatedDiscounts.splice(discountIndex, 1);
-  } else {
-    updatedDiscounts = [discount];
-  }
+    try {
+      if (updatedItems.length > 0) {
+        await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
+        console.log('Lista de artículos seleccionados guardada en AsyncStorage:', updatedItems);
+      } else {
+        await AsyncStorage.removeItem('selectedItems');
+        console.log('Lista de artículos seleccionados eliminada de AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error al guardar/eliminar la lista de artículos seleccionados en AsyncStorage:', error);
+    }
+  };
 
-  setSelectedDiscounts(updatedDiscounts);
+  const handleSelectDiscount = async (discount) => {
+    let updatedDiscounts = [...selectedDiscounts];
+    const discountIndex = updatedDiscounts.findIndex((d) => d.id === discount.id);
 
-  try {
-    if (updatedDiscounts.length > 0) {
-      await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(updatedDiscounts));
-      console.log('Lista de descuentos seleccionados guardada en AsyncStorage:', updatedDiscounts);
+    if (discountIndex !== -1) {
+      updatedDiscounts.splice(discountIndex, 1);
     } else {
-      await AsyncStorage.removeItem('selectedDiscounts');
-      console.log('Lista de descuentos seleccionados eliminada de AsyncStorage');
+      updatedDiscounts = [discount];
     }
-  } catch (error) {
-    console.error('Error al guardar/eliminar la lista de descuentos seleccionados en AsyncStorage:', error);
-  }
-};
 
-const handleSelectClient = async (client) => {
-  if (selectedClients && selectedClients.id === client.id) {
-    setSelectedClients(null);
-    try {
-      await AsyncStorage.removeItem('selectedClients');
-      console.log('Cliente deseleccionado eliminado del AsyncStorage.');
-    } catch (error) {
-      console.error('Error al eliminar cliente deseleccionado del AsyncStorage:', error);
-    }
-  } else {
-    setSelectedClients(client);
-    try {
-      await AsyncStorage.setItem('selectedClients', JSON.stringify(client)); 
-      console.log('Cliente seleccionado guardado en AsyncStorage:', client);
-    } catch (error) {
-      console.error('Error al guardar cliente seleccionado en AsyncStorage:', error);
-    }
-  }
-};
+    setSelectedDiscounts(updatedDiscounts);
 
-const handleSelectTax = async (tax) => {
-  if (selectedTaxes && selectedTaxes.id === tax.id) {
-    setSelectedTaxes(null);
     try {
-      await AsyncStorage.removeItem('selectedTaxes'); 
-      console.log('Impuesto deseleccionado eliminado del AsyncStorage.');
+      if (updatedDiscounts.length > 0) {
+        await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(updatedDiscounts));
+        console.log('Lista de descuentos seleccionados guardada en AsyncStorage:', updatedDiscounts);
+      } else {
+        await AsyncStorage.removeItem('selectedDiscounts');
+        console.log('Lista de descuentos seleccionados eliminada de AsyncStorage');
+      }
     } catch (error) {
-      console.error('Error al eliminar impuesto deseleccionado del AsyncStorage:', error);
+      console.error('Error al guardar/eliminar la lista de descuentos seleccionados en AsyncStorage:', error);
     }
-  } else {
-    setSelectedTaxes(tax);
-    try {
-      await AsyncStorage.setItem('selectedTaxes', JSON.stringify(tax));
-      console.log('Impuesto seleccionado guardado en AsyncStorage:', tax);
-    } catch (error) {
-      console.error('Error al guardar impuesto seleccionado en AsyncStorage:', error);
+  };
+
+  const handleSelectClient = async (client) => {
+    if (selectedClients && selectedClients.id === client.id) {
+      setSelectedClients(null);
+      try {
+        await AsyncStorage.removeItem('selectedClients');
+        console.log('Cliente deseleccionado eliminado del AsyncStorage.');
+      } catch (error) {
+        console.error('Error al eliminar cliente deseleccionado del AsyncStorage:', error);
+      }
+    } else {
+      setSelectedClients(client);
+      try {
+        await AsyncStorage.setItem('selectedClients', JSON.stringify(client));
+        console.log('Cliente seleccionado guardado en AsyncStorage:', client);
+      } catch (error) {
+        console.error('Error al guardar cliente seleccionado en AsyncStorage:', error);
+      }
     }
-  }
-};
+  };
+
+  const handleSelectTax = async (tax) => {
+    if (selectedTaxes && selectedTaxes.id === tax.id) {
+      setSelectedTaxes(null);
+      try {
+        await AsyncStorage.removeItem('selectedTaxes');
+        console.log('Impuesto deseleccionado eliminado del AsyncStorage.');
+      } catch (error) {
+        console.error('Error al eliminar impuesto deseleccionado del AsyncStorage:', error);
+      }
+    } else {
+      setSelectedTaxes(tax);
+      try {
+        await AsyncStorage.setItem('selectedTaxes', JSON.stringify(tax));
+        console.log('Impuesto seleccionado guardado en AsyncStorage:', tax);
+      } catch (error) {
+        console.error('Error al guardar impuesto seleccionado en AsyncStorage:', error);
+      }
+    }
+  };
 
   const showListArticles = () => {
     navigation.navigate('ListarTicket');
@@ -204,15 +204,15 @@ const handleSelectTax = async (tax) => {
 
   const handleAddQuantity = async (item) => {
     const updatedItems = selectedItems.map(selectedItem =>
-        selectedItem.id === item.id ? { ...selectedItem, quantity: selectedItem.quantity + 1 } : selectedItem
+      selectedItem.id === item.id ? { ...selectedItem, quantity: selectedItem.quantity + 1 } : selectedItem
     );
     setSelectedItems(updatedItems);
     try {
-        await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
+      await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
     } catch (error) {
-        console.error('Error al guardar la lista de artículos seleccionados en AsyncStorage:', error);
+      console.error('Error al guardar la lista de artículos seleccionados en AsyncStorage:', error);
     }
-};
+  };
 
   const handleSubtractQuantity = (item) => {
     const updatedItems = selectedItems.map((selectedItem) => {
@@ -250,7 +250,7 @@ const handleSelectTax = async (tax) => {
     await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
   }
 
- const handleSaveChanges = async () => {
+  const handleSaveChanges = async () => {
     try {
       await RemoveItem();
       await AsyncStorage.setItem('selectedDiscounts', JSON.stringify(selectedDiscounts));
@@ -264,45 +264,45 @@ const handleSelectTax = async (tax) => {
 
   const renderItem = ({ item }) => {
     const selectedItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
-    const quantity = selectedItem ? selectedItem.quantity : 0; 
- 
-    return (
-        <View style={styles.item}>
-            <TouchableOpacity
-                style={[styles.circle,selectedItem && styles.circleSelected ]}
-                onPress={() => handleSelectItem(item)}
-            />
-            <View style={styles.leftContainer}>
-                       {item.imagen  ? (
-                           <Image source={{ uri: item.imagen }} style={styles.image} />
-                       ) : item.color ? (
-                        <View style={{...styles.colorSquare, backgroundColor: colorMapping[item.color]}} />
-                       ) : (
-                           <Text>No hay representación</Text>
-                       )}
-            </View>
+    const quantity = selectedItem ? selectedItem.quantity : 0;
 
-            <View style={styles.itemInfo}>
-                <Text style={styles.itemText}>{item.nombre}</Text>
-                <Text style={styles.priceText}>S/ {item.precio}</Text>
-            </View>
-            <View style={styles.quantityContainer}>
-                <TouchableOpacity onPress={() => handleSubtractQuantity(item)}>
-                    <Text style={styles.quantityButton}>-</Text>
-                </TouchableOpacity>
-                <TextInput
-                    style={[styles.quantityInput,selectedItem && { color: 'black' }]}
-                    value={String(quantity)}
-                    onChangeText={(text) => handleQuantityChange(item, text)}
-                    keyboardType="numeric"
-                />
-                <TouchableOpacity onPress={() => handleAddQuantity(item)}>
-                    <Text style={styles.quantityButton}>+</Text>
-                </TouchableOpacity>
-            </View>
+    return (
+      <View style={styles.item}>
+        <TouchableOpacity
+          style={[styles.circle, selectedItem && styles.circleSelected]}
+          onPress={() => handleSelectItem(item)}
+        />
+        <View style={styles.leftContainer}>
+          {item.imagen ? (
+            <Image source={{ uri: item.imagen }} style={styles.image} />
+          ) : item.color ? (
+            <View style={{ ...styles.colorSquare, backgroundColor: colorMapping[item.color] }} />
+          ) : (
+            <Text>No hay representación</Text>
+          )}
         </View>
+
+        <View style={styles.itemInfo}>
+          <Text style={styles.itemText}>{item.nombre}</Text>
+          <Text style={styles.priceText}>S/ {item.precio}</Text>
+        </View>
+        <View style={styles.quantityContainer}>
+          <TouchableOpacity onPress={() => handleSubtractQuantity(item)}>
+            <Text style={styles.quantityButton}>-</Text>
+          </TouchableOpacity>
+          <TextInput
+            style={[styles.quantityInput, selectedItem && { color: 'black' }]}
+            value={String(quantity)}
+            onChangeText={(text) => handleQuantityChange(item, text)}
+            keyboardType="numeric"
+          />
+          <TouchableOpacity onPress={() => handleAddQuantity(item)}>
+            <Text style={styles.quantityButton}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
-};
+  };
 
   const renderItemDiscounts = ({ item }) => {
     let discountValue = '';
@@ -337,7 +337,7 @@ const handleSelectTax = async (tax) => {
       <Text style={styles.priceText}>{item.email}</Text>
     </View>
   );
-  
+
   const renderItemTaxes = ({ item }) => (
     <View style={styles.item}>
       <TouchableOpacity
@@ -351,27 +351,27 @@ const handleSelectTax = async (tax) => {
       <Text style={styles.priceText}>{item.tasa} %</Text>
     </View>
   );
-      const colorMapping = {
-        'Rojo': '#FF0000',
-        'Verde_limon': '#00FF00',
-        'Azul': '#0000FF',
-        'Amarillo': '#FFFF00',
-        'Turquesa': '#00FFFF',
-        'Fucsia': '#FF00FF',
-        'Gris_claro': '#C0C0C0',
-        'Gris_oscuro': '#808080',
-      };
+  const colorMapping = {
+    'Rojo': '#FF0000',
+    'Verde_limon': '#00FF00',
+    'Azul': '#0000FF',
+    'Amarillo': '#FFFF00',
+    'Turquesa': '#00FFFF',
+    'Fucsia': '#FF00FF',
+    'Gris_claro': '#C0C0C0',
+    'Gris_oscuro': '#808080',
+  };
 
   return (
       <View style={styles.container}>
       <View style={styles.searchSection}>
         <TouchableOpacity style={styles.magnifies}>
-          <Icon name="magnify" size={30} color="#517EF2" />
+          <Icon name="magnify" size={30} borderRadius={2} color="#517EF2" />
         </TouchableOpacity>
 
         {/* Icono del carrito con contador */}
         <TouchableOpacity style={styles.cartButton} onPress={handleSaveChanges}>
-          <Icon name="cart" size={32} color="#517EF2" />
+          <Icon name="cart" size={32} color="#517EF2" borderRadius={2} />
           {cartCount > 0 && (
             <View style={styles.cartBadge}>
               <Text style={styles.cartBadgeText}>{cartCount}</Text>
@@ -389,7 +389,7 @@ const handleSelectTax = async (tax) => {
           {Object.keys(pickerOptions).map((value) => (
             <Picker.Item key={value} label={pickerOptions[value]} value={value} />
           ))}
-      </Picker>
+        </Picker>
       </View>
 
       {/* List Items */}
@@ -444,12 +444,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+    alignContent: 'center',
   },
   divider: {
     width: '120%',
     height: 1,
     backgroundColor: 'black',
-    marginBottom: 10, 
+    marginBottom: 10,
   },
   buttonContainer: {
     alignItems: 'center',
@@ -494,6 +495,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderBottomWidth: 1,
     backgroundColor: '#EAEAEA',
+    borderRadius: 8,
   },
   searchInput: {
     flex: 1,
@@ -509,17 +511,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemInfo: {
-    flex: 1, 
+    flex: 1,
   },
   magnifies: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
     border: 1,
     marginRight: 10,
     padding: 15,
   },
   circle: {
-    width: 23.59, 
+    width: 23.59,
     height: 19.59,
     borderWidth: 2,
     borderColor: '#517EF2',
@@ -527,8 +529,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   circleSelected: {
-    backgroundColor: 'blue', 
-    borderColor: 'blue', 
+    backgroundColor: 'blue',
+    borderColor: 'blue',
   }, quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -537,11 +539,11 @@ const styles = StyleSheet.create({
   quantityInput: {
     borderWidth: 1,
     borderColor: 'black',
-    borderRadius: 5, 
+    borderRadius: 5,
     paddingHorizontal: 5,
     marginRight: 5,
     width: 30,
-    height: 30, 
+    height: 30,
     textAlign: 'center',
   },
   quantityButton: {

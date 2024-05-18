@@ -3,8 +3,8 @@ import { StatusBar } from "expo-status-bar"
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useState } from 'react'
-import CustomAlert from '../componentes/CustomAlert';
-import ErrorAlert from '../componentes/ErrorAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
+import ErrorAlert from '../componentes/Alertas/ErrorAlert';
 import useAuth from '../hooks/useAuth';
 // import CustomAlert from '../../Alertas/CustomAlert';
 

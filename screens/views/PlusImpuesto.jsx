@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList ,Modal,TextInput} fr
 import { MaterialCommunityIcons,FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useImpuesto from "../hooks/useImpuesto";
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 
 
  const PlusImpuesto = () => {
@@ -72,11 +72,11 @@ useEffect(() => {
     contentContainerStyle={{ paddingHorizontal: 16 }}
     ListEmptyComponent={() => (
       <View>
-            <View style={styles.circle}>
-              <FontAwesome5 name="percentage" size={100} color="#808080" />
+            <View style={styles.mensajeContainer}>
+              <FontAwesome5 name="percentage" size={80} color="#808080" />
             </View>
-            <Text style={styles.text}>Aun no tiene impuestos en esta tienda</Text>
-            <Text style={styles.text_}>Para agregar un artículo pulse (+)</Text>
+            <Text style={styles.mensaje}>Aun no tiene impuestos en esta tienda</Text>
+            <Text style={styles.mensaje}>Para agregar un artículo pulse (+)</Text>
           </View>
         )}
         />
@@ -124,16 +124,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#E7E7E7',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  text: {
-    marginTop: 20,
-    fontSize: 20,
-    color: '#808080',
-  },
-  text_: {
-    marginTop: 5,
-    fontSize: 16,
-    color: '#808080',
   },
   addButton: {
     position: 'absolute',
@@ -262,6 +252,16 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
 },  
+mensajeContainer: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: 300,
+},
+mensaje: {
+  fontSize: 16,
+  color: '#808080',
+  textAlign: 'center',
+}
 });
 
 export default PlusImpuesto;

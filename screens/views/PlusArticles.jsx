@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useArticle from "../hooks/useArticle";
 import { useNavigation } from '@react-navigation/native';
 import useCategory from "../hooks/useCategory";
-import CustomAlert from '../componentes/CustomAlert';
+import CustomAlert from '../componentes/Alertas/CustomAlert';
 
 
 export default function PlusArticle() {
