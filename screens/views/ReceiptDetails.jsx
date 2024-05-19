@@ -7,8 +7,11 @@ import useClient from "../hooks/useClient";
 import useDiscount from "../hooks/useDiscount";
 import useArticle from "../hooks/useArticle";
 import useDetalle from "../hooks/useDetalle";
+import { useTotal } from "../Global State/TotalContext";
+import { useNavigation } from '@react-navigation/native';
 
 const ReceiptDetail = ({ route }) => {
+  const navigation = useNavigation();
   const { idVenta } = route.params;
   const { handleReciboById } = useRecibos();
   const { handleSaleById } = useSale();
@@ -17,6 +20,7 @@ const ReceiptDetail = ({ route }) => {
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
   const { handleDetalleById } = useDetalle();
+  const { setArticleNames } = useTotal();
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
   const [clienteDetails, setClienteDetails] = useState(null);
@@ -48,6 +52,10 @@ const ReceiptDetail = ({ route }) => {
             const articlePromises = fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId));
             const articles = await Promise.all(articlePromises);
             setArticleDetails(articles);
+
+            // Set article names in context
+            const articleNames = articles.map(article => article.nombre);
+            setArticleNames(articleNames);
           } else {
             console.error(`Failed to fetch sale for ID: ${fetchedRecibo[0].id_venta}`);
           }
@@ -64,7 +72,7 @@ const ReceiptDetail = ({ route }) => {
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleById]);
+  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleById, setArticleNames]);
 
   if (!reciboDetails || !saleDetails) {
     return (
@@ -73,6 +81,7 @@ const ReceiptDetail = ({ route }) => {
       </View>
     );
   }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Detalles de Venta</Text>
@@ -96,7 +105,7 @@ const ReceiptDetail = ({ route }) => {
           <Text>{clienteDetails.nombre}</Text>
         </View>
       )}
-      {(reciboDetails.monto_reembolsado === null) && (
+      {reciboDetails.monto_reembolsado === null && (
         <>
           {reciboDetails.valorDescuentoTotal !== null && (
             <View style={styles.detailsContainer}>
@@ -110,16 +119,16 @@ const ReceiptDetail = ({ route }) => {
               <Text>S/. {reciboDetails.valorImpuestoTotal}</Text>
             </View>
           )}
-              {discountDetails && discountDetails.valor && (
+          {discountDetails && discountDetails.valor && (
             <View style={styles.detailsContainer}>
-            <Text style={styles.label}>Descuento:</Text>
-            <Text>
-              {discountDetails.tipo_descuento === "MONTO"
-                ? `S/. ${discountDetails.valor}`
-                : `${discountDetails.valor}%`}
-            </Text>
-            <Text>S/. -{saleDetails.vDescuento}</Text>
-          </View>
+              <Text style={styles.label}>Descuento:</Text>
+              <Text>
+                {discountDetails.tipo_descuento === "MONTO"
+                  ? `S/. ${discountDetails.valor}`
+                  : `${discountDetails.valor}%`}
+              </Text>
+              <Text>S/. -{saleDetails.vDescuento}</Text>
+            </View>
           )}
           {taxDetails && taxDetails.tasa && (
             <View style={styles.detailsContainer}>
@@ -141,7 +150,6 @@ const ReceiptDetail = ({ route }) => {
             <Text>S/. {saleDetails.cambio}</Text>
           </View>
         </>
-        
       )}
       <Text style={styles.title}>Detalles de los Artículos</Text>
       {articleDetails.map((article, index) => (
@@ -152,9 +160,12 @@ const ReceiptDetail = ({ route }) => {
         </View>
       ))}
       <View style={styles.detailsContainer}>
-            <Text style={styles.label}>Tipo de Pago:</Text>
-            <Text>{saleDetails.tipoPago}</Text>
-          </View>
+        <Text style={styles.label}>Tipo de Pago:</Text>
+        <Text>{saleDetails.tipoPago}</Text>
+      </View>
+      <TouchableOpacity  onPress={() => navigation.navigate("Rembolso")}style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>Reembolsar</Text>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react'
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useRecibos from "../hooks/useRecibos";
@@ -8,9 +8,13 @@ import { useNavigation } from '@react-navigation/native';
 
 const ReceiptForm = () => {
   const navigation = useNavigation();
-  const { listRecibo } = useRecibos();
+  const { listRecibo, setListRecibo } = useRecibos();
   const { listSale } = useSale();
   const { total, setTotal } = useTotal();
+
+  useEffect(() => {
+    setListRecibo(listRecibo); 
+  }, [listRecibo]);
 
   const getTipoPago = (idVenta) => {
     const venta = listSale.find(venta => venta.id === idVenta);
@@ -30,6 +34,7 @@ const ReceiptForm = () => {
   };
 
   const renderItem = ({ item }) => {
+    console.log('Renderizando item:', item);
     const isReembolsado = item.monto_reembolsado !== null;
     return (
       <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', {  idVenta: item.id })}>
@@ -69,7 +74,7 @@ const ReceiptForm = () => {
       <FlatList
         data={listRecibo}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
