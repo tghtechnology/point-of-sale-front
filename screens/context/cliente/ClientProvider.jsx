@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {createClient,getClients, editClient, deleteClient, updateClient} from "../../services/ClientService"
+import {createClient,getClients, editClient, deleteClient, updateClient,getClientById} from "../../services/ClientService"
 import ClientContext from "./ClientContext";
 const ClientProvider = ({children}) => {
   const [client,setClient] = useState([])
@@ -59,7 +59,7 @@ const ClientProvider = ({children}) => {
         } else {
             return false;
         }
-  }
+  };
 
   const handleUpdateClient = async (id, newData) => {
     try {
@@ -74,9 +74,25 @@ const ClientProvider = ({children}) => {
         console.error('Error al actualizar el Cliente:', error);
     }
   };
+
+  const handleClientById = async (id) => {
+    try {
+      const res = await getClientById(id);
+      if (res.status === 200 || res.status === 201) {
+        return res.data;
+      } else {
+        console.error("Failed to get client by ID:", res.status);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching client by ID:", error);
+      return null;
+    }
+  }
+
   return (
     <ClientContext.Provider value={{
-        handleCreateClient, client,setClient, handleEditClient,handleDeleteClient,handleUpdateClient
+        handleCreateClient, client,setClient, handleEditClient,handleDeleteClient,handleUpdateClient,handleClientById
     }}> 
       {children}
     </ClientContext.Provider>

@@ -59,7 +59,7 @@ const listArticles = async () => {
     console.log(error);
     throw new Error('Error al cargar articulos');
   }
-}
+};
 
 const editArticles = async (id, updateArticle) => {
   try {
@@ -97,12 +97,31 @@ const deleteArticles = async (id) => {
   } catch (error) {
     console.log('Error:', error.response.data);
   }
-}
+};
+
+const ArticleById=async(id)=>{
+  try {
+      const token = await getToken();
+      const { data, status } = await apiClient.get(`/articulo/listar${id}`, {
+          headers: {
+              Authorization: `Bearer ${token}`
+          }
+      });
+      return {
+          data,
+          status,
+      };
+  } catch (error) {
+      console.log(error);
+      throw error;
+  }
+};
 
 
 export {
   createArticle,
   listArticles,
   editArticles,
-  deleteArticles
+  deleteArticles,
+  ArticleById
 }

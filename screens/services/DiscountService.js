@@ -42,6 +42,24 @@ const getDiscounts = async () => {
     }
 };
 
+const getDiscountById=async(id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/descuento/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data,
+            status,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 const getCeroDiscounts = async () => {
     try {
         const token = await getToken();
@@ -112,5 +130,5 @@ const editDiscount = async (id, updatedData) => {
     };
 
 export {
-    createDiscount, getDiscounts,getCeroDiscounts,updateDiscountStatus, editDiscount,updateDiscount
+    createDiscount, getDiscounts,getCeroDiscounts,updateDiscountStatus, editDiscount,updateDiscount,getDiscountById
 }

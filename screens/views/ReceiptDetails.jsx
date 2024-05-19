@@ -1,17 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import useRecibos from "../hooks/useRecibos";
 import useSale from "../hooks/useSale";
+import useImpuesto from "../hooks/useImpuesto";
+import useClient from "../hooks/useClient";
+import useDiscount from "../hooks/useDiscount";
+import useArticle from "../hooks/useArticle";
+import useDetalle from "../hooks/useDetalle";
 
 const ReceiptDetail = ({ route }) => {
   const { idVenta } = route.params;
   const { handleReciboById } = useRecibos();
-  const { handleSaleById, handleClientById, handleDiscountById, handleTaxById } = useSale();
+  const { handleSaleById } = useSale();
+  const { handleDiscountById } = useDiscount();
+  const { handleTaxById } = useImpuesto();
+  const { handleClientById } = useClient();
+  const { handleArticleById } = useArticle();
+  const { handleDetalleById } = useDetalle();
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
   const [clienteDetails, setClienteDetails] = useState(null);
   const [discountDetails, setDiscountDetails] = useState(null);
   const [taxDetails, setTaxDetails] = useState(null);
+  const [articleDetails, setArticleDetails] = useState([]);
+  const [detalleDetails, setDetalleDetails] = useState([]);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -22,14 +34,20 @@ const ReceiptDetail = ({ route }) => {
           const fetchedSale = await handleSaleById(fetchedRecibo[0].id_venta);
           if (fetchedSale) {
             setSaleDetails(fetchedSale);
-            const [fetchedCliente, fetchedDiscount, fetchedTax] = await Promise.all([
+            const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedDetalles] = await Promise.all([
               fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
               fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
-              fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null
+              fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
+              handleDetalleById(fetchedSale.id)
             ]);
             setClienteDetails(fetchedCliente);
             setDiscountDetails(fetchedDiscount);
             setTaxDetails(fetchedTax);
+            setDetalleDetails(fetchedDetalles);
+
+            const articlePromises = fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId));
+            const articles = await Promise.all(articlePromises);
+            setArticleDetails(articles);
           } else {
             console.error(`Failed to fetch sale for ID: ${fetchedRecibo[0].id_venta}`);
           }
@@ -46,7 +64,7 @@ const ReceiptDetail = ({ route }) => {
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById]);
+  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleById]);
 
   if (!reciboDetails || !saleDetails) {
     return (
@@ -150,9 +168,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 5,
   },
+  detailsContainer1: {
+    padding: 9,
+    textAlign: 'center',
+    marginLeft: 130,
+  },
+  totalText: {
+    fontSize: 29,
+  },
+  labelTotal: {
+    marginLeft: 25,
+    fontSize: 20,
+  },
   label: {
     fontWeight: "bold",
     marginRight: 5,
+  },
+  buttonContainer: {
+    marginTop: 25,
+    overflow: "hidden",
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#0258FE',
+    backgroundColor: '#0258FE',
+    width: 237,
+    height: 39,
+    marginLeft: 55,
+    padding: 10,
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 16,
   },
 });
 

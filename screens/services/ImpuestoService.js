@@ -80,11 +80,29 @@ const editImpuestos = async(id,updateImpuestos) => {
     }catch (error) {
         console.log('Error:',error.response.data);
     }
+};
+const getTaxById=async(id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/impuesto/listar/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data,
+            status,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 }
 export {
     createImpuesto,
     listImpuestos,
     editImpuestos,
     deleteImpuesto,
+    getTaxById
   
 }

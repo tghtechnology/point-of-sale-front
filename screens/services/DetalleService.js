@@ -11,29 +11,21 @@ const getToken = async () => {
 };
 const listDetalle = async () => {
     try {
-        const token = await getToken();
-        const { data, status } = await apiClient.get(`/detalle`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+      
+        const { data, status } = await apiClient.get(`/detalle`);
         return {
             data,
             status
         };
     } catch (error) {
         console.log(error);
-        throw new Error('Error al cargar articulos');
+        throw new Error('Error al cargar detalle');
     }
 }
 const DetalleByVentaId=async(ventaId)=>{
     try {
-        const token = await getToken();
-        const { data, status } = await apiClient.get(`/detalle/${ventaId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        
+        const { data, status } = await apiClient.get(`/detalle/${ventaId}`);
         return {
             data,
             status

@@ -114,6 +114,25 @@ const updatedWorker = async (id, newData) => {
     }
 };
 
+const getClientById=async(id)=>{
+  try {
+      const token = await getToken();
+      const { data, status } = await apiClient.get(`/cliente/${id}`, {
+          headers: {
+              Authorization: `Bearer ${token}`
+          }
+      });
+      return {
+          data,
+          status,
+      };
+  } catch (error) {
+      console.log(error);
+      throw error;
+  }
+}
+
+
 export {
-    createWorker, getWorkers, editworker, deleteworker, updatedWorker
+    createWorker, getWorkers, editworker, deleteworker, updatedWorker,getClientById
 }

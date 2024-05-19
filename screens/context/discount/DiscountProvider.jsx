@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DiscountContext from "./DiscountContext";
-import { createDiscount, getDiscounts,getCeroDiscounts, updateDiscountStatus,editDiscount, updateDiscount } from "../../services/DiscountService";
+import { createDiscount, getDiscounts,getCeroDiscounts, updateDiscountStatus,editDiscount, updateDiscount,getDiscountById } from "../../services/DiscountService";
 
 const DiscountProvider = ({ children }) => {
     const [discounts, setDiscounts] = useState([]);
@@ -91,6 +91,22 @@ const DiscountProvider = ({ children }) => {
         }
       };
 
+      const handleDiscountById = async (id) => {
+        try {
+          const res = await getDiscountById(id);
+          if (res.status === 200 || res.status === 201) {
+            return res.data;
+          } else {
+            console.error("Failed to get discount by ID:", res.status);
+            return null;
+          }
+        } catch (error) {
+          console.error("Error fetching discount by ID:", error);
+          return null;
+        }
+     
+      };
+
       const handleUpdateDiscount = async (id, newData) => {
         console.log("..")
         try {
@@ -106,7 +122,7 @@ const DiscountProvider = ({ children }) => {
         }
     };
     return (
-        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,setDiscounts,Cerodiscounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount}}>
+        <DiscountContext.Provider value={{ handleCreateDiscount, discounts,setDiscounts,Cerodiscounts,toggleDiscountStatus,handleEditDiscount,handleUpdateDiscount,handleDiscountById}}>
             {children}
         </DiscountContext.Provider>
     );
