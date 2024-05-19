@@ -46,7 +46,7 @@ const ReceiptForm = () => {
           </Text>
         </View>
         <View style={styles.refContainer}>
-          <Text style={styles.itemText}>{`${item.ref}`}</Text>
+          <Text style={styles.itemText1}>{`${item.ref}`}</Text>
           {isReembolsado && <Text style={styles.reembolsadoText}>{getMontoReembolsado(item)}</Text>}
         </View>
       </View>
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   refContainer: {
     width: '40%',
     marginLeft: 10,
+    marginLeft: 28,
   },
   itemText: {
     fontSize: 14,
@@ -123,16 +124,21 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     marginBottom: 5,
   },
+  itemText1: {
+    marginLeft: 70,
+  },
   reembolsadoText: {
     fontSize: 13,
     color: '#d9534f', 
     textAlign: 'justify',
+    marginLeft:28,
     marginBottom: 5,
   },
   magnifies: {
     marginRight: 5,
     marginLeft: 5,
   },
+  
 });
 
 export default ReceiptForm;

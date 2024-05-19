@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import useRecibos from "../hooks/useRecibos";
 import useSale from "../hooks/useSale";
 import useImpuesto from "../hooks/useImpuesto";
 import useClient from "../hooks/useClient";
 import useDiscount from "../hooks/useDiscount";
 import useArticle from "../hooks/useArticle";
+import useDetalle from "../hooks/useDetalle";
 
 const ReceiptDetail = ({ route }) => {
   const { idVenta } = route.params;
@@ -15,13 +16,14 @@ const ReceiptDetail = ({ route }) => {
   const { handleTaxById } = useImpuesto();
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
+  const { handleDetalleById } = useDetalle();
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
   const [clienteDetails, setClienteDetails] = useState(null);
   const [discountDetails, setDiscountDetails] = useState(null);
   const [taxDetails, setTaxDetails] = useState(null);
-  const [articleDetails, setArticleDetails] = useState(null);
-
+  const [articleDetails, setArticleDetails] = useState([]);
+  const [detalleDetails, setDetalleDetails] = useState([]);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -32,16 +34,20 @@ const ReceiptDetail = ({ route }) => {
           const fetchedSale = await handleSaleById(fetchedRecibo[0].id_venta);
           if (fetchedSale) {
             setSaleDetails(fetchedSale);
-            const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedArticle] = await Promise.all([
+            const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedDetalles] = await Promise.all([
               fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
               fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
               fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
-              fetchedSale.articuloId ? handleArticleById(fetchedSale.articuloId) : null
+              handleDetalleById(fetchedSale.id)
             ]);
             setClienteDetails(fetchedCliente);
             setDiscountDetails(fetchedDiscount);
             setTaxDetails(fetchedTax);
-            setArticleDetails(fetchedArticle)
+            setDetalleDetails(fetchedDetalles);
+
+            const articlePromises = fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId));
+            const articles = await Promise.all(articlePromises);
+            setArticleDetails(articles);
           } else {
             console.error(`Failed to fetch sale for ID: ${fetchedRecibo[0].id_venta}`);
           }
@@ -58,7 +64,7 @@ const ReceiptDetail = ({ route }) => {
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById,handleArticleById]);
+  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleById]);
 
   if (!reciboDetails || !saleDetails) {
     return (
@@ -70,6 +76,10 @@ const ReceiptDetail = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.detailsContainer1}>
+        <Text style={styles.totalText}>S/. {saleDetails.total}</Text>
+        <Text style={styles.labelTotal}>Total</Text>
+      </View>
       <Text style={styles.title}>Detalles del Recibo</Text>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Referencia:</Text>
@@ -107,13 +117,13 @@ const ReceiptDetail = ({ route }) => {
       )}
       {discountDetails && discountDetails.valor && (
         <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Descuento:</Text>
-        <Text>
-          {discountDetails.tipo_descuento === "MONTO"
-            ? `S/. ${discountDetails.valor}`
-            : `${discountDetails.valor}%`}
-        </Text>
-      </View>
+          <Text style={styles.label}>Descuento:</Text>
+          <Text>
+            {discountDetails.tipo_descuento === "MONTO"
+              ? `S/. ${discountDetails.valor}`
+              : `${discountDetails.valor}%`}
+          </Text>
+        </View>
       )}
       {taxDetails && taxDetails.tasa && (
         <View style={styles.detailsContainer}>
@@ -126,10 +136,6 @@ const ReceiptDetail = ({ route }) => {
         <Text>{saleDetails.tipoPago}</Text>
       </View>
       <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Total:</Text>
-        <Text>S/. {saleDetails.total}</Text>
-      </View>
-      <View style={styles.detailsContainer}>
         <Text style={styles.label}>Dinero Recibido:</Text>
         <Text>S/. {saleDetails.dineroRecibido}</Text>
       </View>
@@ -137,6 +143,17 @@ const ReceiptDetail = ({ route }) => {
         <Text style={styles.label}>Cambio:</Text>
         <Text>S/. {saleDetails.cambio}</Text>
       </View>
+      {/* Mostrar detalles del artículo */}
+      <Text style={styles.title}>Detalles de los Artículos</Text>
+      {articleDetails.map((article, index) => (
+        <View key={index} style={styles.detailsContainer}>
+          <Text style={styles.label}>Artículo:</Text>
+          <Text>{article.nombre}</Text>
+        </View>
+      ))}
+      <TouchableOpacity style={styles.buttonContainer}>
+        <Text style={styles.buttonText}>Reembolsar</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -158,9 +175,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 5,
   },
+  detailsContainer1: {
+    padding: 9,
+    textAlign: 'center',
+    marginLeft: 130,
+  },
+  totalText: {
+    fontSize: 29,
+  },
+  labelTotal: {
+    marginLeft: 25,
+    fontSize: 20,
+  },
   label: {
     fontWeight: "bold",
     marginRight: 5,
+  },
+  buttonContainer: {
+    marginTop: 25,
+    overflow: "hidden",
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#0258FE',
+    backgroundColor: '#0258FE',
+    width: 237,
+    height: 39,
+    marginLeft: 55,
+    padding: 10,
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 16,
   },
 });
 
