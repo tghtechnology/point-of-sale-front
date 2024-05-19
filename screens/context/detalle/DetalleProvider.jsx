@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react";
-import { listDetalle } from "../../services/DetalleService";
+import { listDetalle,DetalleByVentaId } from "../../services/DetalleService";
 import DetalleContext from "./DetalleContext";
 
 
