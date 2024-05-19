@@ -23,9 +23,9 @@ const DetalleProvider = ({children}) => {
         getDetalles();
     }, []);
 
-    const handleDetalleById = async (id) => {
+    const handleDetalleById = async (ventaId) => {
         try {
-          const res = await DetalleByVentaId(id);
+          const res = await DetalleByVentaId(ventaId);
           if (res.status === 200 || res.status === 201) {
             return res.data;
           } else {

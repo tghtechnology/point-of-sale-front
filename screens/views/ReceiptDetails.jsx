@@ -143,6 +143,14 @@ const ReceiptDetail = ({ route }) => {
         </>
         
       )}
+      <Text style={styles.title}>Detalles de los Artículos</Text>
+      {articleDetails.map((article, index) => (
+        <View key={index} style={styles.detailsContainer}>
+          <Text style={styles.label}>Artículo:</Text>
+          <Text>{articleDetails.cantidad}</Text>
+          <Text>{article.nombre}</Text>
+        </View>
+      ))}
       <View style={styles.detailsContainer}>
             <Text style={styles.label}>Tipo de Pago:</Text>
             <Text>{saleDetails.tipoPago}</Text>

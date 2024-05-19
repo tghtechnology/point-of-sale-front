@@ -102,7 +102,7 @@ const deleteArticles = async (id) => {
 const ArticleById=async(id)=>{
   try {
       const token = await getToken();
-      const { data, status } = await apiClient.get(`/articulo/listar${id}`, {
+      const { data, status } = await apiClient.get(`/articulo/listar/${id}`, {
           headers: {
               Authorization: `Bearer ${token}`
           }

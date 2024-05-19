@@ -25,7 +25,7 @@ const listDetalle = async () => {
 const DetalleByVentaId=async(ventaId)=>{
     try {
         
-        const { data, status } = await apiClient.get(`/detalle/${ventaId}`);
+        const { data, status } = await apiClient.get(`/detalle/venta/${ventaId}`);
         return {
             data,
             status
