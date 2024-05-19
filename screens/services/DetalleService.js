@@ -11,8 +11,12 @@ const getToken = async () => {
 };
 const listDetalle = async () => {
     try {
-      
-        const { data, status } = await apiClient.get(`/detalle`);
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/detalle`, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
         return {
             data,
             status
@@ -24,8 +28,12 @@ const listDetalle = async () => {
 }
 const DetalleByVentaId=async(ventaId)=>{
     try {
-        
-        const { data, status } = await apiClient.get(`/detalle/venta/${ventaId}`);
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/detalle/venta/${ventaId}`, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
         return {
             data,
             status
@@ -36,8 +44,26 @@ const DetalleByVentaId=async(ventaId)=>{
     }
 }
 
+const getDetalleById=async(id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/detalle/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        return {
+            data,
+            status
+        };
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error al cargar articulos');
+    }
+}
 
 export {
     listDetalle,
     DetalleByVentaId,
+    getDetalleById,
 }
