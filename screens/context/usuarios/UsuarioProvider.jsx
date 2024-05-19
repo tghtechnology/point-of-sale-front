@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import {createUser,getUsers,editUser,eliminarTemporal,eliminarPermanente } from "../../services/UserService"
+import {createUser,getUsers,editUser,eliminarTemporal,eliminarPermanente, getUserById } from "../../services/UserService"
 import UsuarioContext from "./UsuarioContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -97,11 +97,19 @@ const UsuarioProvider = ({children}) => {
         return false;
       }
     };
-
-
-    
-
-  
+    const handleGetUserById = async (id) => {
+      try {
+        const response = await getUserById(id);
+        if (response && response.status === 200) {
+          return response.data;
+        } else {
+          return null;
+        }
+      } catch (error) {
+        console.error("Error getting user by id:", error);
+        return null;
+      }
+    }
 
   return (
     <UsuarioContext.Provider value={{
@@ -112,6 +120,7 @@ const UsuarioProvider = ({children}) => {
       setUser,
       handleDeleteTemporary,
       handleDeletePermanent,
+      handleGetUserById
               
     }}> 
       {children}

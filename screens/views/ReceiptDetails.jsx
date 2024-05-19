@@ -7,6 +7,7 @@ import useClient from "../hooks/useClient";
 import useDiscount from "../hooks/useDiscount";
 import useArticle from "../hooks/useArticle";
 import useDetalle from "../hooks/useDetalle";
+import useUser from "../hooks/useUser";
 
 const ReceiptDetail = ({ route }) => {
   const { idVenta } = route.params;
@@ -17,6 +18,7 @@ const ReceiptDetail = ({ route }) => {
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
   const { handleDetalleById } = useDetalle();
+  const { handleGetUserById } = useUser();
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
   const [clienteDetails, setClienteDetails] = useState(null);
@@ -24,6 +26,7 @@ const ReceiptDetail = ({ route }) => {
   const [taxDetails, setTaxDetails] = useState(null);
   const [articleDetails, setArticleDetails] = useState([]);
   const [detalleDetails, setDetalleDetails] = useState([]);
+  const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -34,16 +37,18 @@ const ReceiptDetail = ({ route }) => {
           const fetchedSale = await handleSaleById(fetchedRecibo[0].id_venta);
           if (fetchedSale) {
             setSaleDetails(fetchedSale);
-            const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedDetalles] = await Promise.all([
+            const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedDetalles,fetchedUser] = await Promise.all([
               fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
               fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
               fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
-              handleDetalleById(fetchedSale.id)
+              handleDetalleById(fetchedSale.id),
+              fetchedSale.usuarioId? handleGetUserById(fetchedSale.usuarioId) : null,
             ]);
             setClienteDetails(fetchedCliente);
             setDiscountDetails(fetchedDiscount);
             setTaxDetails(fetchedTax);
             setDetalleDetails(fetchedDetalles);
+            setUserDetails(fetchedUser);
 
             const articlePromises = fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId));
             const articles = await Promise.all(articlePromises);
@@ -94,6 +99,12 @@ const ReceiptDetail = ({ route }) => {
         <View style={styles.detailsContainer}>
           <Text style={styles.label}>Nombre del Cliente:</Text>
           <Text>{clienteDetails.nombre}</Text>
+        </View>
+      )}
+      {userDetails && userDetails.nombre && (
+        <View style={styles.detailsContainer}>
+          <Text style={styles.label}>Nombre del Empleado:</Text>
+          <Text>{userDetails.nombre}</Text>
         </View>
       )}
       {(reciboDetails.monto_reembolsado === null) && (

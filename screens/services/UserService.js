@@ -137,4 +137,5 @@ export {
     editUser,
     eliminarTemporal,
     eliminarPermanente,
+    getUserById,
 }
