@@ -147,8 +147,8 @@ const ReceiptDetail = ({ route }) => {
       {articleDetails.map((article, index) => (
         <View key={index} style={styles.detailsContainer}>
           <Text style={styles.label}>Artículo:</Text>
-          <Text>{articleDetails.cantidad}</Text>
           <Text>{article.nombre}</Text>
+          <Text>X{detalleDetails[index].cantidad}</Text>
         </View>
       ))}
       <View style={styles.detailsContainer}>

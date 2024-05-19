@@ -114,6 +114,23 @@ const eliminarTemporal = async (password) => {
     }
   }
 
+  const getUserById=async (id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/usuario/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data,
+            status,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+  }
 export {
     createUser,
     getUsers, 
