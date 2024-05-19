@@ -46,7 +46,7 @@ const createUser = async (newUser) => {
 const getUsers = async () => {
   try{
     const token = await getToken();
-    const response = await apiClient.get(`/listar`, {
+    const response = await apiClient.get(`/usuario`, {
       headers: {
         Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
       }
