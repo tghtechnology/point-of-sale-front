@@ -34,6 +34,10 @@ const ListVent = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        calculateTotal();
+    }, [selectedItems, selectedDiscounts, selectedTaxes]);
+
     const calculateTotal = () => {
         const totalPrice = selectedItems.reduce((acc, item) => {
             const subtotal = calculateSubtotalWithDiscount(item);
@@ -44,6 +48,8 @@ const ListVent = () => {
         selectedDiscounts.forEach(discount => {
             if (discount.tipo_descuento === 'MONTO') {
                 discountedTotal -= discount.valor;
+            } else if (discount.tipo_descuento === 'PORCENTAJE') {
+                discountedTotal -= discountedTotal * (discount.valor / 100);
             }
         });
 
@@ -59,10 +65,6 @@ const ListVent = () => {
         setTotal(totalWithTaxes);
     };
 
-    useEffect(() => {
-        calculateTotal();
-    }, [selectedItems, selectedDiscounts, selectedTaxes]);
-
     const calculateSubtotalWithDiscount = (item) => {
         let subtotal = item.precio * item.quantity;
         let itemDiscount = 0;
@@ -76,7 +78,7 @@ const ListVent = () => {
     };
 
     return (
-            <ScrollView container={styles.container}>
+        <ScrollView container={styles.container}>
             {/* Sección del total */}
             <TouchableOpacity style={styles.cobrarButton}>
                 <View style={styles.totalTextContainer}>
@@ -111,28 +113,26 @@ const ListVent = () => {
 
             {/* Sección de impuestos */}
             {selectedTaxes !== null && selectedTaxes.length > 0 && (
+                <View style={styles.sectionContainer}>
+                    <Text style={styles.sectionTitle}>Impuestos:</Text>
+                    {selectedTaxes.map((tax, index) => (
+                        <Text key={index} style={styles.sectionItem}>
+                            {tax.nombre}: {tax.tasa}% {tax.tipo_impuesto === 'Anadido_al_precio' ? `(S/ ${taxValue.toFixed(2)})` : ''}
+                        </Text>
+                    ))}
+                </View>
+            )}
 
-    <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Impuestos:</Text>
-        {selectedTaxes.map((tax, index) => (
-            <Text key={index} style={styles.sectionItem}>
-                {tax.nombre}: {tax.tasa}% {tax.tipo_impuesto === 'Anadido_al_precio' ? `(S/ ${taxValue.toFixed(2)})` : ''}
-            </Text>
-        ))}
-    </View>
-)}
-
-{/* Sección de clientes */}
-{selectedClients !== null && selectedClients.length > 0 && (
-    <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Cliente:</Text>
-        {selectedClients.map((client, index) => (
-            <Text key={index} style={styles.sectionItem}>{client.nombre}</Text>
-        ))}
-    </View> 
-)}
-
-            </ScrollView>
+            {/* Sección de clientes */}
+            {selectedClients !== null && selectedClients.length > 0 && (
+                <View style={styles.sectionContainer}>
+                    <Text style={styles.sectionTitle}>Cliente:</Text>
+                    {selectedClients.map((client, index) => (
+                        <Text key={index} style={styles.sectionItem}>{client.nombre}</Text>
+                    ))}
+                </View> 
+            )}
+        </ScrollView>
     );
 };
 
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         borderColor: '#E0E0E0',
         justifyContent: 'space-between',
     },
-      itemText: {
+    itemText: {
         fontSize: 16,
         color: '#000000',
     },

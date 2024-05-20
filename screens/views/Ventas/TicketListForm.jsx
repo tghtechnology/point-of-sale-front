@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Picker } from "@react-native-picker/picker";
+import { RadioButton } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import { useTotal } from '../../Global State/TotalContext'; 
+import useClient from '../../hooks/useClient';
+import useDiscount from '../../hooks/useDiscount';
+import useImpuesto from'../../hooks/useImpuesto'
 import ListVent from '../../componentes/Venta/ListVent';
 
 const TicketListForm = (props) => {
     const navigation = useNavigation();
     const [selectedClient, setSelectedClient] = useState('');
     const [selectedDiscount, setSelectedDiscount] = useState('');
+    const [selectedImport, setSelectedImport] = useState('');
     const [clientType, setClientType] = useState(null);
     const [showClientPicker, setShowClientPicker] = useState(false); // Nuevo estado para controlar la visibilidad del Picker
     const {client} = useClient();
     const {discounts} = useDiscount();
+    const {listImpuesto} = useImpuesto();
 
     const handleClientTypeChange = (type) => {
         if (clientType === type) {
@@ -25,7 +32,11 @@ const TicketListForm = (props) => {
     };
 
     const showSaleTicket = () => {
-        navigation.navigate('SaleTicket');
+        navigation.navigate('SaleTicket',{
+            selectedClient,
+            selectedDiscount,
+            selectedImport
+        });
     };
 
     return (
@@ -70,7 +81,19 @@ const TicketListForm = (props) => {
                 >
                     <Picker.Item label="Seleccion Descuento:" value="" />
                     {discounts.map((discountItem) => (
-                        <Picker.Item key={discountItem.id} label={discountItem.nombre} value={discountItem.id} />
+                        <Picker.Item key={discountItem.id} label={discountItem.nombre && discountItem.valor} value={discountItem.id} />
+                    ))}
+                </Picker>
+            </View>
+            <View style={styles.pickerContainer}>
+                <Picker
+                    selectedValue={selectedImport}
+                    style={styles.picker}
+                    onValueChange={(itemValue, itemIndex) => setSelectedImport(itemValue)}
+                >
+                    <Picker.Item label="Seleccion Importe:" value="" />
+                    {listImpuesto.map((impuestoItem) => (
+                        <Picker.Item key={impuestoItem.id} label={impuestoItem.nombre} value={impuestoItem.id} />
                     ))}
                 </Picker>
             </View>
