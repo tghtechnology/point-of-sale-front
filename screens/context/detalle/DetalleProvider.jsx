@@ -50,8 +50,7 @@ const DetalleProvider = ({children}) => {
           console.error("Error fetching sale by ID:", error);
           return null;
         }
-      }
-
+      };
 
     return (
         <DetalleContext.Provider value={{ listDetalles,setListDetalles,handleDetalleByVentaId, handleGetDetalleById }}>

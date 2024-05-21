@@ -34,6 +34,7 @@ const DetalleByVentaId=async(ventaId)=>{
                 Authorization: `Bearer ${token}` 
             }
         });
+        console.log('Data:',data);
         return {
             data,
             status
@@ -62,8 +63,10 @@ const getDetalleById=async(id)=>{
     }
 }
 
+
+
 export {
     listDetalle,
     DetalleByVentaId,
-    getDetalleById,
+    getDetalleById
 }
