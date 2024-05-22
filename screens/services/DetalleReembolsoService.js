@@ -30,5 +30,5 @@ const DetalleReembolsoByReciboId=async (reciboId)=>{
 
 export {
     getToken,
-    DetalleReembolsoByReciboId,
+    DetalleReembolsoByReciboId
 }

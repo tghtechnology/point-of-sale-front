@@ -1,8 +1,9 @@
-import { useEffect,useState } from "react";
-import { DetalleReembolsoByReciboId } from "../../services/DetalleReembolso";
-import {DetalleReembolsoContext} from "./DetalleReembolsoContex"
+import { DetalleReembolsoByReciboId } from "../../services/DetalleReembolsoService";
+import DetalleReembolsoContext from "./DetalleReembolsoContex"
+  
 const DetalleReembolsoProvider=({children}) => {
-const handleDetalleReembolsoByReciboId=async (reciboId)=>{
+
+const handleDetalleReembolsoByReciboId = async (reciboId)=>{
     try {
       const res = await DetalleReembolsoByReciboId(reciboId);
       if (res.status === 200 || res.status === 201) {

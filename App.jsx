@@ -14,38 +14,40 @@ import SaleProvider from "./screens/context/sale/SaleProvider.jsx";
 import RecibosProvider from "./screens/context/recibos/RecibosProvider.jsx";
 import { TotalProvider } from "./screens/Global State/TotalProvider.jsx";
 import DetalleProvider from "./screens/context/detalle/DetalleProvider.jsx";
-
+import DetalleReembolsoProvider from "./screens/context/detalleReembolso/DetalleReembolsoProvider.jsx";
 
 export default function App() {
   return (
-    <DetalleProvider>
-    <RecibosProvider>
-    <TotalProvider>
-    <SaleProvider>
-      <WorkerProvider>
-        <ClientProvider>
-          <ImpuestoProvider>
-            <EmailProvider>
-              <AuthProvider>
-                <UsuarioProvider>
-                  <CountryProvider>
-                    <DiscountProvider>
-                      <CategoryProvider>
-                        <ArticleProvider>
-                          <Navigation />
-                        </ArticleProvider>
-                      </CategoryProvider>
-                    </DiscountProvider>
-                  </CountryProvider>
-                </UsuarioProvider>
-              </AuthProvider>
-            </EmailProvider>
-          </ImpuestoProvider>
-        </ClientProvider>
-      </WorkerProvider>
-    </SaleProvider>
-    </TotalProvider>
-    </RecibosProvider>
-    </DetalleProvider>
+    <DetalleReembolsoProvider>
+      <DetalleProvider>
+        <RecibosProvider>
+          <TotalProvider>
+            <SaleProvider>
+              <WorkerProvider>
+                <ClientProvider>
+                  <ImpuestoProvider>
+                    <EmailProvider>
+                      <AuthProvider>
+                        <UsuarioProvider>
+                          <CountryProvider>
+                            <DiscountProvider>
+                              <CategoryProvider>
+                                <ArticleProvider>
+                                  <Navigation />
+                                </ArticleProvider>
+                              </CategoryProvider>
+                            </DiscountProvider>
+                          </CountryProvider>
+                        </UsuarioProvider>
+                      </AuthProvider>
+                    </EmailProvider>
+                  </ImpuestoProvider>
+                </ClientProvider>
+              </WorkerProvider>
+            </SaleProvider>
+          </TotalProvider>
+        </RecibosProvider>
+      </DetalleProvider>
+    </DetalleReembolsoProvider>
   );
 }

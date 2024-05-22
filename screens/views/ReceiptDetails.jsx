@@ -6,8 +6,9 @@ import useImpuesto from "../hooks/useImpuesto";
 import useClient from "../hooks/useClient";
 import useDiscount from "../hooks/useDiscount";
 import useArticle from "../hooks/useArticle";
-import useDetalle from "../hooks/useDetalle";
+import useDetalleReembolso from "../hooks/useDetalleReembolso";
 import useUser from "../hooks/useUser";
+import useDetalle from "../hooks/useDetalle";
 
 const ReceiptDetail = ({ route }) => {
   const { idVenta } = route.params;
@@ -17,7 +18,8 @@ const ReceiptDetail = ({ route }) => {
   const { handleTaxById } = useImpuesto();
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
-  const { handleDetalleReembolsoByReciboId, handleDetalleByVentaId } = useDetalle(); 
+  const { handleDetalleReembolsoByReciboId } = useDetalleReembolso(); 
+  const {handleDetalleByVentaId} = useDetalle();
   const { handleGetUserById } = useUser();
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
@@ -173,24 +175,23 @@ const ReceiptDetail = ({ route }) => {
           </View>
         </>
       )}
-      <Text style={styles.title}>Detalles de los Artículos</Text>
+       <Text style={styles.title}>Detalles de los Artículos</Text>
 
-      {reciboDetails.monto_reembolsado !== null && (
-        <>
-{reembolsoDetails.map((detalleReembolso, index) => (
-  <View key={index} style={styles.detailsContainer}>
-    <Text style={styles.label}>Artículo:</Text>
-    {detalleReembolso.articulo && detalleReembolso.articulo.nombre ? (
-      <Text>{detalleReembolso.articulo.nombre}</Text>
-    ) : (
-      <Text>Nombre no disponible</Text>
-    )}
-    <Text>Cantidad Devuelta: {detalleReembolso.cantidadDevuelta}</Text>
-  </View>
-))}
-
-        </>
-      )}
+{reciboDetails.monto_reembolsado !== null && (
+  <>
+    {reembolsoDetails.map((detalleReembolso, index) => (
+      <View key={index} style={styles.detailsContainer}>
+        <Text style={styles.label}>Artículo:</Text>
+        {detalleReembolso.articulo && detalleReembolso.articulo.nombre ? (
+          <Text>{detalleReembolso.articulo.nombre}</Text>
+        ) : (
+          <Text>Nombre no disponible</Text>
+        )}
+        <Text>Cantidad Devuelta: {detalleReembolso.cantidadDevuelta}</Text>
+      </View>
+    ))}
+  </>
+)}
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Tipo de Pago:</Text>
         <Text>{saleDetails.tipoPago}</Text>
