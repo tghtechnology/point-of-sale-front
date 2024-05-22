@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
   },
   optionsButton: {
     position: 'absolute',
-    top: -2,
+    top: -10,
     right: 10,
   },
   emptyContainer: {
