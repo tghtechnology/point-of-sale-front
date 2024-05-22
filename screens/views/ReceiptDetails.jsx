@@ -183,7 +183,7 @@ const ReceiptDetail = ({ route }) => {
       <View key={index} style={styles.detailsContainer}>
         <Text style={styles.label}>Artículo:</Text>
         {detalleReembolso.articulo && detalleReembolso.articulo.nombre ? (
-          <Text>{detalleReembolso.articulo.nombre}</Text>
+          <Text>{detalleReembolso.articuloId.nombre}</Text>
         ) : (
           <Text>Nombre no disponible</Text>
         )}
