@@ -1,10 +1,8 @@
-import { useEffect,useState } from "react";
-import { listDetalle,DetalleByVentaId, getDetalleById } from "../../services/DetalleService";
-import DetalleContext from "./DetalleContext";
+import React, { useEffect, useState } from "react";
+import { listDetalle, DetalleByVentaId, getDetalleById } from "../../services/DetalleService";
+import { DetalleContext } from "./DetalleContext";
 
-
-const DetalleProvider = ({children}) => {
-
+const DetalleProvider = ({ children }) => {
     const [listDetalles, setListDetalles] = useState([]);
 
     useEffect(() => {
@@ -25,38 +23,39 @@ const DetalleProvider = ({children}) => {
 
     const handleDetalleByVentaId = async (ventaId) => {
         try {
-          const res = await DetalleByVentaId(ventaId);
-          if (res.status === 200 || res.status === 201) {
-            return res.data;
-          } else {
-            console.error("Failed to get sale by ID:", res.status);
-            return null;
-          }
+            const res = await DetalleByVentaId(ventaId);
+            if (res.status === 200 || res.status === 201) {
+                return res.data;
+            } else {
+                console.error("Failed to get sale by ID:", res.status);
+                return null;
+            }
         } catch (error) {
-          console.error("Error fetching sale by ID:", error);
-          return null;
+            console.error("Error fetching sale by ID:", error);
+            return null;
         }
-      };
-      const handleGetDetalleById = async (id) => {
+    };
+
+    const handleGetDetalleById = async (id) => {
         try {
-          const res = await getDetalleById(id);
-          if (res.status === 200 || res.status === 201) {
-            return res.data;
-          } else {
-            console.error("Failed to get sale by ID:", res.status);
-            return null;
-          }
+            const res = await getDetalleById(id);
+            if (res.status === 200 || res.status === 201) {
+                return res.data;
+            } else {
+                console.error("Failed to get sale by ID:", res.status);
+                return null;
+            }
         } catch (error) {
-          console.error("Error fetching sale by ID:", error);
-          return null;
+            console.error("Error fetching sale by ID:", error);
+            return null;
         }
-      };
+    };
 
     return (
-        <DetalleContext.Provider value={{ listDetalles,setListDetalles,handleDetalleByVentaId, handleGetDetalleById }}>
+        <DetalleContext.Provider value={{ listDetalles, setListDetalles, handleDetalleByVentaId, handleGetDetalleById }}>
             {children}
         </DetalleContext.Provider>
-    )
-}
+    );
+};
 
 export default DetalleProvider;
