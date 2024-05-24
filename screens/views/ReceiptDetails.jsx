@@ -10,10 +10,11 @@ import useDetalle from "../hooks/useDetalle";
 import { useTotal } from "../Global State/TotalContext";
 import { useNavigation } from '@react-navigation/native';
 
+
 const ReceiptDetail = ({ route }) => {
   const navigation = useNavigation();
   const { idVenta } = route.params;
-  const { handleReciboById } = useRecibos();
+  const { handleReciboById,handleDetalleRembolsoById } = useRecibos();
   const { handleSaleById } = useSale();
   const { handleDiscountById } = useDiscount();
   const { handleTaxById } = useImpuesto();
