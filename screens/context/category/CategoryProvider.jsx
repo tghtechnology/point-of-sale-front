@@ -46,7 +46,7 @@ const CategoryProvider = ({children}) => {
     try {
       const response = await  editCategories(updateCategorias.id, {nombre, color} );
       if (response && (response.status === 200 || response.status === 204)) {
-        console.log('Artículo editado exitosamente');
+        console.log('Categoria editado exitosamente');
         const updatedList = listCategoria.map(category => {
           if (category.id === updateCategorias.id) {
             return { ...category, ...updateCategorias };

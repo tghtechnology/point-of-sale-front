@@ -43,8 +43,47 @@ const ReciboById=async (id)=>{
         throw new Error('Error al cargar recibos');
     }
 }
+const DetalleByRembolsoId=async(id)=>{
+    try {
+        const token = await getToken();
+        const { data, status } = await apiClient.get(`/reembolso/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        return {
+            data,
+            status
+        };
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error al cargar detalle rembolso');
+    }
+}
+
+const Reembolsar = async (id, detalles) => {
+    try {
+      const token = await getToken();
+      const { data, status } = await apiClient.post(
+        '/reembolsar',
+        { id, detalles },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+      return { data, status };
+    } catch (error) {
+      console.error("Error al realizar el reembolso:", error);
+      throw new Error('Error al procesar la solicitud de reembolso');
+    }
+  };
+
 
 export {
     listRecibos,
     ReciboById,
+    DetalleByRembolsoId,
+    Reembolsar
 }

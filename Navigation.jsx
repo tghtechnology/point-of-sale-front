@@ -40,6 +40,7 @@ import ProfileEdit from './screens/views/ProfileEdit';
 import DataUser from './screens/views/DataUser';
 import ResetPassword from './screens/views/ResetPassword';
 import ReceiptDetails from './screens/views/ReceiptDetails';
+import Rembolsar from './screens/views/Rembolsar';
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -189,6 +190,7 @@ function Recibos(){
         },
       }}></Stack.Screen>
      <Stack.Screen name="ReceiptDetail" component={ReceiptDetails} />
+     <Stack.Screen name="Rembolso" component={Rembolsar} />
     </Stack.Navigator>
   
 

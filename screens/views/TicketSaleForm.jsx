@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import CustomAlert from '../componentes/Alertas/CustomAlert';
 import ErrorAlert from '../componentes/Alertas/ErrorAlert';
 import PaymentSelection from '../componentes/PaymentSelection';
+import useRecibos from '../hooks/useRecibos';
 
 const INITIAL_STATE = {
     detalles:'',
@@ -20,6 +21,7 @@ const INITIAL_STATE = {
 const TicketSaleForm = () => {
     const [receivedAmount, setReceivedAmount] = useState('');
     const [change, setChange] = useState('');
+    const { listRecibo,setListRecibo } = useRecibos();
     const { total } = useTotal();
     const [data, setData] = useState(INITIAL_STATE);
     const [selectedPayment, setSelectedPayment] = useState(null);
@@ -70,29 +72,34 @@ const TicketSaleForm = () => {
         setSelectedPayment(paymentType);
     };
     const handleCompleteSale = async () => {
-        try {
-            const data = {
-                detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
-                impuestoId: selectedTaxes ? selectedTaxes.id : null,
-                descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
-                clienteId: selectedClients ? selectedClients.id: null,
-                tipoPago: selectedPayment,
-                dineroRecibido: parseFloat(receivedAmount)
-              };
-              console.log('Sale data:', data);
-            const success = await handleCreateSale(data);
-            if (success) {
-                setShowAlert(true);
-                 
-              console.log('Sale data:', data);
-            } else{
-                setErrorAlertVisible(true);
-                throw new Error("La respuesta del servidor no contiene un impuesto válido.");
-              }
-            } catch (error) {
+      try {
+          const data = {
+              detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
+              impuestoId: selectedTaxes ? selectedTaxes.id : null,
+              descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
+              clienteId: selectedClients ? selectedClients.id : null,
+              tipoPago: selectedPayment,
+              dineroRecibido: parseFloat(receivedAmount)
+          };
+          console.log('Sale data:', data);
+
+          const success = await handleCreateSale(data);
+          if (success) {
+              setShowAlert(true);
+              const newRecibo = success; 
+
+              // Actualiza la lista de recibos con el nuevo recibo
+              setListRecibo(prevList => [...prevList, newRecibo]);
+              clearAsyncStorage();
+          } else {
               setErrorAlertVisible(true);
-            }
-    }
+              throw new Error("La respuesta del servidor no contiene un impuesto válido.");
+          }
+      } catch (error) {
+          console.error('Error completing sale:', error);
+          setErrorAlertVisible(true);
+      }
+  };
     const handleAlertClose = () => {
         setShowAlert(false); 
         clearAsyncStorage();
