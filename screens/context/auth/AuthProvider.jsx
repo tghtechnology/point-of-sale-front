@@ -13,8 +13,8 @@ const AuthProvider = ({children}) => {
         const { status, data } = await createToken(email, password);
         if (status === 200) {
           const { usuario_id, token } = data;
-          AsyncStorage.setItem("token", token);
-          AsyncStorage.setItem("usuarioid", usuario_id.toString());
+          await AsyncStorage.setItem("token", token);
+          await AsyncStorage.setItem("usuarioid", usuario_id.toString());
           setIsAuth(true);
           const userData = await obtenerDatosUsuarioPorId(usuario_id);
           setUser(userData);
@@ -29,6 +29,7 @@ const AuthProvider = ({children}) => {
         return false;
       }
     };
+    
     
     const editarUsuario = async (id, newData) => {
       try {
@@ -64,28 +65,27 @@ const AuthProvider = ({children}) => {
     
 
     const logautAccess = async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (token !== null) {
-        try {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (token !== null) {
           const response = await logout();
           if (response.status === 200) {
-            await AsyncStorage.removeItem("token");
+            await AsyncStorage.clear(); // Limpia todo el AsyncStorage
             setIsAuth(false);
-            setUser(null); // Borra los datos del usuario cuando cierra sesión
+            setUser(null); // Limpia el estado del usuario
             alert("Cierre de sesión exitoso");
             return true;
           } else {
-            setIsAuth(false);
             alert("Error al cerrar sesión");
             return false;
           }
-        } catch (error) {
-          console.error("Error al cerrar sesión:", error.message);
-         
-          return false;
         }
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error.message);
+        return false;
       }
     };
+    
   
   
 
