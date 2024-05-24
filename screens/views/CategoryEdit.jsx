@@ -27,25 +27,23 @@ const ColorBox = ({ color, setEditedData, selectedColor }) => (
       width: 70, 
       height: 70, 
       margin: 5,
-      borderWidth: colorMapping[selectedColor] === color ? 3 : 0, // Compara con el valor hexadecimal
-      borderColor: 'black', // Elige el color del borde
+      borderWidth: selectedColor === color ? 3 : 0, 
+      borderColor: 'black', 
     }} 
-    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: Object.keys(colorMapping).find(key => colorMapping[key] === color) }))} 
+    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: color }))} 
   />
 );
 
 const CategoryForm = () => {
   const route = useRoute();
-  const {handleEditCategories} = useCategory();
+  const { handleEditCategories, listCategoria, setListCategoria } = useCategory();
   const [showAlert, setShowAlert] = useState(false);
   const [editedData, setEditedData] = useState(INITIAL_STATE);
- 
 
   useEffect(() => {
-    const {categorias} = route.params;
+    const { categorias } = route.params;
     setEditedData(categorias || INITIAL_STATE);
   }, [route.params]);
-
 
   const handleChange = (name, value) => {
     setEditedData({
@@ -54,14 +52,21 @@ const CategoryForm = () => {
     });
   };
 
-
   const handleSubmit = async () => {
     try {
       await handleEditCategories(editedData);
       setShowAlert(true);
-      console.log("Articulo editado exitosamente");
+      console.log("Categoría editada exitosamente");
+      // Actualizar la lista de categorías después de la edición
+      setListCategoria(prevLista => prevLista.map(categoria => {
+        if (categoria.id === editedData.id) {
+          return { ...categoria, ...editedData };
+        } else {
+          return categoria;
+        }
+      }));
     } catch (error) {
-      console.error("Error al editar el descuento:", error);
+      console.error("Error al editar la categoría:", error);
     }
   };
 
@@ -69,24 +74,22 @@ const CategoryForm = () => {
     setShowAlert(false);
   };
 
-  
   return (
-<View style={styles.container}>
-  {/* IMPUT DEL NOMBRE DE LA CATEGORIA */}
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder='Nombre'
         placeholderTextColor="#546574"
         value={editedData.nombre}
-        onChangeText={(text) => handleChange('nombre', text)}  
+        onChangeText={(text) => handleChange('nombre', text)}
       />
-     
-     <Text style={styles.label}>Color</Text>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap',justifyContent: 'center', marginTop:20}}>
-          {Object.values(colorMapping).map((color, index) => (
-            <ColorBox key={index} color={color}   setEditedData={setEditedData} selectedColor={editedData.color}/>
-          ))}
-        </View>
+
+      <Text style={styles.label}>Color</Text>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginTop: 20 }}>
+        {Object.values(colorMapping).map((color) => (
+          <ColorBox key={color} color={color} setEditedData={setEditedData} selectedColor={editedData.color} />
+        ))}
+      </View>
       <View style={{ height: 20 }} />
       <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar</Text>
@@ -95,14 +98,14 @@ const CategoryForm = () => {
         isVisible={showAlert}
         onClose={handleCloseAlert}
         title="Edición Exitosa"
-        message="La categoria se ha editado correctamente."
+        message="La categoría se ha editado correctamente."
         buttonColor="#2196F3"
-        iconName="check-circle" 
+        iconName="check-circle"
       />
-      </View>
-    
+    </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     marginTop: 30,
@@ -122,17 +125,17 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor:'#0258FE',
-    backgroundColor:'#0258FE',
-    width:237,
-    height:39,
-    marginLeft:55,
+    borderColor: '#0258FE',
+    backgroundColor: '#0258FE',
+    width: 237,
+    height: 45,
+    marginLeft: 55,
     padding: 10,
   },
   buttonText: {
     color: 'white',
     textAlign: 'center',
-    fontSize:16,
+    fontSize: 16,
   },
   label: {
     marginTop: 30,
@@ -140,4 +143,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
 export default CategoryForm;
