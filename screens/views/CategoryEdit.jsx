@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native';
 import { useRoute } from "@react-navigation/native";
 import useCategory from '../hooks/useCategory';
 import CustomAlert from '../componentes/Alertas/CustomAlert';
 
-const INITIAL_STATE = {
-  nombre: '',
-  color: '',
-};
 
+const INITIAL_STATE = {
+  nombre:'',
+  color:'',
+}
 const colorMapping = {
   'Rojo': '#FF0000',
   'Verde_limon': '#00FF00',
@@ -21,22 +21,22 @@ const colorMapping = {
 };
 
 const ColorBox = ({ color, setEditedData, selectedColor }) => (
-  <TouchableOpacity
-    style={{
-      backgroundColor: color,
-      width: 70,
-      height: 70,
+  <TouchableOpacity 
+    style={{ 
+      backgroundColor: color, 
+      width: 70, 
+      height: 70, 
       margin: 5,
-      borderWidth: selectedColor === color ? 3 : 0,
-      borderColor: 'black',
-    }}
-    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: color }))} // Aquí estableces el color directamente
+      borderWidth: selectedColor === color ? 3 : 0, // Comparar con el valor hexadecimal del color seleccionado
+      borderColor: 'black', // Elige el color del borde
+    }} 
+    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: color }))} // Pasar el valor hexadecimal directamente
   />
 );
 
 const CategoryForm = () => {
   const route = useRoute();
-  const { handleEditCategories } = useCategory();
+  const { handleEditCategories, listCategoria, setListCategoria } = useCategory();
   const [showAlert, setShowAlert] = useState(false);
   const [editedData, setEditedData] = useState(INITIAL_STATE);
 
@@ -57,6 +57,14 @@ const CategoryForm = () => {
       await handleEditCategories(editedData);
       setShowAlert(true);
       console.log("Categoría editada exitosamente");
+      // Actualizar la lista de categorías después de la edición
+      setListCategoria(prevLista => prevLista.map(categoria => {
+        if (categoria.id === editedData.id) {
+          return { ...categoria, ...editedData };
+        } else {
+          return categoria;
+        }
+      }));
     } catch (error) {
       console.error("Error al editar la categoría:", error);
     }
@@ -78,8 +86,8 @@ const CategoryForm = () => {
 
       <Text style={styles.label}>Color</Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginTop: 20 }}>
-        {Object.values(colorMapping).map((color, index) => (
-          <ColorBox key={index} color={color} setEditedData={setEditedData} selectedColor={editedData.color} />
+        {Object.values(colorMapping).map((color) => (
+          <ColorBox key={color} color={color} setEditedData={setEditedData} selectedColor={editedData.color} />
         ))}
       </View>
       <View style={{ height: 20 }} />
@@ -96,7 +104,7 @@ const CategoryForm = () => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
