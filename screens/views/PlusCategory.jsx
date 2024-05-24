@@ -50,19 +50,7 @@ const PlusCategory = () => {
     setModal(true);
   };
 
-  const getColorHexadecimal = (colorName) => {
-    const colorMapping = {
-      'Rojo': '#FF0000',
-      'Verde_limon': '#00FF00',
-      'Azul': '#0000FF',
-      'Amarillo': '#FFFF00',
-      'Turquesa': '#00FFFF',
-      'Fucsia': '#FF00FF',
-      'Gris_claro': '#C0C0C0',
-      'Gris_oscuro': '#808080',
-    };
-    return colorMapping[colorName] || '#FFFFFF'; // Valor predeterminado blanco si el color no está en el mapeo
-  };
+ 
 
   return (
     <View style={styles.container}>
@@ -71,7 +59,7 @@ const PlusCategory = () => {
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <View style={styles.colorContainer}>
-              <View style={{ ...styles.colorSquare, backgroundColor: getColorHexadecimal(item.color) }} />
+              <View style={{ ...styles.colorSquare, backgroundColor: item.color }} />
             </View>
             <View style={styles.itemContent}>
               <Text style={styles.itemText}>{item.nombre}</Text>

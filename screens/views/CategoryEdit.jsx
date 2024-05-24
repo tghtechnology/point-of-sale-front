@@ -27,10 +27,10 @@ const ColorBox = ({ color, setEditedData, selectedColor }) => (
       width: 70, 
       height: 70, 
       margin: 5,
-      borderWidth: selectedColor === color ? 3 : 0, // Comparar con el valor hexadecimal del color seleccionado
-      borderColor: 'black', // Elige el color del borde
+      borderWidth: selectedColor === color ? 3 : 0, 
+      borderColor: 'black', 
     }} 
-    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: color }))} // Pasar el valor hexadecimal directamente
+    onPress={() => setEditedData(prevDatos => ({ ...prevDatos, color: color }))} 
   />
 );
 
