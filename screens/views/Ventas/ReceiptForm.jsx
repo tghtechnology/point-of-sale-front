@@ -1,9 +1,9 @@
 import React, { useState,useEffect } from 'react'
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import useRecibos from "../hooks/useRecibos";
-import { useTotal } from '../Global State/TotalContext';
-import useSale from '../hooks/useSale';
+import useRecibos from "../../hooks/useRecibos";
+import { useTotal } from '../../Global State/TotalContext';
+import useSale from '../../hooks/useSale';
 import { useNavigation } from '@react-navigation/native';
 
 const ReceiptForm = () => {
