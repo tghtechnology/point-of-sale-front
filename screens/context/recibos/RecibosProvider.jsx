@@ -56,6 +56,7 @@ const RecibosProvider = ({ children }) => {
   const handleRembolsar=async(id,detalle)=>{
     try {
       const res = await Reembolsar(id,detalle);
+      console.log(id, detalle)
       if (res.status === 200 || res.status === 201) {
       
         return res.data;

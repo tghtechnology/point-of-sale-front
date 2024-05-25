@@ -30,7 +30,7 @@ import ClientForm from './screens/views/Clientes/ClientForm';
 import PlusClients from './screens/views/Clientes/PlusClients';
 import ClientEdit from './screens/views/Clientes/ClientEdit'
 import PlusWorkers from './screens/views/Empleados/PlusWorkers';
-import ReceiptForm from './screens/views/Ventas/ReceiptForm';
+import ReceiptForm from './screens/views/Recibos/ReceiptForm';
 import EditWorker from './screens/views/Empleados/EditWorker';
 import TicketFormHome from './screens/views/Ventas/TicketFormHome';
 import TicketListForm from './screens/views/Ventas/TicketListForm';
@@ -38,6 +38,8 @@ import TicketSaleForm from './screens/views/Ventas/TicketSaleForm';
 import ProfileEdit from './screens/views/Usuario/ProfileEdit';
 import DataUser from './screens/views/Usuario/DataUser';
 import ResetPassword from './screens/views/Usuario/ResetPassword';
+import Rembolsar from './screens/views/Recibos/Rembolsar'
+import ReceiptDetails from './screens/views/Recibos/ReceiptDetails';
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -188,7 +190,7 @@ function Recibos(){
         },
       }}></Stack.Screen>
      <Stack.Screen name="ReceiptDetail" component={ReceiptDetails} />
-     <Stack.Screen name="Rembolso" component={Rembolsar} />
+     <Stack.Screen name="Rembolsar" component={Rembolsar} />
     </Stack.Navigator>
   
 

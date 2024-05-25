@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import useRecibos from "../hooks/useRecibos";
-import useSale from "../hooks/useSale";
-import useImpuesto from "../hooks/useImpuesto";
-import useClient from "../hooks/useClient";
-import useDiscount from "../hooks/useDiscount";
-import useArticle from "../hooks/useArticle";
-import useDetalle from "../hooks/useDetalle";
-import useDetalleReembolso from "../hooks/useDetalleReembolso";
-import { useTotal } from "../Global State/TotalContext";
+import useRecibos from "../../hooks/useRecibos";
+import useSale from "../../hooks/useSale";
+import useImpuesto from "../../hooks/useImpuesto";
+import useClient from "../../hooks/useClient";
+import useDiscount from "../../hooks/useDiscount";
+import useArticle from "../../hooks/useArticle";
+import useDetalle from "../../hooks/useDetalle";
+import useDetalleReembolso from "../../hooks/useDetalleReembolso";
+import { useTotal } from "../../Global State/TotalContext";
 
 const ReceiptDetail = ({ route }) => {
   const navigation = useNavigation();
-  const { idVenta } = route.params;
+  const { idRecibo } = route.params;
   const { handleDetalleReembolsoByReciboId } = useDetalleReembolso();
   const { handleReciboById } = useRecibos();
   const { handleSaleById } = useSale();
@@ -22,7 +22,7 @@ const ReceiptDetail = ({ route }) => {
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
   const { handleDetalleByVentaId } = useDetalle();
-  const { setArticleNames } = useTotal();
+  const { setArticleNames, setArticleQuantities, setVentaId,setArticleIds } = useTotal(); // Added setArticleQuantities
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
   const [clienteDetails, setClienteDetails] = useState(null);
@@ -35,40 +35,47 @@ const ReceiptDetail = ({ route }) => {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const fetchedRecibo = await handleReciboById(idVenta);
+        const fetchedRecibo = await handleReciboById(idRecibo);
         if (fetchedRecibo) {
           const fetchedSale = await handleSaleById(fetchedRecibo[0].id_venta);
           if (fetchedSale) {
             setReciboDetails(fetchedRecibo[0]);
             setSaleDetails(fetchedSale);
-  
+
             const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedDetalles] = await Promise.all([
               fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
               fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
               fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
               handleDetalleByVentaId(fetchedSale.id)
             ]);
-  
+
             setClienteDetails(fetchedCliente);
             setDiscountDetails(fetchedDiscount);
             setTaxDetails(fetchedTax);
-  
+
             if (Array.isArray(fetchedDetalles)) {
               setDetalleDetails(fetchedDetalles);
-    
+
               const articlePromises = fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId));
               const articles = await Promise.all(articlePromises);
               setArticleDetails(articles);
-    
+
               const articleNames = articles.map(article => article.nombre);
               setArticleNames(articleNames);
+
+              const articleIds = articles.map(article => article.id);
+              setArticleIds(articleIds);
+
+              const articleQuantities = fetchedDetalles.map(detalle => detalle.cantidad);
+              setArticleQuantities(articleQuantities); // Setting article quantities in the context
             } else {
               console.error("fetchedDetalles no es un arreglo", fetchedDetalles);
             }
-  
+            setVentaId(fetchedSale.id);
+
             const fetchedReembolsoDetalles = await handleDetalleReembolsoByReciboId(fetchedRecibo[0].id);
             const reembolsoDetallesArray = Array.isArray(fetchedReembolsoDetalles) ? fetchedReembolsoDetalles : [fetchedReembolsoDetalles];
-  
+
             const reembolsoArticlePromises = reembolsoDetallesArray.map(detalle => handleArticleById(detalle.articuloId));
             const reembolsoArticles = await Promise.all(reembolsoArticlePromises);
             setReembolsoArticleDetails(reembolsoArticles.map((article, index) => ({
@@ -79,20 +86,20 @@ const ReceiptDetail = ({ route }) => {
             console.error(`Failed to fetch sale for ID: ${fetchedRecibo[0].id_venta}`);
           }
         } else {
-          console.error(`Failed to fetch recibo for ID: ${idVenta}`);
+          console.error(`Failed to fetch recibo for ID: ${idRecibo}`);
         }
       } catch (error) {
         console.error("Error fetching details:", error);
       }
     };
-  
-    if (idVenta) {
+
+    if (idRecibo) {
       fetchDetails();
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleByVentaId, handleDetalleReembolsoByReciboId, setArticleNames]);
-  
+  }, [idRecibo, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleByVentaId, handleDetalleReembolsoByReciboId, setArticleNames, setArticleQuantities, setVentaId]); // Added setArticleQuantities
+
   if (!reciboDetails || !saleDetails) {
     return (
       <View style={styles.container}>
@@ -100,6 +107,7 @@ const ReceiptDetail = ({ route }) => {
       </View>
     );
   }
+  
 
   return (
     <View style={styles.container}>
@@ -111,6 +119,10 @@ const ReceiptDetail = ({ route }) => {
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Fecha:</Text>
         <Text>{new Date(reciboDetails.fecha_creacion).toLocaleString()}</Text>
+      </View>
+      <View style={styles.detailsContainer}>
+        <Text style={styles.label}>Tipo de Pago:</Text>
+        <Text>{saleDetails.tipoPago}</Text>
       </View>
       {reciboDetails.monto_reembolsado === null ? (
         <>
@@ -172,8 +184,8 @@ const ReceiptDetail = ({ route }) => {
               <Text>X{detalleDetails[index]?.cantidad}</Text>
             </View>
           ))}
-          <TouchableOpacity onPress={() => navigation.navigate("Rembolso")} style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>Continuar</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Rembolsar")} style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>Continuar</Text>
           </TouchableOpacity>
         </>
       ) : (
@@ -208,14 +220,8 @@ const ReceiptDetail = ({ route }) => {
           ))}
         </>
       )}
-      {/* Común para ambas condiciones */}
-      <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Tipo de Pago:</Text>
-        <Text>{saleDetails.tipoPago}</Text>
-      </View>
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({

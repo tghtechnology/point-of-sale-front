@@ -91,12 +91,6 @@ return (
         value={editedData.telefono}
         onChangeText={(text) => handleChange('telefono', text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="password"
-        value={editedData.password}
-        onChangeText={(text) => handleChange('password', text)}
-      />
       <Text style={styles.label}>Cargo</Text>
       <View style={styles.pickerContainer}>
       <Picker

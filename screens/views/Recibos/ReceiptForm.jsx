@@ -1,16 +1,18 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useRecibos from "../../hooks/useRecibos";
 import { useTotal } from '../../Global State/TotalContext';
 import useSale from '../../hooks/useSale';
 import { useNavigation } from '@react-navigation/native';
+import moment from 'moment-timezone';
 
 const ReceiptForm = () => {
   const navigation = useNavigation();
   const { listRecibo, setListRecibo } = useRecibos();
   const { listSale } = useSale();
   const { total, setTotal } = useTotal();
+  const { setVentaId } = useTotal();
 
   useEffect(() => {
     setListRecibo(listRecibo); 
@@ -20,6 +22,7 @@ const ReceiptForm = () => {
     const venta = listSale.find(venta => venta.id === idVenta);
     return venta ? venta.tipoPago : 'No disponible';
   };
+
   const getTotal = (idVenta) => {
     const venta = listSale.find(venta => venta.id === idVenta);
     return venta ? venta.total : 'No disponible';
@@ -36,27 +39,28 @@ const ReceiptForm = () => {
   const renderItem = ({ item }) => {
     console.log('Renderizando item:', item);
     const isReembolsado = item.monto_reembolsado !== null;
+    const localDate = moment(item.fecha_creacion).tz('America/Lima').format('DD/MM/YYYY HH:mm:ss');
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', {  idVenta: item.id })}>
-      <View style={styles.itemContainer}>
-        <View style={styles.iconContainer}>
-          <MaterialCommunityIcons name="receipt" size={24} color="black" />
+      <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { idRecibo: item.id })}>
+        <View style={styles.itemContainer}>
+          <View style={styles.iconContainer}>
+            <MaterialCommunityIcons name="receipt" size={24} color="black" />
+          </View>
+          <View style={styles.totalDateContainer}>
+            <Text style={styles.itemText}>
+              {isReembolsado ? `S/. ${item.monto_reembolsado}` : `S/. ${getTotal(item.id_venta)}`}
+            </Text>
+            <Text style={styles.itemText}>
+              {localDate}
+            </Text>
+          </View>
+          <View style={styles.refContainer}>
+            <Text style={styles.itemText1}>{`${item.ref}`}</Text>
+            {isReembolsado && <Text style={styles.reembolsadoText}>{getMontoReembolsado(item)}</Text>}
+          </View>
         </View>
-        <View style={styles.totalDateContainer}>
-          <Text style={styles.itemText}>
-            {isReembolsado ? `S/. ${item.monto_reembolsado}` : `S/. ${getTotal(item.id_venta)}`}
-          </Text>
-          <Text style={styles.itemText}>
-            {`${new Date(item.fecha_creacion).toLocaleDateString('es-ES')} ${new Date(item.fecha_creacion).toLocaleTimeString('es-ES')}`}
-          </Text>
-        </View>
-        <View style={styles.refContainer}>
-          <Text style={styles.itemText1}>{`${item.ref}`}</Text>
-          {isReembolsado && <Text style={styles.reembolsadoText}>{getMontoReembolsado(item)}</Text>}
-        </View>
-      </View>
       </TouchableOpacity>
-    )
+    );
   };
 
   return (
@@ -74,7 +78,7 @@ const ReceiptForm = () => {
       <FlatList
         data={listRecibo}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
@@ -134,16 +138,15 @@ const styles = StyleSheet.create({
   },
   reembolsadoText: {
     fontSize: 13,
-    color: '#d9534f', 
+    color: '#d9534f',
     textAlign: 'justify',
-    marginLeft:28,
+    marginLeft: 28,
     marginBottom: 5,
   },
   magnifies: {
     marginRight: 5,
     marginLeft: 5,
   },
-  
 });
 
 export default ReceiptForm;
