@@ -21,7 +21,7 @@ const ReceiptDetail = ({ route }) => {
   const { handleTaxById } = useImpuesto();
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
-  const { handleGetDetalleById } = useDetalle();
+  const { handleDetalleByVentaId } = useDetalle();
   const { setArticleNames } = useTotal();
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
@@ -46,22 +46,25 @@ const ReceiptDetail = ({ route }) => {
               fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
               fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
               fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
-              handleGetDetalleById(fetchedSale.id)
+              handleDetalleByVentaId(fetchedSale.id)
             ]);
   
             setClienteDetails(fetchedCliente);
             setDiscountDetails(fetchedDiscount);
             setTaxDetails(fetchedTax);
   
-            const detallesArray = Array.isArray(fetchedDetalles) ? fetchedDetalles : [fetchedDetalles];
-            setDetalleDetails(detallesArray);
-  
-            const articlePromises = detallesArray.map(detalle => handleArticleById(detalle.articuloId));
-            const articles = await Promise.all(articlePromises);
-            setArticleDetails(articles);
-  
-            const articleNames = articles.map(article => article.nombre);
-            setArticleNames(articleNames);
+            if (Array.isArray(fetchedDetalles)) {
+              setDetalleDetails(fetchedDetalles);
+    
+              const articlePromises = fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId));
+              const articles = await Promise.all(articlePromises);
+              setArticleDetails(articles);
+    
+              const articleNames = articles.map(article => article.nombre);
+              setArticleNames(articleNames);
+            } else {
+              console.error("fetchedDetalles no es un arreglo", fetchedDetalles);
+            }
   
             const fetchedReembolsoDetalles = await handleDetalleReembolsoByReciboId(fetchedRecibo[0].id);
             const reembolsoDetallesArray = Array.isArray(fetchedReembolsoDetalles) ? fetchedReembolsoDetalles : [fetchedReembolsoDetalles];
@@ -88,7 +91,7 @@ const ReceiptDetail = ({ route }) => {
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleGetDetalleById, handleDetalleReembolsoByReciboId, setArticleNames]);
+  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleByVentaId, handleDetalleReembolsoByReciboId, setArticleNames]);
   
   if (!reciboDetails || !saleDetails) {
     return (
@@ -109,20 +112,15 @@ const ReceiptDetail = ({ route }) => {
         <Text style={styles.label}>Fecha:</Text>
         <Text>{new Date(reciboDetails.fecha_creacion).toLocaleString()}</Text>
       </View>
-      {reciboDetails.monto_reembolsado !== null && (
-        <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Monto Reembolsado:</Text>
-          <Text>{reciboDetails.monto_reembolsado}</Text>
-        </View>
-      )}
-      {clienteDetails && clienteDetails.nombre && (
-        <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Nombre del Cliente:</Text>
-          <Text>{clienteDetails.nombre}</Text>
-        </View>
-      )}
-      {reciboDetails.monto_reembolsado === null && (
+      {reciboDetails.monto_reembolsado === null ? (
         <>
+          {/* Detalles de Venta */}
+          {clienteDetails && clienteDetails.nombre && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Nombre del Cliente:</Text>
+              <Text>{clienteDetails.nombre}</Text>
+            </View>
+          )}
           {reciboDetails.valorDescuentoTotal !== null && (
             <View style={styles.detailsContainer}>
               <Text style={styles.label}>Valor Descuento Total:</Text>
@@ -165,33 +163,59 @@ const ReceiptDetail = ({ route }) => {
             <Text style={styles.label}>Cambio:</Text>
             <Text>S/. {saleDetails.cambio}</Text>
           </View>
+          {/* Detalles de Artículos */}
+          <Text style={styles.title}>Detalles de los Artículos</Text>
+          {articleDetails.map((article, index) => (
+            <View key={index} style={styles.detailsContainer}>
+              <Text style={styles.label}>Artículo:</Text>
+              <Text>{article.nombre}</Text>
+              <Text>X{detalleDetails[index]?.cantidad}</Text>
+            </View>
+          ))}
+          <TouchableOpacity onPress={() => navigation.navigate("Rembolso")} style={styles.buttonContainer}>
+          <Text style={styles.buttonText}>Continuar</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          {/* Detalles de Venta con Reembolso */}
+          {reciboDetails.monto_reembolsado !== null && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Monto Reembolsado:</Text>
+              <Text>{reciboDetails.monto_reembolsado}</Text>
+            </View>
+          )}
+          {reciboDetails.valorDescuentoTotal !== null && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Valor Descuento Total:</Text>
+              <Text>S/. -{reciboDetails.valorDescuentoTotal}</Text>
+            </View>
+          )}
+          {reciboDetails.valorImpuestoTotal !== null && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Valor Impuesto Total:</Text>
+              <Text>S/. {reciboDetails.valorImpuestoTotal}</Text>
+            </View>
+          )}
+          {/* Detalles de Artículos Reembolsados */}
+          <Text style={styles.title}>Detalles de los Artículos Reembolsados</Text>
+          {reembolsoArticleDetails.map((article, index) => (
+            <View key={index} style={styles.detailsContainer}>
+              <Text style={styles.label}>Artículo Reembolsado:</Text>
+              <Text>{article.nombre}</Text>
+              <Text>X{article.cantidad}</Text>
+            </View>
+          ))}
         </>
       )}
-      <Text style={styles.title}>Detalles de los Artículos</Text>
-      {articleDetails.map((article, index) => (
-        <View key={index} style={styles.detailsContainer}>
-          <Text style={styles.label}>Artículo:</Text>
-          <Text>{article.nombre}</Text>
-          <Text>X{detalleDetails[index]?.cantidad}</Text>
-        </View>
-      ))}
+      {/* Común para ambas condiciones */}
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Tipo de Pago:</Text>
         <Text>{saleDetails.tipoPago}</Text>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate("Rembolso")} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Reembolsar</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>Detalles de los Artículos Reembolsados</Text>
-      {reembolsoArticleDetails.map((article, index) => (
-        <View key={index} style={styles.detailsContainer}>
-          <Text style={styles.label}>Artículo Reembolsado:</Text>
-          <Text>{article.nombre}</Text>
-          <Text>X{article.cantidad}</Text>
-        </View>
-      ))}
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -223,7 +247,7 @@ const styles = StyleSheet.create({
     borderColor: '#0258FE',
     backgroundColor: '#0258FE',
     width: 237,
-    height: 39,
+    height: 50,
     marginLeft: 55,
     padding: 10,
   },

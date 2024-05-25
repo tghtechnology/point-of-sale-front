@@ -61,7 +61,7 @@ useEffect(() => {
           <View style={styles.itemContainer}>
             <View style={styles.itemContent}>
             <Text style={styles.itemText}>{item.nombre}</Text>
-            <Text style={styles.itemText}>{item.tasa}</Text>
+            <Text style={styles.itemText}>{item.tasa}%</Text>
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
               <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
             </TouchableOpacity> 
