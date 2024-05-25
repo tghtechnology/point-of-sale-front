@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Switch, Modal, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import useDiscount from '../../hooks/useDiscount';
-import DiscountProvider from '../../context/discount/DiscountProvider';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
 
 const PlusDiscount = (props) => {
@@ -83,11 +83,10 @@ const PlusDiscount = (props) => {
         data={discounts}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            
-            <View  >
+            <View>
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
-                <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
-              </TouchableOpacity>
+              <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+            </TouchableOpacity> 
               <MaterialIcons name="discount" size={24} color="#517EF2" />
             </View>
 
@@ -144,12 +143,14 @@ const PlusDiscount = (props) => {
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Tipo de Descuento</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Tipo de descuento"
-                value={editedData.tipo_descuento}
-                onChangeText={(text) => handleChange('tipo_descuento', text)}
-              />
+              <Picker
+                selectedValue={editedData.tipo_descuento}
+                style={styles.picker}
+                onValueChange={(itemValue) => handleChange('tipo_descuento', itemValue)}
+              >
+                <Picker.Item label="Monto" value="MONTO" />
+                <Picker.Item label="Porcentaje" value="PORCENTAJE" />
+              </Picker>
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Valor</Text>
@@ -338,9 +339,11 @@ const styles = StyleSheet.create({
   },
   optionsButton: {
     position: 'absolute',
-    top: -2,
+    top: 5,
     right: 10,
-  },
+    padding:5,
+  }, 
+
   emptyContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -350,6 +353,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#808080',
     textAlign: 'center',
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: '#F5F5F5',
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
   }
 })
 export default PlusDiscount

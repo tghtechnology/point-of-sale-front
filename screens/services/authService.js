@@ -42,21 +42,16 @@ const logout = async () => {
     }
   };
   
-  const getToken = async () => {
+const getToken = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
-      if (token !== null) {
-        console.log('Token recuperado correctamente:', token);
+        const token = await AsyncStorage.getItem('token');
         return token;
-      } else {
-        console.log('No se encontró ningún token en AsyncStorage');
-        return null;
-      }
     } catch (error) {
-      console.error('Error al recuperar el token:', error);
-      return null;
+        console.error('Error getting token:', error);
+        throw new Error('Error al obtener el token');
     }
-  };
+};
+
 
   const obtenerDatosUsuarioPorId = async (id) => {
     try {
