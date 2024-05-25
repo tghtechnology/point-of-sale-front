@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { listDetalle, DetalleByVentaId, getDetalleById } from "../../services/DetalleService";
-import { DetalleContext } from "./DetalleContext";
+import  DetalleContext  from "./DetalleContext";
 
 const DetalleProvider = ({ children }) => {
     const [listDetalles, setListDetalles] = useState([]);

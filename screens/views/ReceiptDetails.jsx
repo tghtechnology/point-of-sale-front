@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import useRecibos from "../hooks/useRecibos";
 import useSale from "../hooks/useSale";
 import useImpuesto from "../hooks/useImpuesto";
@@ -7,19 +8,20 @@ import useClient from "../hooks/useClient";
 import useDiscount from "../hooks/useDiscount";
 import useArticle from "../hooks/useArticle";
 import useDetalle from "../hooks/useDetalle";
+import useDetalleReembolso from "../hooks/useDetalleReembolso";
 import { useTotal } from "../Global State/TotalContext";
-import { useNavigation } from '@react-navigation/native';
 
 const ReceiptDetail = ({ route }) => {
   const navigation = useNavigation();
   const { idVenta } = route.params;
-  const { handleReciboById, handleDetalleRembolsoById } = useRecibos();
+  const { handleDetalleReembolsoByReciboId } = useDetalleReembolso();
+  const { handleReciboById } = useRecibos();
   const { handleSaleById } = useSale();
   const { handleDiscountById } = useDiscount();
   const { handleTaxById } = useImpuesto();
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
-  const { handleDetalleById } = useDetalle();
+  const { handleGetDetalleById } = useDetalle();
   const { setArticleNames } = useTotal();
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
@@ -35,36 +37,40 @@ const ReceiptDetail = ({ route }) => {
       try {
         const fetchedRecibo = await handleReciboById(idVenta);
         if (fetchedRecibo) {
-          setReciboDetails(fetchedRecibo[0]);
           const fetchedSale = await handleSaleById(fetchedRecibo[0].id_venta);
           if (fetchedSale) {
+            setReciboDetails(fetchedRecibo[0]);
             setSaleDetails(fetchedSale);
+  
             const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedDetalles] = await Promise.all([
               fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
               fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
               fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
-              handleDetalleById(fetchedSale.id)
+              handleGetDetalleById(fetchedSale.id)
             ]);
+  
             setClienteDetails(fetchedCliente);
             setDiscountDetails(fetchedDiscount);
             setTaxDetails(fetchedTax);
-            setDetalleDetails(fetchedDetalles);
-
-            const articlePromises = fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId));
+  
+            const detallesArray = Array.isArray(fetchedDetalles) ? fetchedDetalles : [fetchedDetalles];
+            setDetalleDetails(detallesArray);
+  
+            const articlePromises = detallesArray.map(detalle => handleArticleById(detalle.articuloId));
             const articles = await Promise.all(articlePromises);
             setArticleDetails(articles);
-
-            // Set article names in context
+  
             const articleNames = articles.map(article => article.nombre);
             setArticleNames(articleNames);
-
-            // Fetch reembolso articles
-            const fetchedReembolsoDetalles = await handleDetalleRembolsoById(fetchedSale.id);
-            const reembolsoArticlePromises = fetchedReembolsoDetalles.map(detalle => handleArticleById(detalle.articuloId));
+  
+            const fetchedReembolsoDetalles = await handleDetalleReembolsoByReciboId(fetchedRecibo[0].id);
+            const reembolsoDetallesArray = Array.isArray(fetchedReembolsoDetalles) ? fetchedReembolsoDetalles : [fetchedReembolsoDetalles];
+  
+            const reembolsoArticlePromises = reembolsoDetallesArray.map(detalle => handleArticleById(detalle.articuloId));
             const reembolsoArticles = await Promise.all(reembolsoArticlePromises);
             setReembolsoArticleDetails(reembolsoArticles.map((article, index) => ({
               nombre: article.nombre,
-              cantidad: fetchedReembolsoDetalles[index].cantidad
+              cantidad: reembolsoDetallesArray[index].cantidadDevuelta
             })));
           } else {
             console.error(`Failed to fetch sale for ID: ${fetchedRecibo[0].id_venta}`);
@@ -76,14 +82,14 @@ const ReceiptDetail = ({ route }) => {
         console.error("Error fetching details:", error);
       }
     };
-
+  
     if (idVenta) {
       fetchDetails();
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleById, handleDetalleRembolsoById, setArticleNames]);
-
+  }, [idVenta, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleGetDetalleById, handleDetalleReembolsoByReciboId, setArticleNames]);
+  
   if (!reciboDetails || !saleDetails) {
     return (
       <View style={styles.container}>
@@ -120,7 +126,7 @@ const ReceiptDetail = ({ route }) => {
           {reciboDetails.valorDescuentoTotal !== null && (
             <View style={styles.detailsContainer}>
               <Text style={styles.label}>Valor Descuento Total:</Text>
-              <Text>S/.-{reciboDetails.valorDescuentoTotal}</Text>
+              <Text>S/. -{reciboDetails.valorDescuentoTotal}</Text>
             </View>
           )}
           {reciboDetails.valorImpuestoTotal !== null && (
@@ -166,7 +172,7 @@ const ReceiptDetail = ({ route }) => {
         <View key={index} style={styles.detailsContainer}>
           <Text style={styles.label}>Artículo:</Text>
           <Text>{article.nombre}</Text>
-          <Text>X{detalleDetails[index].cantidad}</Text>
+          <Text>X{detalleDetails[index]?.cantidad}</Text>
         </View>
       ))}
       <View style={styles.detailsContainer}>
@@ -205,18 +211,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 5,
   },
-  detailsContainer1: {
-    padding: 9,
-    textAlign: 'center',
-    marginLeft: 130,
-  },
-  totalText: {
-    fontSize: 29,
-  },
-  labelTotal: {
-    marginLeft: 25,
-    fontSize: 20,
-  },
   label: {
     fontWeight: "bold",
     marginRight: 5,
@@ -239,4 +233,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
 export default ReceiptDetail;

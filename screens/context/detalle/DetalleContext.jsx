@@ -1,5 +1,3 @@
 import { createContext } from 'react';
-
 const DetalleContext = createContext();
-
-export { DetalleContext };
+export default DetalleContext ;
