@@ -83,13 +83,10 @@ const PlusDiscount = (props) => {
         data={discounts}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            <View>
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
-              <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+                <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
             </TouchableOpacity> 
               <MaterialIcons name="discount" size={24} color="#517EF2" />
-            </View>
-
             <View>
               <Text style={styles.itemText1}>{item.nombre}</Text>
 
