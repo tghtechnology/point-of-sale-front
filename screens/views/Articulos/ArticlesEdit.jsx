@@ -48,13 +48,12 @@ const ColorBox = ({ color, setEditedData, selectedColor }) => (
 
 const buildFormData = (editedData, selectedImage, categoriaSelect) => {
   const formData = new FormData();
-
   formData.append("nombre", editedData.nombre);
   formData.append("tipo_venta", editedData.tipo_venta);
   formData.append("precio", parseFloat(editedData.precio));
   formData.append("id_categoria", editedData.id_categoria);
+  formData.append("id", editedData.id);
 
-  
   if (editedData.representacion === "imagen") {
     formData.append("representacion", "imagen");
     if (selectedImage) {
@@ -64,16 +63,30 @@ const buildFormData = (editedData, selectedImage, categoriaSelect) => {
         name: fileName,
         type: "image/jpeg",
       });
+    } else {
+      if (editedData.imagen) {
+        formData.append("imagen", editedData.imagen);
+      }
     }
     formData.append("color", null);
   } else if (editedData.representacion === "color" && editedData.color) {
     formData.append("representacion", "color");
-    formData.append("color", editedData.color);
-    formData.append("imagen", null); 
+    const colorHex = colorMapping[editedData.color];
+    if (colorHex) {
+      formData.append("color", colorHex);
+    } else {
+      console.error("Color no válido:", editedData.color);
+    }
+    formData.append("imagen", null);
   }
+
+  console.log("FormData:", formData);
 
   return formData;
 };
+
+
+
 export default function ArticlesEdit() {
   const [editedData, setEditedData] = useState(INITIAL_STATE)
   const route = useRoute();
@@ -81,7 +94,7 @@ export default function ArticlesEdit() {
   const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {handleEditArticle} = useArticle();
+  const {handleEditArticle, listArticle, setListArticle } = useArticle();
   const {listCategoria} = useCategory();
 
   
@@ -89,27 +102,35 @@ export default function ArticlesEdit() {
     if (route.params?.article) {
       const { article } = route.params;
       let representacion = "";
-
+  
       if (article.imagen) {
         representacion = "imagen";
       } else if (article.color) {
         representacion = "color";
       }
-
+  
+      console.log("Artículo cargado:", article); // Verificar si el ID está presente
       setEditedData({
         ...INITIAL_STATE,
         ...article,
         representacion,
         id_categoria: article.categoria?.id || "",
+        id: article.id || "",
       });
-
+  
       if (article.imagen) {
         setSelectedImage(article.imagen);
       }
-
+  
       setLoading(false);
     }
   }, [route.params]);
+  
+  // Verificar si editedData.id está definido después de cargar los datos del artículo
+  useEffect(() => {
+    console.log("ID del artículo después de cargar los datos:", editedData.id);
+  }, [editedData]);
+
   if (loading) {
     return <Text>Cargando...</Text>;
   }
@@ -175,28 +196,32 @@ export default function ArticlesEdit() {
 
 
   const handleSubmit = async () => {
-    // Verifica que el ID esté presente antes de construir el FormData
-    const articleId = editedData.id;
-  
-    if (!articleId) {
-      console.error("El ID del artículo es undefined");
-      return;
-    }
-  
-    const formData = buildFormData(editedData, selectedImage);
-    console.log("Datos a enviar:", [...formData]);
-    // Pasar el ID junto con el FormData
-    const updateArticle = { id: articleId, formData };
-  
-    const wasEdited = await handleEditArticle(updateArticle);
-  
-    if (wasEdited) {
-      console.log("Artículo editado exitosamente");
-      setShowAlert(true);
-    } else {
-      console.error("La edición no fue exitosa.");
+    try {
+      if (!editedData.id) {
+        console.error("ID del artículo no definido");
+        return;
+      }
+      
+      const formData = buildFormData(editedData, selectedImage, categoriaSelect);
+      const updatedArticle = await handleEditArticle(editedData.id, formData);
+      console.log(formData);
+      console.log(editedData.id);
+      
+      if (updatedArticle) {
+        const updatedList = listArticle.map((article) =>
+          article.id === updatedArticle.id ? updatedArticle : article
+        );
+        setListArticle(updatedList);
+        console.log("Artículo editado exitosamente");
+        setShowAlert(true);
+      } else {
+        console.error("La edición no fue exitosa.");
+      }
+    } catch (error) {
+      console.error("Error al editar el artículo:", error);
     }
   };
+  
   
   
   

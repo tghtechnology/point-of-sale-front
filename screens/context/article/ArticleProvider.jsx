@@ -40,30 +40,27 @@ const ArticleProvider = ({children}) => {
     };
         
 
-    const handleEditArticle = async (updateArticle) => {
-      const articleId = updateArticle.id; // El ID debería estar aquí
-    
-      if (!articleId) {
-        console.error("El ID del artículo es undefined");
-        return false;
-      }
-    
-      const formData = updateArticle.formData;
-    
+
+    const handleEditArticle = async (id, updateArticle) => {
       try {
-        const response = await editArticles(articleId, formData);
-    
-        if (response && (response.status === 200 || 204)) {
-          console.log("Artículo editado exitosamente");
-          return true;
-        } else {
-          return false;
-        }
+          const response = await editArticles(id, updateArticle);
+          if (response.status === 200) {
+              console.log("Artículo editado exitosamente");
+              const updatedList = listArticle.map((article) =>
+                  article.id === id ? { ...article, ...updateArticle } : article
+              );
+              setListArticle(updatedList);
+              return true;
+          } else {
+              console.error("La edición no fue exitosa:", response.status);
+              return false;
+          }
       } catch (error) {
-        console.error("Error al editar el artículo:", error);
-        return false;
+          console.error("Error al editar el artículo:", error);
+          return false;
       }
-    };
+  };
+    
 
     const handleDeleteArticle = async (id) => {
         try {
