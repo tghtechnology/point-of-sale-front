@@ -30,7 +30,7 @@ const ReceiptForm = () => {
 
   const getMontoReembolsado = (recibo) => {
     if (recibo.monto_reembolsado !== null) {
-      const reciboReembolsado = listRecibo.find(item => item.id === recibo.id_venta);
+      const reciboReembolsado = listRecibo.find(item => item.id_venta === recibo.id_venta);
       return `Reembolsado: ${reciboReembolsado ? reciboReembolsado.ref : 'No disponible'}`;
     }
     return '';
