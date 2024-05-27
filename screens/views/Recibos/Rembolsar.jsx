@@ -17,32 +17,36 @@ export default function Rembolsar() {
         quantity: remainingQuantity,
         selected: false,
         remainingQuantity: remainingQuantity,
-        
       };
     });
     setSelectedArticles(initialSelectedArticles);
   }, [articleNames, articleQuantities, articleIds, articleQuantitiesReembolsadas]);
-  
 
   const toggleSelection = (id) => {
+    const selectedArticle = selectedArticles.find(article => article.id === id);
+    if (selectedArticle.remainingQuantity <= 0) {
+      // Si no hay cantidad disponible para reembolsar, no cambies el estado
+      return;
+    }
+  
     setSelectedArticles(selectedArticles.map(article =>
       article.id === id ? { ...article, selected: !article.selected } : article
     ));
   };
 
   const incrementQuantity = (id, maxQuantity, remainingQuantity) => {
-    setSelectedArticles(selectedArticles.map(article => 
-      article.id === id && article.quantity < maxQuantity && article.quantity < remainingQuantity 
-        ? { ...article, quantity: article.quantity + 1 } 
+    setSelectedArticles(selectedArticles.map(article =>
+      article.id === id && article.quantity < maxQuantity && article.quantity < remainingQuantity
+        ? { ...article, quantity: article.quantity + 1 }
         : article
     ));
   };
-  
+
 
   const decrementQuantity = (id) => {
-    setSelectedArticles(selectedArticles.map(article => 
-      article.id === id && article.quantity > 1 
-        ? { ...article, quantity: article.quantity - 1 } 
+    setSelectedArticles(selectedArticles.map(article =>
+      article.id === id && article.quantity > 1
+        ? { ...article, quantity: article.quantity - 1 }
         : article
     ));
   };
@@ -82,7 +86,14 @@ export default function Rembolsar() {
                   article.selected && styles.selectedSquare
                 ]}
               />
-              <Text style={styles.articleText}>{article.name}</Text>
+              <View style={styles.textContainer}>
+                <Text style={[styles.articleText, article.remainingQuantity <= 0 && styles.noQuantityText]}>
+                  {article.name}
+                </Text>
+                <Text style={[styles.reembolsadasText, article.remainingQuantity <= 0 && styles.noQuantityText]}>
+                  Reembolsado: {articleQuantitiesReembolsadas[index]}
+                </Text>
+              </View>
             </TouchableOpacity>
             {article.selected && (
               <View style={styles.quantityContainer}>
@@ -97,13 +108,12 @@ export default function Rembolsar() {
                   onPress={() => incrementQuantity(article.id, articleQuantities[index], article.remainingQuantity)}
                   style={[
                     styles.quantityButton,
-                    article.quantity >= article.remainingQuantity && styles.disabledButton
+                    article.quantity >= articleQuantities[index] && styles.disabledButton
                   ]}
-                  disabled={article.quantity >= article.remainingQuantity}
+                  disabled={article.quantity >= articleQuantities[index]}
                 >
                   <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
-
               </View>
             )}
           </View>
@@ -154,9 +164,15 @@ const styles = StyleSheet.create({
   selectedSquare: {
     backgroundColor: 'blue',
   },
+  textContainer: {
+    flex: 1,
+  },
   articleText: {
     fontSize: 16,
-    flex: 1,
+  },
+  reembolsadasText: {
+    fontSize: 12,
+    color: 'gray', // Color gris para el texto de cantidad reembolsada
   },
   quantityContainer: {
     flexDirection: 'row',
@@ -193,5 +209,8 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: '#d3d3d3',
+  },
+  noQuantityText: {
+    color: 'gray', // Cambia el color del texto a gris cuando no hay cantidad disponible
   },
 });
