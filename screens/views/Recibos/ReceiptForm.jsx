@@ -39,7 +39,6 @@ const ReceiptForm = () => {
   }
 
   const renderItem = ({ item }) => {
-    console.log('Renderizando item:', item);
     const isReembolsado = item.monto_reembolsado !== null;
     const fecha = new Date(item.fecha_creacion);
     const formattedDate = `${padLeft(fecha.getUTCDate())}-${padLeft(fecha.getUTCMonth() + 1)}-${fecha.getUTCFullYear()} ${padLeft(fecha.getUTCHours())}:${padLeft(fecha.getUTCMinutes())}:${padLeft(fecha.getUTCSeconds())}`;
