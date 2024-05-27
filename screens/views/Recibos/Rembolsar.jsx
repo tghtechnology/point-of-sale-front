@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTotal } from '../../Global State/TotalContext';
 import useRecibos from "../../hooks/useRecibos";
+import CustomAlert from "../../componentes/Alertas/CustomAlert";
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 export default function Rembolsar() {
   const { articleNames, articleQuantities, ventaId, articleIds, articleQuantitiesReembolsadas } = useTotal();
   const { handleRembolsar } = useRecibos();
+  const [showAlert, setShowAlert] = useState(false);
   const [selectedArticles, setSelectedArticles] = useState([]);
 
   useEffect(() => {
@@ -25,7 +28,6 @@ export default function Rembolsar() {
   const toggleSelection = (id) => {
     const selectedArticle = selectedArticles.find(article => article.id === id);
     if (selectedArticle.remainingQuantity <= 0) {
-      // Si no hay cantidad disponible para reembolsar, no cambies el estado
       return;
     }
   
@@ -65,13 +67,18 @@ export default function Rembolsar() {
       const res = await handleRembolsar(ventaId, detallesReembolso);
       console.log('Response:', res);
       if (res) {
+        setShowAlert(true);
         console.log('Reembolso realizado exitosamente');
       } else {
+        setErrorAlertVisible(true);
         console.error('Error al realizar el reembolso');
       }
     } catch (error) {
       console.error('Error al procesar la solicitud de reembolso:', error);
     }
+  };
+  const handleCloseAlert = () => {
+    setShowAlert(false);
   };
 
   return (
@@ -105,15 +112,15 @@ export default function Rembolsar() {
                 </TouchableOpacity>
                 <Text style={styles.quantityText}>{article.quantity}</Text>
                 <TouchableOpacity
-                  onPress={() => incrementQuantity(article.id, articleQuantities[index], article.remainingQuantity)}
-                  style={[
-                    styles.quantityButton,
-                    article.quantity >= articleQuantities[index] && styles.disabledButton
-                  ]}
-                  disabled={article.quantity >= articleQuantities[index]}
-                >
-                  <Text style={styles.buttonText}>+</Text>
-                </TouchableOpacity>
+                    onPress={() => incrementQuantity(article.id, articleQuantities[index], article.remainingQuantity)}
+                    style={[
+                      styles.quantityButton,
+                      article.quantity >= article.remainingQuantity && styles.disabledButton
+                    ]}
+                    disabled={article.quantity >= article.remainingQuantity}
+                  >
+                    <Text style={styles.buttonText}>+</Text>
+                  </TouchableOpacity>
               </View>
             )}
           </View>
@@ -124,6 +131,14 @@ export default function Rembolsar() {
       <TouchableOpacity onPress={handleReembolso} style={styles.buttonContainer}>
         <Text style={styles.submitButtonText}>Realizar</Text>
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Rembolso realizado"
+        message="Este producto a sido rembolsado"
+        buttonColor="#2196F3"
+        iconName="check-circle"
+      />
     </View>
   );
 }
