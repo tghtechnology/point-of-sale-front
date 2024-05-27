@@ -46,11 +46,12 @@ const ArticleProvider = ({children}) => {
           const response = await editArticles(id, updateArticle);
           if (response.status === 200) {
               console.log("Artículo editado exitosamente");
+              const updatedArticle = response.data;
               const updatedList = listArticle.map((article) =>
-                  article.id === id ? { ...article, ...updateArticle } : article
+                  article.id === id ? updatedArticle : article
               );
-              setListArticle(updatedList);
-              return true;
+              setListArticle(updatedList); 
+              return updatedArticle;
           } else {
               console.error("La edición no fue exitosa:", response.status);
               return false;
@@ -59,7 +60,7 @@ const ArticleProvider = ({children}) => {
           console.error("Error al editar el artículo:", error);
           return false;
       }
-  };
+    };
     
 
     const handleDeleteArticle = async (id) => {
