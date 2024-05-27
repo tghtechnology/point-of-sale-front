@@ -16,54 +16,34 @@ const ReceiptForm = () => {
   useEffect(() => {
     setListRecibo(listRecibo); 
   }, [listRecibo]);
-  
-    const getTipoPago = (idVenta) => {
-      const venta = listSale.find(venta => venta.id === idVenta);
-      return venta ? venta.tipoPago : 'No disponible';
-    };
-  
-    const getTotal = (idVenta) => {
-      const venta = listSale.find(venta => venta.id === idVenta);
-      return venta ? venta.total : 'No disponible';
-    };
-  
-    const getMontoReembolsado = (recibo) => {
-      if (recibo.monto_reembolsado !== null) {
-        const reciboReembolsado = listRecibo.find(item => item.id_venta === recibo.id_venta);
-        return `Reembolsado: ${reciboReembolsado ? reciboReembolsado.ref : 'No disponible'}`;
-      }
-      return '';
-    };
 
-    const groupRecibosByDate = () => {
-      const groupedRecibos = {};
-      listRecibo.forEach(recibo => {
-        const fecha = new Date(recibo.fecha_creacion);
-        const formattedDate = `${fecha.getUTCDate()} de ${monthNames[fecha.getUTCMonth()]} del ${fecha.getUTCFullYear()}`;
-        if (!groupedRecibos[formattedDate]) {
-          groupedRecibos[formattedDate] = [];
-        }
-        groupedRecibos[formattedDate].push(recibo);
-      });
-      return groupedRecibos;
-    };
-    
-    const monthNames = [
-      "enero", "febrero", "marzo",
-      "abril", "mayo", "junio", "julio",
-      "agosto", "septiembre", "octubre",
-      "noviembre", "diciembre"
-    ];
+  const getTipoPago = (idVenta) => {
+    const venta = listSale.find(venta => venta.id === idVenta);
+    return venta ? venta.tipoPago : 'No disponible';
+  };
 
+  const getTotal = (idVenta) => {
+    const venta = listSale.find(venta => venta.id === idVenta);
+    return venta ? venta.total : 'No disponible';
+  };
+
+  const getMontoReembolsado = (recibo) => {
+    if (recibo.monto_reembolsado !== null) {
+      const reciboReembolsado = listRecibo.find(item => item.id_venta === recibo.id_venta);
+      return `Reembolsado: ${reciboReembolsado ? reciboReembolsado.ref : 'No disponible'}`;
+    }
+    return '';
+  };
   function padLeft(number) {
     return number < 10 ? `0${number}` : number;
   }
 
   const renderItem = ({ item }) => {
+    console.log('Renderizando item:', item);
     const isReembolsado = item.monto_reembolsado !== null;
     const fecha = new Date(item.fecha_creacion);
     const formattedDate = `${padLeft(fecha.getUTCDate())}-${padLeft(fecha.getUTCMonth() + 1)}-${fecha.getUTCFullYear()} ${padLeft(fecha.getUTCHours())}:${padLeft(fecha.getUTCMinutes())}:${padLeft(fecha.getUTCSeconds())}`;
-    return (
+        return (
       <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { idRecibo: item.id })}>
         <View style={styles.itemContainer}>
           <View style={styles.iconContainer}>
@@ -74,7 +54,7 @@ const ReceiptForm = () => {
               {isReembolsado ? `S/. ${item.monto_reembolsado}` : `S/. ${getTotal(item.id_venta)}`}
             </Text>
             <Text style={styles.itemText}>
-              {formattedDate}
+            {formattedDate}
             </Text>
           </View>
           <View style={styles.refContainer}>
@@ -98,16 +78,11 @@ const ReceiptForm = () => {
           <MaterialCommunityIcons name="magnify" size={20} color="#000" style={styles.magnifies} />
         </TouchableOpacity>
       </View>
-      {Object.entries(groupRecibosByDate()).map(([date, recibos]) => (
-        <View key={date}>
-          <Text style={styles.dateSeparator}>{date}</Text>
-          <FlatList
-            data={recibos}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        </View>
-      ))}
+      <FlatList
+        data={listRecibo}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+      />
     </View>
   );
 };
@@ -174,12 +149,6 @@ const styles = StyleSheet.create({
   magnifies: {
     marginRight: 5,
     marginLeft: 5,
-  },
-  dateSeparator: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 5,
   },
 });
 
