@@ -44,12 +44,10 @@ export default function Rembolsar() {
   
       const res = await handleRembolsar(ventaId, detallesReembolso);
       console.log('Response:', res);
-      console.log(res.status) // Agregar esta línea para imprimir el objeto de respuesta
-      
-      if (res && (res.status === 200 || res.status === 201)) {
-        console.log('Reembolso realizado exitosamente:', res.data);
+      if (res) {
+        console.log('Reembolso realizado exitosamente');
       } else {
-        console.error('Error al realizar el reembolso:', res ? res.status : 'Respuesta nula');
+        console.error('Error al realizar el reembolso');
       }
     } catch (error) {
       console.error('Error al procesar la solicitud de reembolso:', error);

@@ -16,8 +16,8 @@ export const TotalProvider = ({ children }) => {
       setArticleNames, 
       articleQuantities, 
       setArticleQuantities, 
-      articleIds, // Agregando articleIds al contexto global
-      setArticleIds, // Agregando setArticleIds al contexto global
+      articleIds,
+      setArticleIds,
       ventaId, 
       setVentaId
     }}>
