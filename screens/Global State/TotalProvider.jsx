@@ -7,7 +7,7 @@ export const TotalProvider = ({ children }) => {
   const [articleQuantities, setArticleQuantities] = useState([]); 
   const [articleIds, setArticleIds] = useState([]); // Nuevo estado para almacenar los IDs de los artículos
   const [ventaId, setVentaId] = useState(null);
-
+  const [articleQuantitiesReembolsadas, setarticleQuantitiesReembolsadas] = useState([]);
   return (
     <TotalContext.Provider value={{ 
       total, 
@@ -15,7 +15,9 @@ export const TotalProvider = ({ children }) => {
       articleNames, 
       setArticleNames, 
       articleQuantities, 
-      setArticleQuantities, 
+      setArticleQuantities,
+      articleQuantitiesReembolsadas,
+      setarticleQuantitiesReembolsadas,
       articleIds,
       setArticleIds,
       ventaId, 

@@ -1,33 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTotal } from '../../Global State/TotalContext';
 import useRecibos from "../../hooks/useRecibos";
 
 export default function Rembolsar() {
-  const { articleNames, articleQuantities, ventaId, articleIds } = useTotal(); // Asegúrate de obtener articleIds del contexto global
+  const { articleNames, articleQuantities, ventaId, articleIds, articleQuantitiesReembolsadas } = useTotal();
   const { handleRembolsar } = useRecibos();
-  const [selectedArticles, setSelectedArticles] = useState(articleNames.map((name, index) => ({
-    id: articleIds[index],
-    name,
-    quantity: articleQuantities[index],
-    selected: false,
-  })));
+  const [selectedArticles, setSelectedArticles] = useState([]);
+
+  useEffect(() => {
+    const initialSelectedArticles = articleNames.map((name, index) => {
+      const remainingQuantity = articleQuantities[index] - articleQuantitiesReembolsadas[index];
+      return {
+        id: articleIds[index],
+        name,
+        quantity: remainingQuantity,
+        selected: false,
+        remainingQuantity: remainingQuantity,
+        
+      };
+    });
+    setSelectedArticles(initialSelectedArticles);
+  }, [articleNames, articleQuantities, articleIds, articleQuantitiesReembolsadas]);
+  
 
   const toggleSelection = (id) => {
-    setSelectedArticles(selectedArticles.map(article => 
+    setSelectedArticles(selectedArticles.map(article =>
       article.id === id ? { ...article, selected: !article.selected } : article
     ));
   };
 
-  const incrementQuantity = (id, maxQuantity) => {
+  const incrementQuantity = (id, maxQuantity, remainingQuantity) => {
     setSelectedArticles(selectedArticles.map(article => 
-      article.id === id && article.quantity < maxQuantity ? { ...article, quantity: article.quantity + 1 } : article
+      article.id === id && article.quantity < maxQuantity && article.quantity < remainingQuantity 
+        ? { ...article, quantity: article.quantity + 1 } 
+        : article
     ));
   };
+  
 
   const decrementQuantity = (id) => {
     setSelectedArticles(selectedArticles.map(article => 
-      article.id === id && article.quantity > 1 ? { ...article, quantity: article.quantity - 1 } : article
+      article.id === id && article.quantity > 1 
+        ? { ...article, quantity: article.quantity - 1 } 
+        : article
     ));
   };
 
@@ -41,7 +57,7 @@ export default function Rembolsar() {
           articuloId: article.id,
         }));
       console.log(detallesReembolso);
-  
+
       const res = await handleRembolsar(ventaId, detallesReembolso);
       console.log('Response:', res);
       if (res) {
@@ -53,7 +69,6 @@ export default function Rembolsar() {
       console.error('Error al procesar la solicitud de reembolso:', error);
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -79,15 +94,16 @@ export default function Rembolsar() {
                 </TouchableOpacity>
                 <Text style={styles.quantityText}>{article.quantity}</Text>
                 <TouchableOpacity
-                  onPress={() => incrementQuantity(article.id, articleQuantities[index])}
+                  onPress={() => incrementQuantity(article.id, articleQuantities[index], article.remainingQuantity)}
                   style={[
                     styles.quantityButton,
-                    article.quantity >= articleQuantities[index] && styles.disabledButton
+                    article.quantity >= article.remainingQuantity && styles.disabledButton
                   ]}
-                  disabled={article.quantity >= articleQuantities[index]}
+                  disabled={article.quantity >= article.remainingQuantity}
                 >
                   <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
+
               </View>
             )}
           </View>

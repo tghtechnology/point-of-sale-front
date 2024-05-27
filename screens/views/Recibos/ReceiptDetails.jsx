@@ -22,7 +22,7 @@ const ReceiptDetail = ({ route }) => {
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
   const { handleDetalleByVentaId } = useDetalle();
-  const { setArticleNames, setArticleQuantities, setVentaId,setArticleIds } = useTotal(); // Added setArticleQuantities
+  const { setArticleNames, setArticleQuantities, setVentaId,setArticleIds, setarticleQuantitiesReembolsadas } = useTotal(); // Added setArticleQuantities
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
   const [clienteDetails, setClienteDetails] = useState(null);
@@ -67,7 +67,10 @@ const ReceiptDetail = ({ route }) => {
               setArticleIds(articleIds);
 
               const articleQuantities = fetchedDetalles.map(detalle => detalle.cantidad);
-              setArticleQuantities(articleQuantities); // Setting article quantities in the context
+              setArticleQuantities(articleQuantities);
+              const articleQuantitiesReembolsadas = fetchedDetalles.map(detalle => detalle.cantidadReembolsadaTotal);
+              setarticleQuantitiesReembolsadas(articleQuantitiesReembolsadas);
+               
             } else {
               console.error("fetchedDetalles no es un arreglo", fetchedDetalles);
             }
