@@ -7,7 +7,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
 import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 import PaymentSelection from '../../componentes/Venta/PaymentSelection';
-import useRecibos from "../../hooks/useRecibos";
 
 const INITIAL_STATE = {
     detalles: '',
@@ -20,9 +19,10 @@ const INITIAL_STATE = {
 };
 
 const TicketSaleForm = () => {
+    const { params } = useRoute();
+    const { selectedClient, selectedDiscount, selectedImport } = params || {};
     const [receivedAmount, setReceivedAmount] = useState('');
     const [change, setChange] = useState('');
-    //const { listRecibo,setListRecibo } = useRecibos();
     const { total } = useTotal();
     const [data, setData] = useState(INITIAL_STATE);
     const [selectedPayment, setSelectedPayment] = useState(null);
@@ -37,31 +37,34 @@ const TicketSaleForm = () => {
 
     useEffect(() => {
         const fetchDataFromAsyncStorage = async () => {
-          try {
-            const storedItems = await AsyncStorage.getItem('selectedItems');
-            const storedDiscounts = await AsyncStorage.getItem('selectedDiscounts');
-            const storedClient = await AsyncStorage.getItem('selectedClients');
-            const storedTaxes = await AsyncStorage.getItem('selectedTaxes');
-      
-            if (storedItems !== null) {
-              setSelectedItems(JSON.parse(storedItems));
+            try {
+                const storedItems = await AsyncStorage.getItem('selectedItems');
+                const storedDiscounts = await AsyncStorage.getItem('selectedDiscounts');
+                const storedClient = await AsyncStorage.getItem('selectedClients');
+                const storedTaxes = await AsyncStorage.getItem('selectedTaxes');
+
+                if (storedItems !== null) {
+                    setSelectedItems(JSON.parse(storedItems));
+                }
+                if (storedDiscounts !== null) {
+                    setSelectedDiscounts(JSON.parse(storedDiscounts));
+                }
+                if (storedClient !== null) {
+                    setSelectedClients(JSON.parse(storedClient));
+                }
+                if (storedTaxes !== null) {
+                    setSelectedTaxes(JSON.parse(storedTaxes));
+                }
+            } catch (error) {
+                console.error('Error fetching data from AsyncStorage:', error);
             }
-            if (storedDiscounts !== null) {
-              setSelectedDiscounts(JSON.parse(storedDiscounts));
-            }
-            if (storedClient !== null) {
-              setSelectedClients(JSON.parse(storedClient));
-            }
-            if (storedTaxes !== null) {
-              setSelectedTaxes(JSON.parse(storedTaxes));
-            }
-          } catch (error) {
-            console.error('Error fetching data from AsyncStorage:', error);
-          }
         };
-      
         fetchDataFromAsyncStorage();
-      }, []);
+
+        if (selectedClient) setSelectedClients({ id: selectedClient });
+        if (selectedDiscount) setSelectedDiscounts([{ id: selectedDiscount }]);
+        if (selectedImport) setSelectedTaxes({ id: selectedImport });
+    }, [selectedClient, selectedDiscount, selectedImport]);
 
     const handleChangeReceivedAmount = (amount) => {
         setReceivedAmount(amount);
@@ -73,61 +76,57 @@ const TicketSaleForm = () => {
         setSelectedPayment(paymentType);
     };
     const handleCompleteSale = async () => {
-      try {
-          const data = {
-              detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
-              impuestoId: selectedTaxes ? selectedTaxes.id : null,
-              descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
-              clienteId: selectedClients ? selectedClients.id : null,
-              tipoPago: selectedPayment,
-              dineroRecibido: parseFloat(receivedAmount)
-          };
-          console.log('Sale data:', data);
+        try {
+            const data = {
+                detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
+                impuestoId: selectedTaxes ? selectedTaxes.id : null,
+                descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
+                clienteId: selectedClients ? selectedClients.id : null,
+                tipoPago: selectedPayment,
+                dineroRecibido: parseFloat(receivedAmount),
+            };
+            console.log('Sale data:', data);
+            const success = await handleCreateSale(data);
+            if (success) {
+                setShowAlert(true);
+                console.log('Sale data:', data);
+            } else {
+                setErrorAlertVisible(true);
+                throw new Error("La respuesta del servidor no contiene un impuesto válido.");
+            }
+        } catch (error) {
+            setErrorAlertVisible(true);
+        }
+    };
 
-          const success = await handleCreateSale(data);
-          if (success) {
-              setShowAlert(true);
-              //const newRecibo = success; 
-
-              // Actualiza la lista de recibos con el nuevo recibo
-              //setListRecibo(prevList => [...prevList, newRecibo]);
-              clearAsyncStorage();
-          } else {
-              setErrorAlertVisible(true);
-              throw new Error("La respuesta del servidor no contiene un impuesto válido.");
-          }
-      } catch (error) {
-          console.error('Error completing sale:', error);
-          setErrorAlertVisible(true);
-      }
-  };
     const handleAlertClose = () => {
-        setShowAlert(false); 
+        setShowAlert(false);
         clearAsyncStorage();
         navigation.navigate('Home');
     };
+
     useEffect(() => {
         clearAsyncStorage();
-      }, []);
-    
-      const clearAsyncStorage = async () => {
+    }, []);
+
+    const clearAsyncStorage = async () => {
         try {
-          await AsyncStorage.removeItem('selectedItems');
-          await AsyncStorage.removeItem('selectedDiscounts');
-          await AsyncStorage.removeItem('selectedClients');
-          await AsyncStorage.removeItem('selectedTaxes');
-          console.log('Datos de AsyncStorage eliminados al iniciar sesión');
+            await AsyncStorage.removeItem('selectedItems');
+            await AsyncStorage.removeItem('selectedDiscounts');
+            await AsyncStorage.removeItem('selectedClients');
+            await AsyncStorage.removeItem('selectedTaxes');
+            console.log('Datos de AsyncStorage eliminados al iniciar sesión');
         } catch (error) {
-          console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
+            console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
         }
-      };
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Monto"
+                    placeholder="Monto a ingresar"
                     value={receivedAmount}
                     onChangeText={handleChangeReceivedAmount}
                     keyboardType="numeric"
@@ -137,7 +136,7 @@ const TicketSaleForm = () => {
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Valor"
+                    placeholder="Cambio."
                     value={change}
                     editable={false}
                 />
@@ -149,7 +148,7 @@ const TicketSaleForm = () => {
                 <Text style={styles.buttonText}>Completar Venta</Text>
             </TouchableOpacity>
             <CustomAlert isVisible={showAlert} onClose={handleAlertClose} />
-        <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
+            <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)} />
         </View>
     );
 };
@@ -209,4 +208,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
 });
+
 export default TicketSaleForm;

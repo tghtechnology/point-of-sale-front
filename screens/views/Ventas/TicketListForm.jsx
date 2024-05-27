@@ -12,8 +12,8 @@ import ListVent from '../../componentes/Venta/ListVent';
 const TicketListForm = (props) => {
     const navigation = useNavigation();
     const [selectedClient, setSelectedClient] = useState('');
-    const [selectedDiscount, setSelectedDiscounts] = useState('');
-    const [selectedTaxes, setSelectedTaxes] = useState('');
+    const [selectedDiscount, setSelectedDiscount] = useState('');
+    const [selectedImport, setSelectedImport] = useState('');
     const [clientType, setClientType] = useState(null);
     const [showClientPicker, setShowClientPicker] = useState(false); // Nuevo estado para controlar la visibilidad del Picker
     const {client} = useClient();
@@ -35,7 +35,7 @@ const TicketListForm = (props) => {
         navigation.navigate('SaleTicket',{
             selectedClient,
             selectedDiscount,
-            selectedTaxes
+            selectedImport
         });
     };
 
@@ -77,21 +77,21 @@ const TicketListForm = (props) => {
                 <Picker
                     selectedValue={selectedDiscount}
                     style={styles.picker}
-                    onValueChange={(itemValue, itemIndex) => setSelectedDiscounts(itemValue)}
+                    onValueChange={(itemValue, itemIndex) => setSelectedDiscount(itemValue)}
                 >
                     <Picker.Item label="Seleccion Descuento:" value="" />
                     {discounts.map((discountItem) => (
-                        <Picker.Item key={discountItem.id} label={`${discountItem.nombre} ${discountItem.valor}`} value={discountItem.id} />
+                        <Picker.Item key={discountItem.id} label={discountItem.nombre && discountItem.valor} value={discountItem.id} />
                     ))}
                 </Picker>
             </View>
             <View style={styles.pickerContainer}>
                 <Picker
-                    selectedValue={selectedTaxes}
+                    selectedValue={selectedImport}
                     style={styles.picker}
-                    onValueChange={(itemValue, itemIndex) => setSelectedTaxes(itemValue)}
+                    onValueChange={(itemValue, itemIndex) => setSelectedImport(itemValue)}
                 >
-                    <Picker.Item label="Seleccion Impuesto:" value="" />
+                    <Picker.Item label="Seleccion Importe:" value="" />
                     {listImpuesto.map((impuestoItem) => (
                         <Picker.Item key={impuestoItem.id} label={impuestoItem.nombre} value={impuestoItem.id} />
                     ))}
