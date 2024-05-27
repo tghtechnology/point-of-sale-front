@@ -70,7 +70,7 @@ const ReceiptDetail = ({ route }) => {
               setArticleQuantities(articleQuantities);
               const articleQuantitiesReembolsadas = fetchedDetalles.map(detalle => detalle.cantidadReembolsadaTotal);
               setarticleQuantitiesReembolsadas(articleQuantitiesReembolsadas);
-               
+
             } else {
               console.error("fetchedDetalles no es un arreglo", fetchedDetalles);
             }
@@ -110,7 +110,11 @@ const ReceiptDetail = ({ route }) => {
       </View>
     );
   }
-  
+  function padLeft(number) {
+    return number < 10 ? `0${number}` : number;
+  }
+  const fecha = new Date(reciboDetails.fecha_creacion);
+    const formattedDate = `${padLeft(fecha.getUTCDate())}-${padLeft(fecha.getUTCMonth() + 1)}-${fecha.getUTCFullYear()} ${padLeft(fecha.getUTCHours())}:${padLeft(fecha.getUTCMinutes())}:${padLeft(fecha.getUTCSeconds())}`;
 
   return (
     <View style={styles.container}>
@@ -121,7 +125,7 @@ const ReceiptDetail = ({ route }) => {
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Fecha:</Text>
-        <Text>{new Date(reciboDetails.fecha_creacion).toLocaleString()}</Text>
+        <Text>{formattedDate}</Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Tipo de Pago:</Text>
