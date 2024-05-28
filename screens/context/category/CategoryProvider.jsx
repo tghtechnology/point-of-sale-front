@@ -75,7 +75,9 @@ const CategoryProvider = ({ children }) => {
       return false;
     }
   };
+  
 
+  
   return (
     <CategoryContext.Provider value={{ handleCreateCategory, listCategoria, setListCategoria, handleEditCategories, handleDeleteCategory }}>
       {children}

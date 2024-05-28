@@ -1,4 +1,4 @@
-import {View,Text,TextInput,StyleSheet,TouchableOpacity,Image,ScrollView} from "react-native";
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,Image,ScrollView, ActivityIndicator} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 import React, { useState, useEffect } from "react";
@@ -88,16 +88,22 @@ const buildFormData = (editedData, selectedImage, categoriaSelect) => {
 
 
 export default function ArticlesEdit() {
-  const [editedData, setEditedData] = useState(INITIAL_STATE)
-  const route = useRoute();
+  const [editedData, setEditedData] = useState(INITIAL_STATE);
   const [selectedImage, setSelectedImage] = useState(null);
   const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const {handleEditArticle, listArticle, setListArticle } = useArticle();
+  const [loadingCategoria, setLoadingCategoria] = useState(true);
+
+  const route = useRoute();
+  const {handleEditArticle, listArticle, setListArticle} = useArticle();
   const {listCategoria} = useCategory();
 
-  
+  useEffect(() => {
+    if (listCategoria.length > 0) {
+      setLoadingCategoria(false);
+    }
+  }, [listCategoria]);
+
   useEffect(() => {
     if (route.params?.article) {
       const { article } = route.params;
@@ -109,36 +115,37 @@ export default function ArticlesEdit() {
         representacion = "color";
       }
   
-      console.log("Artículo cargado:", article); // Verificar si el ID está presente
-      setEditedData({
-        ...INITIAL_STATE,
-        ...article,
-        representacion,
-        id_categoria: article.categoria?.id || "",
-        id: article.id || "",
-      });
+      if (article.id) { // Verifica si article.id está presente
+        console.log("Artículo cargado:", article);
+        setEditedData({
+          ...INITIAL_STATE,
+          ...article,
+          representacion,
+          id: article.id || "",
+        });
   
-      if (article.imagen) {
-        setSelectedImage(article.imagen);
+        if (article.imagen) {
+          setSelectedImage(article.imagen);
+        }
+  
+        if (article.categoria && article.categoria.id) {
+          setEditedData((prevData) => ({
+            ...prevData,
+            id_categoria: article.categoria.id.toString(),
+          }));
+        }
+  
+        
+      } else {
+        console.error("ID del artículo no encontrado en los datos cargados:", article);
       }
-  
-      setLoading(false);
     }
   }, [route.params]);
-  
-  // Verificar si editedData.id está definido después de cargar los datos del artículo
-  useEffect(() => {
-    console.log("ID del artículo después de cargar los datos:", editedData.id);
-  }, [editedData]);
 
-  if (loading) {
-    return <Text>Cargando...</Text>;
+  if (loadingCategoria) {
+    return <Text>Cargando categorías...</Text>;
   }
-  console.log("ID del artículo:", editedData.id);
-  console.log("Representacion después del montaje:", editedData.representacion);
-  
 
-  
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -154,7 +161,7 @@ export default function ArticlesEdit() {
       quality: 1,
     });
 
-    if (pickerResult.canceled) {
+    if (pickerResult.cancelled) {
       return;
     }
 
@@ -164,7 +171,6 @@ export default function ArticlesEdit() {
   const removeSelectedImage = () => {
     setSelectedImage(null);
   };
-
 
   const handleChange = (name, value) => {
     setEditedData({
@@ -194,19 +200,16 @@ export default function ArticlesEdit() {
     });
   };
 
-
   const handleSubmit = async () => {
     try {
       if (!editedData.id) {
         console.error("ID del artículo no definido");
         return;
       }
-      
+
       const formData = buildFormData(editedData, selectedImage, categoriaSelect);
       const updatedArticle = await handleEditArticle(editedData.id, formData);
-      console.log(formData);
-      console.log(editedData.id);
-      
+
       if (updatedArticle) {
         const updatedList = listArticle.map((article) =>
           article.id === updatedArticle.id ? updatedArticle : article
@@ -221,13 +224,11 @@ export default function ArticlesEdit() {
       console.error("Error al editar el artículo:", error);
     }
   };
-  
-  
-  
-  
+
   const handleCloseAlert = () => {
     setShowAlert(false);
-};
+  };
+
 
   return (
     <ScrollView style={styles.container}>
@@ -245,15 +246,15 @@ export default function ArticlesEdit() {
       </View>
       <View style={styles.pickeContainer}>
       <Picker
-      selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : ''} 
-      onValueChange={(value) => handleCategoryChange(value)}
-      style={styles.picker}
-      >
-  <Picker.Item label="Sin categoría" value="" />
-  {listCategoria?.map((item) => (
-    <Picker.Item key={item.id} label={item.nombre} value={item.id.toString()} />
-  ))}
-</Picker>
+    selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : (listCategoria.length > 0 ? listCategoria[0].id.toString() : '')}
+    onValueChange={(value) => handleCategoryChange(value)}
+    style={styles.picker}
+  >
+    <Picker.Item label="Sin categoría" value="" />
+    {listCategoria.map((item) => (
+      <Picker.Item key={item.id} label={item.nombre} value={item.id.toString()} />
+    ))}
+  </Picker>
       </View>
       {/* Opcion vendido*/}
       <View>
