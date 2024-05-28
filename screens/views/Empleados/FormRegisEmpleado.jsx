@@ -53,7 +53,7 @@ const FormRegisEmpleado = () => {
       const nuevoEmpleado = await handleCreateWorker(objectSend);
       if (nuevoEmpleado && nuevoEmpleado.id) {
         setData(INITIAL_STATE);
-        setWorker([...worker, objectSend]);
+        setWorker([...worker, nuevoEmpleado]);
         setCountrySelect('');
         setShowAlert(true);
       } else {
