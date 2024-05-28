@@ -86,8 +86,6 @@ const UsuarioProvider = ({children}) => {
         const stored = AsyncStorage.getItem("usuarioid");
         console.log("Usuario_d: ", stored);
         setIsAuth(true);
-  
-        alert("Cuenta eliminada permanentemente");
         return true;
       } else {
         setIsAuth(false);
