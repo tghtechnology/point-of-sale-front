@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     borderColor:'#0258FE',
     backgroundColor:'#0258FE',
     width:237,
-    height:39,
+    height:48,
     marginLeft:55,
     padding: 10,
   },

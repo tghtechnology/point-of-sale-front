@@ -72,8 +72,7 @@ const AuthProvider = ({children}) => {
           if (response.status === 200) {
             await AsyncStorage.clear(); // Limpia todo el AsyncStorage
             setIsAuth(false);
-            setUser(null); // Limpia el estado del usuario
-            alert("Cierre de sesión exitoso");
+            setUser(null);
             return true;
           } else {
             alert("Error al cerrar sesión");

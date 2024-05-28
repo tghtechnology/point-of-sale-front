@@ -66,8 +66,6 @@ const UsuarioProvider = ({children}) => {
         const stored = AsyncStorage.getItem("usuarioid");
         console.log("Usuario_d: ", stored);
         setIsAuth(true);
-  
-        alert("Cuenta eliminada temporalmente");
         return true;
       } else {
         setIsAuth(false);
