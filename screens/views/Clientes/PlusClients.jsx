@@ -176,8 +176,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    backgroundColor: '#007bff', // Color del botón de opciones
     alignItems: 'center',
+    marginVertical: 5,
+    backgroundColor: '#007bff', 
   },
   optionButtonText: {
     fontSize: 16,
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: 'gray',
     alignItems: 'center',
+    marginTop:5,
   },
   emptyContainer: {
     justifyContent: 'center',
