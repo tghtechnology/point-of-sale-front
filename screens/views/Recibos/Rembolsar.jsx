@@ -6,7 +6,7 @@ import CustomAlert from "../../componentes/Alertas/CustomAlert";
 import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 export default function Rembolsar() {
-  const { articleNames, articleQuantities, ventaId, articleIds, articleQuantitiesReembolsadas } = useTotal();
+  const { articleNames, articleQuantities, ventaId, articleIds, articleQuantitiesReembolsadas, setarticleQuantitiesReembolsadas } = useTotal();
   const { handleRembolsar } = useRecibos();
   const [showAlert, setShowAlert] = useState(false);
   const [selectedArticles, setSelectedArticles] = useState([]);
@@ -44,7 +44,6 @@ export default function Rembolsar() {
     ));
   };
 
-
   const decrementQuantity = (id) => {
     setSelectedArticles(selectedArticles.map(article =>
       article.id === id && article.quantity > 1
@@ -55,28 +54,31 @@ export default function Rembolsar() {
 
   const handleReembolso = async () => {
     try {
-      console.log(ventaId);
       const detallesReembolso = selectedArticles
         .filter(article => article.selected)
         .map(article => ({
           cantidad: article.quantity,
           articuloId: article.id,
         }));
-      console.log(detallesReembolso);
 
       const res = await handleRembolsar(ventaId, detallesReembolso);
-      console.log('Response:', res);
       if (res) {
         setShowAlert(true);
-        console.log('Reembolso realizado exitosamente');
+        // Actualizar el estado global de articleQuantitiesReembolsadas
+        const newArticleQuantitiesReembolsadas = [...articleQuantitiesReembolsadas];
+        detallesReembolso.forEach(detalles => {
+          const index = articleIds.indexOf(detalles.articuloId);
+          newArticleQuantitiesReembolsadas[index] += detalles.cantidad;
+        });
+        setarticleQuantitiesReembolsadas(newArticleQuantitiesReembolsadas);
       } else {
-        setErrorAlertVisible(true);
         console.error('Error al realizar el reembolso');
       }
     } catch (error) {
       console.error('Error al procesar la solicitud de reembolso:', error);
     }
   };
+
   const handleCloseAlert = () => {
     setShowAlert(false);
   };

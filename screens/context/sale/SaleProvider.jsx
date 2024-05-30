@@ -29,6 +29,7 @@ const SaleProvider = ({ children }) => {
       const usuarioId = await AsyncStorage.getItem("usuarioid");
       const res = await createSale({ detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido }, usuarioId);
       if (res.status === 200 || res.status === 201) {
+        setListSales([...listSale, res.data]);
         return res.data;
       } else {
         console.error("Failed to create sale:", res.status);
