@@ -103,11 +103,8 @@ function SoporteScreen(){
       <Stack.Screen name="Profile" component={DeleteAccount}></Stack.Screen>
       <Stack.Screen name="perfil" component={DataUser}></Stack.Screen>
       <Stack.Screen name="Contraseña" component={ResetPassword}></Stack.Screen>
-
       <Stack.Screen name="Editar usuario" component={ProfileEdit}></Stack.Screen>
     </Stack.Navigator>
-
-
   );
 };
 function ArticulosScreen() {
@@ -149,12 +146,12 @@ function ArticulosScreen() {
       />
       <Stack.Screen name="Crear Articulo" component={ArticlesForm}></Stack.Screen>
       <Stack.Screen name="Editar Articulo" component={ArticlesEdit}></Stack.Screen>
-      <Stack.Screen name="Categorias" component={PlusCategory} options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
+      <Stack.Screen name="Categorias" component={PlusCategory}></Stack.Screen>
       
       <Stack.Screen name="Crear Descuento" component={DiscountForm}  ></Stack.Screen>
       <Stack.Screen name="Editar Categoria" component={CategoryEdit}  ></Stack.Screen>
       <Stack.Screen name="Crear Categoria" component={CategoryForm} ></Stack.Screen>
-      <Stack.Screen name="Descuento" component={PlusDiscount}  options={{headerRight: () => (<><Ionicons name="search-outline" size={24} color="#fff" /></>),}}></Stack.Screen>
+      <Stack.Screen name="Descuento" component={PlusDiscount} ></Stack.Screen>
       <Stack.Screen name="Impuestos" component={PlusImpuesto}  ></Stack.Screen>
       <Stack.Screen name="Creación de un impuesto" component={ImpuestoForm}  ></Stack.Screen>
       <Stack.Screen name="Editar Impuestos" component={ImpuestoEdit}  ></Stack.Screen>

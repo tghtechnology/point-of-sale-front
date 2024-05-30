@@ -115,7 +115,7 @@ export default function ArticlesEdit() {
         representacion = "color";
       }
   
-      if (article.id) { // Verifica si article.id está presente
+      if (article.id) { 
         console.log("Artículo cargado:", article);
         setEditedData({
           ...INITIAL_STATE,
@@ -161,7 +161,7 @@ export default function ArticlesEdit() {
       quality: 1,
     });
 
-    if (pickerResult.cancelled) {
+    if (pickerResult.canceled) {
       return;
     }
 

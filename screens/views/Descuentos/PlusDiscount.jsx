@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Switch, Modal, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
@@ -6,6 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import useDiscount from '../../hooks/useDiscount';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
+import SearchBar from '../../componentes/Busqueda/SearchBar';
 
 const PlusDiscount = (props) => {
   const navigation = useNavigation();
@@ -15,6 +16,23 @@ const PlusDiscount = (props) => {
   const [modal, setModal] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [selectedDiscount, setSelectedDiscount] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredDiscounts, setFilteredDiscounts] = useState(discounts);
+
+  useEffect(() => {
+    setFilteredDiscounts(discounts);
+  }, [discounts]); 
+
+  const handleSearch = () => {
+    if (searchQuery) {
+      const filtered = discounts.filter(discount => 
+        discount.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredDiscounts(filtered);
+    } else {
+      setFilteredDiscounts(discounts);
+    }
+  };
 
   const handleEdit = (discount) => {
     setSelectedDiscount(discount);
@@ -56,7 +74,6 @@ const PlusDiscount = (props) => {
 
   const handleToggleStatus = async (id, currentStatus) => {
     try {
-      // Invierte el estado actual del descuento
       const newStatus = !currentStatus;
       await toggleDiscountStatus(id, newStatus);
       const updatedDiscounts = discounts.map(discount => {
@@ -65,7 +82,6 @@ const PlusDiscount = (props) => {
         }
         return discount;
       });
-      // Actualiza la lista de descuentos
       setDiscounts(updatedDiscounts);
     } catch (error) {
       setError('Error al actualizar el estado del descuento');
@@ -77,10 +93,16 @@ const PlusDiscount = (props) => {
     setModal(true);
   };
 
+
   return (
     <View style={styles.container}>
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearch={handleSearch}
+      />
       <FlatList
-        data={discounts}
+        data={filteredDiscounts}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <TouchableOpacity style={styles.optionsButton} onPress={() => handleOptionsPress(item)}>
