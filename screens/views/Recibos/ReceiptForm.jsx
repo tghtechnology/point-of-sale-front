@@ -42,7 +42,7 @@ const ReceiptForm = () => {
     const isReembolsado = item.monto_reembolsado !== null;
     const fecha = new Date(item.fecha_creacion);
     const formattedDate = `${padLeft(fecha.getUTCDate())}-${padLeft(fecha.getUTCMonth() + 1)}-${fecha.getUTCFullYear()} ${padLeft(fecha.getUTCHours())}:${padLeft(fecha.getUTCMinutes())}:${padLeft(fecha.getUTCSeconds())}`;
-        return (
+    return (
       <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { idRecibo: item.id })}>
         <View style={styles.itemContainer}>
           <View style={styles.iconContainer}>
@@ -53,7 +53,7 @@ const ReceiptForm = () => {
               {isReembolsado ? `S/. ${item.monto_reembolsado}` : `S/. ${getTotal(item.id_venta)}`}
             </Text>
             <Text style={styles.itemText}>
-            {formattedDate}
+              {formattedDate}
             </Text>
           </View>
           <View style={styles.refContainer}>

@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const SaleProvider = ({ children }) => {
   const [listSale, setListSales] = useState([]);
 
-  useEffect(() => {
+  
     const fetchSales = async () => {
       try {
         const res = await listSales();
@@ -19,7 +19,7 @@ const SaleProvider = ({ children }) => {
         console.error("Failed to list sales:", error);
       }
     };
-
+    useEffect(() => {
     fetchSales();
   }, []); 
 
@@ -29,7 +29,7 @@ const SaleProvider = ({ children }) => {
       const usuarioId = await AsyncStorage.getItem("usuarioid");
       const res = await createSale({ detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido }, usuarioId);
       if (res.status === 200 || res.status === 201) {
-        setListSales([...listSale, res.data]);
+        await fetchSales();
         return res.data;
       } else {
         console.error("Failed to create sale:", res.status);
