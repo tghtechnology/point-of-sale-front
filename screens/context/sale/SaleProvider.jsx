@@ -11,6 +11,7 @@ const SaleProvider = ({ children }) => {
       try {
         const res = await listSales();
         if (res.status === 200 || res.status === 201) {
+          console.log('datos:',res)
           setListSales(res.data);
         } else {
           console.error("Failed to list sales:", res.status);
@@ -60,7 +61,7 @@ const SaleProvider = ({ children }) => {
  
 
   return (
-    <SaleContext.Provider value={{ handleCreateSale, listSale, handleSaleById}}>
+    <SaleContext.Provider value={{ handleCreateSale, listSale,setListSales, handleSaleById}}>
       {children}
     </SaleContext.Provider>
   );

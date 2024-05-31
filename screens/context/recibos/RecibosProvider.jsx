@@ -8,6 +8,7 @@ const RecibosProvider = ({ children }) => {
   const fetchRecibos = async () => {
     try {
       const { data, status } = await listRecibos();
+      console.log('recibo',data)
       if (status === 200) {
         setListRecibo(data);
       } else {

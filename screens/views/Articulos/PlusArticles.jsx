@@ -5,9 +5,9 @@ import useArticle from "../../hooks/useArticle";
 import { useNavigation } from '@react-navigation/native';
 import useCategory from "../../hooks/useCategory";
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
+import SearchBar from '../../componentes/Busqueda/SearchBar';
 
-
-export default function PlusArticle() {
+export default function PlusArticle(props) {
   const {listArticle,handleDeleteArticle,setListArticle} = useArticle();
   const [deletedClientId, setDeletedClientId] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null)
@@ -16,11 +16,27 @@ export default function PlusArticle() {
   const [articles, setArticles] = useState(null); 
   const navigation = useNavigation();
   const {listCategoria} = useCategory();
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filteredArticles, setFilteredArticles] = useState(articles)
 
   useEffect(() => {
     setArticles(listArticle); 
   }, [listArticle]);
 
+  useEffect(() => {
+    setFilteredArticles(articles);
+  }, [articles]);
+
+  const handleSearch = () => {
+    if (searchQuery) {
+      const filtered = articles.filter(article => 
+        article.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredArticles(filtered);
+    } else {
+      setFilteredArticles(articles);
+    }
+  };
 
   const handleEdit = () => { 
     navigation.navigate("Editar Articulo", {  article: selectedItem, });
@@ -67,8 +83,13 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearch={handleSearch}
+      />
       <FlatList
-        data={listArticle}
+        data={filteredArticles}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             {/* Verificar si el artículo tiene imagen o color */}

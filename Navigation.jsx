@@ -133,16 +133,7 @@ function ArticulosScreen() {
         },
       }}></Stack.Screen>
 
-      <Stack.Screen name="Art" component={PlusArticles} options={{ title: "Todos los artículos",
-     headerRight: () => (
-      <><FontAwesome
-          name="sort-down"
-          size={16}
-          color="#fff"
-          style={{ marginRight: 119 }}/>
-        <Ionicons name="search-outline" size={24} color="#fff" />
-      </>
-    ),}}
+      <Stack.Screen name="Art" component={PlusArticles} options={{ title: "Todos los artículos"}}
       />
       <Stack.Screen name="Crear Articulo" component={ArticlesForm}></Stack.Screen>
       <Stack.Screen name="Editar Articulo" component={ArticlesEdit}></Stack.Screen>
@@ -221,12 +212,7 @@ function MiembrosScreen() {
       }}></Stack.Screen>
       <Stack.Screen name="Empleados" component={PlusWorkers}></Stack.Screen>
       <Stack.Screen name="Editar empleado" component={EditWorker}></Stack.Screen>
-      <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Crear Empleado",
-     headerRight: () => (
-      
-        <Ionicons name="search-outline" size={24} color="#fff" />
-    
-    ),}}
+      <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Crear Empleado"}}
       />
       <Stack.Screen name="Cliente" component={PlusClients}></Stack.Screen>
       <Stack.Screen name="Crear Cliente" component={ClientForm}></Stack.Screen>
