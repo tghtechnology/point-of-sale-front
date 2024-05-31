@@ -4,7 +4,7 @@ import { MaterialCommunityIcons,FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useImpuesto from "../../hooks/useImpuesto";
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
-
+import SearchBar from '../../componentes/Busqueda/SearchBar';
 
  const PlusImpuesto = () => {
   const navigation = useNavigation();
@@ -14,10 +14,27 @@ import CustomAlert from '../../componentes/Alertas/CustomAlert';
   const [impuestos, setImpuestos] = useState([]);
   const [deletedClientId, setDeletedClientId] = useState(null);
  const {listImpuesto, handleDeleteImp,setListImpuesto} = useImpuesto();
+ const [searchQuery, setSearchQuery] = useState('')
+ const [filteredImpuestos, setFilteredImpuestos] = useState(impuestos)
 
   useEffect(() => {
     setImpuestos(listImpuesto); 
   }, [listImpuesto]);
+
+  useEffect(() => {
+    setFilteredImpuestos(impuestos);
+  }, [impuestos]);
+
+  const handleSearch = () => {
+    if (searchQuery) {
+      const filtered = impuestos.filter(impuesto => 
+        impuesto.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredImpuestos(filtered);
+    } else {
+      setFilteredImpuestos(impuestos);
+    }
+  };
 
   const handleEdit = () => { 
     navigation.navigate("Editar Impuestos", { impuesto: selectedItem });
@@ -55,8 +72,13 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearch={handleSearch}
+      />
       <FlatList
-        data={listImpuesto}
+        data={filteredImpuestos}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <View style={styles.itemContent}>

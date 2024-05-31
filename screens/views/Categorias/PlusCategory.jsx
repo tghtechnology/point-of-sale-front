@@ -4,8 +4,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useCategory from '../../hooks/useCategory';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { Picker } from '@react-native-picker/picker';
+import SearchBar from '../../componentes/Busqueda/SearchBar';
 
-const PlusCategory = () => {
+const PlusCategory = (props) => {
   const navigation = useNavigation();
   const [modal, setModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -13,10 +16,27 @@ const PlusCategory = () => {
   const [deletedClientId, setDeletedClientId] = useState(null);
   const [categoria, setCategoria] = useState([]);
   const { listCategoria, handleDeleteCategory, setListCategoria } = useCategory();
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filteredCategories, setFilteredCategories] = useState(categoria)
 
   useEffect(() => {
     setCategoria(listCategoria);
   }, [listCategoria]);
+
+  useEffect(() => {
+    setFilteredCategories(categoria);
+  }, [categoria]);
+
+  const handleSearch = () => {
+    if(searchQuery) {
+      const filtered = categoria.filter(categoria =>
+        categoria.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      setFilteredCategories(filtered)
+    } else {
+      setFilteredCategories(categoria)
+    }
+  }
 
   const handleEdit = () => {
     navigation.navigate("Editar Categoria", { categorias: selectedItem });
@@ -54,8 +74,13 @@ const PlusCategory = () => {
 
   return (
     <View style={styles.container}>
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearch={handleSearch}
+      />
       <FlatList
-        data={listCategoria}
+        data={filteredCategories}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <View style={styles.colorContainer}>
