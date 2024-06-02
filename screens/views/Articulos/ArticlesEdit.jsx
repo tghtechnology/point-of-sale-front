@@ -135,7 +135,18 @@ export default function ArticlesEdit() {
           }));
         }
   
-        
+        if (article.precio !== undefined) {
+          setEditedData((prevData) => ({
+            ...prevData,
+            precio: article.precio.toString(),
+          }));
+        } else {
+          // Si el precio no está definido, mantener el estado actual
+          setEditedData((prevData) => ({
+            ...prevData,
+            precio: "",
+          }));
+        }
       } else {
         console.error("ID del artículo no encontrado en los datos cargados:", article);
       }
