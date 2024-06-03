@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { createWorker,getWorkers,editworker,deleteworker,updatedWorker} from "../../services/WorkerService"
 import WorkerContext from './WorkerContext';
+import AuthContext from '../auth/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WorkerProvider = ({ children }) => {
+  const { isAuth } = useContext(AuthContext);
     const [worker, setWorker] = useState([])
 
     const handleCreateWorker = async (newWorker) => {
@@ -34,8 +36,10 @@ const WorkerProvider = ({ children }) => {
         }
     };
     useEffect(() => {
+      if (isAuth) {
         fetchMyWorkers();
-      }, []);
+      }
+      }, [isAuth]);
 
     const handleEditWorker = async (id,updatedData) => {
         console.log(id)

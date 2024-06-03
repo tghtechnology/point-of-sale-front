@@ -1,10 +1,14 @@
-import { useEffect,useState } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import {createImpuesto,listImpuestos,editImpuestos,deleteImpuesto,updateImpuesto,getTaxById} from "../../services/ImpuestoService";
 import ImpuestoContext from "./ImpuestoContext";
+import AuthContext from '../auth/AuthContext';
 
 const ImpuestoProvider = ({ children }) => {
   const [listImpuesto, setListImpuesto] = useState([]);
+  const { isAuth } = useContext(AuthContext);
+
     useEffect(() => {
+      if (isAuth) {
       const getTaxes= async () => {
           try {
               const { data, status } = await listImpuestos();
@@ -19,7 +23,8 @@ const ImpuestoProvider = ({ children }) => {
           }
       }
       getTaxes();
-  }, []);
+    }
+  }, [isAuth]);
   
 
   const handleCreateImp = async (newImp) => {

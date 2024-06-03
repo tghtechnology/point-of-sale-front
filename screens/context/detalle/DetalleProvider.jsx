@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { listDetalle, DetalleByVentaId, getDetalleById } from "../../services/DetalleService";
 import  DetalleContext  from "./DetalleContext";
+import AuthContext from '../auth/AuthContext';
 
 const DetalleProvider = ({ children }) => {
+    const { isAuth } = useContext(AuthContext);
     const [listDetalles, setListDetalles] = useState([]);
 
     useEffect(() => {
+        if (isAuth) {
         const getDetalles = async () => {
+
             try {
                 const { data, status } = await listDetalle();
                 if (status === 200) {
@@ -19,7 +23,8 @@ const DetalleProvider = ({ children }) => {
             }
         }
         getDetalles();
-    }, []);
+    }
+    }, [isAuth]);
 
     const handleDetalleByVentaId = async (ventaId) => {
         try {

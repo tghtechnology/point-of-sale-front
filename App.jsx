@@ -18,6 +18,7 @@ import DetalleReembolsoProvider from "./screens/context/detalleReembolso/Detalle
 
 export default function App() {
   return (
+    <AuthProvider>
     <DetalleReembolsoProvider>
       <DetalleProvider>
         <RecibosProvider>
@@ -27,7 +28,6 @@ export default function App() {
                 <ClientProvider>
                   <ImpuestoProvider>
                     <EmailProvider>
-                      <AuthProvider>
                         <UsuarioProvider>
                           <CountryProvider>
                             <DiscountProvider>
@@ -39,7 +39,6 @@ export default function App() {
                             </DiscountProvider>
                           </CountryProvider>
                         </UsuarioProvider>
-                      </AuthProvider>
                     </EmailProvider>
                   </ImpuestoProvider>
                 </ClientProvider>
@@ -49,5 +48,6 @@ export default function App() {
         </RecibosProvider>
       </DetalleProvider>
     </DetalleReembolsoProvider>
+    </AuthProvider>
   );
 }

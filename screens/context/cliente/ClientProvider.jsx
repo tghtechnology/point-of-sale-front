@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {createClient,getClients, editClient, deleteClient, updateClient,getClientById} from "../../services/ClientService"
 import ClientContext from "./ClientContext";
+import AuthContext from '../auth/AuthContext';
+
 const ClientProvider = ({children}) => {
+  const { isAuth } = useContext(AuthContext);
   const [client,setClient] = useState([])
+
     const handleCreateClient = async (newClient) => {
       try {
         const res= await createClient(newClient);
@@ -31,8 +35,10 @@ const ClientProvider = ({children}) => {
   };
 
   useEffect(() => {
-    fetchMyClients();
-  }, []);
+    if (isAuth) {
+      fetchMyClients();
+    }
+  }, [isAuth]);
 
   const handleEditClient = async (id, updatedData) => {
     console.log(id)

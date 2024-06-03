@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { createSale, listSales, SaleById} from "../../services/SaleService";
 import SaleContext from "./SaleContext";
+import AuthContext from '../auth/AuthContext';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SaleProvider = ({ children }) => {
+  const { isAuth } = useContext(AuthContext);
   const [listSale, setListSales] = useState([]);
 
   
@@ -21,8 +23,10 @@ const SaleProvider = ({ children }) => {
       }
     };
     useEffect(() => {
-    fetchSales();
-  }, []); 
+      if (isAuth) {
+        fetchSales();
+      }
+    }, [isAuth]);
 
   const handleCreateSale = async (newSale) => {
     const { detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido } = newSale;

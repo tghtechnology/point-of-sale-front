@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { createCategory, editCategories, listCategories, deleteCategory } from "../../services/CategoryService";
 import CategoryContext from "./CategoryContext";
+import AuthContext from '../auth/AuthContext';
 
 const CategoryProvider = ({ children }) => {
+  const { isAuth } = useContext(AuthContext);
   const [listCategoria, setListCategoria] = useState([]);
 
   useEffect(() => {
-    const getCategories = async () => {
-      try {
-        const { data, status } = await listCategories();
-        if (status === 200) {
-          setListCategoria(data);
-        } else {
-          console.log("Error al cargar categorías:", status);
+    if (isAuth) {
+      const getCategories = async () => {
+        try {
+          const { data, status } = await listCategories();
+          if (status === 200) {
+            setListCategoria(data);
+          } else {
+            console.log("Error al cargar categorías:", status);
+          }
+        } catch (error) {
+          console.error("Error al cargar categorías:", error);
         }
-      } catch (error) {
-        console.error("Error al cargar categorías:", error);
-      }
-    };
-    getCategories();
-  }, []);
+      };
+      getCategories();
+    }
+  }, [isAuth]);
 
   const handleCreateCategory = async (newCategory) => {
     const { nombre, color } = newCategory;
