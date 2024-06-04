@@ -13,10 +13,7 @@ const ReceiptForm = () => {
   const { total, setTotal } = useTotal();
   const { setVentaId } = useTotal();
 
-  useEffect(() => {
-    setListRecibo(listRecibo); 
-    console.log('recibos:',listSale)
-  }, [listRecibo]);
+
 
   const getTotal = (idVenta) => {
     const venta = listSale.find(venta => venta.id === idVenta);
