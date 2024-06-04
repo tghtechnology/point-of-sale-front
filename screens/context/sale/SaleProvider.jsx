@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SaleProvider = ({ children }) => {
   const { isAuth } = useContext(AuthContext);
-  const { handleCrearRecibo } = useContext(RecibosContext); // Usar handleCrearRecibo
+  const { handleCrearRecibo, fetchRecibos } = useContext(RecibosContext); // Usar fetchRecibos del contexto de recibos
   const [listSale, setListSales] = useState([]);
 
   const fetchSales = async () => {
@@ -36,10 +36,11 @@ const SaleProvider = ({ children }) => {
       const res = await createSale({ detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido }, usuarioId);
       if (res.status === 200 || res.status === 201) {
         await fetchSales();
-        const recibo = await handleCrearRecibo(); 
+        /*const recibo = await handleCrearRecibo();
         if (!recibo) {
           console.error("Failed to create receipt");
-        }
+        }*/
+        await fetchRecibos(); // Llamar a fetchRecibos después de crear el recibo
         return res.data;
       } else {
         console.error("Failed to create sale:", res.status);

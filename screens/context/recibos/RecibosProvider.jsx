@@ -90,7 +90,7 @@ const RecibosProvider = ({ children }) => {
   }
 
   return (
-    <RecibosContext.Provider value={{ listRecibo, setListRecibo, handleReciboById, handleDetalleRembolsoById, handleRembolsar, handleCrearRecibo }}>
+    <RecibosContext.Provider value={{ listRecibo, setListRecibo, handleReciboById, handleDetalleRembolsoById, handleRembolsar, handleCrearRecibo, fetchRecibos }}>
       {children}
     </RecibosContext.Provider>
   );
