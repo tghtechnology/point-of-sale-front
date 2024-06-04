@@ -8,12 +8,12 @@ import { useNavigation } from '@react-navigation/native';
 
 const ReceiptForm = () => {
   const navigation = useNavigation();
-  const { listRecibo, setListRecibo } = useRecibos();
+  const { listRecibo } = useRecibos();
   const { listSale } = useSale();
   const { total, setTotal } = useTotal();
   const { setVentaId } = useTotal();
 
-
+  const [searchQuery, setSearchQuery] = useState('');
 
   const getTotal = (idVenta) => {
     const venta = listSale.find(venta => venta.id === idVenta);
@@ -27,6 +27,7 @@ const ReceiptForm = () => {
     }
     return '';
   };
+
   function padLeft(number) {
     return number < 10 ? `0${number}` : number;
   }
@@ -58,27 +59,41 @@ const ReceiptForm = () => {
     );
   };
 
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const filteredRecibos = listRecibo.filter((recibo) => {
+    const formattedDate = new Date(recibo.fecha_creacion).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+    return formattedDate.includes(searchQuery);
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar"
+          placeholder="Buscar por fecha (dd/mm/yyyy)"
           placeholderTextColor="black"
+          value={searchQuery}
+          onChangeText={handleSearch}
         />
         <TouchableOpacity>
           <MaterialCommunityIcons name="magnify" size={20} color="#000" style={styles.magnifies} />
         </TouchableOpacity>
       </View>
       <FlatList
-        data={listRecibo}
+        data={filteredRecibos}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
