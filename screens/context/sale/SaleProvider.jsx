@@ -36,10 +36,6 @@ const SaleProvider = ({ children }) => {
       const res = await createSale({ detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido }, usuarioId);
       if (res.status === 200 || res.status === 201) {
         await fetchSales();
-        /*const recibo = await handleCrearRecibo();
-        if (!recibo) {
-          console.error("Failed to create receipt");
-        }*/
         await fetchRecibos(); // Llamar a fetchRecibos después de crear el recibo
         return res.data;
       } else {
