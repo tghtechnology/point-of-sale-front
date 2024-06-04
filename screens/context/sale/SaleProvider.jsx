@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SaleProvider = ({ children }) => {
   const { isAuth } = useContext(AuthContext);
-  const { handleCrearRecibo, fetchRecibos } = useContext(RecibosContext); // Usar fetchRecibos del contexto de recibos
+  const { fetchRecibos } = useContext(RecibosContext); // Usar fetchRecibos del contexto de recibos
   const [listSale, setListSales] = useState([]);
 
   const fetchSales = async () => {

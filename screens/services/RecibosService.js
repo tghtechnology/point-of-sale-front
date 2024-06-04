@@ -78,25 +78,10 @@ const Reembolsar = async (id, detalles) => {
     }
 };
 
-const crearRecibo = async () => {
-    try {
-        const token = await getToken();
-        const { data, status } = await apiClient.post(`/recibo`, {}, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return { data, status };
-    } catch (error) {
-        console.log(error);
-        throw new Error('Error al cargar recibos');
-    }
-};
 
 export {
     listRecibos,
     ReciboById,
     DetalleByRembolsoId,
-    Reembolsar,
-    crearRecibo
+    Reembolsar
 };

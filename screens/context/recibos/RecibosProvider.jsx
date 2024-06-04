@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { listRecibos, ReciboById, DetalleByRembolsoId, Reembolsar, crearRecibo } from "../../services/RecibosService";
+import { listRecibos, ReciboById, DetalleByRembolsoId, Reembolsar } from "../../services/RecibosService";
 import RecibosContext from "./RecibosContext";
 import AuthContext from '../auth/AuthContext';
 
@@ -72,25 +72,9 @@ const RecibosProvider = ({ children }) => {
       return null;
     }
   };
-  const handleCrearRecibo = async () => {
-    try {
-      const res = await crearRecibo();
-      console.log('Recibo:',res)
-      if (res.status === 200 || res.status === 201) {
-        await fetchRecibos(); 
-        return res.data;
-      } else {
-        console.error("Error al crear recibo", res.status);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error creando recibo:", error);
-      return null;
-    }
-  }
 
   return (
-    <RecibosContext.Provider value={{ listRecibo, setListRecibo, handleReciboById, handleDetalleRembolsoById, handleRembolsar, handleCrearRecibo, fetchRecibos }}>
+    <RecibosContext.Provider value={{ listRecibo, setListRecibo, handleReciboById, handleDetalleRembolsoById, handleRembolsar, fetchRecibos }}>
       {children}
     </RecibosContext.Provider>
   );
