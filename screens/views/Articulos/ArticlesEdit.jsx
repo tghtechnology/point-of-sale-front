@@ -306,6 +306,7 @@ export default function ArticlesEdit() {
         placeholder="10000"
         placeholderTextColor="black"
         value={editedData.ref}
+        editable={false}
         onChangeText={(text) => handleChange("ref", text)}
       />
       {/* Input representacion*/}
