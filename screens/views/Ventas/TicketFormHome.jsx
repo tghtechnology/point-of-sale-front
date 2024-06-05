@@ -212,7 +212,7 @@ const TicketFormHome = () => {
     <View style={styles.container}>
       <View style={styles.searchSection}>
         <TouchableOpacity style={styles.magnifies}>
-          <Icon name="magnify" size={30} borderRadius={2} color="white" />
+          <Icon name="magnify" size={30} borderRadius={2} color="#fff" />
         </TouchableOpacity>
 
         {/* Icono del carrito con contador */}

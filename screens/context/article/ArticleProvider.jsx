@@ -1,13 +1,16 @@
-import { useEffect,useState } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { createArticle, listArticles, editArticles,deleteArticles,ArticleById } from "../../services/ArticleService";
 import ArticleContext from "./ArticleContext";
+import AuthContext from '../auth/AuthContext';
 
 
 
 const ArticleProvider = ({children}) => {
     const [listArticle, setListArticle] = useState([]);
+    const { isAuth } = useContext(AuthContext);
 
     useEffect(() => {
+      if (isAuth) {
         const getArticle = async () => {
             try {
                 const { data, status } = await listArticles();
@@ -21,7 +24,8 @@ const ArticleProvider = ({children}) => {
             }
         }
         getArticle();
-    }, []);
+      }
+    }, [isAuth]);
 
     const handleCreateArticle = async (newArticle) => {
       try {

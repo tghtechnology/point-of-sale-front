@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { listRecibos, ReciboById, DetalleByRembolsoId, Reembolsar } from "../../services/RecibosService";
 import RecibosContext from "./RecibosContext";
+import AuthContext from '../auth/AuthContext';
+
 
 const RecibosProvider = ({ children }) => {
+  const { isAuth } = useContext(AuthContext);
   const [listRecibo, setListRecibo] = useState([]);
 
   const fetchRecibos = async () => {
@@ -19,8 +22,10 @@ const RecibosProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (isAuth) {
     fetchRecibos();
-  }, []);
+    }
+  }, [isAuth]);
 
   const handleReciboById = async (id) => {
     try {
@@ -69,7 +74,7 @@ const RecibosProvider = ({ children }) => {
   };
 
   return (
-    <RecibosContext.Provider value={{ listRecibo, setListRecibo, handleReciboById, handleDetalleRembolsoById, handleRembolsar }}>
+    <RecibosContext.Provider value={{ listRecibo, setListRecibo, handleReciboById, handleDetalleRembolsoById, handleRembolsar, fetchRecibos }}>
       {children}
     </RecibosContext.Provider>
   );

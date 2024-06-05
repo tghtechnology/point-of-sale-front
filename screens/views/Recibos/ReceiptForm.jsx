@@ -13,14 +13,7 @@ const ReceiptForm = () => {
   const { total, setTotal } = useTotal();
   const { setVentaId } = useTotal();
 
-  useEffect(() => {
-    setListRecibo(listRecibo); 
-  }, [listRecibo]);
 
-  const getTipoPago = (idVenta) => {
-    const venta = listSale.find(venta => venta.id === idVenta);
-    return venta ? venta.tipoPago : 'No disponible';
-  };
 
   const getTotal = (idVenta) => {
     const venta = listSale.find(venta => venta.id === idVenta);

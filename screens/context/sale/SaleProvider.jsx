@@ -1,27 +1,33 @@
-import { useEffect, useState } from "react";
-import { createSale, listSales, SaleById} from "../../services/SaleService";
+import React, { useState, useEffect, useContext } from 'react';
+import { createSale, listSales, SaleById } from "../../services/SaleService";
 import SaleContext from "./SaleContext";
+import AuthContext from '../auth/AuthContext';
+import RecibosContext from '../recibos/RecibosContext'; // Importar RecibosContext
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SaleProvider = ({ children }) => {
+  const { isAuth } = useContext(AuthContext);
+  const { fetchRecibos } = useContext(RecibosContext); // Usar fetchRecibos del contexto de recibos
   const [listSale, setListSales] = useState([]);
 
-  
-    const fetchSales = async () => {
-      try {
-        const res = await listSales();
-        if (res.status === 200 || res.status === 201) {
-          setListSales(res.data);
-        } else {
-          console.error("Failed to list sales:", res.status);
-        }
-      } catch (error) {
-        console.error("Failed to list sales:", error);
+  const fetchSales = async () => {
+    try {
+      const res = await listSales();
+      if (res.status === 200 || res.status === 201) {
+        setListSales(res.data);
+      } else {
+        console.error("Failed to list sales:", res.status);
       }
-    };
-    useEffect(() => {
-    fetchSales();
-  }, []); 
+    } catch (error) {
+      console.error("Failed to list sales:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuth) {
+      fetchSales();
+    }
+  }, [isAuth]);
 
   const handleCreateSale = async (newSale) => {
     const { detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido } = newSale;
@@ -30,6 +36,7 @@ const SaleProvider = ({ children }) => {
       const res = await createSale({ detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido }, usuarioId);
       if (res.status === 200 || res.status === 201) {
         await fetchSales();
+        await fetchRecibos(); // Llamar a fetchRecibos después de crear el recibo
         return res.data;
       } else {
         console.error("Failed to create sale:", res.status);
@@ -56,11 +63,8 @@ const SaleProvider = ({ children }) => {
     }
   };
 
-  
- 
-
   return (
-    <SaleContext.Provider value={{ handleCreateSale, listSale, handleSaleById}}>
+    <SaleContext.Provider value={{ handleCreateSale, listSale, setListSales, handleSaleById }}>
       {children}
     </SaleContext.Provider>
   );

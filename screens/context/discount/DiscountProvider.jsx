@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import DiscountContext from "./DiscountContext";
 import { createDiscount, getDiscounts,getCeroDiscounts, updateDiscountStatus,editDiscount, updateDiscount,getDiscountById } from "../../services/DiscountService";
+import AuthContext from '../auth/AuthContext';
 
 const DiscountProvider = ({ children }) => {
     const [discounts, setDiscounts] = useState([]);
     const [Cerodiscounts, setCerodiscounts] = useState([]);
+    const { isAuth } = useContext(AuthContext);
 
     const handleCreateDiscount = async (newDiscount) => {
         try {
@@ -37,8 +39,10 @@ const DiscountProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        if (isAuth) {
         fetchMyDiscounts();
-    }, []);
+        }
+    }, [isAuth]);
 
     const fetchCeroDiscounts = async () => {
         try {
@@ -51,8 +55,10 @@ const DiscountProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        if (isAuth) {
         fetchCeroDiscounts();
-    }, []);
+        }
+    }, [isAuth]);
 
     const toggleDiscountStatus = async (id, newStatus) => {
         try {
