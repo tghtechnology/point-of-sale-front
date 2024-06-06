@@ -88,9 +88,9 @@ const TicketSaleForm = () => {
         try {
             const data = {
                 detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
-                impuestoId: selectedTaxes ? selectedTaxes.id : null,
-                descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
-                clienteId: selectedClients ? selectedClients.id : null,
+                clienteId: selectedClient ? selectedClient.id : null,
+                descuentoId: selectedDiscount ? selectedDiscount.id : null,
+                impuestoId: selectedImport ? selectedImport.id : null,
                 tipoPago: selectedPayment,
                 dineroRecibido: parseFloat(receivedAmount),
             };

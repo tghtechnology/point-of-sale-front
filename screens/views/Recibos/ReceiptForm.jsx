@@ -60,7 +60,7 @@ const ReceiptForm = () => {
   };
 
   const handleSearch = (text) => {
-    setSearchQuery(text);
+  setSearchQuery(text);
   };
 
   const filteredRecibos = listRecibo.filter((recibo) => {
@@ -68,7 +68,7 @@ const ReceiptForm = () => {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
-    });
+    }).replace(/\//g, '-'); 
     return formattedDate.includes(searchQuery);
   });
 
@@ -77,7 +77,7 @@ const ReceiptForm = () => {
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar por fecha (dd/mm/yyyy)"
+          placeholder="Buscar por fecha (dd-mm-yyyy)"
           placeholderTextColor="black"
           value={searchQuery}
           onChangeText={handleSearch}
