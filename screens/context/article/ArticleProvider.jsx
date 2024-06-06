@@ -2,19 +2,21 @@ import React, { useState, useEffect, useContext } from 'react';
 import { createArticle, listArticles, editArticles,deleteArticles,ArticleById } from "../../services/ArticleService";
 import ArticleContext from "./ArticleContext";
 import AuthContext from '../auth/AuthContext';
-
-
+import CategoryContext from '../category/CategoryContext';
 
 const ArticleProvider = ({children}) => {
     const [listArticle, setListArticle] = useState([]);
     const { isAuth } = useContext(AuthContext);
+    const { getCategories } = useContext(CategoryContext);
 
     useEffect(() => {
       if (isAuth) {
         const getArticle = async () => {
             try {
+              
                 const { data, status } = await listArticles();
                 if (status === 200) {
+                   getCategories();
                     setListArticle(data); 
                 } else {
                     console.log("Error al cargar articulos:", status);
@@ -25,13 +27,14 @@ const ArticleProvider = ({children}) => {
         }
         getArticle();
       }
-    }, [isAuth]);
+    }, [isAuth, getCategories]);
 
     const handleCreateArticle = async (newArticle) => {
       try {
         const res = await createArticle(newArticle);
         if (res.status === 200 || res.status === 201) {
           setListArticle((prevList) => [...prevList, res.data]);
+          await getCategories()
           return res.data;
         } else {
           console.error("Error al crear el artículo:", res.status);
