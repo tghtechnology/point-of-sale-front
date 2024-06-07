@@ -16,7 +16,6 @@ const ArticleProvider = ({children}) => {
               
                 const { data, status } = await listArticles();
                 if (status === 200) {
-                   getCategories();
                     setListArticle(data); 
                 } else {
                     console.log("Error al cargar articulos:", status);
