@@ -226,9 +226,16 @@ const TicketFormHome = () => {
         </TouchableOpacity>
         <View style={styles.Sections}/>
       </View>
-      <View style={styles.divider}/>
-      {/* List Items */}
-      {selectedValue === 'default' && (
+      <View style={styles.divider} />
+      {listArticle.length === 0 ? (
+        <View style={styles.noArticlesContainer}>
+          <Text style={styles.noArticlesText}>No hay artículos disponibles</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Crear Articulo')}>
+          <Text style={styles.createArticleButton}>Crea tu artículo</Text>
+          </TouchableOpacity>
+        </View>
+        
+      ) : (
         <View style={styles.itemList}>
           <FlatList
             data={listArticle}
@@ -373,7 +380,24 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 3,
-  }
+  },
+  noArticlesContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noArticlesText: {
+    fontSize: 18,
+    color: '#777',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  createArticleButton: {
+    color: '#517EF2',
+    fontWeight: 'bold',
+    fontSize: 18,
+    justify: 'center',
+  },
 });
 
 export default TicketFormHome
