@@ -131,7 +131,7 @@ export default function Rembolsar() {
         <Text>No hay artículos</Text>
       )}
       <TouchableOpacity onPress={handleReembolso} style={styles.buttonContainer}>
-        <Text style={styles.submitButtonText}>Realizar</Text>
+        <Text style={styles.submitButtonText}>Confirmar</Text>
       </TouchableOpacity>
       <CustomAlert
         isVisible={showAlert}
