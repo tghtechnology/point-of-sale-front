@@ -64,8 +64,8 @@ return (
           },
         }}
       ></Stack.Screen> 
-      <Stack.Screen name="ListarTicket" component={TicketListForm} />
-      <Stack.Screen name="SaleTicket" component={TicketSaleForm} />
+      <Stack.Screen name="Ticket" component={TicketListForm} />
+      <Stack.Screen name="Finalizar venta" component={TicketSaleForm} />
       <Stack.Screen name="Crear Cliente" component={ClientForm}/>
       
     </Stack.Navigator>
@@ -177,8 +177,8 @@ function Recibos(){
           );
         },
       }}></Stack.Screen>
-     <Stack.Screen name="ReceiptDetail" component={ReceiptDetails} />
-     <Stack.Screen name="Rembolsar" component={Rembolsar} />
+     <Stack.Screen name="Detalles" component={ReceiptDetails} />
+     <Stack.Screen name="Reembolsar" component={Rembolsar} />
     </Stack.Navigator>
   
 

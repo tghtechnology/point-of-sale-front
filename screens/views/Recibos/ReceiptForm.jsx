@@ -37,7 +37,7 @@ const ReceiptForm = () => {
     const fecha = new Date(item.fecha_creacion);
     const formattedDate = `${padLeft(fecha.getUTCDate())}-${padLeft(fecha.getUTCMonth() + 1)}-${fecha.getUTCFullYear()} ${padLeft(fecha.getUTCHours())}:${padLeft(fecha.getUTCMinutes())}:${padLeft(fecha.getUTCSeconds())}`;
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('ReceiptDetail', { idRecibo: item.id })}>
+      <TouchableOpacity onPress={() => navigation.navigate('Detalles', { idRecibo: item.id })}>
         <View style={styles.itemContainer}>
           <View style={styles.iconContainer}>
             <MaterialCommunityIcons name="receipt" size={24} color="black" />

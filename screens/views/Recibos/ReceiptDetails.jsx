@@ -189,7 +189,7 @@ const ReceiptDetail = ({ route }) => {
               <Text>X{detalleDetails[index]?.cantidad}</Text>
             </View>
           ))}
-          <TouchableOpacity onPress={() => navigation.navigate("Rembolsar")} style={styles.buttonContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate("Reembolsar")} style={styles.buttonContainer}>
             <Text style={styles.buttonText}>Reembolsar</Text>
           </TouchableOpacity>
         </>

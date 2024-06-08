@@ -208,7 +208,7 @@ const TicketListForm = () => {
                     ))}
                 </Picker>
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SaleTicket', { selectedClient, selectedDiscount, selectedImport })}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Finalizar venta', { selectedClient, selectedDiscount, selectedImport })}>
                 <Text style={styles.buttonText}>Continuar</Text>
             </TouchableOpacity>
         </ScrollView>

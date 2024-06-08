@@ -2,33 +2,72 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../../hooks/useArticle";
-import useDiscount from '../../hooks/useDiscount';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import useClient from '../../hooks/useClient';
-import useImpuesto from "../../hooks/useImpuesto";
+
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
   const { listArticle } = useArticle();
-  const [selectedValue, setSelectedValue] = useState('default');
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
   const [selectedProductIds, setSelectedProductIds] = useState([]);
+  
   useEffect(() => {
-    const clearAsyncStorage = async () => {
+    const clearAsyncStorageAndSelectedItems = async () => {
       try {
         await AsyncStorage.removeItem('selectedItems');
         setSelectedItems([]);
-        console.log('Datos de AsyncStorage eliminados al iniciar sesión');
       } catch (error) {
-        console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
+        console.error('Error al eliminar datos de AsyncStorage al volver al formulario de venta:', error);
       }
     };
-    clearAsyncStorage();
+
+    const unsubscribe = navigation.addListener('focus', () => {
+      clearAsyncStorageAndSelectedItems();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    const fetchDataFromAsyncStorage = async () => {
+      try {
+        const storedItems = await AsyncStorage.getItem('selectedItems');
+        console.log(storedItems)
+        if (storedItems !== null) {
+          setSelectedItems(JSON.parse(storedItems));
+          console.log('Elementos recuperados del AsyncStorage:', JSON.parse(storedItems));
+        }
+
+      } catch (error) {
+        console.error('Error fetching data from AsyncStorage:', error);
+      }
+    };
+
+    fetchDataFromAsyncStorage();
+    return () => {
+      try {
+          setSelectedItems([]);
+          console.log('Estado de los artículos seleccionados limpiado al desmontar el componente TicketFormHome');
+      } catch (error) {
+          console.error('Error al limpiar el estado de los artículos seleccionados:', error);
+      }
+  };
   }, []);
+
+
+  useEffect(() => {
+    let total = 0;
+    selectedItems.forEach(item => {
+      total += item.precio * item.quantity;
+    });
+    setTotalAmount(total);
+  }, [selectedItems]);
+
+
   useEffect(() => {
     calculateSelectedProductIds();
   }, [selectedItems]);
@@ -40,55 +79,26 @@ const TicketFormHome = () => {
 
   const cartCount = selectedProductIds.length;
 
-  useEffect(() => {
-    const fetchDataFromAsyncStorage = async () => {
-      try {
-        const storedItems = await AsyncStorage.getItem('selectedItems');
-
-
-        if (storedItems !== null) {
-          setSelectedItems(JSON.parse(storedItems));
-        }
-
-      } catch (error) {
-        console.error('Error fetching data from AsyncStorage:', error);
-      }
-    };
-
-    fetchDataFromAsyncStorage();
-  }, []);
-
-  useEffect(() => {
-    let total = 0;
-    selectedItems.forEach(item => {
-      total += item.precio * item.quantity;
-    });
-    setTotalAmount(total);
-  }, [selectedItems]);
-
   const handleSelectItem = async (item) => {
     let updatedItems = [...selectedItems];
     const selectedItemIndex = updatedItems.findIndex((i) => i.id === item.id);
   
     if (selectedItemIndex !== -1) {
-      // Si el artículo ya está seleccionado, lo eliminamos de la lista de selección
       updatedItems.splice(selectedItemIndex, 1);
     } else {
-      // Si el artículo no está seleccionado, lo agregamos a la lista de selección
       updatedItems.push({ ...item, quantity });
     }
   
-    // Actualizamos el estado de los artículos seleccionados
     setSelectedItems(updatedItems);
   
     try {
-      // Guardamos la lista de artículos seleccionados en AsyncStorage para persistencia de datos
       if (updatedItems.length > 0) {
         await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
         console.log('Lista de artículos seleccionados guardada en AsyncStorage:', updatedItems);
       } else {
         await AsyncStorage.removeItem('selectedItems');
         console.log('Lista de artículos seleccionados eliminada de AsyncStorage');
+        setSelectedItems([]);
       }
     } catch (error) {
       console.error('Error al guardar/eliminar la lista de artículos seleccionados en AsyncStorage:', error);
@@ -97,7 +107,7 @@ const TicketFormHome = () => {
   
 
   const showListArticles = () => {
-    navigation.navigate('ListarTicket');
+    navigation.navigate('Ticket');
   };
 
   const handleAddQuantity = async (item) => {
@@ -143,12 +153,12 @@ const TicketFormHome = () => {
     }
   };
 
-  const RemoveItem = async () => {
+  const AddItem = async () => {
     await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
   }
   const handleSaveChanges = async () => {
     try {
-      await RemoveItem();
+      await AddItem();
       console.log('Cambios guardados exitosamente');
       showListArticles();
     } catch (error) {
