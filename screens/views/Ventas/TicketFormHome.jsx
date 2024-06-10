@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../../hooks/useArticle";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -14,50 +13,27 @@ const TicketFormHome = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const navigation = useNavigation();
   const [selectedProductIds, setSelectedProductIds] = useState([]);
-  
-  useEffect(() => {
-    const clearAsyncStorageAndSelectedItems = async () => {
-      try {
-        await AsyncStorage.removeItem('selectedItems');
+
+  const fetchDataFromAsyncStorage = async () => {
+    try {
+      const storedItems = await AsyncStorage.getItem('selectedItems');
+      console.log("storedItems:", storedItems); 
+      if (storedItems !== null) {
+        setSelectedItems(JSON.parse(storedItems));
+        console.log('Elementos recuperados del AsyncStorage:', JSON.parse(storedItems));
+      } else {
         setSelectedItems([]);
-      } catch (error) {
-        console.error('Error al eliminar datos de AsyncStorage al volver al formulario de venta:', error);
       }
-    };
-
-    const unsubscribe = navigation.addListener('focus', () => {
-      clearAsyncStorageAndSelectedItems();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
-  useEffect(() => {
-    const fetchDataFromAsyncStorage = async () => {
-      try {
-        const storedItems = await AsyncStorage.getItem('selectedItems');
-        console.log(storedItems)
-        if (storedItems !== null) {
-          setSelectedItems(JSON.parse(storedItems));
-          console.log('Elementos recuperados del AsyncStorage:', JSON.parse(storedItems));
-        }
-
-      } catch (error) {
-        console.error('Error fetching data from AsyncStorage:', error);
-      }
-    };
-
-    fetchDataFromAsyncStorage();
-    return () => {
-      try {
-          setSelectedItems([]);
-          console.log('Estado de los artículos seleccionados limpiado al desmontar el componente TicketFormHome');
-      } catch (error) {
-          console.error('Error al limpiar el estado de los artículos seleccionados:', error);
-      }
+    } catch (error) {
+      console.error('Error fetching data from AsyncStorage:', error);
+    }
   };
-  }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchDataFromAsyncStorage();
+    }, [])
+  );
 
   useEffect(() => {
     let total = 0;
@@ -66,7 +42,6 @@ const TicketFormHome = () => {
     });
     setTotalAmount(total);
   }, [selectedItems]);
-
 
   useEffect(() => {
     calculateSelectedProductIds();
@@ -82,15 +57,15 @@ const TicketFormHome = () => {
   const handleSelectItem = async (item) => {
     let updatedItems = [...selectedItems];
     const selectedItemIndex = updatedItems.findIndex((i) => i.id === item.id);
-  
+
     if (selectedItemIndex !== -1) {
       updatedItems.splice(selectedItemIndex, 1);
     } else {
       updatedItems.push({ ...item, quantity });
     }
-  
+
     setSelectedItems(updatedItems);
-  
+
     try {
       if (updatedItems.length > 0) {
         await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
@@ -103,11 +78,6 @@ const TicketFormHome = () => {
     } catch (error) {
       console.error('Error al guardar/eliminar la lista de artículos seleccionados en AsyncStorage:', error);
     }
-  };
-  
-
-  const showListArticles = () => {
-    navigation.navigate('Ticket');
   };
 
   const handleAddQuantity = async (item) => {
@@ -153,18 +123,16 @@ const TicketFormHome = () => {
     }
   };
 
-  const AddItem = async () => {
-    await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-  }
   const handleSaveChanges = async () => {
     try {
-      await AddItem();
+      await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
       console.log('Cambios guardados exitosamente');
-      showListArticles();
+      navigation.navigate('Ticket');
     } catch (error) {
       console.error('Error al guardar cambios:', error);
     }
   };
+
   const renderItem = ({ item }) => {
     const selectedItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
     const quantity = selectedItem ? selectedItem.quantity : 0;
@@ -410,4 +378,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TicketFormHome
+export default TicketFormHome;

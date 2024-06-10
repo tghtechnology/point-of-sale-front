@@ -99,6 +99,7 @@ const TicketSaleForm = () => {
             if (success) {
                 setShowAlert(true);
                 console.log('Sale data:', data);
+                await clearAsyncStorage();
             } else {
                 setErrorAlertVisible(true);
                 throw new Error("La respuesta del servidor no contiene un impuesto válido.");
@@ -108,27 +109,31 @@ const TicketSaleForm = () => {
         }
     };
 
-    const handleAlertClose = () => {
+    const handleAlertClose = async () => {
+         // Limpiar AsyncStorage primero
         setShowAlert(false);
-        clearAsyncStorage();
-        navigation.navigate('Home');
+        navigation.navigate("Home"); // Luego navegar a 'Home'
     };
-
-    useEffect(() => {
-        clearAsyncStorage();
-    }, []);
-
+    
     const clearAsyncStorage = async () => {
         try {
+            setSelectedItems([]);
+            setSelectedDiscounts([]);
+            setSelectedClients(null);
+            setSelectedTaxes(null);
             await AsyncStorage.removeItem('selectedItems');
             await AsyncStorage.removeItem('selectedDiscounts');
             await AsyncStorage.removeItem('selectedClients');
             await AsyncStorage.removeItem('selectedTaxes');
-            console.log('Datos de AsyncStorage eliminados al iniciar sesión');
+            console.log('Datos de AsyncStorage eliminados');
         } catch (error) {
-            console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
+            console.error('Error al eliminar datos de AsyncStorage:', error);
         }
     };
+    useEffect(() => {
+        // Llamar a la función para borrar AsyncStorage al cargar la primera interfaz
+        clearAsyncStorage();
+    }, []);
 
     return (
         <View style={styles.container}>
