@@ -20,9 +20,6 @@ const AuthProvider = ({children}) => {
         const userData = await obtenerDatosUsuarioPorId(usuario_id);
         setUser(userData);
         setRole(userData.rol);
-        console.log(userData)
-        console.log(userData);
-        console.log(userData.rol);
         return status, data;
       } else {
         setIsAuth(false);
@@ -97,6 +94,7 @@ const AuthProvider = ({children}) => {
     <AuthContext.Provider value={{
         isAuth,
         user,
+        role,
         setUser,
         editarUsuario,
         loginAccess,
