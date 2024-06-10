@@ -209,7 +209,7 @@ const TicketFormHome = () => {
       {listArticle.length === 0 ? (
         <View style={styles.noArticlesContainer}>
           <Text style={styles.noArticlesText}>No hay artículos disponibles</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Crear Articulo')}>
+          <TouchableOpacity onPress={() => navigation.navigate("Crear Articulo")}>
           <Text style={styles.createArticleButton}>Crea tu artículo</Text>
           </TouchableOpacity>
         </View>

@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const AuthProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
     const [user, setUser] = useState(null);
+    const [role, setRole] = useState(null);
   
 
     const loginAccess = async (email, password) => {
@@ -18,6 +19,9 @@ const AuthProvider = ({children}) => {
           setIsAuth(true);
           const userData = await obtenerDatosUsuarioPorId(usuario_id);
           setUser(userData);
+          setRole(userData.rol);
+          console.log(userData);
+          console.log(userData.rol);
           return status, data;
         } else {
           setIsAuth(false);
