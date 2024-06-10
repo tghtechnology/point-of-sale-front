@@ -227,10 +227,10 @@ function MiembrosScreen() {
 
 const DrawerNav =()=> {
   const Drawer = createDrawerNavigator();
-  const { isAuth, usuario_id } = useContext(AuthContext)
+  const { isAuth, user } = useContext(AuthContext)
 
   if (isAuth === true) {
-    console.log(isAuth, usuario_id)
+    console.log(isAuth, user)
     return (
       <Drawer.Navigator 
         screenOptions={{headerShown: false}}
