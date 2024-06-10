@@ -4,13 +4,14 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../../hooks/useArticle";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTotal } from '../../Global State/TotalContext';
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
   const { listArticle } = useArticle();
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState();
   const navigation = useNavigation();
   const [selectedProductIds, setSelectedProductIds] = useState([]);
 
