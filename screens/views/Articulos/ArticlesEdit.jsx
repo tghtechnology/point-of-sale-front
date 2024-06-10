@@ -128,12 +128,19 @@ export default function ArticlesEdit() {
           setSelectedImage(article.imagen);
         }
   
-        if (article.categoria && article.categoria.id) {
-          setEditedData((prevData) => ({
-            ...prevData,
-            id_categoria: article.categoria.id.toString(),
-          }));
-        }
+      // Verificar si la categoría está definida o es null
+      if (article.categoria && article.categoria.id) {
+        setEditedData((prevData) => ({
+          ...prevData,
+          id_categoria: article.categoria.id.toString(),
+        }));
+      } else {
+        // Si la categoría es null, establecer como "Sin categoría"
+        setEditedData((prevData) => ({
+          ...prevData,
+          id_categoria: null,
+        }));
+      }
   
         if (article.precio !== undefined) {
           setEditedData((prevData) => ({
@@ -153,9 +160,6 @@ export default function ArticlesEdit() {
     }
   }, [route.params]);
 
-  if (loadingCategoria) {
-    return <Text>Cargando categorías...</Text>;
-  }
 
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -257,7 +261,7 @@ export default function ArticlesEdit() {
       </View>
       <View style={styles.pickeContainer}>
       <Picker
-          selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : ""}
+          selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : null}
           onValueChange={(value) => handleCategoryChange(value)}
           style={styles.picker}
         >
