@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useRecibos from "../../hooks/useRecibos";
 import useSale from "../../hooks/useSale";
@@ -32,77 +32,75 @@ const ReceiptDetail = ({ route }) => {
   const [detalleDetails, setDetalleDetails] = useState([]);
   const [reembolsoArticleDetails, setReembolsoArticleDetails] = useState([]);
 
-  useEffect(() => {
-    const fetchDetails = async () => {
-      try {
-        const fetchedRecibo = await handleReciboById(idRecibo);
-        if (fetchedRecibo) {
-          const fetchedSale = await handleSaleById(fetchedRecibo[0].id_venta);
-          if (fetchedSale) {
-            setReciboDetails(fetchedRecibo[0]);
-            setSaleDetails(fetchedSale);
-
-            const [fetchedCliente, fetchedDiscount, fetchedTax, fetchedDetalles] = await Promise.all([
-              fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
-              fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
-              fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
-              handleDetalleByVentaId(fetchedSale.id)
-            ]);
-
-            setClienteDetails(fetchedCliente);
-            setDiscountDetails(fetchedDiscount);
-            setTaxDetails(fetchedTax);
-
-            if (Array.isArray(fetchedDetalles)) {
-              setDetalleDetails(fetchedDetalles);
-
-              const articlePromises = fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId));
-              const articles = await Promise.all(articlePromises);
-              setArticleDetails(articles);
-
-              const articleNames = articles.map(article => article.nombre);
-              setArticleNames(articleNames);
-
-              const articleIds = articles.map(article => article.id);
-              setArticleIds(articleIds);
-
-              const articleQuantities = fetchedDetalles.map(detalle => detalle.cantidad);
-              setArticleQuantities(articleQuantities);
-              const articleQuantitiesReembolsadas = fetchedDetalles.map(detalle => detalle.cantidadReembolsadaTotal);
-              setarticleQuantitiesReembolsadas(articleQuantitiesReembolsadas);
-
-            } else {
-              console.error("fetchedDetalles no es un arreglo", fetchedDetalles);
-            }
-            setVentaId(fetchedSale.id);
-
-            const fetchedReembolsoDetalles = await handleDetalleReembolsoByReciboId(fetchedRecibo[0].id);
-            const reembolsoDetallesArray = Array.isArray(fetchedReembolsoDetalles) ? fetchedReembolsoDetalles : [fetchedReembolsoDetalles];
-
-            const reembolsoArticlePromises = reembolsoDetallesArray.map(detalle => handleArticleById(detalle.articuloId));
-            const reembolsoArticles = await Promise.all(reembolsoArticlePromises);
-            setReembolsoArticleDetails(reembolsoArticles.map((article, index) => ({
-              nombre: article.nombre,
-              cantidad: reembolsoDetallesArray[index].cantidadDevuelta
-            })));
-          } else {
-            console.error(`Failed to fetch sale for ID: ${fetchedRecibo[0].id_venta}`);
-          }
+  const fetchDetails = async () => {
+    try {
+      const fetchedRecibo = await handleReciboById(idRecibo);
+      if (fetchedRecibo) {
+        const fetchedSale = await handleSaleById(fetchedRecibo[0].id_venta);
+        if (fetchedSale) {
+          const fetchedDetalles = await handleDetalleByVentaId(fetchedSale.id);
+  
+          const [
+            fetchedCliente,
+            fetchedDiscount,
+            fetchedTax,
+            articles,
+            reembolsoDetallesArray
+          ] = await Promise.all([
+            fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
+            fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
+            fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
+            fetchedDetalles ? Promise.all(fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId))) : [],
+            handleDetalleReembolsoByReciboId(fetchedRecibo[0].id)
+          ]);
+  
+          setReciboDetails(fetchedRecibo[0]);
+          setSaleDetails(fetchedSale);
+          setClienteDetails(fetchedCliente);
+          setDiscountDetails(fetchedDiscount);
+          setTaxDetails(fetchedTax);
+          setDetalleDetails(fetchedDetalles);
+          setArticleDetails(articles);
+  
+          const articleNames = articles.map(article => article.nombre);
+          setArticleNames(articleNames);
+  
+          const articleIds = articles.map(article => article.id);
+          setArticleIds(articleIds);
+  
+          const articleQuantities = fetchedDetalles.map(detalle => detalle.cantidad);
+          setArticleQuantities(articleQuantities);
+  
+          const articleQuantitiesReembolsadas = fetchedDetalles.map(detalle => detalle.cantidadReembolsadaTotal);
+          setarticleQuantitiesReembolsadas(articleQuantitiesReembolsadas);
+  
+          setVentaId(fetchedSale.id);
+  
+          const reembolsoArticlePromises = (Array.isArray(reembolsoDetallesArray) ? reembolsoDetallesArray : [reembolsoDetallesArray])
+            .map(detalle => handleArticleById(detalle.articuloId));
+          const reembolsoArticles = await Promise.all(reembolsoArticlePromises);
+          setReembolsoArticleDetails(reembolsoArticles.map((article, index) => ({
+            nombre: article.nombre,
+            cantidad: reembolsoDetallesArray[index].cantidadDevuelta
+          })));
         } else {
-          console.error(`Failed to fetch recibo for ID: ${idRecibo}`);
+          console.error(`Failed to fetch sale for ID: ${fetchedRecibo[0].id_venta}`);
         }
-      } catch (error) {
-        console.error("Error fetching details:", error);
+      } else {
+        console.error(`Failed to fetch recibo for ID: ${idRecibo}`);
       }
-    };
-
+    } catch (error) {
+      console.error("Error fetching details:", error);
+    }
+  };
+  
+  useEffect(() => {
     if (idRecibo) {
       fetchDetails();
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idRecibo, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleByVentaId, handleDetalleReembolsoByReciboId, setArticleNames, setArticleQuantities, setVentaId]); // Added setArticleQuantities
-
+  }, [idRecibo, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleByVentaId, handleDetalleReembolsoByReciboId, setArticleNames, setArticleQuantities, setVentaId, setArticleIds, setarticleQuantitiesReembolsadas]);
   if (!reciboDetails || !saleDetails) {
     return (
       <View style={styles.container}>
@@ -117,7 +115,7 @@ const ReceiptDetail = ({ route }) => {
     const formattedDate = `${padLeft(fecha.getUTCDate())}-${padLeft(fecha.getUTCMonth() + 1)}-${fecha.getUTCFullYear()} ${padLeft(fecha.getUTCHours())}:${padLeft(fecha.getUTCMinutes())}:${padLeft(fecha.getUTCSeconds())}`;
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Detalles de Venta</Text>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Referencia:</Text>
@@ -191,8 +189,8 @@ const ReceiptDetail = ({ route }) => {
               <Text>X{detalleDetails[index]?.cantidad}</Text>
             </View>
           ))}
-          <TouchableOpacity onPress={() => navigation.navigate("Rembolsar")} style={styles.buttonContainer}>
-            <Text style={styles.buttonText}>Continuar</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Reembolsar")} style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>Reembolsar</Text>
           </TouchableOpacity>
         </>
       ) : (
@@ -227,7 +225,7 @@ const ReceiptDetail = ({ route }) => {
           ))}
         </>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -246,22 +244,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 5,
+    marginBottom: 10, 
   },
   label: {
-    fontWeight: "bold",
+    fontWeight: "500",
     marginRight: 5,
+    color: "#333",
   },
   buttonContainer: {
     marginTop: 25,
-    overflow: "hidden",
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#0258FE',
     backgroundColor: '#0258FE',
-    width: 237,
-    height: 50,
-    marginLeft: 55,
+    width: '50%',
+    alignSelf: 'center', 
     padding: 10,
   },
   buttonText: {

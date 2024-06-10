@@ -36,7 +36,7 @@ const SaleProvider = ({ children }) => {
       const res = await createSale({ detalles, tipoPago, impuestoId, descuentoId, clienteId, dineroRecibido }, usuarioId);
       if (res.status === 200 || res.status === 201) {
         await fetchSales();
-        await fetchRecibos(); // Llamar a fetchRecibos después de crear el recibo
+        await fetchRecibos();
         return res.data;
       } else {
         console.error("Failed to create sale:", res.status);

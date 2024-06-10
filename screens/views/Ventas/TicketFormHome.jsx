@@ -2,33 +2,48 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../../hooks/useArticle";
-import useDiscount from '../../hooks/useDiscount';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import useClient from '../../hooks/useClient';
-import useImpuesto from "../../hooks/useImpuesto";
+import { useTotal } from '../../Global State/TotalContext';
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
   const { listArticle } = useArticle();
-  const [selectedValue, setSelectedValue] = useState('default');
   const [quantity, setQuantity] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState();
   const navigation = useNavigation();
   const [selectedProductIds, setSelectedProductIds] = useState([]);
-  useEffect(() => {
-    const clearAsyncStorage = async () => {
-      try {
-        await AsyncStorage.removeItem('selectedItems');
+
+  const fetchDataFromAsyncStorage = async () => {
+    try {
+      const storedItems = await AsyncStorage.getItem('selectedItems');
+      console.log("storedItems:", storedItems); 
+      if (storedItems !== null) {
+        setSelectedItems(JSON.parse(storedItems));
+        console.log('Elementos recuperados del AsyncStorage:', JSON.parse(storedItems));
+      } else {
         setSelectedItems([]);
-        console.log('Datos de AsyncStorage eliminados al iniciar sesión');
-      } catch (error) {
-        console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
       }
-    };
-    clearAsyncStorage();
-  }, []);
+    } catch (error) {
+      console.error('Error fetching data from AsyncStorage:', error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchDataFromAsyncStorage();
+    }, [])
+  );
+
+  useEffect(() => {
+    let total = 0;
+    selectedItems.forEach(item => {
+      total += item.precio * item.quantity;
+    });
+    setTotalAmount(total);
+  }, [selectedItems]);
+
   useEffect(() => {
     calculateSelectedProductIds();
   }, [selectedItems]);
@@ -40,64 +55,30 @@ const TicketFormHome = () => {
 
   const cartCount = selectedProductIds.length;
 
-  useEffect(() => {
-    const fetchDataFromAsyncStorage = async () => {
-      try {
-        const storedItems = await AsyncStorage.getItem('selectedItems');
-
-
-        if (storedItems !== null) {
-          setSelectedItems(JSON.parse(storedItems));
-        }
-
-      } catch (error) {
-        console.error('Error fetching data from AsyncStorage:', error);
-      }
-    };
-
-    fetchDataFromAsyncStorage();
-  }, []);
-
-  useEffect(() => {
-    let total = 0;
-    selectedItems.forEach(item => {
-      total += item.precio * item.quantity;
-    });
-    setTotalAmount(total);
-  }, [selectedItems]);
-
   const handleSelectItem = async (item) => {
     let updatedItems = [...selectedItems];
     const selectedItemIndex = updatedItems.findIndex((i) => i.id === item.id);
-  
+
     if (selectedItemIndex !== -1) {
-      // Si el artículo ya está seleccionado, lo eliminamos de la lista de selección
       updatedItems.splice(selectedItemIndex, 1);
     } else {
-      // Si el artículo no está seleccionado, lo agregamos a la lista de selección
       updatedItems.push({ ...item, quantity });
     }
-  
-    // Actualizamos el estado de los artículos seleccionados
+
     setSelectedItems(updatedItems);
-  
+
     try {
-      // Guardamos la lista de artículos seleccionados en AsyncStorage para persistencia de datos
       if (updatedItems.length > 0) {
         await AsyncStorage.setItem('selectedItems', JSON.stringify(updatedItems));
         console.log('Lista de artículos seleccionados guardada en AsyncStorage:', updatedItems);
       } else {
         await AsyncStorage.removeItem('selectedItems');
         console.log('Lista de artículos seleccionados eliminada de AsyncStorage');
+        setSelectedItems([]);
       }
     } catch (error) {
       console.error('Error al guardar/eliminar la lista de artículos seleccionados en AsyncStorage:', error);
     }
-  };
-  
-
-  const showListArticles = () => {
-    navigation.navigate('ListarTicket');
   };
 
   const handleAddQuantity = async (item) => {
@@ -143,18 +124,16 @@ const TicketFormHome = () => {
     }
   };
 
-  const RemoveItem = async () => {
-    await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-  }
   const handleSaveChanges = async () => {
     try {
-      await RemoveItem();
+      await AsyncStorage.setItem('selectedItems', JSON.stringify(selectedItems));
       console.log('Cambios guardados exitosamente');
-      showListArticles();
+      navigation.navigate('Ticket');
     } catch (error) {
       console.error('Error al guardar cambios:', error);
     }
   };
+
   const renderItem = ({ item }) => {
     const selectedItem = selectedItems.find(selectedItem => selectedItem.id === item.id);
     const quantity = selectedItem ? selectedItem.quantity : 0;
@@ -226,9 +205,16 @@ const TicketFormHome = () => {
         </TouchableOpacity>
         <View style={styles.Sections}/>
       </View>
-      <View style={styles.divider}/>
-      {/* List Items */}
-      {selectedValue === 'default' && (
+      <View style={styles.divider} />
+      {listArticle.length === 0 ? (
+        <View style={styles.noArticlesContainer}>
+          <Text style={styles.noArticlesText}>No hay artículos disponibles</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Crear Articulo')}>
+          <Text style={styles.createArticleButton}>Crea tu artículo</Text>
+          </TouchableOpacity>
+        </View>
+        
+      ) : (
         <View style={styles.itemList}>
           <FlatList
             data={listArticle}
@@ -373,7 +359,24 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 3,
-  }
+  },
+  noArticlesContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noArticlesText: {
+    fontSize: 18,
+    color: '#777',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  createArticleButton: {
+    color: '#517EF2',
+    fontWeight: 'bold',
+    fontSize: 18,
+    justify: 'center',
+  },
 });
 
-export default TicketFormHome
+export default TicketFormHome;

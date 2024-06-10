@@ -257,15 +257,15 @@ export default function ArticlesEdit() {
       </View>
       <View style={styles.pickeContainer}>
       <Picker
-    selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : (listCategoria.length > 0 ? listCategoria[0].id.toString() : '')}
-    onValueChange={(value) => handleCategoryChange(value)}
-    style={styles.picker}
-  >
-    <Picker.Item label="Sin categoría" value="" />
-    {listCategoria.map((item) => (
-      <Picker.Item key={item.id} label={item.nombre} value={item.id.toString()} />
-    ))}
-  </Picker>
+          selectedValue={editedData.id_categoria ? editedData.id_categoria.toString() : ""}
+          onValueChange={(value) => handleCategoryChange(value)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Sin categoría" value="" />
+          {listCategoria.map((item) => (
+            <Picker.Item key={item.id} label={item.nombre} value={item.id.toString()} />
+          ))}
+        </Picker>
       </View>
       {/* Opcion vendido*/}
       <View>
@@ -306,6 +306,7 @@ export default function ArticlesEdit() {
         placeholder="10000"
         placeholderTextColor="black"
         value={editedData.ref}
+        editable={false}
         onChangeText={(text) => handleChange("ref", text)}
       />
       {/* Input representacion*/}

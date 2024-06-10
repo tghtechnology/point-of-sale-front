@@ -7,8 +7,6 @@ const CategoryProvider = ({ children }) => {
   const { isAuth } = useContext(AuthContext);
   const [listCategoria, setListCategoria] = useState([]);
 
-  useEffect(() => {
-    if (isAuth) {
       const getCategories = async () => {
         try {
           const { data, status } = await listCategories();
@@ -21,9 +19,12 @@ const CategoryProvider = ({ children }) => {
           console.error("Error al cargar categorías:", error);
         }
       };
-      getCategories();
-    }
-  }, [isAuth]);
+      useEffect(() => {
+        if (isAuth) {
+          getCategories();
+        }
+      }, [isAuth]);
+
 
   const handleCreateCategory = async (newCategory) => {
     const { nombre, color } = newCategory;
@@ -83,7 +84,7 @@ const CategoryProvider = ({ children }) => {
 
   
   return (
-    <CategoryContext.Provider value={{ handleCreateCategory, listCategoria, setListCategoria, handleEditCategories, handleDeleteCategory }}>
+    <CategoryContext.Provider value={{ handleCreateCategory, listCategoria, setListCategoria, handleEditCategories, handleDeleteCategory, getCategories }}>
       {children}
     </CategoryContext.Provider>
   );

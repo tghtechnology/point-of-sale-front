@@ -21,9 +21,9 @@ const INITIAL_STATE = {
 const TicketSaleForm = () => {
     const { params } = useRoute();
     const { selectedClient, selectedDiscount, selectedImport } = params || {};
-    const [receivedAmount, setReceivedAmount] = useState('');
-    const [change, setChange] = useState('');
     const { total } = useTotal();
+    const [receivedAmount, setReceivedAmount] = useState(total.toString());
+    const [change, setChange] = useState('0.00');
     const [data, setData] = useState(INITIAL_STATE);
     const [selectedPayment, setSelectedPayment] = useState(null);
     const navigation = useNavigation();
@@ -67,9 +67,18 @@ const TicketSaleForm = () => {
     }, [selectedClient, selectedDiscount, selectedImport]);
 
     const handleChangeReceivedAmount = (amount) => {
-        setReceivedAmount(amount);
-        const calculatedChange = parseFloat(amount) - parseFloat(total);
-        setChange(calculatedChange.toFixed(2));
+        if (amount === "") {
+            setReceivedAmount("");
+            setChange("0.00");
+        } else {
+            const received = parseFloat(amount);
+            if (!isNaN(received) && received >= 0) {
+                setReceivedAmount(amount);
+                const calculatedChange = received - parseFloat(total);
+                const changeAmount = calculatedChange >= 0 ? calculatedChange.toFixed(2) : "0.00";
+                setChange(changeAmount);
+            }
+        }
     };
 
     const handlePaymentSelection = (paymentType) => {
@@ -79,9 +88,9 @@ const TicketSaleForm = () => {
         try {
             const data = {
                 detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
-                impuestoId: selectedTaxes ? selectedTaxes.id : null,
-                descuentoId: selectedDiscounts.length > 0 ? selectedDiscounts[0].id : null,
-                clienteId: selectedClients ? selectedClients.id : null,
+                clienteId: selectedClient ? selectedClient.id : null,
+                descuentoId: selectedDiscount ? selectedDiscount.id : null,
+                impuestoId: selectedImport ? selectedImport.id : null,
                 tipoPago: selectedPayment,
                 dineroRecibido: parseFloat(receivedAmount),
             };
@@ -90,6 +99,7 @@ const TicketSaleForm = () => {
             if (success) {
                 setShowAlert(true);
                 console.log('Sale data:', data);
+                await clearAsyncStorage();
             } else {
                 setErrorAlertVisible(true);
                 throw new Error("La respuesta del servidor no contiene un impuesto válido.");
@@ -99,34 +109,38 @@ const TicketSaleForm = () => {
         }
     };
 
-    const handleAlertClose = () => {
+    const handleAlertClose = async () => {
+         // Limpiar AsyncStorage primero
         setShowAlert(false);
-        clearAsyncStorage();
-        navigation.navigate('Home');
+        navigation.navigate("Home"); // Luego navegar a 'Home'
     };
-
-    useEffect(() => {
-        clearAsyncStorage();
-    }, []);
-
+    
     const clearAsyncStorage = async () => {
         try {
+            setSelectedItems([]);
+            setSelectedDiscounts([]);
+            setSelectedClients(null);
+            setSelectedTaxes(null);
             await AsyncStorage.removeItem('selectedItems');
             await AsyncStorage.removeItem('selectedDiscounts');
             await AsyncStorage.removeItem('selectedClients');
             await AsyncStorage.removeItem('selectedTaxes');
-            console.log('Datos de AsyncStorage eliminados al iniciar sesión');
+            console.log('Datos de AsyncStorage eliminados');
         } catch (error) {
-            console.error('Error al eliminar datos de AsyncStorage al iniciar sesión:', error);
+            console.error('Error al eliminar datos de AsyncStorage:', error);
         }
     };
+    useEffect(() => {
+        // Llamar a la función para borrar AsyncStorage al cargar la primera interfaz
+        clearAsyncStorage();
+    }, []);
 
     return (
         <View style={styles.container}>
             <View style={styles.inputContainer}>
+                <Text style={styles.label}>Dinero Recibido:</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Monto a ingresar"
                     value={receivedAmount}
                     onChangeText={handleChangeReceivedAmount}
                     keyboardType="numeric"
@@ -134,13 +148,14 @@ const TicketSaleForm = () => {
             </View>
 
             <View style={styles.inputContainer}>
+                <Text style={styles.label}>Cambio:</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Cambio."
                     value={change}
                     editable={false}
                 />
             </View>
+
 
             <PaymentSelection selectedPayment={selectedPayment} onSelectPayment={handlePaymentSelection} />
 
@@ -180,7 +195,7 @@ const styles = StyleSheet.create({
         padding: 15,
         alignItems: 'center',
         borderRadius: 0,
-        marginTop: 200,
+        marginTop: 100,
     },
     buttonText: {
         color: 'white',
@@ -207,6 +222,13 @@ const styles = StyleSheet.create({
     paymentText: {
         fontSize: 16,
     },
+    label: {
+        fontSize: 16,
+        marginBottom: 10,
+        fontWeight: 'bold',
+        color: '#5F615B',
+    },
+    
 });
 
 export default TicketSaleForm;

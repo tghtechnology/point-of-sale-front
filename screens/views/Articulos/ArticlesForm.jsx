@@ -123,6 +123,8 @@ const ArticlesForm = () => {
       console.log("Datos a enviar al servidor:", formData); // Verificar el contenido del FormData
   
       const newArticle = await handleCreateArticle(formData);
+      console.log("ID de categoría seleccionado:", categoriaSelect);
+
   
       if (newArticle && newArticle.id) {
         setShowAlert(true);
