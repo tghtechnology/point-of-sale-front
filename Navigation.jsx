@@ -228,104 +228,25 @@ function MiembrosScreen() {
 
 const DrawerNav =()=> {
   const Drawer = createDrawerNavigator();
-  const { isAuth, user, role } = useContext(AuthContext)
+  const {role } = useContext(AuthContext)
 
-  if (isAuth === true) {
-    if (role === "Empleado") {
-      return (
-        <Drawer.Navigator
-          screenOptions={{headerShown: false}}
-        >
-          <>
-              <Drawer.Screen name="Ventas" component={StackNavigation} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cash-multiple" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Recibos" component={Recibos} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="receipt" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Miembros" component={MiembrosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="account-group" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Soporte" component={SoporteScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="information-outline" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-          </>
-        </Drawer.Navigator>
-        )
-    } else if (role === "Propietario") {
-      return (
-        <Drawer.Navigator
-          screenOptions={{headerShown: false}}
-        >
-          <>
-              <Drawer.Screen name="Ventas" component={StackNavigation} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cash-multiple" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Recibos" component={Recibos} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="receipt" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Articulos" component={ArticulosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cart" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Miembros" component={MiembrosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="account-group" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Soporte" component={SoporteScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="information-outline" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-          </>
-        </Drawer.Navigator>
-        )
-    }
-  } else if (user === null) {
-    return (
-      <Drawer.Navigator 
-       screenOptions={{headerShown:false}}>
-        <>
-        <Drawer.Screen name="Ventas" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cash-multiple" size={25} color="#778899" />), }}/>
-        <Drawer.Screen name="Recibos" component={Recibos}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "receipt" size={25} color="#778899" />), }}/>
-        <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cart" size={25} color="#778899" />), }}/>
-        <Drawer.Screen name="Miembros" component={MiembrosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "account-group" size={25} color="#778899" />), }}/>
-        <Drawer.Screen name="Soporte" component={SoporteScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
-        </>
-      </Drawer.Navigator>
-    )
-  }
-}
-
-
-
-
-/*const DrawerNav =()=> {
-  const Drawer = createDrawerNavigator();
-  const { isAuth, user } = useContext(AuthContext)
-
-  if (isAuth === true) {
-    console.log(isAuth, user)
     return (
       <Drawer.Navigator 
         screenOptions={{headerShown: false}}
-        //initialRouteName={isAuth ? 'Main' : 'Home'}
       >
-          <>
-            {user.role === 'Empleado' ? ( 
-              <>
-                <Drawer.Screen name="Ventas" component={StackNavigation} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cash-multiple" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-                <Drawer.Screen name="Recibos" component={Recibos} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="receipt" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-                <Drawer.Screen name="Miembros" component={MiembrosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="account-group" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-                <Drawer.Screen name="Soporte" component={SoporteScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="information-outline" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              </>
-            ) : ( 
-              <>
-                <Drawer.Screen name="Ventas" component={StackNavigation} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cash-multiple" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-                <Drawer.Screen name="Recibos" component={Recibos} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="receipt" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-                <Drawer.Screen name="Articulos" component={ArticulosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cart" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-                <Drawer.Screen name="Miembros" component={MiembrosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="account-group" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-                <Drawer.Screen name="Soporte" component={SoporteScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="information-outline" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              </>
-            )}
-          </>
+        <>
+          <Drawer.Screen name="Ventas" component={StackNavigation} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cash-multiple" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+          <Drawer.Screen name="Recibos" component={Recibos} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="receipt" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+          {role === "Propietario" && (
+            <Drawer.Screen name="Articulos" component={ArticulosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cart" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+          )}
+          <Drawer.Screen name="Miembros" component={MiembrosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="account-group" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+          <Drawer.Screen name="Soporte" component={SoporteScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="information-outline" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+        </>
       </Drawer.Navigator>
     );
-  } else if(isAuth === false) {
-  return (
-    <Drawer.Navigator 
-      screenOptions={{headerShown: false}}
-      //initialRouteName={isAuth ? 'Main' : 'Home'}
-    >
-            <>
-              <Drawer.Screen name="Ventas" component={StackNavigation} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cash-multiple" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Recibos" component={Recibos} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="receipt" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Articulos" component={ArticulosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cart" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Miembros" component={MiembrosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="account-group" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-              <Drawer.Screen name="Soporte" component={SoporteScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="information-outline" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
-            </>
-    </Drawer.Navigator>
-  );
-}
-};*/
+  }
+
 
 export default function Navigation() {
   return (
