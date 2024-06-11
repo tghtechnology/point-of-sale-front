@@ -10,7 +10,7 @@ import useClient from '../../hooks/useClient';
 import useDiscount from '../../hooks/useDiscount';
 import useImpuesto from '../../hooks/useImpuesto';
 
-const TicketListForm = () => {
+const TicketListForm = (props) => {
     const navigation = useNavigation();
     const { client } = useClient();
     const { discounts } = useDiscount();
@@ -80,7 +80,18 @@ const TicketListForm = () => {
             }
         });
 
-        setTotal(totalWithTaxes);
+        const roundedTotal = roundToTwoDecimals(totalWithTaxes);
+
+        setTotal(roundedTotal);
+    };
+
+    const roundToTwoDecimals = (value) => {
+        const thirdDecimal = Math.floor(value * 1000) % 10;
+        if (thirdDecimal >= 5) {
+            return Math.ceil(value * 100) / 100;
+        } else {
+            return Math.floor(value * 100) / 100;
+        }
     };
 
     const calculateSubtotalWithDiscount = (item) => {
@@ -108,6 +119,16 @@ const TicketListForm = () => {
         const selectedImport = listImpuesto.find(impuesto => impuesto.id === itemValue);
         setSelectedImport(selectedImport);
         setSelectedTaxes([selectedImport]);
+    };
+    const showSaleTicket = () => {
+        console.log("Selected Client:", selectedClient);
+    console.log("Selected Discount:", selectedDiscount);
+    console.log("Selected Import:", selectedImport);
+        navigation.navigate('Finalizar venta',{
+            selectedClient,
+            selectedDiscount,
+            selectedImport
+        });
     };
 
     return (
@@ -166,10 +187,11 @@ const TicketListForm = () => {
                 <RadioButton
                     value="clienteNoExistente"
                     status={clientType === 'clienteNoExistente' ? 'checked' : 'unchecked'}
-                    onPress={() => navigation.navigate("Crear Cliente")}
+                    onPress= {() => props.navigation.navigate("Crear Cliente")}
                 />
                 <Text style={styles.radioText}>Cliente No Existente</Text>
             </View>
+            {/* Picker de selección de cliente */}
             {showClientPicker && clientType === 'clienteExistente' && (
                 <View style={styles.pickerContainer}>
                     <Picker
@@ -208,7 +230,7 @@ const TicketListForm = () => {
                     ))}
                 </Picker>
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Finalizar venta', { selectedClient, selectedDiscount, selectedImport })}>
+            <TouchableOpacity style={styles.button} onPress={showSaleTicket}>
                 <Text style={styles.buttonText}>Continuar</Text>
             </TouchableOpacity>
         </ScrollView>

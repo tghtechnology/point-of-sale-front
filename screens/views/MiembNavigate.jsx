@@ -66,26 +66,6 @@ export default function MiembNavigate() {
       </View>
     );
   }
-
-  /*return (
-    <View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Empleados")}
-        style={styles.container}
-      >
-      <MaterialCommunityIcons name="account-hard-hat" size={24} color="#708090" />
-        <Text style={styles.text}>Empleado</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Cliente")}
-        style={styles.container}
-      >
-        <MaterialCommunityIcons name="account" size={24} color="#708090" />
-        <Text style={styles.text}>Cliente</Text>
-      </TouchableOpacity>
-
-    </View>
-  );*/
 }
 
 const styles = StyleSheet.create({
