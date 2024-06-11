@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useArticle from "../../hooks/useArticle";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTotal } from '../../Global State/TotalContext';
+import AuthContext from "../../context/auth/AuthContext"
 
 const TicketFormHome = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -14,6 +15,7 @@ const TicketFormHome = () => {
   const [totalAmount, setTotalAmount] = useState();
   const navigation = useNavigation();
   const [selectedProductIds, setSelectedProductIds] = useState([]);
+  const {role } = useContext(AuthContext)
 
   const fetchDataFromAsyncStorage = async () => {
     try {
@@ -209,9 +211,11 @@ const TicketFormHome = () => {
       {listArticle.length === 0 ? (
         <View style={styles.noArticlesContainer}>
           <Text style={styles.noArticlesText}>No hay artículos disponibles</Text>
+          {role === "Propietario" && (
           <TouchableOpacity onPress={() => navigation.navigate('Crear Articulo')}>
           <Text style={styles.createArticleButton}>Crea tu artículo</Text>
           </TouchableOpacity>
+          )}
         </View>
         
       ) : (
