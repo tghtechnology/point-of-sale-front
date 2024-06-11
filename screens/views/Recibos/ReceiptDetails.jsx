@@ -9,6 +9,7 @@ import useDiscount from "../../hooks/useDiscount";
 import useArticle from "../../hooks/useArticle";
 import useDetalle from "../../hooks/useDetalle";
 import useDetalleReembolso from "../../hooks/useDetalleReembolso";
+import useUser from '../../hooks/useUser';
 import { useTotal } from "../../Global State/TotalContext";
 
 const ReceiptDetail = ({ route }) => {
@@ -22,10 +23,12 @@ const ReceiptDetail = ({ route }) => {
   const { handleClientById } = useClient();
   const { handleArticleById } = useArticle();
   const { handleDetalleByVentaId } = useDetalle();
+  const {handleGetUserById}=useUser();
   const { setArticleNames, setArticleQuantities, setVentaId,setArticleIds, setarticleQuantitiesReembolsadas } = useTotal(); // Added setArticleQuantities
   const [reciboDetails, setReciboDetails] = useState(null);
   const [saleDetails, setSaleDetails] = useState(null);
   const [clienteDetails, setClienteDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
   const [discountDetails, setDiscountDetails] = useState(null);
   const [taxDetails, setTaxDetails] = useState(null);
   const [articleDetails, setArticleDetails] = useState([]);
@@ -40,14 +43,9 @@ const ReceiptDetail = ({ route }) => {
         if (fetchedSale) {
           const fetchedDetalles = await handleDetalleByVentaId(fetchedSale.id);
   
-          const [
-            fetchedCliente,
-            fetchedDiscount,
-            fetchedTax,
-            articles,
-            reembolsoDetallesArray
-          ] = await Promise.all([
+          const [fetchedCliente,fetchedUser,fetchedDiscount,fetchedTax,articles,reembolsoDetallesArray] = await Promise.all([
             fetchedSale.clienteId ? handleClientById(fetchedSale.clienteId) : null,
+            fetchedSale.usuarioId ? handleGetUserById(fetchedSale.usuarioId) : null,
             fetchedSale.descuentoId ? handleDiscountById(fetchedSale.descuentoId) : null,
             fetchedSale.impuestoId ? handleTaxById(fetchedSale.impuestoId) : null,
             fetchedDetalles ? Promise.all(fetchedDetalles.map(detalle => handleArticleById(detalle.articuloId))) : [],
@@ -57,6 +55,7 @@ const ReceiptDetail = ({ route }) => {
           setReciboDetails(fetchedRecibo[0]);
           setSaleDetails(fetchedSale);
           setClienteDetails(fetchedCliente);
+          setUserDetails(fetchedUser);
           setDiscountDetails(fetchedDiscount);
           setTaxDetails(fetchedTax);
           setDetalleDetails(fetchedDetalles);
@@ -100,7 +99,7 @@ const ReceiptDetail = ({ route }) => {
     } else {
       console.error("ID de la venta está indefinido");
     }
-  }, [idRecibo, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleByVentaId, handleDetalleReembolsoByReciboId, setArticleNames, setArticleQuantities, setVentaId, setArticleIds, setarticleQuantitiesReembolsadas]);
+  }, [idRecibo, handleReciboById, handleSaleById, handleClientById, handleDiscountById, handleTaxById, handleArticleById, handleDetalleByVentaId, handleDetalleReembolsoByReciboId, setArticleNames, setArticleQuantities, setVentaId, setArticleIds, setarticleQuantitiesReembolsadas, handleGetUserById]);
   if (!reciboDetails || !saleDetails) {
     return (
       <View style={styles.container}>
@@ -121,6 +120,18 @@ const ReceiptDetail = ({ route }) => {
         <Text style={styles.label}>Referencia:</Text>
         <Text>{reciboDetails.ref}</Text>
       </View>
+      {clienteDetails && clienteDetails.nombre && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Nombre del Cliente:</Text>
+              <Text>{clienteDetails.nombre}</Text>
+            </View>
+          )}
+          {userDetails && userDetails.nombre && (
+            <View style={styles.detailsContainer}>
+              <Text style={styles.label}>Nombre del Vendedor:</Text>
+              <Text>{userDetails.nombre}</Text>
+            </View>
+          )}
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Fecha:</Text>
         <Text>{formattedDate}</Text>
@@ -131,25 +142,6 @@ const ReceiptDetail = ({ route }) => {
       </View>
       {reciboDetails.monto_reembolsado === null ? (
         <>
-          {/* Detalles de Venta */}
-          {clienteDetails && clienteDetails.nombre && (
-            <View style={styles.detailsContainer}>
-              <Text style={styles.label}>Nombre del Cliente:</Text>
-              <Text>{clienteDetails.nombre}</Text>
-            </View>
-          )}
-          {reciboDetails.valorDescuentoTotal !== null && (
-            <View style={styles.detailsContainer}>
-              <Text style={styles.label}>Valor Descuento Total:</Text>
-              <Text>S/. -{reciboDetails.valorDescuentoTotal}</Text>
-            </View>
-          )}
-          {reciboDetails.valorImpuestoTotal !== null && (
-            <View style={styles.detailsContainer}>
-              <Text style={styles.label}>Valor Impuesto Total:</Text>
-              <Text>S/. {reciboDetails.valorImpuestoTotal}</Text>
-            </View>
-          )}
           {discountDetails && discountDetails.valor && (
             <View style={styles.detailsContainer}>
               <Text style={styles.label}>Descuento:</Text>
