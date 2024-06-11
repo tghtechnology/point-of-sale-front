@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useContext, useReducer } from 'react'
+import React, { useContext } from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {NavigationContainer, useNavigation, DrawerActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -188,6 +188,7 @@ function Recibos(){
 
 function MiembrosScreen() {
   const Stack = createNativeStackNavigator();
+  
   const navigation = useNavigation();
   return (
     <Stack.Navigator
@@ -211,6 +212,7 @@ function MiembrosScreen() {
           );
         },
       }}></Stack.Screen>
+
       <Stack.Screen name="Empleados" component={PlusWorkers}></Stack.Screen>
       <Stack.Screen name="Editar empleado" component={EditWorker}></Stack.Screen>
       <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Crear Empleado"}}
@@ -218,6 +220,7 @@ function MiembrosScreen() {
       <Stack.Screen name="Cliente" component={PlusClients}></Stack.Screen>
       <Stack.Screen name="Crear Cliente" component={ClientForm}></Stack.Screen>
       <Stack.Screen name="Editar Cliente" component={ClientEdit}></Stack.Screen>
+
     </Stack.Navigator>
   );
 };
@@ -226,8 +229,6 @@ function MiembrosScreen() {
 const DrawerNav =()=> {
   const Drawer = createDrawerNavigator();
   const { isAuth, user, role } = useContext(AuthContext)
-
-  console.log(isAuth, user, role)
 
   if (isAuth === true) {
     if (role === "Empleado") {
