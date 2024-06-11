@@ -4,32 +4,34 @@ import {createToken,obtenerDatosUsuarioPorId,editarUsuarioPorId,cambiarContrase�
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthProvider = ({children}) => {
-  const [isAuth, setIsAuth] = useState(false);
-  const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null);
+    const [isAuth, setIsAuth] = useState(false);
+    const [user, setUser] = useState(null);
+    const [role, setRole] = useState(null);
+  
 
-
-  const loginAccess = async (email, password) => {
-    try {
-      const { status, data } = await createToken(email, password);
-      if (status === 200) {
-        const { usuario_id, token } = data;
-        await AsyncStorage.setItem("token", token);
-        await AsyncStorage.setItem("usuarioid", usuario_id.toString());
-        setIsAuth(true);
-        const userData = await obtenerDatosUsuarioPorId(usuario_id);
-        setUser(userData);
-        setRole(userData.rol);
-        return status, data;
-      } else {
+    const loginAccess = async (email, password) => {
+      try {
+        const { status, data } = await createToken(email, password);
+        if (status === 200) {
+          const { usuario_id, token } = data;
+          await AsyncStorage.setItem("token", token);
+          await AsyncStorage.setItem("usuarioid", usuario_id.toString());
+          setIsAuth(true);
+          const userData = await obtenerDatosUsuarioPorId(usuario_id);
+          setUser(userData);
+          setRole(userData.rol);
+          console.log(userData);
+          console.log(userData.rol);
+          return status, data;
+        } else {
+          setIsAuth(false);
+          return false;
+        }
+      } catch (error) {
+        console.error("Error al iniciar sesión:", error);
         setIsAuth(false);
         return false;
       }
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      setIsAuth(false);
-      return false;
-    }
   };
     
     
