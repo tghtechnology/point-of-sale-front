@@ -1,6 +1,11 @@
 import apiClient from "../apiss/AxiosConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+/**
+ * Obtiene el token almacenado en AsyncStorage.
+ *
+ * @returns {Promise<string|null>} - Una promesa que resuelve con el token si existe, o null si no se encuentra.
+ * @throws {Error} - Si ocurre un error al obtener el token.
+ */
 const getToken = async () => {
     try {
         const token = await AsyncStorage.getItem('token');
@@ -10,6 +15,13 @@ const getToken = async () => {
         throw new Error('Error al obtener el token');
     }
 };
+/**
+ * Crea un nuevo descuento.
+ *
+ * @param {Object} newDiscount - Los datos del nuevo descuento.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Si ocurre un error al crear el descuento.
+ */
 const createDiscount = async (newDiscount) => {
     try {
         const token = await getToken();
@@ -26,7 +38,12 @@ const createDiscount = async (newDiscount) => {
         console.log(error);
     }
 }
-
+/**
+ * Obtiene todos los descuentos.
+ *
+ * @returns {Promise<Object[]>} - Una promesa que resuelve con un array de datos de los descuentos.
+ * @throws {Error} - Si ocurre un error al obtener los descuentos.
+ */
 const getDiscounts = async () => {
     try {
         const token = await getToken();
@@ -35,13 +52,19 @@ const getDiscounts = async () => {
                     Authorization: `Bearer ${token}` 
                 }
             });
-        return response.data; // Devuelve los datos de los descuentos
+        return response.data; 
     } catch (error) {
         console.log(error);
-        return []; // En caso de error, devuelve un array vacío
+        return []; 
     }
 };
-
+/**
+ * Obtiene un descuento por su ID.
+ *
+ * @param {string} id - El ID del descuento.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Si ocurre un error al obtener el descuento.
+ */
 const getDiscountById=async(id)=>{
     try {
         const token = await getToken();
@@ -59,7 +82,12 @@ const getDiscountById=async(id)=>{
         throw error;
     }
 }
-
+/**
+ * Obtiene todos los descuentos eliminados.
+ *
+ * @returns {Promise<Object[]>} - Una promesa que resuelve con un array de datos de los descuentos eliminados.
+ * @throws {Error} - Si ocurre un error al obtener los descuentos eliminados.
+ */
 const getCeroDiscounts = async () => {
     try {
         const token = await getToken();
@@ -68,13 +96,21 @@ const getCeroDiscounts = async () => {
                     Authorization: `Bearer ${token}` 
                 }
             });
-        return response.data; // Devuelve los datos de los descuentos
+        return response.data; 
     } catch (error) {
         console.log(error);
-        return []; // En caso de error, devuelve un array vacío
+        return []; 
     }
 };
 
+/**
+ * Actualiza el estado de un descuento.
+ *
+ * @param {string} id - El ID del descuento.
+ * @param {boolean} newStatus - El nuevo estado del descuento.
+ * @returns {Promise<Object>} - Una promesa que resuelve con un objeto que indica éxito o los datos de la respuesta.
+ * @throws {Error} - Si ocurre un error al actualizar el estado del descuento.
+ */
 const updateDiscountStatus = async (id, newStatus) => {
     try {
         const token = await getToken();
@@ -85,7 +121,6 @@ const updateDiscountStatus = async (id, newStatus) => {
             });
         console.log('Response from updateDiscountStatus:', response);
         if (response.status === 204) {
-            // Si la respuesta es 204, devolver un objeto vacío para indicar éxito
             return { success: true };
         } else {
             return response.data;
@@ -95,6 +130,14 @@ const updateDiscountStatus = async (id, newStatus) => {
         throw new Error('Error al actualizar el estado del descuento');
     }
 }
+/**
+ * Edita un descuento.
+ *
+ * @param {string} id - El ID del descuento.
+ * @param {Object} updatedData - Los datos actualizados del descuento.
+ * @returns {Promise<Object>} - Una promesa que resuelve con los datos actualizados del descuento.
+ * @throws {Error} - Si ocurre un error al editar el descuento.
+ */
 
 const editDiscount = async (id, updatedData) => {
     console.log(id)
@@ -106,7 +149,6 @@ const editDiscount = async (id, updatedData) => {
             }
         });
       if (response.status === 200) {
-        // Si la respuesta es 200, devuelve los datos actualizados del descuento
         return response.data;
       }
     } catch (error) {
@@ -114,7 +156,14 @@ const editDiscount = async (id, updatedData) => {
       throw new Error('Error al editar el descuento');
     }
   };
-
+  /**
+ * Actualiza un descuento.
+ *
+ * @param {string} id - El ID del descuento.
+ * @param {Object} newData - Los nuevos datos del descuento.
+ * @returns {Promise<Object>} - Una promesa que resuelve con los datos actualizados del descuento.
+ * @throws {Error} - Si ocurre un error al actualizar el descuento.
+ */
   const updateDiscount = async (id, newData) => {
     try {
         const token = await getToken();

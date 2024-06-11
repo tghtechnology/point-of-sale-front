@@ -31,7 +31,7 @@ const createClient = async (newClient) => {
         const token = await getToken();
         const {data, status} = await apiClient.post(`/cliente`, newClient, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {
@@ -48,13 +48,13 @@ const getClients = async () => {
         const token = await getToken();
         const response = await apiClient.get(`/cliente`, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
-        return response.data// Devuelve los datos de los descuentos
+        return response.data
     } catch (error) {
         console.log(error);
-        return []; // En caso de error, devuelve un array vacío
+        return []; 
     }
 }; 
 
@@ -63,7 +63,7 @@ const editClient = async (id, updatedData) => {
         const token = await getToken();
         const {data,status} = await apiClient.put(`/cliente/${id}`, updatedData, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {
@@ -81,7 +81,7 @@ const deleteClient = async(id) => {
         const token = await getToken();
         const{data, status} = await apiClient.delete(`/cliente/${id}`, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}`
             }
         });
         return {
@@ -98,7 +98,7 @@ const updateClient = async (id, newData) => {
         const token = await getToken();
         const {data,status} = await apiClient.put(`/cliente/${id}`, newData, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {
@@ -114,7 +114,7 @@ const getClientById=async(id)=>{
         const token = await getToken();
         const{data, status} = await apiClient.get(`/cliente/${id}`, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {
