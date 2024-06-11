@@ -22,7 +22,7 @@ const TicketSaleForm = () => {
     const { params } = useRoute();
     const { selectedClient, selectedDiscount, selectedImport } = params || {};
     const { total } = useTotal();
-    const [receivedAmount, setReceivedAmount] = useState(total.toString());
+    const [receivedAmount, setReceivedAmount] = useState(total.toFixed(2));
     const [change, setChange] = useState('0.00');
     const [data, setData] = useState(INITIAL_STATE);
     const [selectedPayment, setSelectedPayment] = useState(null);
@@ -88,7 +88,7 @@ const TicketSaleForm = () => {
         try {
             const data = {
                 detalles: selectedItems.map(item => ({ cantidad: item.quantity, articuloId: item.id })),
-                clienteId: selectedClient ? selectedClient.id : null,
+                clienteId: selectedClient ? selectedClient : null,
                 descuentoId: selectedDiscount ? selectedDiscount.id : null,
                 impuestoId: selectedImport ? selectedImport.id : null,
                 tipoPago: selectedPayment,
@@ -98,7 +98,6 @@ const TicketSaleForm = () => {
             const success = await handleCreateSale(data);
             if (success) {
                 setShowAlert(true);
-                console.log('Sale data:', data);
                 await clearAsyncStorage();
             } else {
                 setErrorAlertVisible(true);
@@ -107,7 +106,7 @@ const TicketSaleForm = () => {
         } catch (error) {
             setErrorAlertVisible(true);
         }
-    };
+    };    
 
     const handleAlertClose = async () => {
          // Limpiar AsyncStorage primero
