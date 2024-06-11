@@ -96,6 +96,7 @@ const AuthProvider = ({children}) => {
     <AuthContext.Provider value={{
         isAuth,
         user,
+        role,
         setUser,
         editarUsuario,
         loginAccess,

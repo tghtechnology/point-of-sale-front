@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react'
+import React, { useContext } from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {NavigationContainer, useNavigation, DrawerActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -40,6 +40,7 @@ import DataUser from './screens/views/Usuario/DataUser';
 import ResetPassword from './screens/views/Usuario/ResetPassword';
 import Rembolsar from './screens/views/Recibos/Rembolsar'
 import ReceiptDetails from './screens/views/Recibos/ReceiptDetails';
+import AuthContext from "./screens/context/auth/AuthContext"
 
 function StackNavigation() {
   const Stack = createNativeStackNavigator();
@@ -187,6 +188,7 @@ function Recibos(){
 
 function MiembrosScreen() {
   const Stack = createNativeStackNavigator();
+  
   const navigation = useNavigation();
   return (
     <Stack.Navigator
@@ -210,6 +212,7 @@ function MiembrosScreen() {
           );
         },
       }}></Stack.Screen>
+
       <Stack.Screen name="Empleados" component={PlusWorkers}></Stack.Screen>
       <Stack.Screen name="Editar empleado" component={EditWorker}></Stack.Screen>
       <Stack.Screen name="Registrar Empleado" component={FormRegisEmpleado} options={{ title: "Crear Empleado"}}
@@ -217,27 +220,33 @@ function MiembrosScreen() {
       <Stack.Screen name="Cliente" component={PlusClients}></Stack.Screen>
       <Stack.Screen name="Crear Cliente" component={ClientForm}></Stack.Screen>
       <Stack.Screen name="Editar Cliente" component={ClientEdit}></Stack.Screen>
+
     </Stack.Navigator>
   );
 };
 
 
-
-
 const DrawerNav =()=> {
   const Drawer = createDrawerNavigator();
-  return (
-    <Drawer.Navigator 
-     screenOptions={{headerShown:false}}>
-      <Drawer.Screen name="Ventas" component={StackNavigation} options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cash-multiple" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Recibos" component={Recibos}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "receipt" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Articulos" component={ArticulosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "cart" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Miembros" component={MiembrosScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "account-group" size={25} color="#778899" />), }}/>
-      <Drawer.Screen name="Soporte" component={SoporteScreen}  options={{drawerIcon: ({focused, size}) => (<MaterialCommunityIcons name= "information-outline" size={25} color="#778899" />), }}/>
-      
-    </Drawer.Navigator>
-  );
-};
+  const {role } = useContext(AuthContext)
+
+    return (
+      <Drawer.Navigator 
+        screenOptions={{headerShown: false}}
+      >
+        <>
+          <Drawer.Screen name="Ventas" component={StackNavigation} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cash-multiple" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+          <Drawer.Screen name="Recibos" component={Recibos} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="receipt" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+          {role === "Propietario" && (
+            <Drawer.Screen name="Articulos" component={ArticulosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="cart" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+          )}
+          <Drawer.Screen name="Miembros" component={MiembrosScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="account-group" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+          <Drawer.Screen name="Soporte" component={SoporteScreen} options={{ drawerIcon: ({ focused, size }) => (<MaterialCommunityIcons name="information-outline" size={size} color={focused ? '#0258FE' : '#778899'} />) }} />
+        </>
+      </Drawer.Navigator>
+    );
+  }
+
 
 export default function Navigation() {
   return (
