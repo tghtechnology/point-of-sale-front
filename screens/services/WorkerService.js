@@ -1,14 +1,11 @@
 import apiClient from "../apiss/AxiosConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const saveToken = async (token) => {
-  try {
-    await AsyncStorage.setItem('token', token);
-    console.log('Token guardado correctamente:', token);
-  } catch (error) {
-    console.error('Error al guardar el token:', error);
-  }
-};
+/**
+ * Obtiene el token de autenticación de AsyncStorage.
+ *
+ * @returns {Promise<string|null>} - Una promesa que resuelve con el token de autenticación o null si no se encuentra.
+ * @throws {Error} - Error al obtener el token.
+ */
 
 const getToken = async () => {
   try {
@@ -25,7 +22,14 @@ const getToken = async () => {
     return null;
   }
 };
-
+/**
+ * Crea un nuevo empleado.
+ *
+ * @param {Object} newWorker - Los datos del nuevo empleado.
+ * @param {number} propietarioId - El ID del propietario del empleado.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al crear el empleado.
+ */
 const createWorker = async (newWorker, propietarioId) => {
     try {
         const token = await getToken();
@@ -34,7 +38,7 @@ const createWorker = async (newWorker, propietarioId) => {
         console.log(UserIdInt)
         const { data, status } = await apiClient.post(`/empleado`, {...newWorker, propietarioId: UserIdInt}, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {
@@ -46,23 +50,35 @@ const createWorker = async (newWorker, propietarioId) => {
         throw new Error('Error al crear el empleado');
     }
 };
-
+/**
+ * Obtiene la lista de empleados.
+ *
+ * @returns {Promise<Object[]>} - Una promesa que resuelve con la lista de empleados.
+ * @throws {Error} - Error al obtener la lista de empleados.
+ */
 const getWorkers = async () => {
     try {
       const token = await getToken();
       console.log('tu token es:',token)
       const response = await apiClient.get(`/empleado`, {
         headers: {
-          Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+          Authorization: `Bearer ${token}` 
         }
       });
-      return response.data; // Devuelve los datos de los empleados
+      return response.data; 
     } catch (error) {
       console.error('Error al obtener los empleados:', error);
       throw new Error('Error al obtener los empleados');
     }
   };
-
+/**
+ * Edita un empleado existente.
+ *
+ * @param {number} id - El ID del empleado a editar.
+ * @param {Object} updatedWorker - Los datos actualizados del empleado.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al editar el empleado.
+ */
 const editworker = async (id, updatedWorker) => {
     try {
         const token = await getToken();
@@ -79,7 +95,13 @@ const editworker = async (id, updatedWorker) => {
     throw new Error('Error al editar el empleado');
   }
 };
-
+/**
+ * Elimina un empleado.
+ *
+ * @param {number} id - El ID del empleado a eliminar.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al eliminar el empleado.
+ */
 const deleteworker = async (id) => {
     try {
         const token = await getToken();
@@ -96,6 +118,14 @@ const deleteworker = async (id) => {
       console.log('Error:',error.response.data);
   }
 }
+/**
+ * Actualiza un empleado.
+ *
+ * @param {number} id - El ID del empleado a actualizar.
+ * @param {Object} newData - Los datos actualizados del empleado.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al actualizar el empleado.
+ */
 
 const updatedWorker = async (id, newData) => {
     try {
@@ -113,7 +143,13 @@ const updatedWorker = async (id, newData) => {
         throw new Error(`Error al actualizar el empleado: ${error.message}`);
     }
 };
-
+/**
+ * Obtiene un cliente por su ID.
+ *
+ * @param {number} id - El ID del cliente a obtener.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al obtener el cliente.
+ */
 const getClientById=async(id)=>{
   try {
       const token = await getToken();
