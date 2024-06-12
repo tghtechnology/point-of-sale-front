@@ -66,7 +66,6 @@ export default function MiembNavigate() {
       </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({

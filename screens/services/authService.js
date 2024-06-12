@@ -22,7 +22,7 @@ const createToken = async (email,password)  => {
         return {
             data,
             status
-        }
+        }     
     } catch (error) {
         console.log(error)
     }

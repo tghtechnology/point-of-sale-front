@@ -3,9 +3,31 @@ import {createClient,getClients, editClient, deleteClient, updateClient,getClien
 import ClientContext from "./ClientContext";
 import AuthContext from '../auth/AuthContext';
 
+
+/**
+ * Componente ClientProvider
+ *
+ * Este componente proporciona funcionalidades relacionadas con clientes y gestión del estado
+ * a sus componentes hijos. Utiliza la API de Contexto de React para gestionar clientes y
+ * manejar operaciones CRUD.
+ *
+ * @param {Object} props - El objeto de propiedades.
+ * @param {React.ReactNode} props.children - Los componentes hijos que tendrán acceso al contexto.
+ *
+ * @returns {JSX.Element} El componente ClientProvider.
+ */
+
 const ClientProvider = ({children}) => {
   const { isAuth } = useContext(AuthContext);
   const [client,setClient] = useState([])
+
+
+  /**
+   * Crea un nuevo cliente.
+   * @param {Object} newClient - El nuevo cliente a crear.
+   * @returns {Object|null} El cliente creado o null si la creación falló.
+   * @throws {Error} - Devuelve un error si hay un problema al crear el cliente.
+   */
 
     const handleCreateClient = async (newClient) => {
       try {
@@ -24,6 +46,12 @@ const ClientProvider = ({children}) => {
 
     }
 
+    /**
+   * Obtiene todos los clientes.
+   * @returns {void}
+   * @throws {Error} - Devuelve un error si hay un problema al obtener los clientes.
+   */
+
     const fetchMyClients = async () => {
       try {
           const client = await getClients();
@@ -39,6 +67,14 @@ const ClientProvider = ({children}) => {
       fetchMyClients();
     }
   }, [isAuth]);
+
+  /**
+   * Edita un cliente existente.
+   * @param {number|string} id - El ID del cliente a editar.
+   * @param {Object} updatedData - Los datos actualizados del cliente.
+   * @returns {void}
+   * @throws {Error} - Devuelve un error si hay un problema al editar el cliente.
+   */
 
   const handleEditClient = async (id, updatedData) => {
     console.log(id)
@@ -58,6 +94,14 @@ const ClientProvider = ({children}) => {
     }
   };
 
+
+  /**
+   * Elimina un cliente.
+   * @param {number|string} id - El ID del cliente a eliminar.
+   * @returns {boolean} True si la eliminación fue exitosa, false en caso contrario.
+   * @throws {Error} - Devuelve un error si hay un problema al eliminar el cliente.
+   */
+
   const handleDeleteClient = async (id) => {
         const {status} = await deleteClient(id);
         if (status === 200 || status === 201) {
@@ -66,6 +110,14 @@ const ClientProvider = ({children}) => {
             return false;
         }
   };
+
+  /**
+   * Actualiza un cliente.
+   * @param {number|string} id - El ID del cliente a actualizar.
+   * @param {Object} newData - Los nuevos datos del cliente.
+   * @returns {void}
+   * @throws {Error} - Devuelve un error si hay un problema al actualizar el cliente.
+   */
 
   const handleUpdateClient = async (id, newData) => {
     try {
@@ -81,6 +133,14 @@ const ClientProvider = ({children}) => {
     }
   };
 
+
+  /**
+   * Obtiene un cliente por ID.
+   * @param {number|string} id - El ID del cliente a obtener.
+   * @returns {Object|null} El cliente obtenido o null si la obtención falló.
+   * @throws {Error} - Devuelve un error si hay un problema al obtener el cliente.
+   */
+  
   const handleClientById = async (id) => {
     try {
       const res = await getClientById(id);

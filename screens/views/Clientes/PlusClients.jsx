@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect, useContext} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList,Modal,} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import useClient from '../../hooks/useClient';
 import ClientProvider from '../../context/cliente/ClientProvider';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
 import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
+import AuthContext from "../../context/auth/AuthContext"
 
 const PlusClients = (props) => {
     const navigation = useNavigation();
@@ -16,6 +17,7 @@ const PlusClients = (props) => {
     const [modal, setModal] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
     const [deletedClientId, setDeletedClientId] = useState(null);
+    const {role } = useContext(AuthContext)
     
 
     const handleEdit = () => {
@@ -95,9 +97,11 @@ useEffect(() => {
             <TouchableOpacity style={styles.optionButton} onPress={handleEdit }>
               <Text style={styles.optionButtonText}>Editar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton} onPress={() => handleDelete(selectedClient.id)}>
-              <Text style={styles.optionButtonText}>Eliminar</Text>
-            </TouchableOpacity>
+            {role === "Propietario" && (
+              <TouchableOpacity style={styles.optionButton} onPress={() => handleDelete(selectedClient.id)}>
+                <Text style={styles.optionButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity style={styles.cancelButton} onPress={() => setModal(false)}>
               <Text style={styles.optionButtonText}>Cancelar</Text>
             </TouchableOpacity>

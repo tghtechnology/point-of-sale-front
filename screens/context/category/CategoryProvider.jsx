@@ -3,9 +3,30 @@ import { createCategory, editCategories, listCategories, deleteCategory } from "
 import CategoryContext from "./CategoryContext";
 import AuthContext from '../auth/AuthContext';
 
+
+/**
+ * Componente CategoryProvider
+ *
+ * Este componente proporciona funcionalidades relacionadas con categorías y gestión del estado
+ * a sus componentes hijos. Utiliza la API de Contexto de React para gestionar categorías y
+ * manejar operaciones CRUD.
+ *
+ * @param {Object} props - El objeto de propiedades.
+ * @param {React.ReactNode} props.children - Los componentes hijos que tendrán acceso al contexto.
+ *
+ * @returns {JSX.Element} El componente CategoryProvider.
+ */
+
 const CategoryProvider = ({ children }) => {
   const { isAuth } = useContext(AuthContext);
   const [listCategoria, setListCategoria] = useState([]);
+
+
+  /**
+   * Obtiene todas las categorías.
+   * @returns {void}
+   * @throws {Error} - Devuelve un error si hay un problema al cargar las categorías.
+   */
 
       const getCategories = async () => {
         try {
@@ -26,6 +47,15 @@ const CategoryProvider = ({ children }) => {
       }, [isAuth]);
 
 
+      /**
+   * Crea una nueva categoría.
+   * @param {Object} newCategory - La nueva categoría a crear.
+   * @param {string} newCategory.nombre - El nombre de la categoría.
+   * @param {string} newCategory.color - El color de la categoría.
+   * @returns {Object|null} La categoría creada o null si la creación falló.
+   * @throws {Error} - Devuelve un error si hay un problema al crear la categoría.
+   */
+
   const handleCreateCategory = async (newCategory) => {
     const { nombre, color } = newCategory;
     try {
@@ -41,6 +71,16 @@ const CategoryProvider = ({ children }) => {
       return null;
     }
   };
+
+  /**
+   * Edita una categoría existente.
+   * @param {Object} updateCategorias - Los datos actualizados de la categoría.
+   * @param {number|string} updateCategorias.id - El ID de la categoría a editar.
+   * @param {string} updateCategorias.nombre - El nombre de la categoría.
+   * @param {string} updateCategorias.color - El color de la categoría.
+   * @returns {boolean} True si la edición fue exitosa, false en caso contrario.
+   * @throws {Error} - Devuelve un error si hay un problema al editar la categoría.
+   */
 
   const handleEditCategories = async (updateCategorias) => {
     const { id, nombre, color } = updateCategorias;
@@ -66,6 +106,13 @@ const CategoryProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Elimina una categoría.
+   * @param {number|string} id - El ID de la categoría a eliminar.
+   * @returns {boolean} True si la eliminación fue exitosa, false en caso contrario.
+   * @throws {Error} - Devuelve un error si hay un problema al eliminar la categoría.
+   */
+  
   const handleDeleteCategory = async (id) => {
     try {
       const { status } = await deleteCategory(id);

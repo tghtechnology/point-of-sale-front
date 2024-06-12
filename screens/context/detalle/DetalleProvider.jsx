@@ -3,6 +3,19 @@ import { listDetalle, DetalleByVentaId, getDetalleById } from "../../services/De
 import  DetalleContext  from "./DetalleContext";
 import AuthContext from '../auth/AuthContext';
 
+
+/**
+ * Componente DetalleProvider
+ *
+ * Este componente proporciona funcionalidades relacionadas con los detalles de ventas y gestión del estado
+ * a sus componentes hijos. Utiliza la API de Contexto de React para gestionar los detalles de ventas.
+ *
+ * @param {Object} props - El objeto de propiedades.
+ * @param {React.ReactNode} props.children - Los componentes hijos que tendrán acceso al contexto.
+ *
+ * @returns {JSX.Element} El componente DetalleProvider.
+ */
+
 const DetalleProvider = ({ children }) => {
     const { isAuth } = useContext(AuthContext);
     const [listDetalles, setListDetalles] = useState([]);
@@ -26,6 +39,14 @@ const DetalleProvider = ({ children }) => {
     }
     }, [isAuth]);
 
+
+    /**
+     * Obtiene los detalles de ventas por el ID de la venta.
+     * @param {number|string} ventaId - El ID de la venta.
+     * @returns {Object|null} Los detalles de la venta o null si la obtención falló.
+     * @throws {Error} - Devuelve un error si hay un problema al obtener los detalles de la venta.
+     */
+
     const handleDetalleByVentaId = async (ventaId) => {
         try {
             const res = await DetalleByVentaId(ventaId);
@@ -41,6 +62,13 @@ const DetalleProvider = ({ children }) => {
         }
     };
 
+    /**
+     * Obtiene los detalles de ventas por el ID del detalle.
+     * @param {number|string} id - El ID del detalle.
+     * @returns {Object|null} Los detalles obtenidos o null si la obtención falló.
+     * @throws {Error} - Devuelve un error si hay un problema al obtener los detalles.
+     */
+    
     const handleGetDetalleById = async (id) => {
         try {
             const res = await getDetalleById(id);
