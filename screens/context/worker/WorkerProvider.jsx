@@ -4,9 +4,26 @@ import WorkerContext from './WorkerContext';
 import AuthContext from '../auth/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+/**
+ * Proveedor de contexto para el manejo de trabajadores.
+ *
+ * @param {Object} props - Propiedades del componente.
+ * @param {React.ReactNode} props.children - Componentes hijos que tendrán acceso al contexto.
+ * @returns {JSX.Element} El proveedor de contexto de trabajadores.
+ */
+
 const WorkerProvider = ({ children }) => {
   const { isAuth } = useContext(AuthContext);
     const [worker, setWorker] = useState([])
+
+    /**
+   * Crea un nuevo trabajador.
+   *
+   * @param {Object} newWorker - Datos del nuevo trabajador.
+   * @returns {Object|null} Los datos del trabajador creado o null si hubo un error.
+   * @throws {Error} Si ocurre un error al crear el trabajador.
+   */
 
     const handleCreateWorker = async (newWorker) => {
       try {
@@ -26,6 +43,13 @@ const WorkerProvider = ({ children }) => {
 
     }
 
+    /**
+   * Obtiene la lista de trabajadores.
+   *
+   * @returns {void}
+   * @throws {Error} Si ocurre un error al obtener los trabajadores.
+   */
+
     const fetchMyWorkers = async () => {
         try {
             const worker = await getWorkers();
@@ -40,6 +64,15 @@ const WorkerProvider = ({ children }) => {
         fetchMyWorkers();
       }
       }, [isAuth]);
+
+      /**
+   * Edita un trabajador.
+   *
+   * @param {number} id - ID del trabajador a editar.
+   * @param {Object} updatedData - Datos actualizados del trabajador.
+   * @returns {void}
+   * @throws {Error} Si ocurre un error al editar el trabajador.
+   */
 
     const handleEditWorker = async (id,updatedData) => {
         console.log(id)
@@ -59,6 +92,14 @@ const WorkerProvider = ({ children }) => {
       }
     };
   
+    /**
+   * Elimina un trabajador.
+   *
+   * @param {number} id - ID del trabajador a eliminar.
+   * @returns {boolean} True si se eliminó exitosamente, false en caso contrario.
+   * @throws {Error} Si ocurre un error al eliminar el trabajador.
+   */
+
       const handleDeleteworker = async (id) => {
         const {status} = await deleteworker(id);
         if (status === 200 || status === 201) {
@@ -68,8 +109,15 @@ const WorkerProvider = ({ children }) => {
         }
   }
 
-    
-
+    /**
+   * Actualiza un trabajador.
+   *
+   * @param {number} id - ID del trabajador a actualizar.
+   * @param {Object} newData - Datos nuevos del trabajador.
+   * @returns {void}
+   * @throws {Error} Si ocurre un error al actualizar el trabajador.
+   */
+  
     const handleUpdateWorker = async (id, newData) => {
         try {
             const updateWorker = await updatedWorker(id, newData);

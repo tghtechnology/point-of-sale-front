@@ -4,9 +4,24 @@ import RecibosContext from "./RecibosContext";
 import AuthContext from '../auth/AuthContext';
 
 
+/**
+ * Proveedor de contexto para el manejo de recibos.
+ *
+ * @param {Object} props - Propiedades del componente.
+ * @param {React.ReactNode} props.children - Componentes hijos que tendrán acceso al contexto.
+ * @returns {JSX.Element} El proveedor de contexto de recibos.
+ */
+
 const RecibosProvider = ({ children }) => {
   const { isAuth } = useContext(AuthContext);
   const [listRecibo, setListRecibo] = useState([]);
+
+  /**
+   * Obtiene la lista de recibos.
+   *
+   * @returns {void}
+   * @throws {Error} Si ocurre un error al cargar los recibos.
+   */
 
   const fetchRecibos = async () => {
     try {
@@ -27,6 +42,14 @@ const RecibosProvider = ({ children }) => {
     }
   }, [isAuth]);
 
+  /**
+   * Obtiene un recibo por su ID.
+   *
+   * @param {number} id - ID del recibo.
+   * @returns {Object|null} Los datos del recibo o null si hubo un error.
+   * @throws {Error} Si ocurre un error al cargar el recibo.
+   */
+
   const handleReciboById = async (id) => {
     try {
       const { data, status } = await ReciboById(id);
@@ -41,6 +64,14 @@ const RecibosProvider = ({ children }) => {
       return null;
     }
   };
+
+  /**
+   * Obtiene el detalle de un rembolso por su ID.
+   *
+   * @param {number} id - ID del rembolso.
+   * @returns {Object|null} Los datos del detalle del rembolso o null si hubo un error.
+   * @throws {Error} Si ocurre un error al cargar el detalle del rembolso.
+   */
 
   const handleDetalleRembolsoById = async (id) => {
     try {
@@ -57,6 +88,15 @@ const RecibosProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Realiza un rembolso.
+   *
+   * @param {number} id - ID del recibo a rembolsar.
+   * @param {Object} detalle - Detalles del rembolso.
+   * @returns {Object|null} Los datos del rembolso o null si hubo un error.
+   * @throws {Error} Si ocurre un error al realizar el rembolso.
+   */
+  
   const handleRembolsar = async (id, detalle) => {
     try {
       const res = await Reembolsar(id, detalle);
