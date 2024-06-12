@@ -1,6 +1,11 @@
 import apiClient from "../apiss/AxiosConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+/**
+ * Obtiene el token de autenticación del almacenamiento asíncrono.
+ *
+ * @returns {Promise<string|null>} - Una promesa que resuelve con el token de autenticación o null si no se encuentra.
+ * @throws {Error} - Error al obtener el token.
+ */
 const getToken = async () => {
     try {
         const token = await AsyncStorage.getItem('token');
@@ -10,7 +15,13 @@ const getToken = async () => {
         throw new Error('Error al obtener el token');
     }
 };
-
+/**
+ * Crea un nuevo impuesto.
+ *
+ * @param {Object} newImp - Los datos del nuevo impuesto.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al crear el impuesto.
+ */
 const createImpuesto = async (newImp) => {
     try {
         const token = await getToken();
@@ -28,7 +39,12 @@ const createImpuesto = async (newImp) => {
         throw error;
     }
 };
-
+/**
+ * Obtiene la lista de impuestos.
+ *
+ * @returns {Promise<{data: Array, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al cargar los impuestos.
+ */
 const listImpuestos = async () => {
     try {
         const token = await getToken();
@@ -47,7 +63,14 @@ const listImpuestos = async () => {
         throw new Error('Error al cargar Impuestos'); 
     }
 };
-
+/**
+ * Edita un impuesto existente.
+ *
+ * @param {string} id - El ID del impuesto a editar.
+ * @param {Object} updateImpuestos - Los datos actualizados del impuesto.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al editar el impuesto.
+ */
 const editImpuestos = async(id,updateImpuestos) => {
     try {
         const token = await getToken();
@@ -64,7 +87,12 @@ const editImpuestos = async(id,updateImpuestos) => {
       throw new Error('Error al editar impuestos');
     }
   };
-
+/**
+ * Elimina un impuesto existente.
+ *
+ * @param {string} id - El ID del impuesto a eliminar.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ */
   const deleteImpuesto = async(id) => {
     try{
         const token = await getToken();
@@ -81,6 +109,13 @@ const editImpuestos = async(id,updateImpuestos) => {
         console.log('Error:',error.response.data);
     }
 };
+/**
+ * Obtiene un impuesto por su ID.
+ *
+ * @param {string} id - El ID del impuesto a obtener.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al obtener el impuesto.
+ */
 const getTaxById=async(id)=>{
     try {
         const token = await getToken();
