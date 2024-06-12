@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTotal } from '../../Global State/TotalContext';
 import useRecibos from "../../hooks/useRecibos";
 import CustomAlert from "../../componentes/Alertas/CustomAlert";
+import { useNavigation } from '@react-navigation/native';
 import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 export default function Rembolsar() {
@@ -10,6 +11,7 @@ export default function Rembolsar() {
   const { handleRembolsar } = useRecibos();
   const [showAlert, setShowAlert] = useState(false);
   const [selectedArticles, setSelectedArticles] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const initialSelectedArticles = articleNames.map((name, index) => {
@@ -64,7 +66,6 @@ export default function Rembolsar() {
       const res = await handleRembolsar(ventaId, detallesReembolso);
       if (res) {
         setShowAlert(true);
-        // Actualizar el estado global de articleQuantitiesReembolsadas
         const newArticleQuantitiesReembolsadas = [...articleQuantitiesReembolsadas];
         detallesReembolso.forEach(detalles => {
           const index = articleIds.indexOf(detalles.articuloId);
@@ -81,6 +82,7 @@ export default function Rembolsar() {
 
   const handleCloseAlert = () => {
     setShowAlert(false);
+    navigation.navigate("Recibos");
   };
 
   return (
