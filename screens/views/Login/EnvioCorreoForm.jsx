@@ -1,84 +1,102 @@
-import { View, Text } from 'react-native'
-import { TextInput, StyleSheet, Alert } from 'react-native'
-import { TouchableOpacity } from 'react-native'
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-//Importaciones 
-import { useState,useEffect   } from 'react'
 import useEmail from '../../hooks/useEmail';
 import EmailProvider from '../../context/email/EmailProvider';
-//
-//import CustomAlert from '../componentes/CustomAlert';
+import LoginAlert from '../../componentes/Alertas/LoginAlert';
 
-//Valores Iniciales
 const INITIAL_STATE = {
-  email:'',
-}
-//
+  email: '',
+};
 
 const EnvioCorreoForm = () => {
   const navigation = useNavigation();
-  const [ dataForm, setDataForm] = useState(INITIAL_STATE);
-  const {handleSendEmail} = useEmail();
-  //const [email, setEmail] = useState('');
-  //const [successAlertVisible, setSuccessAlertVisible] = useState(false);
-  //const [errorAlertVisible, setErrorAlertVisible] = useState(false);
-  //const [campoAlertVisible, setCampoAlertVisible] = useState(false);
-  //const [formatAlertVisible, setFormatAlertVisible] = useState(false);
+  const [dataForm, setDataForm] = useState(INITIAL_STATE);
+  const { handleSendEmail } = useEmail();
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
-  //Logica de Enviar Correo
-  const getValues = (name,value) => {
+  const getValues = (name, value) => {
     setDataForm({
       ...dataForm,
-      [name]:value
-    })
-  }
+      [name]: value,
+    });
+  };
+
+  const validateEmail = (email) => {
+    const regex = /\S+@\S+\.\S+/;
+    return regex.test(email);
+  };
 
   const handleSend = async () => {
-    const objectSend = {
-      ...dataForm,
+    const objectSend = { ...dataForm };
+
+    if (!objectSend.email) {
+      setAlertMessage('El campo de correo electrónico no puede estar vacío.');
+      setIsAlertVisible(true);
+      return;
     }
-    
-    //control de errores para el crear un usuario
+
+    if (!validateEmail(objectSend.email)) {
+      setAlertMessage('Por favor, introduce un correo electrónico válido.');
+      setIsAlertVisible(true);
+      return;
+    }
+
     try {
       const response = await handleSendEmail(objectSend);
-      if(response){
-        alert("Mensaje Enviado Correctamente")
+      if (response) {
         setDataForm(INITIAL_STATE);
-      }else{
-        alert("No se envio Correctmente el Mensaje");
+        Alert.alert('Correo enviado', 'Por favor, revisa tu correo electrónico.');
+      } else {
+        setAlertMessage('No se envió correctamente el mensaje.');
+        setIsAlertVisible(true);
       }
     } catch (error) {
-      alert("problema interno del servidor")
-      console.log(Error)
+      setAlertMessage('Problema interno del servidor.');
+      setIsAlertVisible(true);
+      console.log(error);
     }
-    console.log("valor del formulario"  + JSON.stringify(objectSend));
+    console.log("Valor del formulario: " + JSON.stringify(objectSend));
   };
-  //Aqui Termina
-
 
   return (
     <View style={styles.container}>
-      <Text>
-        Introduzca su correo electronico para recibir
-        un mensaje para reestablecer su contraseña.
+      <Text style={styles.instructionText}>
+        Introduzca su email para recibir un correo para restablecer su contraseña.
       </Text>
       <TextInput
         style={styles.input}
-        placeholder="Direccion de Correo Electronico"
+        placeholder="Email"
         placeholderTextColor="#546574"
         onChangeText={text => getValues('email', text)}
+        value={dataForm.email}
       />
       <TouchableOpacity style={styles.button} onPress={handleSend}>
         <Text style={styles.buttonText}>Enviar</Text>
       </TouchableOpacity>
+      <LoginAlert
+        isVisible={isAlertVisible}
+        onClose={() => setIsAlertVisible(false)}
+        message={alertMessage}
+        iconName="exclamation-circle"
+      />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100, // Puedes ajustar este valor según tus necesidades
-    paddingHorizontal: 25, // Añadido para agregar espaciado a los lados
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 25,
+    backgroundColor: '#f5f5f5',
+  },
+  instructionText: {
+    marginBottom: 20,
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#333',
   },
   input: {
     marginBottom: 25,
@@ -101,6 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-})
+});
 
-export default EnvioCorreoForm
+export default EnvioCorreoForm;

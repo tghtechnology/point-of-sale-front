@@ -97,8 +97,7 @@ const CategoryForm = () => {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Edición Exitosa"
-        message="La categoría se ha editado correctamente."
+        message="La categoría se ha editado."
         buttonColor="#2196F3"
         iconName="check-circle"
       />

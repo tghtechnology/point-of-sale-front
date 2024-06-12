@@ -373,8 +373,7 @@ export default function ArticlesEdit() {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Edicion exitosa"
-        message="El articulo se ha creado correctamente."
+        message="El articulo se ha creado."
         buttonColor="#2196F3"
         iconName="check-circle" 
         />

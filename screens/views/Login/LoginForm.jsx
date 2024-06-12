@@ -5,13 +5,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import React, { useState } from 'react'
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
 import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
+import LoginAlert from '../../componentes/Alertas/LoginAlert';
 import useAuth from '../../hooks/useAuth';
-// import CustomAlert from '../../Alertas/CustomAlert';
 
 const LoginForm = () => {
   const navigation = useNavigation();
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [loginAlertVisible, setLoginAlertVisible]=useState(false);
   const { loginAccess } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
@@ -32,10 +33,10 @@ const LoginForm = () => {
         //setSuccessAlertVisible(true); // Mostrar alerta de inicio de sesión exitoso
         navigation.navigate("Home");
       } else {
-        setErrorAlertVisible(true); // Mostrar alerta de error de inicio de sesión
+        setLoginAlertVisible(true); // Mostrar alerta de error de inicio de sesión
       }
     } catch (error) {
-      setErrorAlertVisible(true); // Mostrar alerta de error de inicio de sesión
+      setLoginAlertVisible(true); // Mostrar alerta de error de inicio de sesión
     }
   };
   //Aqui Termina
@@ -98,6 +99,7 @@ const LoginForm = () => {
       </TouchableOpacity>
       <CustomAlert isVisible={successAlertVisible} onClose={() => setSuccessAlertVisible(false)}/>
       <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
+      <LoginAlert isVisible={loginAlertVisible} onClose={() => setLoginAlertVisible(false)}/>
     </View>
     <View style={styles.redSection}></View>
     </View>

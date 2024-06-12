@@ -272,8 +272,7 @@ const ArticlesForm = () => {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Artículo creado"
-        message="El artículo se ha creado correctamente."
+        message="El artículo se ha creado."
         buttonColor="#2196F3"
         iconName="check-circle"
       />

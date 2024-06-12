@@ -80,7 +80,6 @@ const CategoryForm = () => {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Categoría Creada"
         message="La categoría se ha creado correctamente."
         buttonColor="#2196F3"
         iconName="check-circle"
