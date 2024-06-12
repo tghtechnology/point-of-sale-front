@@ -3,9 +3,26 @@ import {createUser,getUsers,editUser,eliminarTemporal,eliminarPermanente, getUse
 import UsuarioContext from "./UsuarioContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+/**
+ * Proveedor de contexto para el manejo de usuarios.
+ *
+ * @param {Object} props - Propiedades del componente.
+ * @param {React.ReactNode} props.children - Componentes hijos que tendrán acceso al contexto.
+ * @returns {JSX.Element} El proveedor de contexto de usuarios.
+ */
+
 const UsuarioProvider = ({children}) => {
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState([])
+
+
+  /**
+   * Crea un nuevo usuario.
+   *
+   * @param {Object} newUser - Datos del nuevo usuario.
+   * @returns {Object|null} Los datos del usuario creado o null si hubo un error.
+   * @throws {Error} Si ocurre un error al crear el usuario.
+   */
 
     const handleCreateUser = async (newUser) => {
       try{
@@ -24,6 +41,13 @@ const UsuarioProvider = ({children}) => {
 
     }
 
+    /**
+   * Obtiene la lista de usuarios.
+   *
+   * @returns {void}
+   * @throws {Error} Si ocurre un error al obtener los usuarios.
+   */
+
     const fetchUsers = async () =>{
       try {
         const user = await getUsers();
@@ -35,6 +59,15 @@ const UsuarioProvider = ({children}) => {
     useEffect(() => {
       fetchUsers();
     }, []);
+
+    /**
+   * Edita un usuario.
+   *
+   * @param {number} id - ID del usuario a editar.
+   * @param {Object} updatedData - Datos actualizados del usuario.
+   * @returns {void}
+   * @throws {Error} Si ocurre un error al editar el usuario.
+   */
 
     const handleEditUser = async (id,updatedData) => {
       console.log(id)
@@ -53,6 +86,14 @@ const UsuarioProvider = ({children}) => {
       console.error('Error editing user:', error);
     }
   };
+
+  /**
+   * Elimina temporalmente un usuario.
+   *
+   * @param {string} password - Contraseña del usuario.
+   * @returns {boolean} True si se eliminó temporalmente, false en caso contrario.
+   * @throws {Error} Si ocurre un error al eliminar temporalmente el usuario.
+   */
 
     const handleDeleteTemporary = async (password) => {
       const { status, data } = await eliminarTemporal(password);
@@ -74,6 +115,14 @@ const UsuarioProvider = ({children}) => {
       }
     };
 
+    /**
+   * Elimina permanentemente un usuario.
+   *
+   * @param {string} password - Contraseña del usuario.
+   * @returns {boolean} True si se eliminó permanentemente, false en caso contrario.
+   * @throws {Error} Si ocurre un error al eliminar permanentemente el usuario.
+   */
+
     const handleDeletePermanent = async (password) => {
       const { status, data } = await eliminarPermanente(password);
       if (status === 200) {
@@ -93,6 +142,15 @@ const UsuarioProvider = ({children}) => {
         return false;
       }
     };
+
+    /**
+   * Obtiene un usuario por su ID.
+   *
+   * @param {number} id - ID del usuario.
+   * @returns {Object|null} Los datos del usuario o null si hubo un error.
+   * @throws {Error} Si ocurre un error al obtener el usuario por ID.
+   */
+  
     const handleGetUserById = async (id) => {
       try {
         const response = await getUserById(id);

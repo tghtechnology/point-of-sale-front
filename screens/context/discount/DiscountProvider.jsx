@@ -3,10 +3,28 @@ import DiscountContext from "./DiscountContext";
 import { createDiscount, getDiscounts,getCeroDiscounts, updateDiscountStatus,editDiscount, updateDiscount,getDiscountById } from "../../services/DiscountService";
 import AuthContext from '../auth/AuthContext';
 
+/**
+ * Proveedor de contexto para descuentos.
+ *
+ * @param {Object} props - Propiedades del componente.
+ * @param {React.ReactNode} props.children - Componentes hijos que tendrán acceso al contexto.
+ * @returns {JSX.Element} El proveedor de contexto de descuentos.
+ */
+
 const DiscountProvider = ({ children }) => {
     const [discounts, setDiscounts] = useState([]);
     const [Cerodiscounts, setCerodiscounts] = useState([]);
     const { isAuth } = useContext(AuthContext);
+
+    /**
+     * Crea un nuevo descuento.
+     *
+     * @param {Object} newDiscount - Datos del nuevo descuento.
+     * @param {string} newDiscount.nombre - Nombre del descuento.
+     * @param {number} newDiscount.porcentaje - Porcentaje del descuento.
+     * @returns {Object|null} Los datos del descuento creado o null si falla.
+     * @throws {Error} Si ocurre un error al crear el descuento.
+     */
 
     const handleCreateDiscount = async (newDiscount) => {
         try {
@@ -28,6 +46,13 @@ const DiscountProvider = ({ children }) => {
         }
     }
 
+    /**
+     * Obtiene la lista de descuentos.
+     *
+     * @returns {void}
+     * @throws {Error} Si ocurre un error al obtener los descuentos.
+     */
+
     const fetchMyDiscounts = async () => {
         try {
             const discounts = await getDiscounts();
@@ -44,6 +69,13 @@ const DiscountProvider = ({ children }) => {
         }
     }, [isAuth]);
 
+    /**
+     * Obtiene la lista de descuentos con valor cero.
+     *
+     * @returns {void}
+     * @throws {Error} Si ocurre un error al obtener los descuentos.
+     */
+
     const fetchCeroDiscounts = async () => {
         try {
             const Cerodiscounts = await getCeroDiscounts();
@@ -59,6 +91,15 @@ const DiscountProvider = ({ children }) => {
         fetchCeroDiscounts();
         }
     }, [isAuth]);
+
+    /**
+     * Cambia el estado de un descuento.
+     *
+     * @param {number|string} id - ID del descuento.
+     * @param {boolean} newStatus - Nuevo estado del descuento.
+     * @returns {boolean} True si el estado se cambió correctamente, false si no.
+     * @throws {Error} Si ocurre un error al cambiar el estado del descuento.
+     */
 
     const toggleDiscountStatus = async (id, newStatus) => {
         try {
@@ -79,6 +120,15 @@ const DiscountProvider = ({ children }) => {
         }
     };
 
+    /**
+     * Edita un descuento existente.
+     *
+     * @param {number|string} id - ID del descuento.
+     * @param {Object} updatedData - Datos actualizados del descuento.
+     * @returns {boolean} True si la edición fue exitosa, false si no.
+     * @throws {Error} Si ocurre un error al editar el descuento.
+     */
+
     const handleEditDiscount = async (id, updatedData) => {
         console.log(id)
         try {
@@ -97,6 +147,14 @@ const DiscountProvider = ({ children }) => {
         }
       };
 
+      /**
+     * Obtiene un descuento por su ID.
+     *
+     * @param {number|string} id - ID del descuento.
+     * @returns {Object|null} Los datos del descuento o null si falla.
+     * @throws {Error} Si ocurre un error al obtener el descuento por ID.
+     */
+
       const handleDiscountById = async (id) => {
         try {
           const res = await getDiscountById(id);
@@ -113,6 +171,15 @@ const DiscountProvider = ({ children }) => {
      
       };
 
+      /**
+     * Actualiza un descuento.
+     *
+     * @param {number|string} id - ID del descuento.
+     * @param {Object} newData - Datos nuevos del descuento.
+     * @returns {boolean} True si la actualización fue exitosa, false si no.
+     * @throws {Error} Si ocurre un error al actualizar el descuento.
+     */
+    
       const handleUpdateDiscount = async (id, newData) => {
         console.log("..")
         try {
