@@ -68,6 +68,7 @@ return (
       <Stack.Screen name="Ticket" component={TicketListForm} />
       <Stack.Screen name="Finalizar venta" component={TicketSaleForm} />
       <Stack.Screen name="Crear Cliente" component={ClientForm}/>
+      <Stack.Screen name="Crear Articulo" component={ArticlesForm}></Stack.Screen>
       
     </Stack.Navigator>
   );
