@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: "https://pos-back-production.up.railway.app"
+  baseURL: "http://192.168.0.5:3000"
 })
 
 export default apiClient;
