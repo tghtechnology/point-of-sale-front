@@ -82,6 +82,7 @@ const ArticlesForm = () => {
   const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("")
   const { handleCreateArticle } = useArticle();
   const { listCategoria } = useCategory();
 
@@ -118,36 +119,49 @@ const ArticlesForm = () => {
     });
   };
 
+  const validateFields = () => {
+    if (!datos.nombre || !datos.tipo_venta || !datos.precio || !categoriaSelect) {
+      setErrorMessage("Todos los campos son obligatorios.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    if (datos.representacion === "imagen" && !selectedImage) {
+      setErrorMessage("Debe seleccionar una imagen.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    if (datos.representacion === "color" && !datos.color) {
+      setErrorMessage("Debe seleccionar un color.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    return true;
+  };
+
   const SubmitArticle = async () => {
+    if (!validateFields()) return;
+
     try {
       const formData = buildFormData(datos, selectedImage, categoriaSelect);
-  
-      console.log("Datos a enviar al servidor:", formData); // Verificar el contenido del FormData
-  
       const newArticle = await handleCreateArticle(formData);
-      console.log("ID de categoría seleccionado:", categoriaSelect);
 
-  
       if (newArticle && newArticle.id) {
         setShowAlert(true);
         setDatos(INITIAL_STATE);
         setCategoriaSelect("");
         setSelectedImage(null);
       } else {
-        alert("El artículo no se pudo crear.");
+        setErrorMessage("El artículo no se pudo crear.");
+        setErrorAlertVisible(true);
       }
     } catch (error) {
-      console.error("Error al crear el artículo:", error); // Registro detallado
-      if (error.response) {
-        console.error("Error del servidor:", error.response.status, error.response.data);
-        alert(`Error del servidor: ${error.response.data?.message || "Error desconocido"}`);
-      } else {
-        console.error("Error general:", error.message);
-        alert("Problema interno del servidor.");
-      }
+      setErrorMessage("Problema interno del servidor.");
+      setErrorAlertVisible(true);
     }
   };
-
   const handleCloseAlert = () => {
     setShowAlert(false);
   };
@@ -277,6 +291,11 @@ const ArticlesForm = () => {
         message="El artículo se ha creado."
         buttonColor="#2196F3"
         iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
       />
     </ScrollView>
   );

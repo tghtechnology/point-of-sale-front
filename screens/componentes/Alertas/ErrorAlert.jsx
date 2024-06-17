@@ -14,12 +14,12 @@ const ErrorAlert = ({ isVisible, onClose, title, message, iconName }) => {
     <View style={styles.modalView}>
       {/* Icono */}
       <View style={styles.iconWrapper}>
-        <Icon name="warning" size={30} color="#fff" />
+        <Icon name={iconName || "warning"} size={30} color="#fff" />
       </View>
       {/* Título */}
-      <Text style={styles.title}>¡Error!</Text>
+      <Text style={styles.title}>{title || "¡Error!"}</Text>
       {/* Mensaje */}
-      <Text style={styles.message}>No se pudo hacer la solicitud</Text>
+      <Text style={styles.message}>{message || "No se pudo hacer la solicitud"}</Text>
       {/* Botón de cierre */}
       <TouchableOpacity style={styles.button} onPress={onClose}>
         <Text style={styles.buttonText}>Cerrar</Text>

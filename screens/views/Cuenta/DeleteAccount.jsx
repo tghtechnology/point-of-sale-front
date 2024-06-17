@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import useUser from '../../hooks/useUser';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Error from '../../componentes/Alertas/Error';
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert'; // Importa ErrorAlert en lugar de Error
 
 export default function DeleteAccount(props) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -129,9 +129,12 @@ export default function DeleteAccount(props) {
                 onClose={() => setShowAlertPermanent(false)}
             />
 
-            <Error
+            <ErrorAlert
                 isVisible={errorAlertVisible}
                 onClose={() => setErrorAlertVisible(false)}
+                title="Datos incorrectos"
+                message="La contraseña no coincide. Intente de nuevo."
+                iconName="exclamation-circle"
             />
         </View>
     );
@@ -172,7 +175,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     inputLabel: {
-        marginTop:2,
+        marginTop: 2,
         position: 'absolute',
         left: 5,
         color: 'blue',
@@ -183,10 +186,9 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',  
-        marginHorizontal: 40, 
+        justifyContent: 'space-between',
+        marginHorizontal: 40,
         marginTop: 15,
-        
     },
     buttonText: {
         color: '#0258FE',
@@ -197,9 +199,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         margin: 20,
-      },
-      text: {
+    },
+    text: {
         marginLeft: 20,
-      },
+    },
 });
 
