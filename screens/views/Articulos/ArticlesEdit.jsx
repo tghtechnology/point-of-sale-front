@@ -7,6 +7,7 @@ import useArticle from "../../hooks/useArticle";
 import useCategory from "../../hooks/useCategory";
 import CustomAlert from "../../componentes/Alertas/CustomAlert"
 import {MaterialIcons} from '@expo/vector-icons';
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 import * as ImagePicker from 'expo-image-picker';
 
 const INITIAL_STATE = {

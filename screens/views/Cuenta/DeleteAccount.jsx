@@ -5,17 +5,18 @@ import { useNavigation } from '@react-navigation/native';
 import useUser from '../../hooks/useUser';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Error from '../../componentes/Alertas/Error';
 
 export default function DeleteAccount(props) {
     const [modalVisible, setModalVisible] = useState(false);
     const [showAlertTemporary, setShowAlertTemporary] = useState(false);
     const [showAlertPermanent, setShowAlertPermanent] = useState(false);
+    const [errorAlertVisible, setErrorAlertVisible] = useState(false);
     const [password, setPassword] = useState("");
     const [isFocused, setIsFocused] = useState(false);
     const [deleteType, setDeleteType] = useState('');
-    const { handleDeleteTemporary,handleDeletePermanent } = useUser();
+    const { handleDeleteTemporary, handleDeletePermanent } = useUser();
     const navigation = useNavigation();
-    
 
     const handleDeleteAccount = (type) => {
         setDeleteType(type);
@@ -23,53 +24,63 @@ export default function DeleteAccount(props) {
     };
 
     const handleContinue = async () => {
-        console.log("Datos enviados al servidor: ",  {deleteType,password});
-            
+        console.log("Datos enviados al servidor: ", { deleteType, password });
+
         if (deleteType === 'temporary') {
-            const success = await handleDeleteTemporary(password);
-            if (success) {
-                navigation.navigate("Main")
-                setShowAlertTemporary(true);
-                console.log("La cuenta temporal se ha eliminado exitosamente."); 
-            } else {
-                alert("No se pudo eliminar la cuenta temporal. La contraseña es incorrecta o ha ocurrido un error.");
+            try {
+                const success = await handleDeleteTemporary(password);
+                if (success) {
+                    navigation.navigate("Main");
+                    setShowAlertTemporary(true);
+                    console.log("La cuenta temporal se ha eliminado exitosamente.");
+                } else {
+                    throw new Error('Temporary deletion failed');
+                }
+            } catch (error) {
+                setErrorAlertVisible(true);
+                console.log("No se pudo eliminar la cuenta temporal. La contraseña es incorrecta o ha ocurrido un error.");
             }
-        } // Cierra el bloque 'if (deleteType === 'temporary')'
-    
+        }
+
         if (deleteType === 'permanent') {
-            const success = await handleDeletePermanent(password);
-            if (success) {
-                navigation.navigate("Main")
-                setShowAlertPermanent(true);
-                console.log("La cuenta permanente se ha eliminado exitosamente.");
-            } else {
-                alert("No se pudo eliminar la cuenta permanente. La contraseña es incorrecta o ha ocurrido un error.");
+            try {
+                const success = await handleDeletePermanent(password);
+                if (success) {
+                    navigation.navigate("Main");
+                    setShowAlertPermanent(true);
+                    console.log("La cuenta permanente se ha eliminado exitosamente.");
+                } else {
+                    throw new Error('Permanent deletion failed');
+                }
+            } catch (error) {
+                setErrorAlertVisible(true);
+                console.log("No se pudo eliminar la cuenta permanente. La contraseña es incorrecta o ha ocurrido un error.");
             }
-        } // Cierra el bloque 'if (deleteType === 'permanent')'
-    
+        }
+
         setModalVisible(false);
         setPassword('');
     };
 
     return (
         <View>
-            <TouchableOpacity onPress={() => props.navigation.navigate ("perfil")} style={styles.container}>
-            <MaterialCommunityIcons name="account" size={24} color="#708090" />
+            <TouchableOpacity onPress={() => props.navigation.navigate("perfil")} style={styles.container}>
+                <MaterialCommunityIcons name="account" size={24} color="#708090" />
                 <Text style={styles.text}>Perfil</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => props.navigation.navigate ("Contraseña")} style={styles.container}>
-            <MaterialCommunityIcons name="lock-reset" size={24} color="#708090" />
+            <TouchableOpacity onPress={() => props.navigation.navigate("Contraseña")} style={styles.container}>
+                <MaterialCommunityIcons name="lock-reset" size={24} color="#708090" />
                 <Text style={styles.text}>Cambiar Contraseña</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.container} onPress={() => handleDeleteAccount('permanent')}>
-            <MaterialCommunityIcons name="account-remove-outline" size={24} color="#708090" />
+                <MaterialCommunityIcons name="account-remove-outline" size={24} color="#708090" />
                 <Text style={styles.text}>Eliminar Cuenta Permanente</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.container} onPress={() => handleDeleteAccount('temporary')}>
-            <MaterialCommunityIcons name="account-remove" size={24} color="#708090" />
+                <MaterialCommunityIcons name="account-remove" size={24} color="#708090" />
                 <Text style={styles.text}>Eliminar Cuenta Temporal</Text>
             </TouchableOpacity>
 
@@ -107,6 +118,7 @@ export default function DeleteAccount(props) {
                     </View>
                 </View>
             </Modal>
+            
             <CustomAlert
                 isVisible={showAlertTemporary}
                 onClose={() => setShowAlertTemporary(false)}
@@ -115,6 +127,11 @@ export default function DeleteAccount(props) {
             <CustomAlert
                 isVisible={showAlertPermanent}
                 onClose={() => setShowAlertPermanent(false)}
+            />
+
+            <Error
+                isVisible={errorAlertVisible}
+                onClose={() => setErrorAlertVisible(false)}
             />
         </View>
     );
