@@ -56,7 +56,7 @@ const CategoryForm = () => {
   };
   const validateFields = () => {
     if (!editedData.nombre || !editedData.color) {
-      setErrorMessage("Debe completar los campos.");
+      setErrorMessage("Todos los campos son obligatorios.");
       setErrorAlertVisible(true);
       return false;
     }

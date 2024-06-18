@@ -218,10 +218,35 @@ export default function ArticlesEdit() {
     });
   };
 
+  const validateFields = () => {
+    if (!editedData.nombre || !editedData.tipo_venta || !editedData.precio || !editedData.id_categoria) {
+      setErrorMessage("Todos los campos son obligatorios.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    if (editedData.representacion === "imagen" && !selectedImage) {
+      setErrorMessage("Debe seleccionar una imagen.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    if (editedData.representacion === "color" && !editedData.color) {
+      setErrorMessage("Debe seleccionar un color.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async () => {
     try {
       if (!editedData.id) {
         console.error("ID del artículo no definido");
+        return;
+      }
+      if (!validateFields()) {
         return;
       }
 
@@ -235,8 +260,8 @@ export default function ArticlesEdit() {
         setListArticle(updatedList);
         console.log("Artículo editado exitosamente");
         setShowAlert(true);
-      }  else {
-        setErrorMessage("Por favor, complete todos los campos.");
+      } else {
+        setErrorMessage("No se pudo editar el artículo. Inténtalo nuevamente.");
         setErrorAlertVisible(true);
       }
     } catch (error) {

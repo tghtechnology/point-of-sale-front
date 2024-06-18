@@ -40,7 +40,7 @@ const CategoryForm = () => {
   };
   const validateFields = () => {
     if (!datos.nombre || !datos.color) {
-      setErrorMessage("Debe completar los campos.");
+      setErrorMessage("Todos los campos son obligatorios.");
       setErrorAlertVisible(true);
       return false;
     }

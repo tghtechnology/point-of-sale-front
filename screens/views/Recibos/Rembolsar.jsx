@@ -10,6 +10,8 @@ export default function Rembolsar() {
   const { articleNames, articleQuantities, ventaId, articleIds, articleQuantitiesReembolsadas, setarticleQuantitiesReembolsadas } = useTotal();
   const { handleRembolsar } = useRecibos();
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [selectedArticles, setSelectedArticles] = useState([]);
   const navigation = useNavigation();
 
@@ -56,6 +58,14 @@ export default function Rembolsar() {
 
   const handleReembolso = async () => {
     try {
+      const selectedArticleIds = selectedArticles.filter(article => article.selected);
+
+      if (selectedArticleIds.length === 0) {
+        setErrorMessage('Debe seleccionar al menos un artículo para reembolsar.');
+        setErrorAlertVisible(true);
+        return;
+      }
+
       const detallesReembolso = selectedArticles
         .filter(article => article.selected)
         .map(article => ({
@@ -73,10 +83,12 @@ export default function Rembolsar() {
         });
         setarticleQuantitiesReembolsadas(newArticleQuantitiesReembolsadas);
       } else {
-        console.error('Error al realizar el reembolso');
+        setErrorMessage('No se pudo hacer un reembolso.');
+        setErrorAlertVisible(true);
       }
     } catch (error) {
-      console.error('Error al procesar la solicitud de reembolso:', error);
+      setErrorMessage('Problema interno del servidor.');
+      setErrorAlertVisible(true);
     }
   };
 
@@ -142,6 +154,11 @@ export default function Rembolsar() {
         message="Este producto a sido rembolsado"
         buttonColor="#2196F3"
         iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
       />
     </View>
   );
