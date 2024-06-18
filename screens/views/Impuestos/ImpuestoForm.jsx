@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
 import useImpuesto from "../../hooks/useImpuesto";
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 import CustomAlert from "../../componentes/Alertas/CustomAlert";
 
 const INITIAL_STATE = {
@@ -12,18 +13,17 @@ const INITIAL_STATE = {
 
 export default function ImpuestoForm() {
   const [datos, setDatos] = useState(INITIAL_STATE);
-  const { handleCreateImp,listImpuesto,setListImpuesto } = useImpuesto();
+  const { handleCreateImp, listImpuesto, setListImpuesto } = useImpuesto();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-
   const getValues = (name, value) => {
-    const newValue = name === 'tasa' ? parseFloat(value) : value;
     setDatos({
       ...datos,
-      [name]: newValue,
+      [name]: value,
     });
   };
-  
 
   const handleChange = (value) => {
     setDatos({
@@ -31,8 +31,24 @@ export default function ImpuestoForm() {
       tipo_impuesto: value,
     });
   };
-  
+
+  const validateFields = () => {
+    if (!datos.nombre || !datos.tasa || !datos.tipo_impuesto) {
+      setErrorMessage("Todos los campos son obligatorios.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    if (isNaN(datos.tasa) || parseFloat(datos.tasa) <= 0) {
+      setErrorMessage("La tasa debe ser un número positivo.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
+
   const SubmitImpuesto = async () => {
+    if (!validateFields()) return;
+
     try {
       console.log("Datos a enviar al servidor:", datos);
       const nuevoImpuesto = await handleCreateImp(datos);
@@ -41,19 +57,19 @@ export default function ImpuestoForm() {
         setShowAlert(true);
         setDatos(INITIAL_STATE);
       } else {
-        throw new Error("La respuesta del servidor no contiene un impuesto válido.");
+        setErrorMessage("El impuesto no se pudo crear.");
+        setErrorAlertVisible(true);
       }
     } catch (error) {
-      console.log("Error al crear el impuesto:", error.message);
-    
+      setErrorMessage("Problema interno del servidor.");
+      setErrorAlertVisible(true);
+      console.error("Error al crear el impuesto:", error.message);
     }
   };
-  
-  
 
   const handleCloseAlert = () => {
     setShowAlert(false);
-};
+  };
 
   return (
     <View style={styles.container}>
@@ -68,13 +84,14 @@ export default function ImpuestoForm() {
         style={styles.input}
         placeholder="Tasa de impuestos %"
         placeholderTextColor="#546574"
+        keyboardType="numeric"
         value={datos.tasa}
         onChangeText={(text) => getValues("tasa", text)}
       />
       <View>
         <Text style={styles.label}>Tipo</Text>
       </View>
-      <View style={styles.pickerContainer} >
+      <View style={styles.pickerContainer}>
         <Picker
           style={styles.picker}
           selectedValue={datos.tipo_impuesto}
@@ -95,8 +112,13 @@ export default function ImpuestoForm() {
         title="Impuesto Creado"
         message="El impuesto se ha creado correctamente."
         buttonColor="#2196F3"
-        iconName="check-circle" 
-        />
+        iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
+      />
     </View>
   );
 }
