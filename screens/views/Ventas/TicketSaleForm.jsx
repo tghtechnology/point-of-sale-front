@@ -161,8 +161,8 @@ const TicketSaleForm = () => {
             <TouchableOpacity style={styles.button} onPress={handleCompleteSale}>
                 <Text style={styles.buttonText}>Completar Venta</Text>
             </TouchableOpacity>
-            <CustomAlert isVisible={showAlert} onClose={handleAlertClose} />
-            <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)} />
+            <CustomAlert isVisible={showAlert} onClose={handleAlertClose} message="Se ha realizado la venta."/>
+            <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)} message="No se realizo la venta."/>
         </View>
     );
 };
