@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   email: '',
   telefono: '',
   password: '',
+
 }
 
 const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
@@ -51,11 +52,7 @@ const RegisterForm = () => {
       [name]: value
     })
   }
-  const validateEmail = (email) => {
-    const regex = /\S+@\S+\.\S+/;
-    return regex.test(email);
-  };
-  const validateFields=()=>{
+  const validateFields = () => {
     if (!dataForm.nombre) {
       setErrorMessage('El nombre no puede estar vacío.');
       setErrorAlertVisible(true);
@@ -66,25 +63,37 @@ const RegisterForm = () => {
       setErrorAlertVisible(true);
       return false;
     }
-    if (!validateEmail(dataForm.email)) {
+    if (!/\S+@\S+\.\S+/.test(dataForm.email)) {
       setErrorMessage('El correo electrónico no es válido.');
       setErrorAlertVisible(true);
       return false;
     }
+    if (!dataForm.telefono) {
+      setErrorMessage('El teléfono no puede estar vacío.');
+      setErrorAlertVisible(true);
+      return false;
+    }
     if (!dataForm.password) {
-      setErrorMessage('El contraseña no puede estar vacío.');
+      setErrorMessage('La contraseña no puede estar vacía.');
       setErrorAlertVisible(true);
       return false;
     }
     if (!dataForm.nombreNegocio) {
-      setErrorMessage('El nombre de negocio no puede estar vacío.');
+      setErrorMessage('El nombre del negocio no puede estar vacío.');
       setErrorAlertVisible(true);
       return false;
     }
+    if (!countrySelect) {
+      setErrorMessage('Debes seleccionar un país.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
   }
 
   const handleSubmit = async () => {
     if (!validateFields()) return;
+
     const objectSend = {
       ...dataForm,
       pais: countrySelect,
@@ -97,7 +106,6 @@ const RegisterForm = () => {
       if (response) {
         setShowAlert(true);
         setDataForm(INITIAL_STATE);
-        setWorker([...worker, objectSend]);
         setCountrySelect('');
       } else {
         setErrorMessage("El usuario no se pudo crear.");
@@ -207,18 +215,8 @@ const RegisterForm = () => {
         </View>
       </Modal>
       <View style={styles.redSection}></View>
-      <CustomAlert
-        isVisible={showAlert}
-        onClose={() => setShowAlert(false)}
-        message="El usuario se ha registrado."
-        buttonColor="#2196F3"
-        iconName="check-circle"
-      />
-      <ErrorAlert
-        isVisible={errorAlertVisible}
-        onClose={() => setErrorAlertVisible(false)}
-        message={errorMessage}
-      />
+      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} message="Se ha creado el usuario" />
+      <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)} message={errorMessage} />
     </View>
 
   )
