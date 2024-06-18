@@ -6,6 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import useDiscount from '../../hooks/useDiscount';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 import SearchBar from '../../componentes/Busqueda/SearchBar';
 
 const PlusDiscount = (props) => {
@@ -13,6 +14,8 @@ const PlusDiscount = (props) => {
   const { discounts, setDiscounts, toggleDiscountStatus, handleEditDiscount, handleUpdateDiscount } = useDiscount();
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [modal, setModal] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [selectedDiscount, setSelectedDiscount] = useState({});
@@ -53,7 +56,23 @@ const PlusDiscount = (props) => {
     });
   };
 
+  const validateFields = () => {
+    if (!editedData.nombre || !editedData.tipo_descuento || !editedData.valor) {
+      setErrorMessage("Todos los campos son obligatorios.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    if (isNaN(editedData.valor) || parseFloat(editedData.valor) <= 0) {
+      setErrorMessage("El valor debe ser un número positivo.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateFields()) return;
+
     try {
       await handleEditDiscount(selectedDiscount.id, editedData);
       await handleUpdateDiscount(selectedDiscount.id, editedData);
@@ -84,7 +103,8 @@ const PlusDiscount = (props) => {
       });
       setDiscounts(updatedDiscounts);
     } catch (error) {
-      setError('Error al actualizar el estado del descuento');
+      setErrorMessage('Error al actualizar el estado del descuento');
+      setErrorAlertVisible(true);
     }
   };
 
@@ -92,7 +112,6 @@ const PlusDiscount = (props) => {
     setSelectedDiscount(item);
     setModal(true);
   };
-
 
   return (
     <View style={styles.container}>
@@ -123,8 +142,6 @@ const PlusDiscount = (props) => {
             <View style={styles.container}>
             </View>
           </View>
-
-
         )}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ paddingHorizontal: 16 }}
@@ -208,16 +225,19 @@ const PlusDiscount = (props) => {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Edicion Correcta"
+        title="Edición Correcta"
         message="Se ha editado correctamente."
         buttonColor="#2196F3"
-        iconName="check-circle" // Puedes cambiar el icono según lo desees
+        iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
       />
     </View>
-
-
-  )
-}
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
