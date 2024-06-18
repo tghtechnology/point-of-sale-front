@@ -107,7 +107,7 @@ const ProfileEdit = ({ route }) => {
         <Text style={styles.buttonText}>Guardar Cambios</Text>
       </TouchableOpacity>
       </View>
-      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
+      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} message="Se ha editado el usuario."/>
       <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
     </View>
   );

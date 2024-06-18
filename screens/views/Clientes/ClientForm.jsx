@@ -52,6 +52,11 @@ const ClientForm = () => {
       ...data,
       pais: countrySelect,
     };
+    for (let key in objectSend) {
+      if (objectSend[key] === "") {
+        objectSend[key] = null;
+      }
+    }
     console.log('Valor del formulario:', JSON.stringify(objectSend));
 
     try {

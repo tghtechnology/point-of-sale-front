@@ -48,7 +48,7 @@ const ClientEdit = () => {
 
   const validateFields = () => {
     if (!editedData.nombre || !editedData.email || !editedData.telefono) {
-      setErrorMessage('Todos los campos son obligatorios.');
+      setErrorMessage('Todos los campos son obligatorios excepto dirección, ciudad, región y país.');
       setErrorAlertVisible(true);
       return false;
     }
@@ -57,7 +57,14 @@ const ClientEdit = () => {
 
   const handleSubmit = async () => {
     if (!validateFields()) return;
+    const editedDataToSend = { ...editedData };
 
+    // Convertir campos vacíos a null
+    for (let key in editedDataToSend) {
+      if (editedDataToSend[key] === '') {
+        editedDataToSend[key] = null;
+      }
+    }
     try {
       await handleEditClient(editedData.id, editedData);
       await handleUpdateClient(editedData.id, editedData);

@@ -102,7 +102,6 @@ const AuthProvider = ({children}) => {
         return result;
       } catch (error) {
         console.error("Error al cambiar la contraseña:", error.message);
-        alert(error.message); // Notificación de error al usuario
         throw error; // Lanza el error para otros manejadores
       }
     };

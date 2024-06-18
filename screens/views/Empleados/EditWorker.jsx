@@ -53,7 +53,7 @@ const EditWorker = () => {
   };
 
   const validateFields = () => {
-    if (!editedData.nombre || !editedData.email || !editedData.telefono || !cargo || !selectedCountry) {
+    if (!editedData.nombre || !editedData.email || !editedData.telefono || !cargo || !selectedCountry || !editedData.password) {
       setErrorMessage('Todos los campos son obligatorios.');
       setErrorAlertVisible(true);
       return false;
@@ -127,7 +127,7 @@ const EditWorker = () => {
           <Text style={styles.buttonText}>Guardar Cambios</Text>
         </TouchableOpacity>
       </View>
-      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} />
+      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} message="Se ha editado el empleado"/>
       <ErrorAlert
         isVisible={errorAlertVisible}
         onClose={() => setErrorAlertVisible(false)}

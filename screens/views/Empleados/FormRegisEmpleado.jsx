@@ -67,6 +67,7 @@ const FormRegisEmpleado = () => {
         setData(INITIAL_STATE);
         setWorker([...worker, nuevoEmpleado]);
         setCountrySelect('');
+        setCargo(INITIAL_STATE.cargo);
         setShowAlert(true);
       } else {
         setErrorAlertVisible(true);
@@ -150,7 +151,7 @@ const FormRegisEmpleado = () => {
             <Text style={styles.buttonText}>Registrar</Text>
           </TouchableOpacity>
         </View>
-        <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} />
+        <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} message="Se ha creado el empleado" />
         <ErrorAlert
           isVisible={errorAlertVisible}
           onClose={() => setErrorAlertVisible(false)}
