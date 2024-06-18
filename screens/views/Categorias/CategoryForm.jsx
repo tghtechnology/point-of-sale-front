@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import useCategory from '../../hooks/useCategory';
 import CustomAlert from "../../componentes/Alertas/CustomAlert";
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 const INITIAL_STATE = {
   nombre: '',
@@ -27,6 +28,8 @@ const ColorBox = ({ color, selectedColor, setDatos }) => (
 const CategoryForm = () => {
   const [datos, setDatos] = useState(INITIAL_STATE);
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("")
   const { handleCreateCategory, setListCategoria, listCategoria } = useCategory();
 
   const getValues = (name, value) => {
@@ -35,9 +38,19 @@ const CategoryForm = () => {
       [name]: value,
     });
   };
+  const validateFields = () => {
+    if (!datos.nombre || !datos.color) {
+      setErrorMessage("Debe completar los campos.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
+
 
   const SubmitCategory = async () => {
     try {
+      if (!validateFields()) return;
       console.log("Datos a enviar al servidor:", datos);
       const nuevaCategoria = await handleCreateCategory(datos);
       if (nuevaCategoria && nuevaCategoria.id) {
@@ -46,10 +59,12 @@ const CategoryForm = () => {
         setShowAlert(true);
         setDatos(INITIAL_STATE);
       } else {
-        alert("La categoría no se pudo crear");
+        setErrorMessage("La categoría no se pudo crear.");
+        setErrorAlertVisible(true);
       }
     } catch (error) {
-      alert("Problema interno del servidor");
+      setErrorMessage("Problema interno del servidor.");
+      setErrorAlertVisible(true);
     }
     console.log("Valor del formulario: " + JSON.stringify(datos));
   };
@@ -83,6 +98,11 @@ const CategoryForm = () => {
         message="La categoría se ha creado correctamente."
         buttonColor="#2196F3"
         iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
       />
     </View>
   );

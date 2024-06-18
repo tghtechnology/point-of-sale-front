@@ -53,7 +53,7 @@ const EnvioCorreoForm = () => {
         setIsAlertVisible(true);
       }
     } catch (error) {
-      setAlertMessage('Problema interno del servidor.');
+      setAlertMessage('Escriba bien su correo');
       setIsAlertVisible(true);
       console.log(error);
     }

@@ -3,6 +3,7 @@ import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-nativ
 import { useRoute } from "@react-navigation/native";
 import useCategory from '../../hooks/useCategory';
 import CustomAlert from "../../componentes/Alertas/CustomAlert"
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 
 const INITIAL_STATE = {
@@ -57,7 +58,6 @@ const CategoryForm = () => {
       await handleEditCategories(editedData);
       setShowAlert(true);
       console.log("Categoría editada exitosamente");
-      // Actualizar la lista de categorías después de la edición
       setListCategoria(prevLista => prevLista.map(categoria => {
         if (categoria.id === editedData.id) {
           return { ...categoria, ...editedData };

@@ -7,6 +7,7 @@ import useArticle from "../../hooks/useArticle";
 import useCategory from "../../hooks/useCategory";
 import CustomAlert from "../../componentes/Alertas/CustomAlert"
 import {MaterialIcons} from '@expo/vector-icons';
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 import * as ImagePicker from 'expo-image-picker';
 
 const INITIAL_STATE = {
@@ -93,6 +94,8 @@ export default function ArticlesEdit() {
   const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [loadingCategoria, setLoadingCategoria] = useState(true);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false); // State for ErrorAlert
+  const [errorMessage, setErrorMessage] = useState('');
 
   const route = useRoute();
   const {handleEditArticle, listArticle, setListArticle} = useArticle();
@@ -232,16 +235,21 @@ export default function ArticlesEdit() {
         setListArticle(updatedList);
         console.log("Artículo editado exitosamente");
         setShowAlert(true);
-      } else {
-        console.error("La edición no fue exitosa.");
+      }  else {
+        setErrorMessage("Por favor, complete todos los campos.");
+        setErrorAlertVisible(true);
       }
     } catch (error) {
-      console.error("Error al editar el artículo:", error);
+      setErrorMessage("Problema interno del servidor.");
+      setErrorAlertVisible(true);
     }
   };
 
   const handleCloseAlert = () => {
     setShowAlert(false);
+  };
+  const handleCloseErrorAlert = () => {
+    setErrorAlertVisible(false);
   };
 
 
@@ -373,10 +381,15 @@ export default function ArticlesEdit() {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        message="El articulo se ha creado."
+        message="El articulo se ha editado."
         buttonColor="#2196F3"
         iconName="check-circle" 
         />
+        <ErrorAlert
+        isVisible={errorAlertVisible}
+        message={errorMessage}
+        onClose={handleCloseErrorAlert}
+      />
     </ScrollView>
   );
 }
