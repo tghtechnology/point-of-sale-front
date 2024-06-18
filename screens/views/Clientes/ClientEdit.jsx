@@ -1,36 +1,36 @@
-import {useState, useEffect} from "react";
-import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
-import { Picker } from "@react-native-picker/picker";
-import { useRoute } from "@react-navigation/native";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { useRoute } from '@react-navigation/native';
 import useClient from '../../hooks/useClient';
-import useCountry from "../../hooks/useCountry";
-import CustomAlert from "../../componentes/Alertas/CustomAlert"
-import ErrorAlert from "../../componentes/Alertas/ErrorAlert";
-import { ScrollView } from "react-native-gesture-handler";
-
+import useCountry from '../../hooks/useCountry';
+import CustomAlert from '../../componentes/Alertas/CustomAlert';
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const INITIAL_STATE = {
-  nombre: "",
-  email: "",
-  telefono: "", 
-  direccion: "",
-  ciudad: "",
-  region: "",
-  codigo_postal: "",
-  pais: "",
+  nombre: '',
+  email: '',
+  telefono: '',
+  direccion: '',
+  ciudad: '',
+  region: '',
+  codigo_postal: '',
+  pais: '',
 };
 
 const ClientEdit = () => {
-  const { handleEditClient,handleUpdateClient} = useClient();
+  const { handleEditClient, handleUpdateClient } = useClient();
   const route = useRoute();
   const [showAlert, setShowAlert] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [editedData, setEditedData] = useState(INITIAL_STATE);
   const [selectedCountry, setSelectedCountry] = useState('');
-  const { countries,fetchCountries} = useCountry();
+  const { countries, fetchCountries } = useCountry();
 
   useEffect(() => {
-    fetchCountries(); 
+    fetchCountries();
   }, []);
 
   useEffect(() => {
@@ -46,12 +46,22 @@ const ClientEdit = () => {
     });
   };
 
+  const validateFields = () => {
+    if (!editedData.nombre || !editedData.email || !editedData.telefono) {
+      setErrorMessage('Todos los campos son obligatorios.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateFields()) return;
+
     try {
       await handleEditClient(editedData.id, editedData);
       await handleUpdateClient(editedData.id, editedData);
       setShowAlert(true);
-      //navigation.goBack();
     } catch (error) {
       setErrorAlertVisible(true);
       console.error('Error al editar el cliente:', error);
@@ -61,73 +71,85 @@ const ClientEdit = () => {
   const handleCloseAlert = () => {
     setShowAlert(false);
   };
+
   return (
     <ScrollView>
-    <View style={styles.container}>
-      <View style={styles.topBanner}></View>
-      <View style={styles.formBackground}>
-      <TextInput
-        style={styles.input}
-        placeholder="Nombre"
-        value={editedData.nombre}
-        onChangeText={(text) => handleChange('nombre', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={editedData.email}
-        onChangeText={(text) => handleChange('email', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Teléfono"
-        value={editedData.telefono}
-        onChangeText={(text) => handleChange('telefono', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Dirección"
-        value={editedData.direccion}
-        onChangeText={(text) => handleChange('direccion', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Ciudad"
-        value={editedData.ciudad}
-        onChangeText={(text) => handleChange('ciudad', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Región"
-        value={editedData.region}
-        onChangeText={(text) => handleChange('region', text)}
-      />
-        <Text style={styles.label}>País</Text>
-        <View style={styles.pickerContainer}>
-        <Picker
-          style={styles.picker}
-          selectedValue={selectedCountry}
-          onValueChange={(itemValue) => {
-            setSelectedCountry(itemValue);
-            handleChange('pais', itemValue); 
-          }}
-        >
-          <Picker.Item label="Seleccionar país" value="" />
-          {countries.map((country, index) => (
-            <Picker.Item key={index} label={country} value={country} /> 
-          ))}
-        </Picker>
+      <View style={styles.container}>
+        <View style={styles.topBanner}></View>
+        <View style={styles.formBackground}>
+          <TextInput
+            style={styles.input}
+            placeholder="Nombre"
+            value={editedData.nombre}
+            onChangeText={(text) => handleChange('nombre', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={editedData.email}
+            onChangeText={(text) => handleChange('email', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Teléfono"
+            value={editedData.telefono}
+            onChangeText={(text) => handleChange('telefono', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Dirección"
+            value={editedData.direccion}
+            onChangeText={(text) => handleChange('direccion', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Ciudad"
+            value={editedData.ciudad}
+            onChangeText={(text) => handleChange('ciudad', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Región"
+            value={editedData.region}
+            onChangeText={(text) => handleChange('region', text)}
+          />
+          <Text style={styles.label}>País</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              style={styles.picker}
+              selectedValue={selectedCountry}
+              onValueChange={(itemValue) => {
+                setSelectedCountry(itemValue);
+                handleChange('pais', itemValue);
+              }}
+            >
+              <Picker.Item label="Seleccionar país" value="" />
+              {countries.map((country, index) => (
+                <Picker.Item key={index} label={country} value={country} />
+              ))}
+            </Picker>
+          </View>
+          <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>Guardar Cambios</Text>
+          </TouchableOpacity>
+        </View>
+        <CustomAlert
+          isVisible={showAlert}
+          onClose={handleCloseAlert}
+          title="Cliente Editado"
+          message="El cliente se ha editado correctamente."
+          buttonColor="#2196F3"
+          iconName="check-circle"
+        />
+        <ErrorAlert
+          isVisible={errorAlertVisible}
+          onClose={() => setErrorAlertVisible(false)}
+          message={errorMessage}
+        />
       </View>
-      <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Guardar Cambios</Text>
-      </TouchableOpacity>
-      </View>
-      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
-      <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
-    </View>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

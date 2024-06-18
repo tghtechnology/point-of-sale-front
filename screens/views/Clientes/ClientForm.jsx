@@ -1,67 +1,79 @@
-import { useState,useEffect   } from 'react'
-import { ScrollView, View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import useCountry from '../../hooks/useCountry';
 import useClient from '../../hooks/useClient';
-import ClientProvider from '../../context/cliente/ClientProvider';
-import CountryProvider from '../../context/country/CountryProvider';
-import CustomAlert from "../../componentes/Alertas/CustomAlert"
+import CustomAlert from '../../componentes/Alertas/CustomAlert';
 import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 const INITIAL_STATE = {
-    nombre:'',
-    email:'',
-    telefono:'',
-    direccion:'',
-    ciudad:'',
-    region:'',
-    codigo_postal:'',
-  }
-  const ClientForm = () => {
-    const [ data, setData] = useState(INITIAL_STATE);
-    const [countrySelect, setCountrySelect] = useState('');
-    const { countries,fetchCountries } = useCountry();
-    const {handleCreateClient,client, setClient} = useClient();
-    const [showAlert, setShowAlert] = useState(false);
-    const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  nombre: '',
+  email: '',
+  telefono: '',
+  direccion: '',
+  ciudad: '',
+  region: '',
+  codigo_postal: '',
+};
 
-    useEffect(() => {
-        fetchCountries(); // Llama a fetchCountries cuando el componente se monta
-      }, []);
-    
-    const getValues = (name,value) => {
-        setData({
-          ...data,
-          [name]:value
-        })
-      }
+const ClientForm = () => {
+  const [data, setData] = useState(INITIAL_STATE);
+  const [countrySelect, setCountrySelect] = useState('');
+  const { countries, fetchCountries } = useCountry();
+  const { handleCreateClient, client, setClient } = useClient();
+  const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = async () => {
-        const objectSend = {
-          ...data,
-          pais:countrySelect
-        }   
-        //control de errores para el crear un cliente
-        try {
-          const nuevoCliente = await handleCreateClient(objectSend);
-          if(nuevoCliente && nuevoCliente.id){
-            setData(INITIAL_STATE);
-            setCountrySelect('');
-            setClient([...client, nuevoCliente]);
-            setShowAlert(true);
-          }else{
-            setErrorAlertVisible(true);
-            throw new Error("La respuesta del servidor no contiene un impuesto válido.");
-          }
-        } catch (error) {
-          setErrorAlertVisible(true);
-        }
-        console.log("valor del formulario"  + JSON.stringify(objectSend));
-      }
+  useEffect(() => {
+    fetchCountries(); // Llama a fetchCountries cuando el componente se monta
+  }, []);
 
-      const handleCloseAlert = () => {
-        setShowAlert(false);
+  const getValues = (name, value) => {
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+
+  const validateFields = () => {
+    if (!data.nombre || !data.email || !data.telefono) {
+      setErrorMessage('Todos los campos son obligatorios excepto dirección, ciudad, región y país.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateFields()) return;
+
+    const objectSend = {
+      ...data,
+      pais: countrySelect,
     };
+    console.log('Valor del formulario:', JSON.stringify(objectSend));
+
+    try {
+      const nuevoCliente = await handleCreateClient(objectSend);
+      if (nuevoCliente && nuevoCliente.id) {
+        setData(INITIAL_STATE);
+        setCountrySelect('');
+        setClient([...client, nuevoCliente]);
+        setShowAlert(true);
+      } else {
+        setErrorAlertVisible(true);
+        throw new Error('La respuesta del servidor no contiene un cliente válido.');
+      }
+    } catch (error) {
+      setErrorAlertVisible(true);
+    }
+  };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -72,71 +84,82 @@ const INITIAL_STATE = {
             style={styles.input}
             placeholder="Nombre del cliente"
             value={data.nombre}
-            onChangeText={text => getValues('nombre', text)}
+            onChangeText={(text) => getValues('nombre', text)}
           />
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
             placeholder="Email"
             value={data.email}
-            onChangeText={text => getValues('email', text)}
+            onChangeText={(text) => getValues('email', text)}
           />
-          <Text style={styles.label}>Telefono</Text>
+          <Text style={styles.label}>Teléfono</Text>
           <TextInput
             style={styles.input}
-            placeholder="Numero de telefono"
+            placeholder="Número de teléfono"
             value={data.telefono}
             keyboardType="numeric"
-            onChangeText={number => getValues('telefono', number)}
+            onChangeText={(number) => getValues('telefono', number)}
           />
-          <Text style={styles.label}>Direccion</Text>
+          <Text style={styles.label}>Dirección</Text>
           <TextInput
             style={styles.input}
-            placeholder="Direccion"
+            placeholder="Dirección"
             value={data.direccion}
-            onChangeText={text => getValues('direccion', text)}
+            onChangeText={(text) => getValues('direccion', text)}
           />
           <Text style={styles.label}>Ciudad</Text>
           <TextInput
             style={styles.input}
-            placeholder="ciudad"
+            placeholder="Ciudad"
             value={data.ciudad}
-            onChangeText={text => getValues('ciudad', text)}
+            onChangeText={(text) => getValues('ciudad', text)}
           />
-          <Text style={styles.label}>Region</Text>
+          <Text style={styles.label}>Región</Text>
           <TextInput
             style={styles.input}
-            placeholder="Region"
+            placeholder="Región"
             value={data.region}
-            onChangeText={text => getValues('region', text)}
+            onChangeText={(text) => getValues('region', text)}
           />
-          
-          {/* INPUT PARA SELECCIONAR PAIS */}
-        
-        <Text style={styles.label}>Selecciona un país:</Text>
-        <View style={styles.pickerContainer}>
-        <Picker
-        style={styles.picker}
-        selectedValue={countrySelect}
-        onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
-        >
-        <Picker.Item label="País:" value="" />
-        {countries && countries.map((country, index) => (
-        <Picker.Item key={index} label={country} value={country} />
-        ))}
-        </Picker>
+
+          {/* INPUT PARA SELECCIONAR PAÍS */}
+          <Text style={styles.label}>Selecciona un país:</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              style={styles.picker}
+              selectedValue={countrySelect}
+              onValueChange={(itemValue, itemIndex) => setCountrySelect(itemValue)}
+            >
+              <Picker.Item label="País:" value="" />
+              {countries && countries.map((country, index) => (
+                <Picker.Item key={index} label={country} value={country} />
+              ))}
+            </Picker>
+          </View>
+          <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+            <Text style={styles.buttonText}>Crear Cliente</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-        <Text style={styles.buttonText}>Crear Cliente</Text>
-        </TouchableOpacity>
-        </View>
-          
-        <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
-        <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
-  </View>
-  </ScrollView>
-  )
-}
+
+        <CustomAlert
+          isVisible={showAlert}
+          onClose={handleCloseAlert}
+          title="Cliente Creado"
+          message="El cliente se ha creado correctamente."
+          buttonColor="#2196F3"
+          iconName="check-circle"
+        />
+        <ErrorAlert
+          isVisible={errorAlertVisible}
+          onClose={() => setErrorAlertVisible(false)}
+          message={errorMessage}
+        />
+      </View>
+    </ScrollView>
+  );
+};
+
 
 const styles = StyleSheet.create({
   container: {
