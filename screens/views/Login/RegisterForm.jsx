@@ -8,6 +8,7 @@ import useCountry from '../../hooks/useCountry';
 import UsuarioProvider from '../../context/usuarios/UsuarioProvider';
 import CountryProvider from '../../context/country/CountryProvider';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 
 const INITIAL_STATE = {
@@ -25,6 +26,8 @@ const RegisterForm = () => {
   const [countrySelect, setCountrySelect] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("")
   const { handleCreateUser } = useUser();
   const { countries, fetchCountries } = useCountry();
 
@@ -48,9 +51,40 @@ const RegisterForm = () => {
       [name]: value
     })
   }
+  const validateEmail = (email) => {
+    const regex = /\S+@\S+\.\S+/;
+    return regex.test(email);
+  };
+  const validateFields=()=>{
+    if (!dataForm.nombre) {
+      setErrorMessage('El nombre no puede estar vacío.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    if (!dataForm.email) {
+      setErrorMessage('El correo electrónico no puede estar vacío.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    if (!validateEmail(dataForm.email)) {
+      setErrorMessage('El correo electrónico no es válido.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    if (!dataForm.password) {
+      setErrorMessage('El contraseña no puede estar vacío.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    if (!dataForm.nombreNegocio) {
+      setErrorMessage('El nombre de negocio no puede estar vacío.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+  }
 
   const handleSubmit = async () => {
-
+    if (!validateFields()) return;
     const objectSend = {
       ...dataForm,
       pais: countrySelect,
@@ -66,10 +100,12 @@ const RegisterForm = () => {
         setWorker([...worker, objectSend]);
         setCountrySelect('');
       } else {
-        alert("El usuarios no se pudo crear");
+        setErrorMessage("El usuario no se pudo crear.");
+        setErrorAlertVisible(true);
       }
     } catch (error) {
-      console.log('error:', error)
+      setErrorMessage("Problema del servidor.");
+      setErrorAlertVisible(true);
     }
     console.log("valor del formulario" + JSON.stringify(objectSend));
   }
@@ -171,7 +207,18 @@ const RegisterForm = () => {
         </View>
       </Modal>
       <View style={styles.redSection}></View>
-      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} />
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={() => setShowAlert(false)}
+        message="El usuario se ha registrado."
+        buttonColor="#2196F3"
+        iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
+      />
     </View>
 
   )
