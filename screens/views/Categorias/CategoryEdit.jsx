@@ -39,6 +39,8 @@ const CategoryForm = () => {
   const route = useRoute();
   const { handleEditCategories, listCategoria, setListCategoria } = useCategory();
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("")
   const [editedData, setEditedData] = useState(INITIAL_STATE);
 
   useEffect(() => {
@@ -52,12 +54,23 @@ const CategoryForm = () => {
       [name]: value,
     });
   };
+  const validateFields = () => {
+    if (!editedData.nombre || !editedData.color) {
+      setErrorMessage("Debe completar los campos.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async () => {
     try {
+      if (!validateFields()) return;
+
       await handleEditCategories(editedData);
       setShowAlert(true);
       console.log("Categoría editada exitosamente");
+
       setListCategoria(prevLista => prevLista.map(categoria => {
         if (categoria.id === editedData.id) {
           return { ...categoria, ...editedData };
@@ -66,7 +79,8 @@ const CategoryForm = () => {
         }
       }));
     } catch (error) {
-      console.error("Error al editar la categoría:", error);
+      setErrorMessage("Problema interno del servidor.");
+      setErrorAlertVisible(true);
     }
   };
 
@@ -100,6 +114,11 @@ const CategoryForm = () => {
         message="La categoría se ha editado."
         buttonColor="#2196F3"
         iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
       />
     </View>
   );

@@ -51,6 +51,7 @@ const CategoryForm = () => {
   const SubmitCategory = async () => {
     try {
       if (!validateFields()) return;
+
       console.log("Datos a enviar al servidor:", datos);
       const nuevaCategoria = await handleCreateCategory(datos);
       if (nuevaCategoria && nuevaCategoria.id) {
