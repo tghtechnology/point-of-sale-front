@@ -218,7 +218,7 @@ const ArticlesForm = () => {
       />
       <View>
         <Text style={styles.info}>
-          Deje el campo en blanco para indicar el precio durante la venta.
+          Indique el precio del artículo a crear.
         </Text>
       </View>
       <View>
