@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useEmail from '../../hooks/useEmail';
+import CustomAlert from "../../componentes/Alertas/CustomAlert"
 import EmailProvider from '../../context/email/EmailProvider';
 import LoginAlert from '../../componentes/Alertas/LoginAlert';
 
@@ -13,6 +14,7 @@ const EnvioCorreoForm = () => {
   const navigation = useNavigation();
   const [dataForm, setDataForm] = useState(INITIAL_STATE);
   const { handleSendEmail } = useEmail();
+  const [showAlert, setShowAlert] = useState(false);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
@@ -26,6 +28,10 @@ const EnvioCorreoForm = () => {
   const validateEmail = (email) => {
     const regex = /\S+@\S+\.\S+/;
     return regex.test(email);
+  };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
   };
 
   const handleSend = async () => {
@@ -47,7 +53,7 @@ const EnvioCorreoForm = () => {
       const response = await handleSendEmail(objectSend);
       if (response) {
         setDataForm(INITIAL_STATE);
-        Alert.alert('Correo enviado', 'Por favor, revisa tu correo electrónico.');
+        setShowAlert(true);
       } else {
         setAlertMessage('No se envió correctamente el mensaje.');
         setIsAlertVisible(true);
@@ -75,6 +81,14 @@ const EnvioCorreoForm = () => {
       <TouchableOpacity style={styles.button} onPress={handleSend}>
         <Text style={styles.buttonText}>Enviar</Text>
       </TouchableOpacity>
+      <CustomAlert
+        isVisible={showAlert}
+        onClose={handleCloseAlert}
+        title="Correo Enviado"
+        message="Por favor, revisa tu correo electronico"
+        buttonColor="#2196F3"
+        iconName="check-circle" 
+      />
       <LoginAlert
         isVisible={isAlertVisible}
         onClose={() => setIsAlertVisible(false)}
