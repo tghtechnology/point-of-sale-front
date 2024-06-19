@@ -64,9 +64,9 @@ import Icono from '../../img/Icono.png'
             <Text style={styles.buttonText}>Iniciar Sesión</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={showViewRegister}>
+          {/* <TouchableOpacity style={styles.button} onPress={showViewRegister}>
             <Text style={styles.buttonText}>Registrarse</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         </View>
       </ScrollView>
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   blueSection: {
     position: 'absolute',
     backgroundColor: '#0258FE',
-    height: '85%',
+    height: '88%',
     width: '100%',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   buttonSection: {
     position: 'relative',
     alignItems: 'center',
-    top: '5%',
+    top: '15%',
     zIndex: 1,
   },
   button: {
