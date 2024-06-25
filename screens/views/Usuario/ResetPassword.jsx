@@ -22,7 +22,6 @@ const ResetPassword = () => {
       setConfirmPassword('')
     } catch (error) {
       setErrorAlertVisible(true);
-      Alert.alert("Error", error.message); // Mostrar errores
     }
   };
   
@@ -58,8 +57,8 @@ const ResetPassword = () => {
           <Text style={styles.text}>Guardar Cambios</Text>
         </TouchableOpacity>
       </View>
-      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
-      <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
+      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} message="Se ha cambiado la contraseña."/>
+      <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)} message="Verifique si su contraseña actual es correcta."/>
     </View>
   );
 };

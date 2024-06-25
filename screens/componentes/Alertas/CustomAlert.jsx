@@ -14,12 +14,12 @@ const CustomAlert = ({ isVisible, onClose, title, message, iconName }) => {
     <View style={styles.modalView}>
       {/* Icono de éxito */}
       <View style={styles.iconWrapper}>
-        <Icon name="check-circle" size={40} color="#fff" />
+        <Icon name={iconName || "check-circle"} size={40} color="#fff" />
       </View>
       {/* Título */}
-      <Text style={styles.title}>¡Éxito!</Text>
+      <Text style={styles.title}>{title ||"¡Éxito!"}</Text>
       {/* Mensaje */}
-      <Text style={styles.message}>Solicitud hecha con exito</Text>
+      <Text style={styles.message}>{message || "Solicitud hecha con exito"}</Text>
       {/* Botón de cierre */}
       <TouchableOpacity style={styles.button} onPress={onClose}>
         <Text style={styles.buttonText}>Cerrar</Text>

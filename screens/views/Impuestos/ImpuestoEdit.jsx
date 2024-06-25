@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { Picker } from "@react-native-picker/picker";
 import { useRoute } from "@react-navigation/native";
 import useImpuesto from "../../hooks/useImpuesto";
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 import CustomAlert from "../../componentes/Alertas/CustomAlert";
 
 const INITIAL_STATE = {
@@ -12,17 +13,17 @@ const INITIAL_STATE = {
 };
 
 export default function ImpuestoForm() {
-  const {handleEditImp,handleUpdateImp} = useImpuesto();
+  const { handleEditImp } = useImpuesto();
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const route = useRoute();
   const [editedData, setEditedData] = useState(INITIAL_STATE);
- 
 
   useEffect(() => {
     const { impuesto } = route.params;
     setEditedData(impuesto || INITIAL_STATE);
   }, [route.params]);
-
 
   const handleChange = (name, value) => {
     setEditedData({
@@ -30,7 +31,6 @@ export default function ImpuestoForm() {
       [name]: value,
     });
   };
-  
 
   const handleTip = (value) => {
     setEditedData({
@@ -38,9 +38,24 @@ export default function ImpuestoForm() {
       tipo_impuesto: value,
     });
   };
-  
-  
+
+  const validateFields = () => {
+    if (!editedData.nombre || !editedData.tasa || !editedData.tipo_impuesto) {
+      setErrorMessage("Todos los campos son obligatorios.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    if (isNaN(editedData.tasa) || parseFloat(editedData.tasa) <= 0) {
+      setErrorMessage("La tasa debe ser un número positivo.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateFields()) return;
+
     try {
       const dataToSend = {
         ...editedData,
@@ -50,9 +65,12 @@ export default function ImpuestoForm() {
       await handleEditImp(dataToSend);
       setShowAlert(true);
     } catch (error) {
+      setErrorMessage("Error al editar el impuesto: " + error.message);
+      setErrorAlertVisible(true);
       console.error("Error al editar el impuesto:", error);
     }
   };
+
   const handleCloseAlert = () => {
     setShowAlert(false);
   };
@@ -70,7 +88,8 @@ export default function ImpuestoForm() {
         style={styles.input}
         placeholder="Tasa de impuestos %"
         placeholderTextColor="#546574"
-        value={editedData.tasa}
+        keyboardType="numeric"
+        value={editedData.tasa.toString()}
         onChangeText={(text) => handleChange("tasa", text)}
       />
       <View>
@@ -81,13 +100,13 @@ export default function ImpuestoForm() {
           selectedValue={editedData.tipo_impuesto}
           onValueChange={(value) => handleTip(value)}
         >
-          <Picker.Item label="" value="" />
+          <Picker.Item label="Seleccione el tipo de impuesto" value="" />
           <Picker.Item label="Incluido en el precio" value="Incluido_en_el_precio" />
           <Picker.Item label="Añadido al precio" value="Anadido_al_precio" />
         </Picker>
       </View>
       <View style={{ height: 20 }} />
-      <TouchableOpacity onPress={handleSubmit } style={styles.buttonContainer}>
+      <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
       <CustomAlert
@@ -97,6 +116,11 @@ export default function ImpuestoForm() {
         message="El impuesto se ha editado correctamente."
         buttonColor="#2196F3"
         iconName="check-circle" 
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
       />
     </View>
   );

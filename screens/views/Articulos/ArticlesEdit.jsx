@@ -7,6 +7,7 @@ import useArticle from "../../hooks/useArticle";
 import useCategory from "../../hooks/useCategory";
 import CustomAlert from "../../componentes/Alertas/CustomAlert"
 import {MaterialIcons} from '@expo/vector-icons';
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 import * as ImagePicker from 'expo-image-picker';
 
 const INITIAL_STATE = {
@@ -93,6 +94,8 @@ export default function ArticlesEdit() {
   const [categoriaSelect, setCategoriaSelect] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [loadingCategoria, setLoadingCategoria] = useState(true);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false); // State for ErrorAlert
+  const [errorMessage, setErrorMessage] = useState('');
 
   const route = useRoute();
   const {handleEditArticle, listArticle, setListArticle} = useArticle();
@@ -215,10 +218,35 @@ export default function ArticlesEdit() {
     });
   };
 
+  const validateFields = () => {
+    if (!editedData.nombre || !editedData.tipo_venta || !editedData.precio || !editedData.id_categoria) {
+      setErrorMessage("Todos los campos son obligatorios.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    if (editedData.representacion === "imagen" && !selectedImage) {
+      setErrorMessage("Debe seleccionar una imagen.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    if (editedData.representacion === "color" && !editedData.color) {
+      setErrorMessage("Debe seleccionar un color.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async () => {
     try {
       if (!editedData.id) {
         console.error("ID del artículo no definido");
+        return;
+      }
+      if (!validateFields()) {
         return;
       }
 
@@ -233,15 +261,20 @@ export default function ArticlesEdit() {
         console.log("Artículo editado exitosamente");
         setShowAlert(true);
       } else {
-        console.error("La edición no fue exitosa.");
+        setErrorMessage("No se pudo editar el artículo. Inténtalo nuevamente.");
+        setErrorAlertVisible(true);
       }
     } catch (error) {
-      console.error("Error al editar el artículo:", error);
+      setErrorMessage("Problema interno del servidor.");
+      setErrorAlertVisible(true);
     }
   };
 
   const handleCloseAlert = () => {
     setShowAlert(false);
+  };
+  const handleCloseErrorAlert = () => {
+    setErrorAlertVisible(false);
   };
 
 
@@ -373,11 +406,15 @@ export default function ArticlesEdit() {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Edicion exitosa"
-        message="El articulo se ha creado correctamente."
+        message="El articulo se ha editado."
         buttonColor="#2196F3"
         iconName="check-circle" 
         />
+        <ErrorAlert
+        isVisible={errorAlertVisible}
+        message={errorMessage}
+        onClose={handleCloseErrorAlert}
+      />
     </ScrollView>
   );
 }

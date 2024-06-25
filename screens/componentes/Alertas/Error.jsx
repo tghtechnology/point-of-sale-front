@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Importa los iconos de FontAwesome
 
-const ErrorAlert = ({ isVisible, onClose, title, message, iconName }) => {
+const Error = ({ isVisible, onClose, title, message, iconName }) => {
   return (
     <Modal
   animationType="fade"
@@ -14,12 +14,12 @@ const ErrorAlert = ({ isVisible, onClose, title, message, iconName }) => {
     <View style={styles.modalView}>
       {/* Icono */}
       <View style={styles.iconWrapper}>
-        <Icon name={iconName || "warning"} size={30} color="#fff" />
+        <Icon name="exclamation-circle" size={30} color="#fff" />
       </View>
       {/* Título */}
-      <Text style={styles.title}>{title || "¡Error!"}</Text>
+      <Text style={styles.title}>Datos incorrectos</Text>
       {/* Mensaje */}
-      <Text style={styles.message}>{message || "No se pudo hacer la solicitud"}</Text>
+      <Text style={styles.message}>Contraseña Incorrecta</Text>
       {/* Botón de cierre */}
       <TouchableOpacity style={styles.button} onPress={onClose}>
         <Text style={styles.buttonText}>Cerrar</Text>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   iconWrapper: {
-    backgroundColor: 'red', // Fondo naranja para el icono
+    backgroundColor: '#E5C814', // Fondo naranja para el icono
     borderRadius: 50,
     padding: 10,
     marginBottom: 20,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   button: {
-    backgroundColor: 'red',
+    backgroundColor: '#E5C814',
     borderRadius: 20,
     padding: 12,
     elevation: 2,
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ErrorAlert;
+export default Error;

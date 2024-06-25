@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "pyweb",
-    "slug": "pyweb",
+    "name": "POS TGH Technology Solution",
+    "slug": "POS-TGH-Technology-Solution",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/robot.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,20 +15,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tghtechnologysolution.pos"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/robot.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.tghtechnologysolution.pos"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo_web.png"
     },
     "plugins": [
       "expo-font"
-        
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d253cac5-b46d-45ae-8782-3cb341049ee0"
+      }
+    }
   }
 }

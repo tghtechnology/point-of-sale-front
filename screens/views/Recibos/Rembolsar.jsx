@@ -3,13 +3,17 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTotal } from '../../Global State/TotalContext';
 import useRecibos from "../../hooks/useRecibos";
 import CustomAlert from "../../componentes/Alertas/CustomAlert";
+import { useNavigation } from '@react-navigation/native';
 import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 export default function Rembolsar() {
   const { articleNames, articleQuantities, ventaId, articleIds, articleQuantitiesReembolsadas, setarticleQuantitiesReembolsadas } = useTotal();
   const { handleRembolsar } = useRecibos();
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [selectedArticles, setSelectedArticles] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const initialSelectedArticles = articleNames.map((name, index) => {
@@ -54,6 +58,14 @@ export default function Rembolsar() {
 
   const handleReembolso = async () => {
     try {
+      const selectedArticleIds = selectedArticles.filter(article => article.selected);
+
+      if (selectedArticleIds.length === 0) {
+        setErrorMessage('Debe seleccionar al menos un artículo para reembolsar.');
+        setErrorAlertVisible(true);
+        return;
+      }
+
       const detallesReembolso = selectedArticles
         .filter(article => article.selected)
         .map(article => ({
@@ -64,7 +76,6 @@ export default function Rembolsar() {
       const res = await handleRembolsar(ventaId, detallesReembolso);
       if (res) {
         setShowAlert(true);
-        // Actualizar el estado global de articleQuantitiesReembolsadas
         const newArticleQuantitiesReembolsadas = [...articleQuantitiesReembolsadas];
         detallesReembolso.forEach(detalles => {
           const index = articleIds.indexOf(detalles.articuloId);
@@ -72,15 +83,18 @@ export default function Rembolsar() {
         });
         setarticleQuantitiesReembolsadas(newArticleQuantitiesReembolsadas);
       } else {
-        console.error('Error al realizar el reembolso');
+        setErrorMessage('No se pudo hacer un reembolso.');
+        setErrorAlertVisible(true);
       }
     } catch (error) {
-      console.error('Error al procesar la solicitud de reembolso:', error);
+      setErrorMessage('Problema interno del servidor.');
+      setErrorAlertVisible(true);
     }
   };
 
   const handleCloseAlert = () => {
     setShowAlert(false);
+    navigation.navigate("Recibos");
   };
 
   return (
@@ -140,6 +154,11 @@ export default function Rembolsar() {
         message="Este producto a sido rembolsado"
         buttonColor="#2196F3"
         iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
       />
     </View>
   );

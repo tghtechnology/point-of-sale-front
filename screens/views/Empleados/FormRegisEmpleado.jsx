@@ -22,6 +22,7 @@ const FormRegisEmpleado = () => {
   const [cargo, setCargo] = useState(INITIAL_STATE.cargo);
   const [showAlert, setShowAlert] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { countries, fetchCountries } = useCountry();
   const [countrySelect, setCountrySelect] = useState('');
   const [data, setData] = useState(INITIAL_STATE);
@@ -42,7 +43,18 @@ const FormRegisEmpleado = () => {
     });
   };
 
+  const validateFields = () => {
+    if (!data.nombre || !data.email || !data.password || !data.telefono || !cargo) {
+      setErrorMessage('Todos los campos son obligatorios.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateFields()) return;
+
     const objectSend = {
       ...data,
       pais: countrySelect,
@@ -55,6 +67,7 @@ const FormRegisEmpleado = () => {
         setData(INITIAL_STATE);
         setWorker([...worker, nuevoEmpleado]);
         setCountrySelect('');
+        setCargo(INITIAL_STATE.cargo);
         setShowAlert(true);
       } else {
         setErrorAlertVisible(true);
@@ -68,80 +81,87 @@ const FormRegisEmpleado = () => {
   return (
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
-        <View style={styles.topBanner}>
-        </View>
+        <View style={styles.topBanner}></View>
         <View style={styles.formBackground}>
-        <Text style={styles.label}>Nombre:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre"
-          placeholderTextColor="#546574"
-          value={data.nombre}
-          onChangeText={(text) => getValues('nombre', text)}
-        />
+          <Text style={styles.label}>Nombre:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Nombre"
+            placeholderTextColor="#546574"
+            value={data.nombre}
+            onChangeText={(text) => getValues('nombre', text)}
+          />
 
-        <Text style={styles.label}>Correo:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Correo Electrónico"
-          placeholderTextColor="#546574"
-          value={data.email}
-          onChangeText={(text) => getValues('email', text)}
-        />
+          <Text style={styles.label}>Correo:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Correo Electrónico"
+            placeholderTextColor="#546574"
+            value={data.email}
+            onChangeText={(text) => getValues('email', text)}
+          />
 
-        <Text style={styles.label}>Contraseña:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Contraseña"
-          secureTextEntry={true}
-          value={data.password}
-          onChangeText={(text) => getValues('password', text)}
-        />
+          <Text style={styles.label}>Contraseña:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Contraseña"
+            secureTextEntry={true}
+            value={data.password}
+            onChangeText={(text) => getValues('password', text)}
+          />
 
-        <Text style={styles.label}>Teléfono:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Teléfono"
-          keyboardType='numeric'
-          value={data.telefono}
-          onChangeText={(text) => getValues('telefono', text)}
+          <Text style={styles.label}>Teléfono:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Teléfono"
+            keyboardType='numeric'
+            value={data.telefono}
+            onChangeText={(text) => getValues('telefono', text)}
+          />
+
+          <Text style={styles.label}>Seleccione un cargo:</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={cargo}
+              onValueChange={handleCargoChange}
+              style={styles.picker}
+            >
+              <Picker.Item label="Cargo:" value="" />
+              {cargosDisponibles.map((cargo, index) => (
+                <Picker.Item label={cargo} value={cargo} key={index} />
+              ))}
+            </Picker>
+          </View>
+
+          <Text style={styles.label}>Seleccione un país:</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={countrySelect}
+              onValueChange={(itemValue) => setCountrySelect(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="País:" value="" />
+              {countries && countries.map((country, index) => (
+                <Picker.Item key={index} label={country} value={country} />
+              ))}
+            </Picker>
+          </View>
+
+          <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Registrar</Text>
+          </TouchableOpacity>
+        </View>
+        <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} message="Se ha creado el empleado" />
+        <ErrorAlert
+          isVisible={errorAlertVisible}
+          onClose={() => setErrorAlertVisible(false)}
+          message={errorMessage}
         />
-        <Text style={styles.label}>Seleccione un cargo:</Text>
-        <View style= {styles.pickerContainer}>
-        <Picker
-          selectedValue={cargo}
-          onValueChange={handleCargoChange}
-          style={styles.picker}
-        >
-          <Picker.Item label="Cargo:" value="" />
-          {cargosDisponibles.map((cargo, index) => (
-            <Picker.Item label={cargo} value={cargo} key={index} />
-          ))}
-        </Picker>
-        </View>
-        <Text style={styles.label}>Seleccione un país:</Text>
-        <View style= {styles.pickerContainer}>
-        <Picker
-          selectedValue={countrySelect}
-          onValueChange={(itemValue) => setCountrySelect(itemValue)}
-          style={styles.picker}
-        >
-          <Picker.Item label="País:" value="" />
-          {countries && countries.map((country, index) => (
-            <Picker.Item key={index} label={country} value={country} />
-          ))}
-        </Picker>
-        </View>
-        <TouchableOpacity style={styles.buttonRegister} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Registrar</Text>
-        </TouchableOpacity>
-        </View>
-        <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
-        <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
       </View>
-      </ScrollView>
+    </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   scrollContainer: {

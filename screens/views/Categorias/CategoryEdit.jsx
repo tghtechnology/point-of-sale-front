@@ -3,6 +3,7 @@ import {  View, Text ,TextInput ,StyleSheet, TouchableOpacity} from 'react-nativ
 import { useRoute } from "@react-navigation/native";
 import useCategory from '../../hooks/useCategory';
 import CustomAlert from "../../componentes/Alertas/CustomAlert"
+import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 
 const INITIAL_STATE = {
@@ -38,6 +39,8 @@ const CategoryForm = () => {
   const route = useRoute();
   const { handleEditCategories, listCategoria, setListCategoria } = useCategory();
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("")
   const [editedData, setEditedData] = useState(INITIAL_STATE);
 
   useEffect(() => {
@@ -51,13 +54,23 @@ const CategoryForm = () => {
       [name]: value,
     });
   };
+  const validateFields = () => {
+    if (!editedData.nombre || !editedData.color) {
+      setErrorMessage("Todos los campos son obligatorios.");
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async () => {
     try {
+      if (!validateFields()) return;
+
       await handleEditCategories(editedData);
       setShowAlert(true);
       console.log("Categoría editada exitosamente");
-      // Actualizar la lista de categorías después de la edición
+
       setListCategoria(prevLista => prevLista.map(categoria => {
         if (categoria.id === editedData.id) {
           return { ...categoria, ...editedData };
@@ -66,7 +79,8 @@ const CategoryForm = () => {
         }
       }));
     } catch (error) {
-      console.error("Error al editar la categoría:", error);
+      setErrorMessage("Problema interno del servidor.");
+      setErrorAlertVisible(true);
     }
   };
 
@@ -97,10 +111,14 @@ const CategoryForm = () => {
       <CustomAlert
         isVisible={showAlert}
         onClose={handleCloseAlert}
-        title="Edición Exitosa"
-        message="La categoría se ha editado correctamente."
+        message="La categoría se ha editado."
         buttonColor="#2196F3"
         iconName="check-circle"
+      />
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
       />
     </View>
   );

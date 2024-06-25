@@ -1,14 +1,11 @@
 import apiClient from "../apiss/AxiosConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const saveToken = async (token) => {
-    try {
-      await AsyncStorage.setItem('token', token);
-      console.log('Token guardado correctamente:', token);
-    } catch (error) {
-      console.error('Error al guardar el token:', error);
-    }
-  };
+/**
+ * Obtiene el token de autenticación de AsyncStorage.
+ *
+ * @returns {Promise<string|null>} - Una promesa que resuelve con el token de autenticación o null si no se encuentra.
+ */
   
   const getToken = async () => {
     try {
@@ -25,13 +22,21 @@ const saveToken = async (token) => {
       return null;
     }
   };
+
+  /**
+ * Crea un nuevo cliente.
+ *
+ * @param {Object} newClient - Los datos del nuevo cliente.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al crear el cliente.
+ */
   
 const createClient = async (newClient) => {
     try {
         const token = await getToken();
         const {data, status} = await apiClient.post(`/cliente`, newClient, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {
@@ -42,28 +47,40 @@ const createClient = async (newClient) => {
         console.log(error);
     }
 }
-
+/**
+ * Obtiene la lista de clientes.
+ *
+ * @returns {Promise<Object[]>} - Una promesa que resuelve con la lista de clientes.
+ * @throws {Error} - Error al obtener la lista de clientes.
+ */
 const getClients = async () => {
     try {
         const token = await getToken();
         const response = await apiClient.get(`/cliente`, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
-        return response.data// Devuelve los datos de los descuentos
+        return response.data
     } catch (error) {
         console.log(error);
-        return []; // En caso de error, devuelve un array vacío
+        return []; 
     }
 }; 
-
+/**
+ * Edita un cliente existente.
+ *
+ * @param {number} id - El ID del cliente a editar.
+ * @param {Object} updatedData - Los datos actualizados del cliente.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al editar el cliente.
+ */
 const editClient = async (id, updatedData) => {
     try {
         const token = await getToken();
         const {data,status} = await apiClient.put(`/cliente/${id}`, updatedData, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {
@@ -75,13 +92,19 @@ const editClient = async (id, updatedData) => {
       throw new Error('Error al editar el descuento');
     }
   };
-
+/**
+ * Elimina un cliente.
+ *
+ * @param {number} id - El ID del cliente a eliminar.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al eliminar el cliente.
+ */
 const deleteClient = async(id) => {
     try{
         const token = await getToken();
         const{data, status} = await apiClient.delete(`/cliente/${id}`, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}`
             }
         });
         return {
@@ -92,13 +115,21 @@ const deleteClient = async(id) => {
         console.log('Error:',error.response.data);
     }
 }
+/**
+ * Actualiza un cliente.
+ *
+ * @param {number} id - El ID del cliente a actualizar.
+ * @param {Object} newData - Los datos actualizados del cliente.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al actualizar el cliente.
+ */
 
 const updateClient = async (id, newData) => {
     try {
         const token = await getToken();
         const {data,status} = await apiClient.put(`/cliente/${id}`, newData, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {
@@ -109,12 +140,19 @@ const updateClient = async (id, newData) => {
         throw new Error(`Error al actualizar el cliente: ${error.message}`);
     }
     };
+    /**
+ * Obtiene un cliente por su ID.
+ *
+ * @param {number} id - El ID del cliente a obtener.
+ * @returns {Promise<{data: Object, status: number}>} - Una promesa que resuelve con los datos y el estado de la respuesta.
+ * @throws {Error} - Error al obtener el cliente.
+ */
 const getClientById=async(id)=>{
     try{
         const token = await getToken();
         const{data, status} = await apiClient.get(`/cliente/${id}`, {
             headers: {
-                Authorization: `Bearer ${token}` // Agrega el token como encabezado de autorización
+                Authorization: `Bearer ${token}` 
             }
         });
         return {

@@ -1,132 +1,141 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useRoute } from "@react-navigation/native";
 import useWorker from '../../hooks/useWorker';
 import useCountry from '../../hooks/useCountry';
-import WorkerProvider from '../../context/worker/WorkerProvider';
 import CustomAlert from '../../componentes/Alertas/CustomAlert';
 import ErrorAlert from '../../componentes/Alertas/ErrorAlert';
 
 const INITIAL_STATE = {
-    nombre: '',
-    email: '',
-    password: '',
-    telefono: '',
-    cargo: '',
-    pais:'', // Establecer el valor inicial del cargo aquí
-  };
+  nombre: '',
+  email: '',
+  password: '',
+  telefono: '',
+  cargo: '',
+  pais: '',
+};
 
-  const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
+const cargosDisponibles = ['Administrador', 'Gerente', 'Cajero'];
 
 const EditWorker = () => {
-    const route = useRoute();
-    const {handleEditWorker, handleUpdateWorker } = useWorker()
-    const [editedData, setEditedData] = useState(INITIAL_STATE);
-    const [selectedCountry, setSelectedCountry] = useState('');
-    const [cargo, setCargo] = useState('');
-    const { countries,fetchCountries} = useCountry();
-    const [showAlert, setShowAlert] = useState(false);
-    const [errorAlertVisible, setErrorAlertVisible] = useState(false);
-    const handleCargoChange = (cargoSeleccionado) => {
-      setCargo(cargoSeleccionado);
-      handleChange('cargo', cargoSeleccionado);
+  const route = useRoute();
+  const { handleEditWorker, handleUpdateWorker } = useWorker();
+  const [editedData, setEditedData] = useState(INITIAL_STATE);
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [cargo, setCargo] = useState('');
+  const { countries, fetchCountries } = useCountry();
+  const [showAlert, setShowAlert] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleCargoChange = (cargoSeleccionado) => {
+    setCargo(cargoSeleccionado);
+    handleChange('cargo', cargoSeleccionado);
   };
 
-    useEffect(() => {
-      fetchCountries(); 
-    }, []);
+  useEffect(() => {
+    fetchCountries();
+  }, []);
 
-    useEffect(() => {
-      // Verificamos si existe el parámetro "work" en la ruta.
-      const { work } = route.params;
-      // Inicializamos el estado editedData con los datos del empleado seleccionado.
-      setEditedData(work || INITIAL_STATE);
-      // Inicializamos los estados para otros campos si es necesario.
-      setSelectedCountry(work ? work.pais : '');
-      setCargo(work ? work.cargo : '')
+  useEffect(() => {
+    const { work } = route.params;
+    setEditedData(work || INITIAL_STATE);
+    setSelectedCountry(work ? work.pais : '');
+    setCargo(work ? work.cargo : '');
   }, [route.params]);
 
-    const handleChange = (name, value) => {
-      setEditedData({
-        ...editedData,
-        [name]: value,
-      });
-    };
+  const handleChange = (name, value) => {
+    setEditedData({
+      ...editedData,
+      [name]: value,
+    });
+  };
 
-    const handleSubmit = async () => {
-      try {
-        await handleEditWorker(editedData.id, editedData);
-        await handleUpdateWorker(editedData.id, editedData);
-        setShowAlert(true);
-        //navigation.goBack();
-      } catch (error) {
-        setErrorAlertVisible(true);
-        console.error('Error al editar el cliente:', error);
-      }
-    };
-    const handleCloseAlert = () => {
-      setShowAlert(false);
-    };
+  const validateFields = () => {
+    if (!editedData.nombre || !editedData.email || !editedData.telefono || !cargo || !selectedCountry || !editedData.password) {
+      setErrorMessage('Todos los campos son obligatorios.');
+      setErrorAlertVisible(true);
+      return false;
+    }
+    return true;
+  };
 
-return (
+  const handleSubmit = async () => {
+    if (!validateFields()) return;
+
+    try {
+      await handleEditWorker(editedData.id, editedData);
+      await handleUpdateWorker(editedData.id, editedData);
+      setShowAlert(true);
+    } catch (error) {
+      setErrorAlertVisible(true);
+      console.error('Error al editar el empleado:', error);
+    }
+  };
+
+  return (
     <View style={styles.container}>
       <View style={styles.topBanner}></View>
       <View style={styles.formBackground}>
-      <TextInput
-        style={styles.input}
-        placeholder="Nombre"
-        value={editedData.nombre}
-        onChangeText={(text) => handleChange('nombre', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={editedData.email}
-        onChangeText={(text) => handleChange('email', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Teléfono"
-        value={editedData.telefono}
-        onChangeText={(text) => handleChange('telefono', text)}
-      />
-      <Text style={styles.label}>Cargo</Text>
-      <View style={styles.pickerContainer}>
-      <Picker
-          style={styles.picker}
-          selectedValue={cargo}
-          onValueChange={handleCargoChange}
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre"
+          value={editedData.nombre}
+          onChangeText={(text) => handleChange('nombre', text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={editedData.email}
+          onChangeText={(text) => handleChange('email', text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Teléfono"
+          value={editedData.telefono}
+          onChangeText={(text) => handleChange('telefono', text)}
+        />
+        <Text style={styles.label}>Cargo</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            style={styles.picker}
+            selectedValue={cargo}
+            onValueChange={handleCargoChange}
           >
-          {cargosDisponibles.map((cargo, index) => (
-          <Picker.Item label={cargo} value={cargo} key={index} />
-        ))}
-      </Picker>
-      </View>
+            {cargosDisponibles.map((cargo, index) => (
+              <Picker.Item label={cargo} value={cargo} key={index} />
+            ))}
+          </Picker>
+        </View>
         <Text style={styles.label}>País</Text>
         <View style={styles.pickerContainer}>
-        <Picker
-          style={styles.picker}
-          selectedValue={selectedCountry}
-          onValueChange={(itemValue) => {
-            setSelectedCountry(itemValue);
-            handleChange('pais', itemValue); 
-          }}
-        >
-          {countries.map((country, index) => (
-            <Picker.Item key={index} label={country} value={country} /> 
-          ))}
-        </Picker>
+          <Picker
+            style={styles.picker}
+            selectedValue={selectedCountry}
+            onValueChange={(itemValue) => {
+              setSelectedCountry(itemValue);
+              handleChange('pais', itemValue);
+            }}
+          >
+            {countries.map((country, index) => (
+              <Picker.Item key={index} label={country} value={country} />
+            ))}
+          </Picker>
+        </View>
+        <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
+          <Text style={styles.buttonText}>Guardar Cambios</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={handleSubmit} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Guardar Cambios</Text>
-      </TouchableOpacity>
-      </View>
-      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)}/>
-      <ErrorAlert isVisible={errorAlertVisible} onClose={() => setErrorAlertVisible(false)}/>
+      <CustomAlert isVisible={showAlert} onClose={() => setShowAlert(false)} message="Se ha editado el empleado"/>
+      <ErrorAlert
+        isVisible={errorAlertVisible}
+        onClose={() => setErrorAlertVisible(false)}
+        message={errorMessage}
+      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
